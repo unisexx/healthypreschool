@@ -1,0 +1,1 @@
+<div id="footer"><br><br>© Copyright All Right Reserved.  ศูนย์เด็กเล็กปลอดโรค</div>

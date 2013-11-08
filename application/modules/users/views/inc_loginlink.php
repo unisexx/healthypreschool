@@ -1,0 +1,1 @@
+<div><a href="users/login_frm">Login</a> | <a href="users/register">Sign Up</a></div>
