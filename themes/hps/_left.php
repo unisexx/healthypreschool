@@ -17,9 +17,16 @@
                 <div class="login-menu">
                 	<?php if(user_login()->m_status == 'active'):?>
 	                	<b> 
+	                	<?php if(user_login()->user_type_id == 1 or user_login()->user_type_id == 6 or user_login()->user_type_id == 7 or user_login()->user_type_id == 8):?>
 	                	<a href="nurseries">ศูนย์เด็กเล็ก</a>
+	                	<?php endif;?>
+	                	
 	                    <?php if(user_login()->user_type_id == 1 or user_login()->user_type_id == 6 or user_login()->user_type_id == 7):?>
 	                        <span class="divider">/</span> <a href="officers">ตรวจสอบรายชื่อ</a>
+	                    <?php endif;?>
+	                    
+	                    <?php if(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก ?>
+	                    	แบบคัดกรองโรค <span class="divider">/</span> ห้องเรียน ชั้นเรียน และเด็ก
 	                    <?php endif;?>
 	                    </b>
 	                <?php else:?>

@@ -5,9 +5,13 @@ class Users extends Public_Controller{
         parent::__construct();
     }
     
-    function register(){
+    function register(){ // เจ้าหน้าที่สาธารณสุข
         $this->template->build('register');
     }
+	
+	function register_center(){ // เจ้าหน้าที่ศูนย์
+		$this->template->build('register_center');
+	}
     
     function signup()
     {

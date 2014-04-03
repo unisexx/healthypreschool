@@ -146,6 +146,12 @@ $(function(){
 
 <div class="row">
     <div class="span9">
+    	
+    	<ul class="nav nav-tabs home-nav-tabs estimate-tab">
+		  <li class="active"><a href="users/register">เจ้าหน้าที่สาธารณสุข</a></li>
+		  <li><a href="users/register_center">เจ้าหน้าที่ศูนย์</a></li>
+		</ul>
+	
     	<div class="alert alert-info" style="width:600px;">
 		  <button type="button" class="close" data-dismiss="alert">&times;</button>
 		  <strong>ประกาศ!!!</strong> หลังจากสมัครสมาชิกแล้ว ผู้สมัครจะต้องรอการตรวจสอบจากเจ้าหน้าที่ก่อนจึงจะเข้าใช้งานระบบได้
