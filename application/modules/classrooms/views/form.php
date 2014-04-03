@@ -2,7 +2,7 @@
 <br>
 <div class="row">
 	<div class="span9">
-		<form action="classrooms/save" class="form-horizontal">
+		<form action="classrooms/save" method="post" class="form-horizontal">
 			<div class="control-group">
 		        <label class="control-label">ชื่อห้องเรียน / ชั้นเรียน <span class="TxtRed">*</span></label>
 		        <div class="controls">
@@ -12,12 +12,13 @@
 		    <div class="control-group">
 		        <label class="control-label">ครูประจำชั้น / ครูผู้ดูแลเด็ก <span class="TxtRed">*</span></label>
 		        <div class="controls">
-		          <input class="input-xlarge" type="text" name="name" id="inputname" placeholder="ชื่อ - นามสกุล">
+		          <input class="input-xlarge" type="text" name="name" id="inputname" placeholder="ชื่อ - นามสกุล"> <button class="btn btn-small">ค้นหา</button>
 		          <input type="hidden" name="user_id" value="">
 		        </div>
 		    </div>
 		    <div class="control-group">
                 <div class="controls">
+                  <input type="hidden" name="id" value="">
                   <input type="submit" class="btn btn-small btn-info" value="บันทึก">
                 </div>
             </div>
