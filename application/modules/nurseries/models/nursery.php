@@ -5,7 +5,7 @@ class Nursery extends ORM {
 	
 	public $has_one = array("amphur","district","province","nursery_category","area");
 	
-	public $has_many = array("classroom");
+	public $has_many = array("classroom","user");
 
     function __construct($id = NULL)
     {

@@ -1,4 +1,3 @@
-<script type="text/javascript" src="media/js/jquery.validate.min.js"></script>
 <script language="javascript">
 $(function(){
     $("#regisform").validate({

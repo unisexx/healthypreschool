@@ -35,13 +35,8 @@ $(document).ready(function(){
 		  <li><a href="users/register">เจ้าหน้าที่สาธารณสุข</a></li>
 		  <li class="active"><a href="users/register_center">เจ้าหน้าที่ศูนย์</a></li>
 		</ul>
-	
-    	<!-- <div class="alert alert-info" style="width:600px;">
-		  <button type="button" class="close" data-dismiss="alert">&times;</button>
-		  <strong>ประกาศ!!!</strong> หลังจากสมัครสมาชิกแล้ว ผู้สมัครจะต้องรอการตรวจสอบจากเจ้าหน้าที่ก่อนจึงจะเข้าใช้งานระบบได้
-		</div> -->
 
-        <form id="regisform" class="form-horizontal" method="post" action="users/signup">
+        <form id="regisform" class="form-horizontal" method="post" action="users/signup_center">
         	
         	<div class="control-group">
                 <label class="control-label">คำนำหน้า</label>
@@ -51,9 +46,23 @@ $(document).ready(function(){
             </div>
             
             <div class="control-group">
-                <label class="control-label">ชื่อศูนย์<span class="TxtRed">*</span></label>
+                <label class="control-label">ชื่อศูนย์เด็กเล็ก<span class="TxtRed">*</span></label>
                 <div class="controls">
-                  <input class="input-xlarge" type="text" name="name" id="inputname">
+                  <input class="input-xlarge" type="text" name="name">
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label class="control-label">เลขที่</label>
+                <div class="controls">
+                  <input class="input-xlarge" type="text" name="number" style="width:50px;">
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label class="control-label">หมู่</label>
+                <div class="controls">
+                  <input class="input-xlarge" type="text" name="moo" style="width:50px;">
                 </div>
             </div>
             
@@ -78,37 +87,45 @@ $(document).ready(function(){
             </div>
             
             <div class="control-group">
-                <label class="control-label">ที่อยู่</label>
+                <label class="control-label">รหัสไปรษณีย์</label>
                 <div class="controls">
-                  <textarea name="address" class="input-xlarge"></textarea>
+                  <input class="input-xlarge" type="text" name="code">
+                </div>
+            </div>
+            <hr>
+            
+             <div class="control-group">
+                <label class="control-label">คำนำหน้า</label>
+                <div class="controls">
+                  <?php echo form_dropdown('p_title',array('นาย'=>'นาย','นาง'=>'นาง','นางสาว'=>'นางสาว'),'','','--- เลือกคำนำหน้า ---');?>
                 </div>
             </div>
             
             <div class="control-group">
-                <label class="control-label">เบอร์ศูนย์</label>
+                <label class="control-label">ชื่อหัวหน้าศูนย์</label>
                 <div class="controls">
-                  <input class="input-xlarge" type="text" name="name" id="inputname">
+                  <input class="input-xlarge" type="text" name="p_name">
                 </div>
             </div>
             
             <div class="control-group">
-                <label class="control-label">หัวหน้าศูนย์</label>
+                <label class="control-label">นามสกุล</label>
                 <div class="controls">
-                  <input class="input-xlarge" type="text" name="name" id="inputname">
+                  <input class="input-xlarge" type="text" name="p_surname">
                 </div>
             </div>
             
             <div class="control-group">
-                <label class="control-label">เจ้าหน้าที่ประสานงาน</label>
+                <label class="control-label">อีเมล์</label>
                 <div class="controls">
-                  <input class="input-xlarge" type="text" name="name" id="inputname">
+                  <input class="input-xlarge" type="text" name="p_email">
                 </div>
             </div>
             
             <div class="control-group">
                 <label class="control-label">เบอร์ติดต่อ</label>
                 <div class="controls">
-                  <input class="input-xlarge" type="text" name="name" id="inputname">
+                  <input class="input-xlarge" type="text" name="p_tel">
                 </div>
             </div>
             <hr>
@@ -140,6 +157,7 @@ $(document).ready(function(){
             </div>
             <div class="control-group">
                 <div class="controls">
+                  <input type="hidden" name="m_status" value="active">
                   <input type="hidden" name="user_type_id" value="9">
                   <input type="submit" class="btn btn-small btn-info" value="สมัครสมาชิก">
                 </div>

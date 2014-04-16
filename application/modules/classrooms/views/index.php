@@ -14,4 +14,17 @@
 		<td>จำนวนเด็ก (คน)</td>
 		<td>จัดการ</td>
 	</tr>
+	<?foreach($classes as $key=>$class):?>
+	<tr>
+		<td><?=($key+1)+$classes->paged->current_row?></td>
+		<td><?=$class->room_name?></td>
+		<td><?=$class->user->name?></td>
+		<td></td>
+		<td>
+			<a href="classrooms/form/<?=$class->id?>" class='btn btn-mini btn-info'>แก้ไข</a>
+	        <a href="classrooms/delete/<?=$class->id?>" class="btn btn-mini btn-danger" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>
+		</td>
+	</tr>
+	<?endforeach;?>
 </table>
+<?=$classes->pagination();?>

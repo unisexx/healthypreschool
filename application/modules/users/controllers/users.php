@@ -12,6 +12,35 @@ class Users extends Public_Controller{
 	function register_center(){ // เจ้าหน้าที่ศูนย์
 		$this->template->build('register_center');
 	}
+	
+	function signup_center(){
+		if($_POST){
+			$captcha = $this->session->userdata('captcha');
+			if(($_POST['captcha'] == $captcha) && !empty($captcha)){
+				
+				$nursery = new Nursery();
+				$nursery->from_array($_POST);
+				$nursery->save();
+				
+				$nursery = new Nursery();
+				$nursery->order_by('id','desc')->get(1);
+				
+				$_POST['nursery_id'] = $nursery->id;
+				
+				$user = new User();
+	            $user->from_array($_POST);
+	            $user->save();
+				
+				set_notify('success', 'สมัครสมาชิกเรียบร้อย');
+			}else{
+				
+				set_notify('error','กรอกรหัสไม่ถูกต้อง');
+				redirect($_SERVER['HTTP_REFERER']);
+				
+			}
+            redirect('home');
+        }
+	}
     
     function signup()
     {

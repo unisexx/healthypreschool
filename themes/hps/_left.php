@@ -25,8 +25,12 @@
 	                        <span class="divider">/</span> <a href="officers">ตรวจสอบรายชื่อ</a>
 	                    <?php endif;?>
 	                    
+	                    <?php if(user_login()->user_type_id == 9): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก ?>
+	                    	<a href="teachers">จัดการครู / ผู้ดูแลเด็ก</a>
+	                    <?php endif;?>
+	                    
 	                    <?php if(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก ?>
-	                    	แบบคัดกรองโรค <span class="divider">/</span> ห้องเรียน ชั้นเรียน และเด็ก
+	                    	แบบคัดกรองโรค <span class="divider">/</span> <a href="classrooms">ห้องเรียน ชั้นเรียน และเด็ก</a>
 	                    <?php endif;?>
 	                    </b>
 	                <?php else:?>
