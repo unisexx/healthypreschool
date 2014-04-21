@@ -91,6 +91,13 @@ $(function(){
 	<div class="span9">
 		<form id="teacherform" action="teachers/save" method="post" class="form-horizontal">
 			<div class="control-group">
+                <label class="control-label" for="inputUsername">สถานะเจ้าหน้าที่</label>
+                <div class="controls">
+                  <?=form_dropdown('m_status',array('deactive'=>'ปิดการใช้งาน','active'=>'เปิดการใช้งาน'),$teacher->m_status,'class="input-xlarge"');?>
+                </div>
+            </div>
+			<hr>
+			<div class="control-group">
 		        <label class="control-label">ชื่อ - สกุล<span class="TxtRed">*</span></label>
 		        <div class="controls">
 		          <input class="input-xlarge" type="text" name="name" value="<?=$teacher->name?>">
@@ -136,7 +143,7 @@ $(function(){
             <div class="control-group">
                 <label class="control-label" for="re-inputPass">ยืนยันรหัสผ่าน <span class="TxtRed">*</span></label>
                 <div class="controls">
-                  <input class="input-xlarge" type="password" name="_password" id="re-inputPass" placeholder="ยืนยันรหัสผ่าน">
+                  <input class="input-xlarge" type="password" name="_password" id="re-inputPass" value="<?=$teacher->password?>" >
                 </div>
             </div>
             <div class="control-group">

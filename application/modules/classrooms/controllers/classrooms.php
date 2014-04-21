@@ -7,7 +7,7 @@ class Classrooms extends Public_Controller{
     
     function index(){
     	$classroom = new Classroom();
-		$data['classes'] = $classroom->order_by('id','desc')->get_page();
+		$data['classes'] = $classroom->where('user_id = '.user_login()->id)->order_by('id','desc')->get_page();
     	$this->template->build('index',$data);
     }
 	

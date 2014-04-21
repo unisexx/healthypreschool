@@ -30,16 +30,16 @@
 		        </div>
 		    </div>
 		    <div class="control-group">
-		        <label class="control-label">อายุ<span class="TxtRed">*</span></label>
+		        <label class="control-label">อายุ (ปี)<span class="TxtRed">*</span></label>
 		        <div class="controls">
 		          <input class="span1" type="text" name="age" value="<?=$child->age?>">
 		        </div>
 		    </div>
 		    <div class="control-group">
-		        <label class="control-label">น้ำหนัก / ส่วนสูง<span class="TxtRed">*</span></label>
+		        <label class="control-label">น้ำหนัก (กก) / ส่วนสูง (ซม)<span class="TxtRed">*</span></label>
 		        <div class="controls">
-		          <input class="span1" type="text" name="weight" value="<?=$child->weight?>" placeholder="kg"> / 
-		          <input class="span1" type="text" name="height" value="<?=$child->height?>" placeholder="cm">
+		          <input class="span1" type="text" name="weight" value="<?=$child->weight?>"> / 
+		          <input class="span1" type="text" name="height" value="<?=$child->height?>">
 		        </div>
 		    </div>
 		    <div class="control-group">

@@ -30,7 +30,7 @@
 	                    <?php endif;?>
 	                    
 	                    <?php if(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก ?>
-	                    	แบบคัดกรองโรค <span class="divider">/</span> <a href="classrooms">ห้องเรียน ชั้นเรียน และเด็ก</a>
+	                    	<a href="diseases">แบบคัดกรองโรค</a> <span class="divider">/</span> <a href="classrooms">ห้องเรียน ชั้นเรียน และเด็ก</a>
 	                    <?php endif;?>
 	                    </b>
 	                <?php else:?>
