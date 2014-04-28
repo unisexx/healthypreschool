@@ -22,7 +22,7 @@
 		    <div class="control-group">
 		        <label class="control-label">ครูประจำชั้น / ครูผู้ดูแลเด็ก <span class="TxtRed">*</span></label>
 		        <div class="controls">
-		          <input class="input-xlarge" type="text" name="name" value="<?=$classroom->user_id == ''? user_login()->name : $classroom->user->name ;?>" placeholder="ชื่อ - นามสกุล"> <!-- <button class="btn btn-small">ค้นหา</button> -->
+		          <input class="input-xlarge" type="text" name="name" value="<?=$classroom->user_id == ''? user_login()->name : $classroom->user->name ;?>" placeholder="ชื่อ - นามสกุล" readonly> <!-- <button class="btn btn-small">ค้นหา</button> -->
 		          <input type="hidden" name="user_id" value="<?=$classroom->user_id == ''? user_login()->id : $classroom->user_id ;?>">
 		        </div>
 		    </div>

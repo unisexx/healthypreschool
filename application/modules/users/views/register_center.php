@@ -17,6 +17,69 @@ $(document).ready(function(){
 				$("#district").html(data);
 			});
 	});
+	
+	$("#regisform").validate({
+    rules: 
+    {
+    	nursery_category_id:{required: true},
+    	name:{required: true},
+        email: 
+        { 
+            required: true,
+            email: true,
+            remote: "users/check_email"
+        },
+        password: 
+        {
+            required: true,
+            minlength: 4
+        },
+        _password:
+        {
+            equalTo: "#inputPass"
+        },
+        captcha:
+        {
+            required: true,
+            remote: "users/check_captcha"
+        }
+    },
+    messages:
+    {
+    	nursery_category_id:{required: "กรุณาเลือกคำนำหน้าชื่อ"},
+    	name:{required: "กรุณากรอกชื่อศูนย์เด็กเล็ก"},
+        email: 
+        { 
+            required: "กรุณากรอกอีเมล์",
+            email: "กรุณากรอกอีเมล์ให้ถูกต้อง",
+            remote: "อีเมล์นี้ไม่สามารถใช้งานได้"
+        },
+        password: 
+        {
+            required: "กรุณากรอกรหัสผ่าน",
+            minlength: "กรุณากรอกรหัสผ่านอย่างน้อย 4 ตัวอักษร"
+        },
+        _password:
+        {
+            equalTo: "กรุณากรอกรหัสผ่านให้ตรงกันทั้ง 2 ช่อง"
+        },
+        captcha:
+        {
+            required: "กรุณากรอกตัวอักษรตัวที่เห็นในภาพ",
+            remote: "กรุณากรอกตัวอักษรให้ตรงกับภาพ"
+        }
+    }
+    });
+    
+    // เช็คชื่อศูนย์เด็กเล็กซ้ำ
+    $( "input[name=name]").keyup(function() {
+    	$.post('users/check_nursery',{
+    		nursery_name : $('input[name=name]').val()
+    	},function(data){
+    		$('.nursery_alert').html(data);
+    	});
+	});
+	
 });
 </script>
 
@@ -35,6 +98,8 @@ $(document).ready(function(){
 		  <li><a href="users/register">เจ้าหน้าที่สาธารณสุข</a></li>
 		  <li class="active"><a href="users/register_center">เจ้าหน้าที่ศูนย์</a></li>
 		</ul>
+		
+		<span class='nursery_alert' style="color:#CC181E;"></span>
 
         <form id="regisform" class="form-horizontal" method="post" action="users/signup_center">
         	
@@ -149,10 +214,10 @@ $(document).ready(function(){
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="inputCaptcha">รหัสลับ <span class="TxtRed">*</span></label>
+                <label class="control-label" for="inputCaptcha">captcha <span class="TxtRed">*</span></label>
                 <div class="controls">
                   <img src="users/captcha" /><Br>
-                  <input class="input-small" type="text" name="captcha" id="inputCaptcha" placeholder="รหัสลับ">
+                  <input class="input-small" type="text" name="captcha" id="inputCaptcha">
                 </div>
             </div>
             <div class="control-group">

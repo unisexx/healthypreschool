@@ -18,6 +18,7 @@ $(document).ready(function(){
 	    $('.c33point').html(b);
 	    total();
 	});
+	
 });
 
 function total(){

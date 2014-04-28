@@ -29,8 +29,9 @@ class Diseases extends Public_Controller{
 	
 	function save(){
 		if($_POST){
-			$disease = new Disease();
-			$disease->where('nursery_id = '.$_POST['nursery_id'][0].' and classroom_id = '.$_POST['classroom_id'][0])->delete();
+			// $disease = new Disease();
+			// $disease->where('nursery_id = '.$_POST['nursery_id'][0].' and classroom_id = '.$_POST['classroom_id'][0])->get();
+			// $disease->delete_all();
 			
 			if(isset($_POST['classroom_detail_id'])){
 				foreach($_POST['classroom_detail_id'] as $key=>$item){
@@ -47,7 +48,7 @@ class Diseases extends Public_Controller{
 					$data['c4'] = $_POST['c4'][$key];
 					$data['c5'] = $_POST['c5'][$key];
 					
-					$disease = new Disease();
+					$disease = new Disease($_POST['id'][$key]);
 					$disease->from_array($data);
 					$disease->save();
 					$data = array();

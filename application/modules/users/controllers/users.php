@@ -89,6 +89,22 @@ class Users extends Public_Controller{
 			echo ($user->email)?"false":"true";
 		}
     }
+	
+	function check_nursery(){
+		$nurseries = new Nursery();
+		$nurseries->where('name = "'.$_POST['nursery_name'].'"')->get();
+		if($nurseries->exists())
+		{
+			echo "<div style='border:1px dashed #888; padding:7px; margin-bottom:10px;'>";
+			echo "พบศูนย์เด็กเล็กที่มีชื่อตรงกันอยู่ ".$nurseries->result_count()." ศูนย์";
+			echo "<ul>";
+			foreach($nurseries as $row){
+			echo "<li>".$row->nursery_category->title.$row->name.' ตำบล'.$row->district->district_name.' อำเภอ'.$row->amphur->amphur_name.' จังหวัด'.$row->province->name."</li>";
+			}
+			echo "</ul>";
+			echo "</div>";
+		}
+	}
     
     function check_captcha()
     {
@@ -114,8 +130,8 @@ class Users extends Public_Controller{
             if(login($_POST['email'], $_POST['password']))
             {
                 set_notify('success', 'ยินดีต้อนรับเข้าสู่ระบบค่ะ');
-				redirect('nurseries/register');
-                //redirect($_SERVER['HTTP_REFERER']);
+				//redirect('nurseries/register');
+                redirect($_SERVER['HTTP_REFERER']);
             }
             else
             {

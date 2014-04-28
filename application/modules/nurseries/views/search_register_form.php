@@ -28,10 +28,10 @@ $(document).ready(function(){
 		{ 
 			required: true
 		},
-		nursery_category_id: 
-		{ 
-			required: true
-		},
+		// nursery_category_id: 
+		// { 
+			// required: true
+		// },
 		number: 
 		{ 
 			required: true
@@ -93,10 +93,10 @@ $(document).ready(function(){
 		{
 			required: "กรุณาเลือกสคร.ค่ะ"
 		},
-		nursery_category_id:
-		{
-			required: "กรุณาเลือกคำนำหน้าค่ะ"
-		},
+		// nursery_category_id:
+		// {
+			// required: "กรุณาเลือกคำนำหน้าค่ะ"
+		// },
 		number:
 		{
 			required: "กรุณากรอกเลขที่"
@@ -168,10 +168,10 @@ $(document).ready(function(){
                    <th>ปีที่เข้าร่วมโครงการ<strong> <span class="TxtRed">*</span></strong></th>
                    <td><?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),$nursery->year)?></td>
                  </tr>
-                 <tr>
+                 <!-- <tr>
                  	<th>คำนำหน้า<strong> <span class="TxtRed">*</span></strong></th>
                  	<td><?php echo  form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),$nursery->nursery_category_id,'','--- เลือกประเภท ---')?></td>
-                 </tr>
+                 </tr> -->
         	    <tr>
         	      <th>ชื่อศูนย์เด็กเล็ก<strong> <span class="TxtRed">*</span></strong></th>
         	      <td><input type="text" name="name" value="<?=$nursery->name?>" id="textfield"  style="width:350px;"/></td>

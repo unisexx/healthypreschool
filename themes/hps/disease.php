@@ -1,8 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<base href="<?php echo base_url(); ?>" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>ศูนย์เด็กเล็กปลอดโรค</title>
+<title><?php echo $template['title'] ?></title>
+<?php echo $template['metadata'] ?>
 <style type="text/css">
 @charset "utf-8";
 /*
@@ -33,6 +35,7 @@ a:hover {color:#0190fe;}
 .officer ul li a { display:block;  margin:0; padding-right:10px; padding-left:10px; font-size:13px;  font-weight:bold; color:#686868; text-decoration:none; text-align:center;}
 .officer ul li.active a, .officer ul li a:hover{ padding:0px; padding-left:10px; padding-right:10px; margin:0; color:#4993ec}
 </style>
+<? include "_script.php";?>
 </head>
 
 

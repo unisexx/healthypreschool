@@ -30,7 +30,7 @@
 	                    <?php endif;?>
 	                    
 	                    <?php if(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก ?>
-	                    	<a href="diseases">แบบคัดกรองโรค</a> <span class="divider">/</span> <a href="classrooms">ห้องเรียน ชั้นเรียน และเด็ก</a>
+	                    	<a href="classrooms">ห้องเรียน ชั้นเรียน และเด็ก</a> <span class="divider">/</span> <a href="diseases/form?nursery_id=<?=user_login()->nursery_id?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=date("m")?>&year=<?=date("Y")+543?>" target="_blank">แบบคัดกรองโรค</a>
 	                    <?php endif;?>
 	                    </b>
 	                <?php else:?>

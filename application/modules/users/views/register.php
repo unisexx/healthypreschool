@@ -232,10 +232,10 @@ $(function(){
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="inputCaptcha">รหัสลับ <span class="TxtRed">*</span></label>
+                <label class="control-label" for="inputCaptcha">captcha <span class="TxtRed">*</span></label>
                 <div class="controls">
                   <img src="users/captcha" /><Br>
-                  <input class="input-small" type="text" name="captcha" id="inputCaptcha" placeholder="รหัสลับ">
+                  <input class="input-small" type="text" name="captcha" id="inputCaptcha">
                 </div>
             </div>
             <div class="control-group">
