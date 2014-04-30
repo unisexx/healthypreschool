@@ -140,16 +140,16 @@ $(function(){
   <li class="active">สมัครสมาชิก</li>
 </ul>
 
-<h1>สมัครสมาชิก</h1>
+<h1>เจ้าหน้าที่สาธารณะสุข</h1>
 <br>
 
 <div class="row">
     <div class="span9">
     	
-    	<ul class="nav nav-tabs home-nav-tabs estimate-tab">
+    	<!-- <ul class="nav nav-tabs home-nav-tabs estimate-tab">
 		  <li class="active"><a href="users/register">เจ้าหน้าที่สาธารณสุข</a></li>
 		  <li><a href="users/register_center">เจ้าหน้าที่ศูนย์</a></li>
-		</ul>
+		</ul> -->
 	
     	<div class="alert alert-info" style="width:600px;">
 		  <button type="button" class="close" data-dismiss="alert">&times;</button>

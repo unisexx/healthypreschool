@@ -55,13 +55,13 @@
   </tr>
   <tr bgcolor="#cce5fe">
   	<?for($i=1;$i<=31;$i++):?>
-  	<td width="2%" align="center"><?=$i?></td>
+  	<td width="2%" align="center" <?=date('j') == $i && date('m') == $_GET['month'] ? "style='background:#A2B1BF'" : "" ;?>><?=$i?></td>
   	<?endfor;?>
   </tr>
   <?foreach($childs as $key=>$row):?>
   <tr>
   	<td align="center" valign="top" ><?=$key+1?></td>
-    <td valign="top"><?=$row->title?> <?=$row->child_name?></td>
+    <td valign="top" style="white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"><?=$row->title?> <?=$row->child_name?></td>
     <?for($i=1;$i<=31;$i++):?>
     <?php
     	$sql = "select * from diseases where 
@@ -80,12 +80,12 @@
     	<!-- <?=$sql?>
     	<?=$disease->id?> -->
     	<select name="c1[]" style="margin-bottom:5px;">
-    	  <option value="-">-</option>
-    	  <option value="C" <?=($disease->c1 == 'C')?'selected':'';?>>C</option>
-    	  <option value="H" <?=($disease->c1 == 'H')?'selected':'';?>>H</option>
-    	  <option value="D" <?=($disease->c1 == 'D')?'selected':'';?>>D</option>
+    	  <option value="-"></option>
+    	  <option value="C" <?=($disease->c1 == 'C')?'selected':'';?>>หวัด</option>
+    	  <option value="H" <?=($disease->c1 == 'H')?'selected':'';?>>มือ เท้า ปาก</option>
+    	  <option value="D" <?=($disease->c1 == 'D')?'selected':'';?>>อุจจาระร่วงเฉียบพลัน</option>
     	</select>
-    	<select name="c2[]" style="margin-bottom:5px;">
+    	<!-- <select name="c2[]" style="margin-bottom:5px;">
     	  <option value="-">-</option>
     	  <option value="0" <?=($disease->c2 == '0')?'selected':'';?>>0</option>
     	  <option value="1" <?=($disease->c2 == '1')?'selected':'';?>>1</option>
@@ -103,7 +103,7 @@
     	<select name="c5[]" style="margin-bottom:5px;">
     	  <option value="-">-</option>
     	  <option value="*" <?=($disease->c5 == '*')?'selected':'';?>>*</option>
-        </select>
+        </select> -->
         <input type="hidden" name="nursery_id[]" value="<?=$_GET['nursery_id']?>">
         <input type="hidden" name="classroom_id[]" value="<?=$_GET['classroom_id']?>">
         <input type="hidden" name="classroom_detail_id[]" value="<?=$row->id?>">
@@ -121,12 +121,15 @@
 <div style="text-align: center; padding:5px;"><input type="submit" value=" บันทึก "></div>
 </form>
 
-<h3>หมายเหตุ : สัญลักษณ์ในการบันทึกข้อมูล</h3>
+<!-- <h3>หมายเหตุ : สัญลักษณ์ในการบันทึกข้อมูล</h3>
 <ol>
 	<li>โรคที่พบบ่อย : หวัด = C, มือ เท้า ปาก = H, อุจจาระร่วงเฉียบพลัน = D</li>
 	<li>การแยกเด็กป่วย : ไม่มีการแยกนอนแยกเล่น = 0, แยกนอน = 1, แยกเล่น = 2</li>
 	<li>ไม่มาเรียนให้ทำเครื่องหมาย x หากหยุดเรียนให้ใส่สัญลักษณ์โรค /</li>
 	<li>กรณีเด็กได้ยารักษามาจากบ้าน 0</li>
 	<li>กรณีมีคนที่บ้านป่วยด้วยโรคเดียวกันก่อนเด็กป่วย ให้ทำเครื่องหมาย *</li>
-</ol>
+</ol> -->
 <?endif;?>
+
+<?//=cal_days_in_month(CAL_GREGORIAN, $_GET['month'], $_GET['year']);?>
+<?//=date('m')?>

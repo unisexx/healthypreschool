@@ -1,66 +1,115 @@
 <div class="col1">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td width="250" height="250" class="bg_login2">
-        <div id="login">
+        <!-- <td width="250" height="250" class="bg_login2"> -->
+        <td background="themes/hps/images/bg_col1.png">
+        <!-- <div id="login"> -->
+        <div>
 			<?php if(is_login()):?>
-                <div>สวัสดี : <?php echo user_login()->email ?></div>
-                <div>ประเภท : <?=user_login()->user_type->name?> <?php 
-                    if(user_login()->user_type_id == 6){
-                        echo user_login()->area->area_name;
-                    }elseif(user_login()->user_type_id == 7){
-                        echo user_login()->province->name;
-                    }elseif(user_login()->user_type_id == 8){
-                        echo user_login()->amphur->amphur_name;
-                    }
-                ?></div>
-                <div class="login-menu">
-                	<?php if(user_login()->m_status == 'active'):?>
-	                	<b> 
-	                	<?php if(user_login()->user_type_id == 1 or user_login()->user_type_id == 6 or user_login()->user_type_id == 7 or user_login()->user_type_id == 8):?>
-	                	<a href="nurseries">ศูนย์เด็กเล็ก</a>
-	                	<?php endif;?>
-	                	
-	                    <?php if(user_login()->user_type_id == 1 or user_login()->user_type_id == 6 or user_login()->user_type_id == 7):?>
-	                        <span class="divider">/</span> <a href="officers">ตรวจสอบรายชื่อ</a>
-	                    <?php endif;?>
-	                    
-	                    <?php if(user_login()->user_type_id == 9): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก ?>
-	                    	<a href="teachers">จัดการครู / ผู้ดูแลเด็ก</a>
-	                    <?php endif;?>
-	                    
-	                    <?php if(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก ?>
-	                    	<a href="classrooms">ห้องเรียน ชั้นเรียน และเด็ก</a> <span class="divider">/</span> <a href="diseases/form?nursery_id=<?=user_login()->nursery_id?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=date("m")?>&year=<?=date("Y")+543?>" target="_blank">แบบคัดกรองโรค</a>
-	                    <?php endif;?>
-	                    </b>
-	                <?php else:?>
-	                	สถานะ : <span style="color:orangered;">รอการตรวจสอบ</span>
-	                <?php endif;?>
-                </div>
-                <hr class="lineRegis" style="margin-top:5px;">
-					<div class="Chick" style="padding-left:45px;">
+				<div style="padding:10px 0 0 15px;">
+	                <div>สวัสดี : <?php echo user_login()->email ?></div>
+	                <div>ประเภท : <?=user_login()->user_type->name?> <?php 
+	                    if(user_login()->user_type_id == 6){
+	                        echo user_login()->area->area_name;
+	                    }elseif(user_login()->user_type_id == 7){
+	                        echo user_login()->province->name;
+	                    }elseif(user_login()->user_type_id == 8){
+	                        echo user_login()->amphur->amphur_name;
+	                    }
+	                ?></div>
+	                <div class="login-menu">
+	                	<?php if(user_login()->m_status == 'active'):?>
+		                	<b> 
+		                	<?php if(user_login()->user_type_id == 1 or user_login()->user_type_id == 6 or user_login()->user_type_id == 7 or user_login()->user_type_id == 8):?>
+		                	<a href="nurseries">ศูนย์เด็กเล็ก</a>
+		                	<?php endif;?>
+		                	
+		                    <?php if(user_login()->user_type_id == 1 or user_login()->user_type_id == 6 or user_login()->user_type_id == 7):?>
+		                        <span class="divider">/</span> <a href="officers">ตรวจสอบรายชื่อ</a>
+		                    <?php endif;?>
+		                    
+		                    <?php if(user_login()->user_type_id == 9): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก ?>
+		                    	<a href="teachers">จัดการครู / ผู้ดูแลเด็ก</a>
+		                    <?php endif;?>
+		                    
+		                    <?php if(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก ?>
+		                    	<a href="classrooms">ห้องเรียน ชั้นเรียน และเด็ก</a> <span class="divider">/</span> <a href="diseases/form?nursery_id=<?=user_login()->nursery_id?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=date("m")?>&year=<?=date("Y")+543?>" target="_blank">แบบคัดกรองโรค</a>
+		                    <?php endif;?>
+		                    </b>
+		                <?php else:?>
+		                	สถานะ : <span style="color:orangered;">รอการตรวจสอบ</span>
+		                <?php endif;?>
+	                </div>
+					<!-- <div class="Chick" style="padding-left:45px;"> -->
+					<label style="padding-left:45px;">
 						<a href="users/edit_profile"><div class="btn btn-mini">แก้ไขข้อมูล</div></a>
-						<a href="users/logout"><div class="btn btn-mini btn-info">logout</div></a>
+						<a href="users/logout"><div class="btn btn-mini btn-info">ล็อกเอ้า</div></a>
 					</div>
+				</div>
             <?php else:?>
-                <form action="users/login" method="post">
-					<div>
+            	<style type="text/css">
+            	 #loginfrm .controls{margin-left:65px;}
+            	 #loginfrm .control-label{width:73px;}
+            	 #loginfrm .control-group{margin-bottom:0px;}
+            	</style>
+            	<h5 style="margin-left: 10px;"><u>เข้าสู่ระบบ</u></h5>
+                <form id="loginfrm" action="users/login" method="post"  class="form-horizontal">
+                	<div class="control-group">
+					    <label class="control-label" for="inputEmail">อีเมล์:</label>
+					    <div class="controls">
+					      <input type="text" id="inputEmail" class="input_boxLogin input-medium" name="email">
+					    </div>
+					</div>
+					<div class="control-group">
+					    <label class="control-label" for="inputPassword">รหัสผ่าน:</label>
+					    <div class="controls">
+					      <input type="password" id="inputPassword" class="input_boxLogin input-medium" name="password">
+					    </div>
+					</div>
+					<div class="control-group">
+					    <label class="control-label" for="inputType">ประเภท:</label>
+					    <div style="float:left; margin-left: 15px;">
+					      <select class="span2" style="height:25px;" name="user_type_id">
+					      	<option value="1">ผู้ดูแลระบบ</option>
+					      	<option value="6">เจ้าหน้าที่ประจำเขต</option>
+					      	<option value="7">เจ้าหน้าที่ประจำจังหวัด</option>
+					      	<option value="8">เจ้าหน้าที่ประจำอำเภอ</option>
+					      	<option value="9">เจ้าหน้าที่ศูนย์</option>
+					      	<option value="10">ครู / ผู้ดูแลเด็ก</option>
+					      </select>
+					    </div>
+					</div>
+					<!-- <div>
 						<input type="text" name="email" value="" class="input_boxLogin input-small" placeholder="E-mail">
 					</div><br clear="all">
 					<div>
 						<input type="password" name="password" value=""  class="input_boxLogin input-small" placeholder="Password">
-					</div>
+					</div> -->
 		            <!-- <input type="submit" value="" class="btn_login" ><div class="clr"></div> -->
-		            <input type="submit" class="btn btn-info btn_login" value="login">
-		            <hr class="lineRegis" style="margin-top:5px;">
-					<label class="Chick" style="padding-left:35px;">
+		            <input type="submit" class="btn btn-info btn-mini" value="ล็อกอิน" style="margin-left:88px;"> <a href="users/forget_pass"><div class="btn btn-mini">ลืมรหัสผ่าน</div></a>
+					<!-- <label class="Chick" style="padding-left:35px;"> -->
+					<!-- <label style="padding-left:60px;">
 						<a href="users/register"><div class="btn btn-mini">ลงทะเบียน</div></a>
 						<a href="users/forget_pass"><div class="btn btn-mini">ลืมรหัสผ่าน</div></a>
-					</label>
+					</label> -->
 				</form>
             <?php endif;?>
+            <hr>
 		</div>
         
+        </td>
+      </tr>
+       <tr>
+        <td background="themes/hps/images/bg_col1.png">
+        	<h5 style="margin:0 0 0 10px;" ><u>ลงทะเบียน</u></h5>
+        	<div class="menuleft">
+	         <ul>
+	            <li><a href="users/register">เจ้าหน้าที่สาธารณะสุข</a></li>
+	            <li><a href="users/register_center">เจ้าหน้าที่ศูนย์</a></li>
+	            <!-- <li><a href="nurseries/searchs">เจ้าหน้าที่โรงเรียน</a></li> -->
+	         </ul>
+	         </div>
+	         <hr>
         </td>
       </tr>
       <tr>

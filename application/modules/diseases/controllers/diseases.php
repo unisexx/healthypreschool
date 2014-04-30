@@ -43,10 +43,10 @@ class Diseases extends Public_Controller{
 					$data['month'] = $_POST['month'][$key];
 					$data['year'] = $_POST['year'][$key];
 					$data['c1'] = $_POST['c1'][$key];
-					$data['c2'] = $_POST['c2'][$key];
-					$data['c3'] = $_POST['c3'][$key];
-					$data['c4'] = $_POST['c4'][$key];
-					$data['c5'] = $_POST['c5'][$key];
+					// $data['c2'] = $_POST['c2'][$key];
+					// $data['c3'] = $_POST['c3'][$key];
+					// $data['c4'] = $_POST['c4'][$key];
+					// $data['c5'] = $_POST['c5'][$key];
 					
 					$disease = new Disease($_POST['id'][$key]);
 					$disease->from_array($data);

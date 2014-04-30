@@ -1,10 +1,10 @@
 <?php
 
-function login($email,$password)
+function login($email,$password,$user_type_id)
 {
 	$CI =& get_instance();
 	$user = new User();
-	$user->where(array('email'=>$email,'password'=>$password))->get();
+	$user->where(array('email'=>$email,'password'=>$password,'user_type_id'=>$user_type_id))->get();
 	if($user->exists())
 	{
 		$CI->session->set_userdata('id',$user->id);

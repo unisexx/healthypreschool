@@ -9,29 +9,33 @@ class Users extends Public_Controller{
         $this->template->build('register');
     }
 	
-	function register_center(){ // เจ้าหน้าที่ศูนย์
-		$this->template->build('register_center');
+	function register_center($id=false){ // เจ้าหน้าที่ศูนย์
+		$data['nursery'] = new Nursery($id);
+		$this->template->build('register_center',$data);
 	}
 	
-	function signup_center(){
+	function signup_center($id=false){
 		if($_POST){
 			$captcha = $this->session->userdata('captcha');
 			if(($_POST['captcha'] == $captcha) && !empty($captcha)){
 				
-				$nursery = new Nursery();
+				$nursery = new Nursery($id);
 				$nursery->from_array($_POST);
 				$nursery->save();
 				
-				$nursery = new Nursery();
-				$nursery->order_by('id','desc')->get(1);
+				if(!$id){
+					$nursery = new Nursery();
+					$nursery->order_by('id','desc')->get(1);
+				}
 				
 				$_POST['nursery_id'] = $nursery->id;
+				$_POST['m_status'] = 'active';
 				
 				$user = new User();
 	            $user->from_array($_POST);
 	            $user->save();
 				
-				set_notify('success', 'สมัครสมาชิกเรียบร้อย');
+				set_notify('success', 'ลงทะเบียนเรียบร้อย');
 			}else{
 				
 				set_notify('error','กรอกรหัสไม่ถูกต้อง');
@@ -92,17 +96,20 @@ class Users extends Public_Controller{
 	
 	function check_nursery(){
 		$nurseries = new Nursery();
-		$nurseries->where('name = "'.$_POST['nursery_name'].'"')->get();
-		if($nurseries->exists())
-		{
-			echo "<div style='border:1px dashed #888; padding:7px; margin-bottom:10px;'>";
-			echo "พบศูนย์เด็กเล็กที่มีชื่อตรงกันอยู่ ".$nurseries->result_count()." ศูนย์";
-			echo "<ul>";
-			foreach($nurseries as $row){
-			echo "<li>".$row->nursery_category->title.$row->name.' ตำบล'.$row->district->district_name.' อำเภอ'.$row->amphur->amphur_name.' จังหวัด'.$row->province->name."</li>";
+		if(strlen($_GET['nursery_name']) > 4){
+			
+			$nurseries->where('name like "%'.$_GET['nursery_name'].'%"')->get();
+			if($nurseries->exists())
+			{
+				echo "<div style='border:1px dashed #888; padding:7px; margin-bottom:10px;'>";
+				echo "พบศูนย์เด็กเล็กที่มีชื่อตรงกันอยู่ ".$nurseries->result_count()." ศูนย์";
+				echo "<ul>";
+				foreach($nurseries as $row){
+				echo "<li>".$row->nursery_category->title.$row->name.' ตำบล'.$row->district->district_name.' อำเภอ'.$row->amphur->amphur_name.' จังหวัด'.$row->province->name."<a href='users/register_center/".$row->id."'>ลงทะเบียน</a></li>";
+				}
+				echo "</ul>";
+				echo "</div>";
 			}
-			echo "</ul>";
-			echo "</div>";
 		}
 	}
     
@@ -127,7 +134,7 @@ class Users extends Public_Controller{
     {
         if($_POST)
         {
-            if(login($_POST['email'], $_POST['password']))
+            if(login($_POST['email'], $_POST['password'], $_POST['user_type_id']))
             {
                 set_notify('success', 'ยินดีต้อนรับเข้าสู่ระบบค่ะ');
 				//redirect('nurseries/register');
