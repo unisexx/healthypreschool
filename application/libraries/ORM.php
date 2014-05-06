@@ -1,10 +1,18 @@
 <?php
+/*
+ * Author: Yotsakon Pitinanon
+ * Email: iyottt@gmail.com
+ * Version: 1.1
+ */
 class ORM extends DataMapper
 {
 	public $handle = NULL;
 	public $filename = NULL;
 	public $sql = NULL;
-	public $watermark = array();
+    public $watermark = array();
+    
+    public $sql_page_total = null;
+    public $sql_pagination = null;
 	
 	function __construct($id = NULL)
     {
@@ -17,12 +25,13 @@ class ORM extends DataMapper
 		return $this;
 	}
 	
-	public function get_page($page_size = 15, $page_num_by_rows = FALSE, $info_object = 'paged', $iterated = FALSE)
+	public function get_page($page_size = 20, $page_num_by_rows = FALSE, $info_object = 'paged', $iterated = FALSE)
 	{
 		$page = @$_GET['page'];
 		// first, duplicate this query, so we have a copy for the query
 		$count_query = $this->get_clone(TRUE);
-
+		$clone = $this->get_clone(TRUE);
+		
 		if($page_num_by_rows)
 		{
 			$page = 1 + floor(intval($page) / $page_size);
@@ -53,24 +62,27 @@ class ORM extends DataMapper
 		if($iterated)
 		{
 			$this->get_iterated($page_size, $offset);
+			$clone->get();
 		}
 		else if($this->sql)
 		{
-			$query = $this->db->query($this->sql." limit $offset,$page_size");		
+			$clone->query($this->sql);			
+			$query = $this->db->query($this->sql." limit $offset,$page_size");	
 			$this->_process_query($query);	
 		}
 		else
 		{
 			$this->get($page_size, $offset);
+			$clone->get();
 		}
-
+		
 		$this->{$info_object} = new stdClass();
 
 		$this->{$info_object}->page_size = $page_size;
 		$this->{$info_object}->items_on_page = $this->result_count();
 		$this->{$info_object}->current_page = $page;
 		$this->{$info_object}->current_row = $offset;
-		$this->{$info_object}->total_rows = $total;
+		$this->{$info_object}->total_rows = $clone->result_count();;
 		$this->{$info_object}->last_row = $last_row;
 		$this->{$info_object}->total_pages = $total_pages;
 		$this->{$info_object}->has_previous = $offset > 0;
@@ -97,6 +109,22 @@ class ORM extends DataMapper
 		$page->Items($this->paged->total_rows);
 		return $page->show();
 	}
+    
+    function sql_page($sql, $limit = 20)
+    {
+        $db = get_instance()->db;
+        $this->sql_page_total = $db->query($sql)->num_rows();
+        
+        $this->load->library('pagination');
+        $page = new pagination();
+        $page->target(preg_replace('/([&?]+page=[0-9]+)/i', '',  $_SERVER['REQUEST_URI']));
+        $page->limit($limit);
+        @$page->currentPage($_GET['page']);
+        $page->Items($this->sql_page_total);
+        $this->sql_pagination = $page->show();
+        $c_page = ($page->page == 1) ? 0 : ($page->page-1) * $page->limit; 
+        return $db->query($sql.' limit '.$c_page.','.$page->limit)->result();
+    }
 	
 	function counter($field = 'counter')
 	{
@@ -109,23 +137,23 @@ class ORM extends DataMapper
 		if($file['name'])
 		{
 			ini_set("max_execution_time","600");
-			ini_set("memory_limit","12M");
+			ini_set("memory_limit","-1");
 			$this->filename = uniqid();
 			$this->load->library('uploader');
 			$handle = new Uploader();
 			$handle->Upload($file);
 			$this->handle =& $handle;
+            if(!empty($this->watermark['image']))
+            {
+                $this->handle->image_watermark = 'uploads/watermark/'.$this->watermark['image'];
+                $this->handle->image_watermark_position = $this->watermark['position'];
+            }
 			if($width)
 			{
 				return $this->thumb($path, $width, $height, $ratio);
 			} 
 			else
 			{
-				if(!empty($this->watermark['image']))
-				{
-					$this->handle->image_watermark = 'uploads/icon/watermark/'.$this->watermark['image'];
-					$this->handle->image_watermark_position = $this->watermark['position'];
-				}
 				$this->handle->file_new_name_body = $this->filename; 
 				$this->handle->process($path);
 				if($this->handle->processed) 
@@ -168,6 +196,15 @@ class ORM extends DataMapper
 			}
 		}
 	}
+    
+    public function watermark($image, $position)
+    {
+        $this->watermark = array(
+            'image' => $image,
+            'position' => $position
+        );
+        return $this;
+    }
 	
 	function delete_file($path,$field = 'image')
 	{
@@ -175,14 +212,30 @@ class ORM extends DataMapper
 		@unlink($path.$this->$field);
 	}
 	
-	public function watermark($image, $position)
-	{
-		$this->watermark = array(
-			'image' => $image,
-			'position' => $position
-		);
-		return $this;
-	}
-	
+    /*
+     * $config = arrray('field' => 'model');
+     */
+    function get_order($config = null)
+    {
+        if(!empty($_GET['order']) and !empty($_GET['sort']))
+        {
+            if ($this->db->field_exists($_GET['order'], $this->table))
+            {
+                $field = $this->db->query('select '.$_GET['order'].' from '.$this->table.' limit 1')->field_data();
+                $order = ($field[0]->type) ? 'CONVERT('.$_GET['order'].' USING TIS620)' : $_GET['order'];
+                $this->order_by($order, $_GET['sort']);   
+            }
+            else if(is_array($config))
+            {
+                $class = $config[$_GET['order']];
+                $obj = new $class;
+                $field = $this->db->query('select '.$_GET['order'].' from '.$obj->table.' limit 1')->field_data();
+                $order = ($field[0]->type) 
+                ? $this->order_by_func('CONVERT', array('@'.$class.'/'.$_GET['order'], '[USING TIS620]'),$_GET['sort']) 
+                : $this->order_by($order, $_GET['sort']);
+            }           
+        }
+        return $this;
+    }
 }
 ?>

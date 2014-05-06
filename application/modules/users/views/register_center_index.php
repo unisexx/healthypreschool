@@ -20,12 +20,12 @@ $(document).ready(function(){
 </script>
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</li>
+  <li class="active">ลงทะเบียนเจ้าหน้าที่ศูนย์</li>
 </ul>
     <div id="data">
-    	<div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</div>
+    	<div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">ค้นหาข้อมูลศูนย์เด็กเล็กของคุณ</div>
     	
-    	<form method="get" action="nurseries/searchs">
+    	<form method="get" action="users/register_center">
 	    	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
 	    		<?//=form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),@$_GET['nursery_category_id'],'','--- เลือกคำนำหน้า ---');?>
 	    		<input name="name" type="text" value="<?=@$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:280px;"/>
@@ -51,31 +51,31 @@ $(document).ready(function(){
 <?php if($_GET):?>
 	ผลการค้นหาพบทั้งหมด <?=$count?> แห่ง
         <div style="float:right; padding:10px 0;">
-        	<a href="nurseries/searchs/register_form"><div class="btn">เพิ่มศูนย์เด็กเล็ก</div></a>
+        	<a href="users/register_center_form"><div class="btn">ลงทะเบียนศูนย์ใหม่</div></a>
         </div>
     	<table class="table">
         <tr>
 	        <th>ลำดับ</th>
 	        <th>ชื่อศุนย์พัฒนาเด็กเล็ก</th>
 	        <th>ที่อยู่</th>
-	        <th>ปีที่เข้าร่วม</th>
-	        <th>หัวหน้าศูนย์</th>
+	        <!-- <th>ปีที่เข้าร่วม</th>
+	        <th>หัวหน้าศูนย์</th> -->
 	        <th>ผลการประเมิน</th>
         </tr>
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
 		        <td><?=($key+1)+$nurseries->paged->current_row?></td>
 		        <td><?=$nursery->title?><?=$nursery->name?></td>
-		        <td>ต.<?=$nursery->district_name?><br>อ.<?=$nursery->amphur_name?><br>จ.<?=$nursery->province_name?></td>
-		        <td><?=$nursery->year?></td>
+		        <td style="white-space: nowrap; overflow: hidden; text-overflow:ellipsis;">ต.<?=$nursery->district_name?> อ.<?=$nursery->amphur_name?> จ.<?=$nursery->province_name?></td>
+		        <!-- <td><?=$nursery->year?></td>
 		        <td>
 		        	<?php if($nursery->p_title == "นาย"):?>
 		        		<img class="icon-boy" src="themes/hps/images/boy.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
 		        	<?php else:?>
 		        		<img class="icon-girl" src="themes/hps/images/girl.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
 		        	<?php endif;?>
-		        </td>
-		        <td><?=($nursery->status == 0)?"รอการประเมิน":"ผ่านเกณฑ์ <br>(พ.ศ. ".$nursery->approve_year.")";?></td>
+		        </td> -->
+		        <td><a href="users/register_center_form/<?=$nursery->id?>" class="btn btn-mini">ลงทะเบียน</a></td>
 	        </tr>
 		<?php endforeach;?>
         </table>

@@ -110,12 +110,12 @@ $(function(){
            break;
            case '3':
 			$("#amphur").show();
-			$("#province,#area,#district").hide();
+			$("#area,#district").hide();
 			$("select[name=province_id],select[name=area_id],select[name=district_id]").val("0");
            break;
            case '4':
 			$("#district").show();
-			$("#province,#amphur,#area").hide();
+			$("#area").hide();
 			$("select[name=province_id],select[name=amphur_id],select[name=area_id]").val("0");
            break;
 		}
@@ -153,7 +153,7 @@ $(function(){
     	
 <form method="get" action="nurseries/reports/index/basic_column">
 	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-	<?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),@$_GET['year'],'','--- เลือกปี ---');?>
+	<?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),@$_GET['year'],'','--- ทุกปี ---');?>
 		
 	<?=form_dropdown('type',array('1'=>'สคร.','2'=>'จังหวัด','3'=>'อำเภอ','4'=>'ตำบล'),@$_GET['type'],'','--- แยกตาม ---');?>
 	
@@ -162,15 +162,15 @@ $(function(){
 	</span>
 	
 	<span id="province" <?=(@$_GET['province_id'] == "")?'style="display:none;"':'';?>>
-	<?php echo form_dropdown('province_id',get_option('id','name','provinces'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
+	<?php echo form_dropdown('province_id',get_option('id','name','provinces','order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
 	</span>
    	
 	<span id="amphur" <?=(@$_GET['amphur_id'] == "")?'style="display:none;"':'';?>>
-		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
+		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
 	</span>
 	
 	<span id="district" <?=(@$_GET['district_id'] == "")?'style="display:none;"':'';?>>
-		<?=form_dropdown('district_id',get_option('id','district_name','districts'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
+		<?=form_dropdown('district_id',get_option('id','district_name','districts','order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
 	</span>
 	
       <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">

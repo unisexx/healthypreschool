@@ -128,13 +128,13 @@ class Nurseries extends Public_Controller
 	
 	function get_amphur(){
 		if($_POST){
-			echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.$_POST['province_id'].' order by id asc'),'','','--- เลือกอำเภอ ---');
+			echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.$_POST['province_id'].' order by amphur_name asc'),'','','--- เลือกอำเภอ ---');
 		}
 	}
 	
 	function get_district(){
 		if($_POST){
-			echo form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.$_POST['amphur_id'].' order by id asc'),'','','--- เลือกตำบล ---');
+			echo form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.$_POST['amphur_id'].' order by district_name asc'),'','','--- เลือกตำบล ---');
 		}
 	}
 	

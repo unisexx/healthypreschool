@@ -140,12 +140,9 @@ $(function(){
   <li class="active">สมัครสมาชิก</li>
 </ul>
 
-<h1>เจ้าหน้าที่สาธารณะสุข</h1>
-<br>
-
-<div class="row">
-    <div class="span9">
-    	
+<div id="data">
+	<div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">เจ้าหน้าที่สาธารณะสุข</div>
+	
     	<!-- <ul class="nav nav-tabs home-nav-tabs estimate-tab">
 		  <li class="active"><a href="users/register">เจ้าหน้าที่สาธารณสุข</a></li>
 		  <li><a href="users/register_center">เจ้าหน้าที่ศูนย์</a></li>
@@ -244,5 +241,4 @@ $(function(){
                 </div>
             </div>
         </form>
-    </div>
 </div>

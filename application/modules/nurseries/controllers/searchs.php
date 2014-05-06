@@ -4,18 +4,45 @@ class Searchs extends Public_Controller
 	function __construct()
 	{
 		parent::__construct();
+		ini_set('memory_limit', '-1');
 	}
 
 	function index(){
-		$data['nurseries'] = new Nursery();
-		if(@$_GET['nursery_category_id'])$data['nurseries']->where("nursery_category_id = ".$_GET['nursery_category_id']);
-        if(@$_GET['name'])$data['nurseries']->where("name like '%".$_GET['name']."%'");
-		if(@$_GET['province_id'])$data['nurseries']->where('province_id',$_GET['province_id']);
-		if(@$_GET['amphur_id'])$data['nurseries']->where("amphur_id = ".$_GET['amphur_id']);
-		if(@$_GET['district_id'])$data['nurseries']->where("district_id = ".$_GET['district_id']);
+		// if(@$_GET['nursery_category_id'])$data['nurseries']->where("nursery_category_id = ".$_GET['nursery_category_id']);
+        // if(@$_GET['name'])$data['nurseries']->where("name like '%".$_GET['name']."%'");
+		// if(@$_GET['province_id'])$data['nurseries']->where('province_id',$_GET['province_id']);
+		// if(@$_GET['amphur_id'])$data['nurseries']->where("amphur_id = ".$_GET['amphur_id']);
+		// if(@$_GET['district_id'])$data['nurseries']->where("district_id = ".$_GET['district_id']);
 		
-		$data['nurseries']->order_by('id','desc')->get_page();
-		$data['count'] = $data['nurseries']->paged->total_rows;
+		$sql = "SELECT
+				nurseries.id,
+				nurseries.name,
+				nurseries.year,
+				nurseries.p_title,
+				nurseries.p_name,
+				nurseries.p_surname,
+				nurseries.status,
+				nurseries.approve_year,
+				nursery_categories.title,
+				districts.district_name,
+				amphures.amphur_name,
+				provinces.name province_name
+				FROM
+				nurseries
+				INNER JOIN nursery_categories ON nurseries.nursery_category_id = nursery_categories.id
+				INNER JOIN districts on nurseries.district_id = districts.id
+				INNER JOIN amphures on nurseries.amphur_id = amphures.id
+				INNER JOIN provinces on nurseries.province_id = provinces.id
+				WHERE 1=1";
+		if(@$_GET['name']) $sql .= ' and CONCAT(nursery_categories.title,nurseries.name) like "%'.$_GET['name'].'%"';
+		if(@$_GET['province_id']) $sql .= ' and nurseries.province_id = '.$_GET['province_id'];
+		if(@$_GET['amphur_id']) $sql .= ' and nurseries.amphur_id = '.$_GET['amphur_id'];
+		if(@$_GET['district_id']) $sql .= ' and nurseries.district_id = '.$_GET['district_id'];
+		$sql .= " ORDER BY nurseries.id DESC";
+		
+		$nurseries = new Nursery();
+		$data['nurseries'] = $nurseries->sql($sql)->get_page();
+		$data['count'] = $nurseries->paged->total_rows;
 		$this->template->build('search_index',$data);
 	}
 

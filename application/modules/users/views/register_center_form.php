@@ -73,39 +73,38 @@ $(document).ready(function(){
     
     
     // เช็คชื่อศูนย์เด็กเล็กซ้ำ (delay keyup)
-    var delay = (function(){
-	  var timer = 0;
-	  return function(callback, ms){
-	    clearTimeout (timer);
-	    timer = setTimeout(callback, ms);
-	  };
-	})();
-	
-	$('input[name=name]').keyup(function() {
-	    delay(function(){
-	      
-			$.get('users/check_nursery',{
-	    		nursery_name : $('input[name=name]').val()
-	    	},function(data){
-	    		$('.nursery_alert').html(data);
-	    	});
-	      
-	    }, 2500 );
-	});
+    // var delay = (function(){
+	  // var timer = 0;
+	  // return function(callback, ms){
+	    // clearTimeout (timer);
+	    // timer = setTimeout(callback, ms);
+	  // };
+	// })();
+// 	
+	// $('input[name=name]').keyup(function() {
+	    // delay(function(){
+// 	      
+			// $.get('users/check_nursery',{
+	    		// nursery_name : $('input[name=name]').val()
+	    	// },function(data){
+	    		// $('.nursery_alert').html(data);
+	    	// });
+// 	      
+	    // }, 2500 );
+	// });
 	
 });
 </script>
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active">สมัครสมาชิก</li>
+  <li><a href="users/register_center">ลงทะเบียนเจ้าหน้าที่ศูนย์</a> <span class="divider">/</span></li>
+  <li class="active"><?=$nursery->nursery_category->title?><?=$nursery->name?></li>
 </ul>
 
-<h1>เจ้าหน้าที่ศูนย์</h1>
-<br>
 
-<div class="row">
-    <div class="span9">
+<div id="data">
+	<div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">ลงทะเบียนเจ้าหน้าที่ศูนย์</div>
     	
     	<!-- <ul class="nav nav-tabs home-nav-tabs estimate-tab">
 		  <li><a href="users/register">เจ้าหน้าที่สาธารณสุข</a></li>
@@ -242,5 +241,4 @@ $(document).ready(function(){
                 </div>
             </div>
         </form>
-    </div>
 </div>
