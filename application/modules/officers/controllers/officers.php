@@ -8,6 +8,7 @@ class Officers extends Public_Controller
 			redirect('home');
 		}
         parent::__construct();
+		$this->template->set_layout('blank');
     }
     
     function index()

@@ -171,8 +171,8 @@ class Users extends Public_Controller{
             if(login($_POST['email'], $_POST['password'], $_POST['user_type_id']))
             {
                 set_notify('success', 'ยินดีต้อนรับเข้าสู่ระบบค่ะ');
-				//redirect('nurseries/register');
-                redirect($_SERVER['HTTP_REFERER']);
+				redirect('home/menu');
+                // redirect($_SERVER['HTTP_REFERER']);
             }
             else
             {

@@ -19,23 +19,7 @@
 	                ?></div>
 	                <div class="login-menu">
 	                	<?php if(user_login()->m_status == 'active'):?>
-		                	<b> 
-		                	<?php if(user_login()->user_type_id == 1 or user_login()->user_type_id == 6 or user_login()->user_type_id == 7 or user_login()->user_type_id == 8):?>
-		                	<a href="nurseries">ศูนย์เด็กเล็ก</a>
-		                	<?php endif;?>
-		                	
-		                    <?php if(user_login()->user_type_id == 1 or user_login()->user_type_id == 6 or user_login()->user_type_id == 7):?>
-		                        <span class="divider">/</span> <a href="officers">ตรวจสอบรายชื่อ</a>
-		                    <?php endif;?>
-		                    
-		                    <?php if(user_login()->user_type_id == 9): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก ?>
-		                    	<a href="teachers">จัดการครู / ผู้ดูแลเด็ก</a>
-		                    <?php endif;?>
-		                    
-		                    <?php if(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก ?>
-		                    	<a href="classrooms">ห้องเรียน ชั้นเรียน และเด็ก</a> <span class="divider">/</span> <a href="diseases/form?nursery_id=<?=user_login()->nursery_id?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=date("m")?>&year=<?=date("Y")+543?>" target="_blank">แบบคัดกรองโรค</a>
-		                    <?php endif;?>
-		                    </b>
+	                		<b class="tabspace"><a href="home/menu">เมนูหลัก</a></b>
 		                <?php else:?>
 		                	สถานะ : <span style="color:orangered;">รอการตรวจสอบ</span>
 		                <?php endif;?>

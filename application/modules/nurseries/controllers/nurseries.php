@@ -8,14 +8,17 @@ class Nurseries extends Public_Controller
 			redirect('home');
 		}
 		parent::__construct();
+		ini_set('memory_limit', '-1');
 	}
 	
 	function index()
 	{
+		$this->template->set_layout('blank');
 		$this->template->build('child');
 	}
 
 	function register(){
+		$this->template->set_layout('blank');
 		$data['nurseries'] = new Nursery();
         
 		if(@$_GET['nursery_category_id'])$data['nurseries']->where("nursery_category_id = ".$_GET['nursery_category_id']);
@@ -24,29 +27,48 @@ class Nurseries extends Public_Controller
 		if(@$_GET['amphur_id'])$data['nurseries']->where("amphur_id = ".$_GET['amphur_id']);
 		if(@$_GET['district_id'])$data['nurseries']->where("district_id = ".$_GET['district_id']);
 		if(@$_GET['year'])$data['nurseries']->where("year = ".$_GET['year']);
-		if(@$_GET['status'])$data['nurseries']->where("status = ".$_GET['status']);
+		// if(@$_GET['status'])$data['nurseries']->where("status = ".$_GET['status']);
+		switch (@$_GET['status']) {
+		    case 1: // ผ่านเกณฑ์
+		        $data['nurseries']->where("status = 1");
+		        break;
+		    case 2: // ไม่ผ่านเกณฑ์ (ประเมินแล้วแต่ไม่ผ่าน)
+		        $data['nurseries']->where("status = 0")->where_related_assessment('total < 28');
+		        break;
+			case 3: // รอการประเมิน
+		        $data['nurseries']->where("status = 0")->where_related_assessment('total IS NULL');
+		        break;
+		}
 		
 		if(user_login()->user_type_id==1 ){ // เป็น admin
             $data['pass_count']  = $data['nurseries']->get_clone();
             $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
+			$data['nopass_count']  = $data['nurseries']->get_clone();
+            $data['nopass_count']  = $data['nopass_count']->where('status = 0')->where_related_assessment('total < 28')->get()->result_count();
 			$data['nurseries']->order_by('id','desc')->get_page();
 			$data['regis_count'] = $data['nurseries']->paged->total_rows;
 		}elseif(user_login()->user_type_id==6){ // เจ้าหน้าที่สคร
 			$data['nurseries']->where('area_id = '.user_login()->area_id);
 			$data['pass_count']  = $data['nurseries']->get_clone();
             $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
+			$data['nopass_count']  = $data['nurseries']->get_clone();
+            $data['nopass_count']  = $data['nopass_count']->where('status = 0')->where_related_assessment('total < 28')->get()->result_count();
             $data['nurseries']->order_by('id','desc')->get_page();
 			$data['regis_count'] = $data['nurseries']->paged->total_rows;
         }elseif(user_login()->user_type_id==7){ // เจ้าหน้าที่จังหวัด
             $data['nurseries']->where('province_id = '.user_login()->province_id);
 			$data['pass_count']  = $data['nurseries']->get_clone();
             $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
+			$data['nopass_count']  = $data['nurseries']->get_clone();
+            $data['nopass_count']  = $data['nopass_count']->where('status = 0')->where_related_assessment('total < 28')->get()->result_count();
             $data['nurseries']->order_by('id','desc')->get_page();
 			$data['regis_count'] = $data['nurseries']->paged->total_rows;
         }elseif(user_login()->user_type_id==8){ // เจ้าหน้าที่อำเภอ
             $data['nurseries']->where('amphur_id = '.user_login()->amphur_id);
 			$data['pass_count']  = $data['nurseries']->get_clone();
             $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
+			$data['nopass_count']  = $data['nurseries']->get_clone();
+            $data['nopass_count']  = $data['nopass_count']->where('status = 0')->where_related_assessment('total < 28')->get()->result_count();
             $data['nurseries']->order_by('id','desc')->get_page();
 			$data['regis_count'] = $data['nurseries']->paged->total_rows;
         }
@@ -95,6 +117,8 @@ class Nurseries extends Public_Controller
 	}
 	
 	function estimate($status=false){
+		$this->template->set_layout('blank');
+		
 		$data['nurseries'] = new Nursery();
 		
 		if(@$_GET['nursery_category_id'])$data['nurseries']->where("nursery_category_id = ".$_GET['nursery_category_id']);

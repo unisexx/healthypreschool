@@ -88,7 +88,7 @@ $(function(){
 <h1><?=user_login()->nursery->nursery_category->title?><?=user_login()->nursery->name?> (ครู / ผู้ดูแลเด็ก)</h1>
 <br>
 <div class="row">
-	<div class="span9">
+	<div class="span12">
 		<form id="teacherform" action="teachers/save" method="post" class="form-horizontal">
 			<div class="control-group">
                 <label class="control-label" for="inputUsername">สถานะเจ้าหน้าที่</label>

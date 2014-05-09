@@ -8,5 +8,5 @@
 </ul>
 <div id="data" class="child">
 	<a href="nurseries/register"><img src="themes/hps/images/child_register.jpg" width="520" height="75"></a>
-    <a href="nurseries/estimate/0"><img src="themes/hps/images/child_estimate.jpg" width="520" height="75"></a>
+    <!-- <a href="nurseries/estimate/0"><img src="themes/hps/images/child_estimate.jpg" width="520" height="75"></a> -->
 </div>

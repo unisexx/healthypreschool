@@ -21,6 +21,15 @@ class Home extends Public_Controller {
 		$this->template->build('index');
 	}
 	
+	function menu(){
+		if(user_login()->m_status != "active"){
+			set_notify('error', 'สถานะของผู้ใช้งานไม่ได้รับอนุญาติ');
+			redirect('home');
+		}
+		$this->template->set_layout('blank');
+		$this->template->build('menu');
+	}
+	
 	function intro(){
 		$this->load->view('intro');
 	}

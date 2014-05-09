@@ -2,7 +2,12 @@
 class Teachers extends Public_Controller{
     
     function __construct(){
+    	if(user_login()->m_status != "active"){
+			set_notify('error', 'สถานะของผู้ใช้งานไม่ได้รับอนุญาติ');
+			redirect('home');
+		}
         parent::__construct();
+		$this->template->set_layout('blank');
     }
     
     function index(){

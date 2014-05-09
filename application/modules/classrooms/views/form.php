@@ -11,7 +11,7 @@
 <h1>ห้องเรียน / ชั้นเรียน และเด็ก (เพิ่ม / แก้ไข)</h1>
 <br>
 <div class="row">
-	<div class="span9">
+	<div class="span12">
 		<form action="classrooms/save" method="post" class="form-horizontal">
 			<div class="control-group">
 		        <label class="control-label">ชื่อห้องเรียน / ชั้นเรียน <span class="TxtRed">*</span></label>
@@ -43,6 +43,7 @@
 				<th>ชื่อ - สกุล เด็ก</th>
 				<th>อายุ (ปี)</th>
 				<th>น้ำหนัก (กก) / ส่วนสูง (ซม)</th>
+				<th>ดัชนีมวลกาย (BMI)</th>
 				<th>จัดการ</th>
 			</tr>
 			<?foreach($childs as $key=>$row):?>
@@ -51,6 +52,9 @@
 				<td><?=$row->title?> <?=$row->child_name?></td>
 				<td><?=$row->age?></td>
 				<td><?=$row->weight?> / <?=$row->height?></td>
+				<td>
+					<?=number_format($row->weight/(($row->height/100)*($row->height/100)),2)?>
+				</td>
 				<td>
 					<a href="classrooms/childform/<?=$classroom->id?>/<?=$row->id?>" class='btn btn-mini btn-info'>แก้ไข</a>
 	        		<a href="classrooms/childdelete/<?=$classroom->id?>/<?=$row->id?>" class="btn btn-mini btn-danger" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>

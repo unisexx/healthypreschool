@@ -12,7 +12,7 @@
 <h1>รายชื่อเด็ก (เพิ่ม / แก้ไข)</h1>
 <br>
 <div class="row">
-	<div class="span9">
+	<div class="span12">
 		<form action="classrooms/childsave" method="post" class="form-horizontal">
 			<div class="control-group">
 		        <label class="control-label">คำนำหน้า<span class="TxtRed">*</span></label>

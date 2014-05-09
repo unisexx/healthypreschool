@@ -433,7 +433,19 @@ $(function(){
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=1"><?=$pass?></a></td>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=0"><?=$not?></a></td>
 			</tr>
+			
+				<?php
+					@$totalAll += $all;
+					@$totalPass += $pass;
+					@$totalNot += $not;
+				?>
 			<?php endforeach;?>
+			<tr>
+				<th>รวมทั้งหมด</th>
+				<th><?=$totalAll?></th>
+				<th><?=$totalPass?></th>
+				<th><?=$totalNot?></th>
+			</tr>
 		</tbody>
 	</table>
 <?php elseif(@$_GET['type'] == 2):?>
@@ -467,7 +479,18 @@ $(function(){
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=1"><?=$pass?></a></td>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=0"><?=$not?></a></td>
 			</tr>
+				<?php
+					@$totalAll += $all;
+					@$totalPass += $pass;
+					@$totalNot += $not;
+				?>
 			<?php endforeach;?>
+			<tr>
+				<th>รวมทั้งหมด</th>
+				<th><?=$totalAll?></th>
+				<th><?=$totalPass?></th>
+				<th><?=$totalNot?></th>
+			</tr>
 		</tbody>
 	</table>
 <?php elseif(@$_GET['type'] == 3):?>
@@ -501,7 +524,18 @@ $(function(){
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=1"><?=$pass?></a></td>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=0"><?=$not?></a></td>
 			</tr>
+				<?php
+					@$totalAll += $all;
+					@$totalPass += $pass;
+					@$totalNot += $not;
+				?>
 			<?php endforeach;?>
+			<tr>
+				<th>รวมทั้งหมด</th>
+				<th><?=$totalAll?></th>
+				<th><?=$totalPass?></th>
+				<th><?=$totalNot?></th>
+			</tr>
 		</tbody>
 	</table>
 <?php elseif(@$_GET['type'] == 4):?>
@@ -567,7 +601,18 @@ $(function(){
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=1><?=$pass?></a></td>
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=0><?=$not?></a></td>
 			</tr>
+				<?php
+					@$totalAll += $all;
+					@$totalPass += $pass;
+					@$totalNot += $not;
+				?>
 			<?php endforeach;?>
+			<tr>
+				<th>รวมทั้งหมด</th>
+				<th><?=$totalAll?></th>
+				<th><?=$totalPass?></th>
+				<th><?=$totalNot?></th>
+			</tr>
 		</tbody>
 	</table>
 <?php endif;?>
