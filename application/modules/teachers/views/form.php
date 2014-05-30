@@ -81,7 +81,7 @@ $(function(){
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="teachers">ครู / ผู้ดูแลเด็ก</a> <span class="divider">/</span></li>
+  <li><a href="teachers">จัดการครู / ผู้ดูแลเด็ก</a> <span class="divider">/</span></li>
   <li class="active">ฟอร์ม</li>
 </ul>
 

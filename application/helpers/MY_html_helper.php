@@ -186,4 +186,16 @@ function randomPassword() {
     return implode($pass); //turn the array into a string
 }
 
+function get_user_name($id=false){
+	$CI =& get_instance();
+	if($id != ""){
+		$u = new User();
+		$u->query("select name from users where id =".$id);
+		$name = $u->name;
+	}else{
+		$name = "";
+	}
+	return $name;
+}
+
 ?>

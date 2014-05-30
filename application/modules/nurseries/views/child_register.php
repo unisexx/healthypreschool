@@ -23,7 +23,7 @@ $(document).ready(function(){
   <li class="active">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</li>
 </ul>
     <div id="data">
-    	<div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</div>
+    	<div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">รายละเอียดชื่อโครงการศูนย์เด็กเล็กปลอดโรค</div>
     	
     	<form method="get" action="nurseries/register">
 	    	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
@@ -88,13 +88,14 @@ $(document).ready(function(){
 	  	      <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 	    	</div>
     	</form>
-        <div>
-        	ผ่านเกณฑ์<a href="nurseries/register?nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>&status=1"> <span class="badge badge-success"><?=$pass_count?></span></a>
-        	ไม่ผ่านเกณฑ์<a href="nurseries/register?nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>&status=2"> <span class="badge badge-important"><?=$nopass_count?></span></a>
-        	รอการประเมิน<a href="nurseries/register?nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>&status=3"> <span class="badge"><?=$regis_count-($pass_count+$nopass_count)?></span></a>
-        	เข้าร่วมโครงการ<a href="nurseries/register?nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>&status=0"> <span class="badge badge-info"><?=$regis_count?></span></a>
+        <div style="margin-bottom: 10px;">
+        	ผ่านเกณฑ์<a href="nurseries/register?status=1"> <span class="badge badge-success"><?=$pass_count?></span></a>
+        	ไม่ผ่านเกณฑ์<a href="nurseries/register?status=2"> <span class="badge badge-important"><?=$nopass_count?></span></a>
+        	รอการประเมิน<a href="nurseries/register?status=3"> <span class="badge"><?=$regis_count-($pass_count+$nopass_count)?></span></a>
+        	เข้าร่วมโครงการ<a href="nurseries/register"> <span class="badge badge-info"><?=$regis_count?></span></a>
         </div>
-        <div style="float:right; padding:10px 0;">
+        
+        <!-- <div style="float:right; padding:10px 0;">
         	<a href="nurseries/register_form"><div class="btn">เพิ่มศูนย์เด็กเล็ก</div></a>
         	<?php if(user_login()->user_type_id == 1): //ถ้าเป็นผู้ดูแลระบบ ?>
 	        	<a href="nurseries/category_form"><div class="btn">คำนำหน้า</div></a>
@@ -106,23 +107,28 @@ $(document).ready(function(){
         	<?elseif(user_login()->user_type_id == 8): //ถ้าเป็นเจ้าหน้าที่ประจำอำเภอ ?>
         		<a href="nurseries/reports/index/basic_column?type=3&amphur_id=<?=user_login()->amphur_id?>" target="_blank"><div class="btn">รายงาน</div></a>
         	<?endif;?>
-        </div>
+        </div> -->
+        
     	<table class="table">
         <tr>
 	        <th>ลำดับ</th>
 	        <th>ชื่อศุนย์พัฒนาเด็กเล็ก</th>
+	        <th>จังหวัด</th>
 	        <th>ที่อยู่</th>
 	        <!-- <th>ปีที่เข้าร่วม</th> -->
 	        <th>หัวหน้าศูนย์</th>
 	        <th>วันที่ลงทะเบียน</th>
 	        <th>ผลการประเมิน</th>
+	        <th>วันที่ประเมิน</th>
+	        <th>ผู้ประเมิน</th>
 	        <th width="100">จัดการ</th>
         </tr>
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
 	        <td><?=($key+1)+$nurseries->paged->current_row?></td>
 	        <td><?=$nursery->nursery_category->title?><?=$nursery->name?></td>
-	        <td>ต.<?=$nursery->district->district_name?> <br>อ.<?=$nursery->amphur->amphur_name?></span> <br>จ.<?=$nursery->province->name?></td>
+	        <td>จ.<?=$nursery->province->name?></td>
+	        <td>อ.<?=$nursery->amphur->amphur_name?><br>ต.<?=$nursery->district->district_name?> </td>
 	        <!-- <td><?=$nursery->year?></td> -->
 	        <td>
 	        	<?php if($nursery->p_title == "นาย"):?>
@@ -151,9 +157,11 @@ $(document).ready(function(){
 	        		<?endif;?>
 	        		</span>
 	        	<?endif;?>
+	        <td><?=mysql_to_th($nursery->approve_date)?></td>
+	        <td><?=get_user_name($nursery->approve_user_id)?></td>
 	        </td>
 	        <td>
-	        	<a href="assessments/form?nursery_id=<?=$nursery->id?>" class='btn btn-mini' style="width:59px;">ประเมินผล</a>
+	        	<a href="assessments/form?nursery_id=<?=$nursery->id?>" class='btn btn-mini' style="width:59px;">ประเมินผลแบบ 35 ข้อ</a>
 	        	<a href="nurseries/register_form/<?=$nursery->id?>" class='btn btn-mini btn-info'>แก้ไข</a>
 	        	<a href="nurseries/delete/<?=$nursery->id?>" class="btn btn-mini btn-danger" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>
 	        </td>

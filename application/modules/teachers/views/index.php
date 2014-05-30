@@ -1,6 +1,6 @@
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active">ครู / ผู้ดูแลเด็ก</li>
+  <li class="active">จัดการครู / ผู้ดูแลเด็ก</li>
 </ul>
 
 <h1><?=user_login()->nursery->nursery_category->title?><?=user_login()->nursery->name?> (ครู / ผู้ดูแลเด็ก)</h1>

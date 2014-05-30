@@ -102,10 +102,10 @@ $(document).ready(function(){
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active">เจ้าหน้าที่สาธารณะสุข</li>
+  <li class="active">เจ้าหน้าที่ศูนย์เด็กเล็ก</li>
 </ul>
 
-<form method="get" action="officers">
+<form method="get" action="staffs">
 	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
 	
 	<?=form_dropdown('m_status',array('active'=>'เปิด','deactive'=>'ปิด'),@$_GET['m_status'],'','--- เลือกสถานะ ---');?>
@@ -163,9 +163,11 @@ $(document).ready(function(){
         <th>สถานะ</th>
         <th>อีเมล์</th>
         <th>ชื่อ - นามสกุล</th>
-        <th>ประเภท</th>
-        <th>พื้นที่</th>
-        <th width="80"><a class="btn btn-mini btn-info" href="officers/form">เพิ่มเจ้าหน้าที่</a></th>
+        <th>เจ้าหน้าที่ศูนย์เด็กเล็ก</th>
+        <th>จังหวัด</th>
+        <th width="80">
+        	<!-- <a class="btn btn-mini btn-info" href="staff/form">เพิ่มเจ้าหน้าที่</a> -->
+        </th>
     </tr>
     <?php foreach($users as $key=>$user):?>
         <tr>
@@ -173,21 +175,11 @@ $(document).ready(function(){
             <td><?=($user->m_status == 'active')?'<div class="label label-info">เปิด</div>':'<div class="label">ปิด</div>';?></td>
             <td><?=$user->email?></td>
             <td><?=$user->name?></td>
-            <td><?=$user->user_type->name?></td>
+            <td><?=$user->nursery->nursery_category->title?><?=$user->nursery->name?></td>
+            <td><?=$user->nursery->province->name?></td>
             <td>
-                <?php 
-                    if($user->user_type_id == 6){
-                        echo $user->area->area_name;
-                    }elseif($user->user_type_id == 7){
-                        echo $user->province->name;
-                    }elseif($user->user_type_id == 8){
-                        echo $user->amphur->amphur_name;
-                    }
-                ?>
-            </td>
-            <td>
-                <a class="btn btn-mini" href="officers/form/<?=$user->id?>">แก้ไข</a>
-                <a class="btn btn-mini" href="officers/delete/<?=$user->id?>" onclick="return confirm('<?php echo lang('notice_confirm_delete');?>')">ลบ</a>
+                <a class="btn btn-mini" href="staffs/form/<?=$user->id?>">แก้ไข</a>
+                <a class="btn btn-mini" href="staffs/delete/<?=$user->id?>" onclick="return confirm('<?php echo lang('notice_confirm_delete');?>')">ลบ</a>
             </td>
         </tr>
     <?php endforeach;?>

@@ -50,6 +50,9 @@ class Searchs extends Public_Controller
 		if($_POST){
 			echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.$_POST['province_id'].' order by id asc'),'','','--- เลือกอำเภอ ---');
 		}
+		
+		$province = new Province($_POST['province_id']);
+		echo "<br><input type='hidden' name='area_id' value='".$province->area_id."'>";
 	}
 	
 	function get_district(){

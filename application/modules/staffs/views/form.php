@@ -98,16 +98,16 @@ $(function(){
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="officers">เจ้าหน้าที่สาธารณะสุข</a> <span class="divider">/</span></li>
+  <li><a href="officers">เจ้าหน้าที่ศูนย์เด็กเล็ก</a> <span class="divider">/</span></li>
   <li class="active">ฟอร์ม</li>
 </ul>
 
-<h1>เจ้าหน้าที่สาธารณะสุข</h1>
+<h1>เจ้าหน้าที่ศูนย์เด็กเล็ก</h1>
 <br>
 
 <div class="row">
     <div class="span8">
-        <form id="regisform" class="form-horizontal" method="post" action="officers/save/<?=$user->id?>">
+        <form id="regisform" class="form-horizontal" method="post" action="staffs/save/<?=$user->id?>">
             <div class="control-group">
                 <label class="control-label" for="inputUsername">สถานะเจ้าหน้าที่</label>
                 <div class="controls">
@@ -116,49 +116,9 @@ $(function(){
             </div>
             <hr>
             <div class="control-group">
-                <label class="control-label">ประเภท</label>
+                <label class="control-label">เจ้าหน้าที่ประจำศูนย์</label>
                 <div class="controls">
-                    <?php if(user_login()->user_type_id == 1): // admin เห็นเลือกได้ทุกตำแหน่ง?>
-                    <?=form_dropdown('user_type_id',array('6'=>'เจ้าหน้าที่ประจำเขต','7'=>'เจ้าหน้าที่ประจำจังหวัด','8'=>'เจ้าหน้าที่ประจำอำเภอ'),$user->user_type_id,'class="input-xlarge"','--- เลือกตำแหน่ง ---');?>
-                    <?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร. เพิ่มเจ้าหน้าที่จังหวัด?>
-                        <input type="text" value="เจ้าหน้าที่ประจำจังหวัด" disabled>
-                        <input type="hidden" name="user_type_id" value="7">
-                    <?php elseif(user_login()->user_type_id == 7): //เจ้าหน้าที่ประจำศูนย์ สคร. เพิ่มเจ้าหน้าที่จังหวัด?>
-                        <input type="text" value="เจ้าหน้าที่ประจำอำเภอ" disabled>
-                        <input type="hidden" name="user_type_id" value="8">
-                    <?php endif;?>
-                </div>
-            </div>
-            <div class="control-group" id="area" <?=($user->user_type_id == 6)?'':'style="display:none;"';?>>
-                <label class="control-label">เจ้าหน้าที่ประจำเขต</label>
-                <div class="controls">
-                    <?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),$user->area_id,'class="input-xlarge"','--- เลือกสคร. ---');?>
-                    <div class="underprovince"></div>
-                </div>
-            </div>
-            <div class="control-group" id="province" <?=($user->user_type_id == 7 or user_login()->user_type_id == 6)?'':'style="display:none;"';?>>
-                <label class="control-label">เจ้าหน้าที่ประจำจังหวัด</label>
-                <div class="controls">
-                    <?php if(user_login()->user_type_id == 1): // admin เห็นทุกจังหวัด?>
-                    <?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),$user->province_id,'class="input-xlarge"','--- เลือกจังหวัด ---') ?>
-                    <?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร. เห็นจังหวัดในเขตตัวเอง?>
-                        <?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),$user->province_id,'','--- เลือกจังหวัด ---') ?>
-                    <?php endif;?>
-                </div>
-            </div>
-            <div class="control-group" id="amphur" <?=($user->user_type_id == 8 or user_login()->user_type_id == 7)?'':'style="display:none;"';?>>
-                <label class="control-label">เจ้าหน้าที่ประจำอำเภอ</label>
-                <div class="controls">
-                    <?php if(user_login()->user_type_id == 1): // admin เห็นทุกจังหวัด?>
-                    <div>
-                		<?=form_dropdown('province_to_select_amphur',get_option('id','name','provinces order by name asc'),@$user->amphur_id,'class="input-xlarge"','--- เลือกจังหวัด ---');?>
-                	</div>
-                	<div class="amphur-frm">
-                		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures'),@$user->amphur_id,'class="input-xlarge" style="margin-top:5px";','--- เลือกอำเภอ ---');?>
-                	</div>
-                    <?php elseif(user_login()->user_type_id == 7): //เจ้าหน้าที่ประจำอำเภอ เห็นตำบลของตัวเอง?>
-                        <?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.user_login()->province_id.' order by amphur_name asc'),$user->amphur_id,'','--- เลือกอำเภอ ---');?>
-                    <?php endif;?>
+                    <input type="text" value="<?=$user->nursery->nursery_category->title?><?=$user->nursery->name?>" readonly>
                 </div>
             </div>
             <div class="control-group">

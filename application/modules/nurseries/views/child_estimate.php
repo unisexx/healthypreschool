@@ -108,16 +108,20 @@ $(document).ready(function(){
         <tr>
 	        <th>ลำดับ</th>
 	        <th>ชื่อศุนย์พัฒนาเด็กเล็ก</th>
+	        <th>จังหวัด</th>
 	        <th>ที่อยู่</th>
 	        <th>ปีที่เข้าร่วม</th>
 	        <th>หัวหน้าศูนย์</th>
+	        <th>วันที่ประเมิน</th>
+	        <th>ผู้ประเมิน</th>
 	        <th width="65">จัดการ</th>
         </tr>
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
 	        <td><?=($key+1)+$nurseries->paged->current_row?></td>
 	        <td><?=$nursery->nursery_category->title?><?=$nursery->name?></td>
-	        <td>ต.<?=$nursery->district->district_name?><br>อ.<?=$nursery->amphur->amphur_name?><br>จ.<?=$nursery->province->name?></td>
+	        <td>จ.<?=$nursery->province->name?></td>
+	        <td>อ.<?=$nursery->amphur->amphur_name?><br>ต.<?=$nursery->district->district_name?></td>
 	        <td><?=$nursery->year?></td>
 	        <td>
 	        	<?php if($nursery->p_title == "นาย"):?>
@@ -126,6 +130,8 @@ $(document).ready(function(){
 	        		<img class="icon-girl" src="themes/hps/images/girl.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
 	        	<?php endif;?>
 	        </td>
+	        <td><?=mysql_to_th($nursery->approve_date)?></td>
+	        <td><?=get_user_name($nursery->approve_user_id)?></td>
 	        <td>
 	        	<input type="hidden" name="id" value="<?=$nursery->id?>">
 	        	<a href="#myModal" role="button" data-toggle="modal" class='btn btn-mini btn-estimate btn-info'>ประเมินผล</a>

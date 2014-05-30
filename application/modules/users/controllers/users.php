@@ -171,7 +171,17 @@ class Users extends Public_Controller{
             if(login($_POST['email'], $_POST['password'], $_POST['user_type_id']))
             {
                 set_notify('success', 'ยินดีต้อนรับเข้าสู่ระบบค่ะ');
-				redirect('home/menu');
+				
+				
+				if(user_login()->user_type_id == 1 || user_login()->user_type_id == 6 || user_login()->user_type_id == 7 || user_login()->user_type_id == 8){
+					redirect('nurseries/register');
+				}elseif(user_login()->user_type_id == 9){
+					redirect('teachers');
+				}elseif(user_login()->user_type_id == 10){
+					redirect('classrooms');
+				}
+				
+				// redirect('home/menu');
                 // redirect($_SERVER['HTTP_REFERER']);
             }
             else

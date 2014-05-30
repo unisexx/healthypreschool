@@ -4,9 +4,12 @@ class Reports extends Public_Controller
 	function __construct()
 	{
 		parent::__construct();
+		ini_set('memory_limit', '-1');
 	}
 	
 	function index($graphtype=false){ // เข้าร่วมโครงการ - ผ่านเกณ
+		$this->template->set_layout('blank');
+		
 		(@$_GET['year'])?$txt="ปีงบประมาณ ".@$_GET['year']:$txt="โดยรวมทั้งหมด";
 		
 		if(@$_GET['type'] == 1 ){ // สคร
@@ -73,10 +76,13 @@ class Reports extends Public_Controller
 	}
 	
 	function detail(){
+		$this->template->set_layout('blank');
+		
 		$data['nurseries'] = new Nursery();
 		
 		if(@$_GET['area_id']){
-			$data['nurseries']->where('area_id',$_GET['area_id']);
+			// $data['nurseries']->where('area_id',$_GET['area_id']);
+			$data['nurseries']->where_related_province('area_id',$_GET['area_id']);
 			$data['area'] = "สคร.".$_GET['area_id'];
 		}
 		if(@$_GET['province_id']){

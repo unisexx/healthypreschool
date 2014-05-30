@@ -41,41 +41,49 @@ class Nurseries extends Public_Controller
 		}
 		
 		if(user_login()->user_type_id==1 ){ // เป็น admin
-            $data['pass_count']  = $data['nurseries']->get_clone();
-            $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
-			$data['nopass_count']  = $data['nurseries']->get_clone();
-            $data['nopass_count']  = $data['nopass_count']->where('status = 0')->where_related_assessment('total < 28')->get()->result_count();
+			$data['pass_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where status = 1")->result();
+			$data['pass_count'] = $data['pass_count'][0]->total;
+			$data['nopass_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where status = 0 and approve_type = 2")->result();
+			$data['nopass_count'] = $data['nopass_count'][0]->total;
+            $data['regis_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries")->result();
+			$data['regis_count'] = $data['regis_count'][0]->total;
+			
 			$data['nurseries']->order_by('id','desc')->get_page();
-			$data['regis_count'] = $data['nurseries']->paged->total_rows;
 		}elseif(user_login()->user_type_id==6){ // เจ้าหน้าที่สคร
-			$data['nurseries']->where('area_id = '.user_login()->area_id);
-			$data['pass_count']  = $data['nurseries']->get_clone();
-            $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
-			$data['nopass_count']  = $data['nurseries']->get_clone();
-            $data['nopass_count']  = $data['nopass_count']->where('status = 0')->where_related_assessment('total < 28')->get()->result_count();
+			$data['pass_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where status = 1 and area_id = ".user_login()->area_id)->result();
+			$data['pass_count'] = $data['pass_count'][0]->total;
+			$data['nopass_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where status = 0 and approve_type = 2 and area_id = ".user_login()->area_id)->result();
+			$data['nopass_count'] = $data['nopass_count'][0]->total;
+            $data['regis_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where area_id = ".user_login()->area_id)->result();
+			$data['regis_count'] = $data['regis_count'][0]->total;
+			
+			$data['nurseries']->where_related_province('area_id = '.user_login()->area_id);
             $data['nurseries']->order_by('id','desc')->get_page();
-			$data['regis_count'] = $data['nurseries']->paged->total_rows;
         }elseif(user_login()->user_type_id==7){ // เจ้าหน้าที่จังหวัด
+        	$data['pass_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where status = 1 and province_id = ".user_login()->province_id)->result();
+			$data['pass_count'] = $data['pass_count'][0]->total;
+			$data['nopass_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where status = 0 and approve_type = 2 and province_id = ".user_login()->province_id)->result();
+			$data['nopass_count'] = $data['nopass_count'][0]->total;
+            $data['regis_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where province_id = ".user_login()->province_id)->result();
+			
             $data['nurseries']->where('province_id = '.user_login()->province_id);
-			$data['pass_count']  = $data['nurseries']->get_clone();
-            $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
-			$data['nopass_count']  = $data['nurseries']->get_clone();
-            $data['nopass_count']  = $data['nopass_count']->where('status = 0')->where_related_assessment('total < 28')->get()->result_count();
             $data['nurseries']->order_by('id','desc')->get_page();
-			$data['regis_count'] = $data['nurseries']->paged->total_rows;
         }elseif(user_login()->user_type_id==8){ // เจ้าหน้าที่อำเภอ
+        	$data['pass_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where status = 1 and amphur_id = ".user_login()->amphur_id)->result();
+			$data['pass_count'] = $data['pass_count'][0]->total;
+			$data['nopass_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where status = 0 and amphur_id = 2 and province_id = ".user_login()->amphur_id)->result();
+			$data['nopass_count'] = $data['nopass_count'][0]->total;
+            $data['regis_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where amphur_id = ".user_login()->amphur_id)->result();
+        	
             $data['nurseries']->where('amphur_id = '.user_login()->amphur_id);
-			$data['pass_count']  = $data['nurseries']->get_clone();
-            $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
-			$data['nopass_count']  = $data['nurseries']->get_clone();
-            $data['nopass_count']  = $data['nopass_count']->where('status = 0')->where_related_assessment('total < 28')->get()->result_count();
             $data['nurseries']->order_by('id','desc')->get_page();
-			$data['regis_count'] = $data['nurseries']->paged->total_rows;
+			// $data['regis_count'] = $data['nurseries']->paged->total_rows; //นับจำนวนทั้งหมดในทุกหน้า
         }
 		$this->template->build('child_register',$data);
 	}
 	
 	function register_form($id=false){
+		$this->template->set_layout('blank');
 		$data['nursery'] = new Nursery($id);
 		$this->template->build('child_register_form',$data);
 	}
@@ -93,7 +101,7 @@ class Nurseries extends Public_Controller
 					}
 				}
 				
-				$_POST['user_id'] = $this->session->userdata('id');
+				$_POST['user_id'] = $this->session->userdata('id'); // ไอดีเจ้าหน้าที่ที่แอด nursery
 				//$_POST['area_id'] = login_data('nursery');
 				$nursery = new Nursery($id);
 				$nursery->from_array($_POST);
@@ -127,24 +135,49 @@ class Nurseries extends Public_Controller
 		if(@$_GET['amphur_id'])$data['nurseries']->where("amphur_id = ".$_GET['amphur_id']);
 		if(@$_GET['district_id'])$data['nurseries']->where("district_id = ".$_GET['district_id']);
 		if(@$_GET['year'])$data['nurseries']->where("year = ".$_GET['year']);
-		
-		// นับจำนวนศูนย์เด็กเล็ก
-		$data['pass_count']  = $data['nurseries']->get_clone();
-		$data['regis_count'] = $data['nurseries']->get_clone();
-        $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
-		$data['regis_count']  = $data['regis_count']->where('status = 0')->get()->result_count();
-		// ------------
-			
-		(@$status == 1)?$data['nurseries']->where("status = 1"):$data['nurseries']->where("status = 0");
-		
+
+
 		if(user_login()->user_type_id==1){ // แอดมินเห็นทั้งหมด
+			$data['pass_count']  = $data['nurseries']->get_clone();
+	        $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
+			
+			$data['regis_count'] = $data['nurseries']->get_clone();
+			$data['regis_count']  = $data['regis_count']->where('status = 0')->get()->result_count();
+			
+			(@$status == 1)?$data['nurseries']->where("status = 1"):$data['nurseries']->where("status = 0");
 			$data['nurseries']->order_by('id','desc')->get_page();
 		}elseif(user_login()->user_type_id==6){ // เจ้าหน้าที่สคร
-			$data['nurseries']->where('area_id = '.user_login()->area_id)->order_by('id','desc')->get_page();
+			$data['nurseries']->where_related_province('area_id = '.user_login()->area_id);
+			
+			$data['pass_count']  = $data['nurseries']->get_clone();
+	        $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
+			
+			$data['regis_count'] = $data['nurseries']->get_clone();
+			$data['regis_count']  = $data['regis_count']->where('status = 0')->get()->result_count();
+		
+			(@$status == 1)?$data['nurseries']->where("status = 1"):$data['nurseries']->where("status = 0");
+			$data['nurseries']->order_by('id','desc')->get_page();
 		}elseif(user_login()->user_type_id==7){ // เจ้าหน้าที่จังหวัด
-		    $data['nurseries']->where('province_id = '.user_login()->province_id)->order_by('id','desc')->get_page();
+		
+		    $data['nurseries']->where('province_id = '.user_login()->province_id);
+			
+			$data['pass_count']  = $data['nurseries']->get_clone();
+	        $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
+			
+			$data['regis_count'] = $data['nurseries']->get_clone();
+			$data['regis_count']  = $data['regis_count']->where('status = 0')->get()->result_count();
+		    
+		    $data['nurseries']->order_by('id','desc')->get_page();
 		}elseif(user_login()->user_type_id==8){ // เจ้าหน้าที่อำเภอ
-            $data['nurseries']->where('amphur_id = '.user_login()->amphur_id)->order_by('id','desc')->get_page();
+            $data['nurseries']->where('amphur_id = '.user_login()->amphur_id);
+            
+            $data['pass_count']  = $data['nurseries']->get_clone();
+	        $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
+			
+			$data['regis_count'] = $data['nurseries']->get_clone();
+			$data['regis_count']  = $data['regis_count']->where('status = 0')->get()->result_count();
+			
+            $data['nurseries']->order_by('id','desc')->get_page();
         }
 		
 		$this->template->build('child_estimate',$data);
@@ -267,6 +300,9 @@ class Nurseries extends Public_Controller
 			}else{
 				$_POST['status'] = 1;
 			}
+			$_POST['approve_date'] = date("Y-m-d H:i:s");
+			$_POST['approve_user_id'] = user_login()->id;
+			$_POST['approve_type'] = 1; // 1 = แบบประเมินแบบเก่า, 2 = แบบประเมิน 35 ข้อ
 			$nursery = new Nursery($id);
 			$nursery->from_array($_POST);
 			$nursery->save();
