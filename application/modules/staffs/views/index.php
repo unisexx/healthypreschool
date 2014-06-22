@@ -165,6 +165,9 @@ $(document).ready(function(){
         <th>ชื่อ - นามสกุล</th>
         <th>เจ้าหน้าที่ศูนย์เด็กเล็ก</th>
         <th>จังหวัด</th>
+        <th>อำเภอ</th>
+        <th>ตำบล</th>
+        <th>วันที่สมัคร</th>
         <th width="80">
         	<!-- <a class="btn btn-mini btn-info" href="staff/form">เพิ่มเจ้าหน้าที่</a> -->
         </th>
@@ -174,9 +177,12 @@ $(document).ready(function(){
             <td><?=($key+1)+$users->paged->current_row?></td>
             <td><?=($user->m_status == 'active')?'<div class="label label-info">เปิด</div>':'<div class="label">ปิด</div>';?></td>
             <td><?=$user->email?></td>
-            <td><?=$user->name?></td>
+            <td><?=$user->nursery->p_name?> <?=$user->nursery->p_surname?></td>
             <td><?=$user->nursery->nursery_category->title?><?=$user->nursery->name?></td>
             <td><?=$user->nursery->province->name?></td>
+            <td><?=$user->nursery->amphur->amphur_name?></td>
+            <td><?=$user->nursery->district->district_name?></td>
+            <td><?=mysql_to_th($user->created)?></td>
             <td>
                 <a class="btn btn-mini" href="staffs/form/<?=$user->id?>">แก้ไข</a>
                 <a class="btn btn-mini" href="staffs/delete/<?=$user->id?>" onclick="return confirm('<?php echo lang('notice_confirm_delete');?>')">ลบ</a>

@@ -60,7 +60,7 @@ $(document).ready(function(){
 	        <th>ที่อยู่</th>
 	        <!-- <th>ปีที่เข้าร่วม</th>
 	        <th>หัวหน้าศูนย์</th> -->
-	        <th>ผลการประเมิน</th>
+	        <th></th>
         </tr>
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
@@ -75,7 +75,10 @@ $(document).ready(function(){
 		        		<img class="icon-girl" src="themes/hps/images/girl.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
 		        	<?php endif;?>
 		        </td> -->
-		        <td><a href="users/register_center_form/<?=$nursery->id?>" class="btn btn-mini">ลงทะเบียน</a></td>
+		        <td>
+		        	<!-- <a href="users/register_center_form/<?=$nursery->id?>" class="btn btn-mini">ลงทะเบียน</a> -->
+		        	<?=chk_center_status($nursery->id)?>
+		        </td>
 	        </tr>
 		<?php endforeach;?>
         </table>

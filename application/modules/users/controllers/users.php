@@ -26,10 +26,10 @@ class Users extends Public_Controller{
 				provinces.name province_name
 				FROM
 				nurseries
-				INNER JOIN nursery_categories ON nurseries.nursery_category_id = nursery_categories.id
-				INNER JOIN districts on nurseries.district_id = districts.id
-				INNER JOIN amphures on nurseries.amphur_id = amphures.id
-				INNER JOIN provinces on nurseries.province_id = provinces.id
+				LEFT JOIN nursery_categories ON nurseries.nursery_category_id = nursery_categories.id
+				LEFT JOIN districts on nurseries.district_id = districts.id
+				LEFT JOIN amphures on nurseries.amphur_id = amphures.id
+				LEFT JOIN provinces on nurseries.province_id = provinces.id
 				WHERE 1=1";
 		if(@$_GET['name']) $sql .= ' and CONCAT(nursery_categories.title,nurseries.name) like "%'.$_GET['name'].'%"';
 		if(@$_GET['province_id']) $sql .= ' and nurseries.province_id = '.$_GET['province_id'];
@@ -44,6 +44,14 @@ class Users extends Public_Controller{
 	}
 	
 	function register_center_form($id=false){
+		$u = new User();
+		$u->query("select id from users where user_type_id = 9 and nursery_id = ".$id);
+		if($u->exists())
+		{
+			set_notify('success', 'ศูนย์เด็กเล็กนี้มีเจ้าหน้าที่ศูนย์แล้ว');
+			redirect('users/register_center');
+		}
+
 		$data['nursery'] = new Nursery($id);
 		$this->template->build('register_center_form',$data);
 	}
@@ -64,12 +72,21 @@ class Users extends Public_Controller{
 				
 				$_POST['nursery_id'] = $nursery->id;
 				$_POST['m_status'] = 'active';
+				$_POST['name'] = $_POST['p_name'].' '.$_POST['p_surname'];
 				
 				$user = new User();
 	            $user->from_array($_POST);
 	            $user->save();
+	            
+	            // สมัครเสร็จ login ต่อทันที
+	            if(login($_POST['email'], $_POST['password'], 9))
+	            {
+	                set_notify('success', 'ยินดีต้อนรับเข้าสู่ระบบค่ะ');
+					
+					redirect('teachers');
+	            }
 				
-				set_notify('success', 'ลงทะเบียนเรียบร้อย');
+				// set_notify('success', 'ลงทะเบียนเรียบร้อย');
 			}else{
 				
 				set_notify('error','กรอกรหัสไม่ถูกต้อง');

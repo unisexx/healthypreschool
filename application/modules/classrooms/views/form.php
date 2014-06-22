@@ -19,15 +19,25 @@
 		          <input class="input-xlarge" type="text" name="room_name" value="<?=$classroom->room_name?>" placeholder="ชื่อห้องเรียน">
 		        </div>
 		    </div>
+		    <?if(user_login()->user_type_id == 9): //เจ้าหน้าที่ศูนย์ สามารถเลือกเจ้าหน้าที่ครูได้?>
 		    <div class="control-group">
 		        <label class="control-label">ครูประจำชั้น / ครูผู้ดูแลเด็ก <span class="TxtRed">*</span></label>
 		        <div class="controls">
-		          <input class="input-xlarge" type="text" name="name" value="<?=$classroom->user_id == ''? user_login()->name : $classroom->user->name ;?>" placeholder="ชื่อ - นามสกุล" readonly> <!-- <button class="btn btn-small">ค้นหา</button> -->
+		          <?=form_dropdown('user_id',get_option('id','name','users where user_type_id = 10 and nursery_id = '.user_login()->nursery_id.' order by name asc'),@$classroom->user_id,'class="input-xlarge"','--- เจ้าหน้าที่ครู ---');?>
+		        </div>
+		    </div>
+		    <?elseif(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก เพิ่มของตัวเองได้อย่างเดียว?>
+		    <div class="control-group">
+		        <label class="control-label">ครูประจำชั้น / ครูผู้ดูแลเด็ก <span class="TxtRed">*</span></label>
+		        <div class="controls">
+		          <input class="input-xlarge" type="text" name="name" value="<?=$classroom->user_id == ''? user_login()->name : $classroom->user->name ;?>" placeholder="ชื่อ - นามสกุล" readonly>
 		          <input type="hidden" name="user_id" value="<?=$classroom->user_id == ''? user_login()->id : $classroom->user_id ;?>">
 		        </div>
 		    </div>
+		    <?endif;?>
 		    <div class="control-group">
                 <div class="controls">
+                  <input type="hidden" name="nursery_id" value="<?=$classroom->nursery_id == ''? user_login()->nursery_id : $classroom->nursery_id ;?>">
                   <input type="hidden" name="id" value="<?=$classroom->id?>">
                   <input type="submit" class="btn btn-small btn-info" value="บันทึก">
                   <input type="button" class="btn btn-small btn-danger" value="ย้อนกลับ" onclick="history.back(-1)">
@@ -64,7 +74,7 @@
 		</table>
 		<?endif;?>
 		
-		<u>หมายเหตุ : การประเมินค่าดัชนีมวลกาย</u>
+		<!-- <u>หมายเหตุ : การประเมินค่าดัชนีมวลกาย</u>
 		<ul>
 		  <li>40 หรือมากกว่านี้ : โรคอ้วนขั้นสูงสุด</li>
 		  <li>35.0 - 39.9: โรคอ้วนระดับ2</li>
@@ -72,7 +82,7 @@
 		  <li>23.5 - 28.4: น้ำหนักเกิน</li>
 		  <li>18.5 - 23.4: น้ำหนักปกติ</li>
 		  <li>น้อยกว่า 18.5: น้ำหนักน้อยเกินไป</li>
-		</ul>
+		</ul> -->
 		
 	</div>
 </div>

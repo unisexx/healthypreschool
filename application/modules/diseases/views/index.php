@@ -1,3 +1,6 @@
+<?
+	$month_th = array( 1 =>'ม.ค.',2 => 'ก.พ.',3=>'มี.ค.',4=>'เม.ย',5=>'พ.ค.',6=>'มิ.ย',7=>'ก.ค.',8=>'ส.ค.',9=>'ก.ย.',10=>'ต.ค.',11=>'พ.ย.',12=>'ธ.ค.');
+?>
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
   <li class="active">แบบคัดกรองโรค</li>
@@ -8,23 +11,24 @@
 <div style="float:right; padding:10px 0;"><a href="diseases/form?nursery_id=<?=user_login()->nursery_id?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=date("m")?>&year=<?=date("Y")+543?>"><div class="btn">เพิ่มรายการ</div></a></div>
 <table class="table">
 	<tr>
-		<th>ลำดับ</th>
 		<th>ประจำเดือน / ปี	</th>
 		<th>ห้องเรียน / ชั้นเรียน</th>
-		<th>ชื่อศูนย์</th>
+		<th>ครู / ผู้ดูแลเด็ก</th>
+		<th>บันทึกล่าสุด</th>
+		<th>ผู้บันทึก</th>
 		<th>จัดการ</th>
 	</tr>
-	<?foreach($classes as $key=>$class):?>
+	<? foreach($diseases as $row):?>
 	<tr>
-		<td><?=($key+1)+$classes->paged->current_row?></td>
-		<td><?=$class->room_name?></td>
-		<td><?=$class->user->name?></td>
-		<td><?=$class->classroom_detail->count()?></td>
+		<td><?=$month_th[$row->month]?> / <?=$row->year?></td>
+		<td><?=$row->room_name?></td>
+		<td><?=$row->teacher_name?></td>
+		<td><?=mysql_to_th($row->created)?></td>
+		<td><?=get_user_name($row->user_id)?></td>
 		<td>
-			<a href="classrooms/form/<?=$class->id?>" class='btn btn-mini btn-info'>แก้ไข</a>
-	        <a href="classrooms/delete/<?=$class->id?>" class="btn btn-mini btn-danger" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>
+			<a href="diseases/form?nursery_id=<?=$row->nursery_id?>&classroom_id=<?=$row->classroom_id?>&month=<?=$row->month?>&year=<?=$row->year?>" class="btn btn-mini">แก้ไข</a>
+			<a href="diseases/delete?nursery_id=<?=$row->nursery_id?>&classroom_id=<?=$row->classroom_id?>&month=<?=$row->month?>&year=<?=$row->year?>" class="btn btn-mini" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>
 		</td>
 	</tr>
-	<?endforeach;?>
+	<? endforeach;?>
 </table>
-<?=$classes->pagination();?>

@@ -1,11 +1,9 @@
 <?php
-class Disease extends ORM
+class Bmi extends ORM
 {
-	public $table = "diseases";
+	public $table = "bmis";
 	
 	public $has_one = array("classroom_detail");
-	
-	// public $has_many = array("classroom_detail");
 	
 	public function __construct($id = NULL)
 	{

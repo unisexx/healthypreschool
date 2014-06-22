@@ -8,7 +8,12 @@ class Classrooms extends Public_Controller{
     
     function index(){
     	$classroom = new Classroom();
-		$data['classes'] = $classroom->where('user_id = '.user_login()->id)->order_by('id','desc')->get_page();
+		if(user_login()->user_type_id == 9){ //เจ้าหน้าที่ศูนย์
+			$classroom->where('nursery_id = '.user_login()->nursery_id);
+		}elseif(user_login()->user_type_id == 10){ //เจ้าหน้าที่ครู ผู้ดูแลเด็ก
+			$classroom->where('user_id = '.user_login()->id);
+		}
+		$data['classes'] = $classroom->order_by('id','desc')->get_page();
     	$this->template->build('index',$data);
     }
 	

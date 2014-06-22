@@ -118,7 +118,10 @@
   <tr>
 </table>
 
-<div style="text-align: center; padding:5px;"><input type="submit" value=" บันทึก "></div>
+<div style="text-align: center; padding:5px;">
+	<input type="submit" value=" บันทึก "> 
+	<a href="diseases"><input type="button" value=" กลับหน้าหลัก "></a>
+</div>
 </form>
 
 <!-- <h3>หมายเหตุ : สัญลักษณ์ในการบันทึกข้อมูล</h3>

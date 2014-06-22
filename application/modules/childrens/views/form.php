@@ -4,8 +4,7 @@
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="classrooms">ห้องเรียน / ชั้นเรียน และเด็ก</a> <span class="divider">/</span></li>
-  <li><a href="classrooms/form/<?=$classroom->id?>"><?=$classroom->room_name?></a> <span class="divider">/</span></li>
+  <li><a href="childrens">ตรวจสอบรายชื่อเด็ก / นักเรียน</a> <span class="divider">/</span></li>
   <li>ฟอร์มเด็ก</li>
 </ul>
 
@@ -13,7 +12,17 @@
 <br>
 <div class="row">
 	<div class="span12">
-		<form action="classrooms/childsave" method="post" class="form-horizontal">
+		<form action="childrens/save" method="post" class="form-horizontal">
+			<div class="control-group">
+		        <label class="control-label">ห้องเรียน<span class="TxtRed">*</span></label>
+		        <div class="controls">
+		          <?if(user_login()->user_type_id == 9):?>
+		          	<?php echo  form_dropdown('classroom_id',get_option('id','room_name','classrooms','where nursery_id = '.user_login()->nursery_id.' order by room_name asc'),@$child->classroom_id,'','--- เลือกห้องเรียน ---')?>
+		          <?elseif(user_login()->user_type_id == 10):?>
+		          	<?php echo  form_dropdown('classroom_id',get_option('id','room_name','classrooms','where user_id = '.user_login()->id.' order by room_name asc'),@$child->classroom_id,'','--- เลือกห้องเรียน ---')?>
+		          <?endif;?>
+		        </div>
+		    </div>
 			<div class="control-group">
 		        <label class="control-label">คำนำหน้า<span class="TxtRed">*</span></label>
 		        <div class="controls">
@@ -45,8 +54,7 @@
 		    <div class="control-group">
                 <div class="controls">
                   <input type="hidden" name="id" value="<?=$child->id?>">
-                  <input type="hidden" name="classroom_id" value="<?=$classroom->id?>">
-                  <input type="hidden" name="nursery_id" value="<?=user_login()->nursery_id?>">
+                  <input type="hidden" name="nursery_id" value="<?php echo user_login()->nursery_id ?>">
                   <input type="submit" class="btn btn-small btn-info" value="บันทึก">
                   <input type="button" class="btn btn-small btn-danger" value="ย้อนกลับ" onclick="history.back(-1)">
                 </div>

@@ -81,11 +81,11 @@ $(function(){
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="teachers">จัดการครู / ผู้ดูแลเด็ก</a> <span class="divider">/</span></li>
+  <li><a href="teachers">ตรวจสอบรายชื่อครู / เจ้าหน้าที่</a> <span class="divider">/</span></li>
   <li class="active">ฟอร์ม</li>
 </ul>
 
-<h1><?=user_login()->nursery->nursery_category->title?><?=user_login()->nursery->name?> (ครู / ผู้ดูแลเด็ก)</h1>
+<h1> ตรวจสอบรายชื่อครู / เจ้าหน้าที่</h1>
 <br>
 <div class="row">
 	<div class="span12">

@@ -84,44 +84,81 @@
 								</div>
 				        	</div>
 				        	
-				        	<!-- เมนู -->
+				        	<!------- เมนู ------->
+				        	<style type="text/css">
+				        	#nav
+							{
+							    list-style: none;
+							    margin-bottom: 10px;
+							    position: relative;
+							    z-index: 9;
+							    height: 26px;
+							    padding: 4px 4px 4px 4px;
+							    margin-left:0px;
+							}
+							
+							#nav li
+							{
+							    float: left;
+							    margin:0 5px 10px 5px;
+							}
+							#nav img
+							{
+								margin:10px 0 10px 5px;
+							    border-bottom: #fff 2px solid;
+							}
+							#nav img:hover
+							{
+							    color: #fff;
+							    border-bottom: #0079C2 2px solid;
+							}
+				        	</style>
+				        	
 				        	<?if(user_login()->user_type_id == 1 or user_login()->user_type_id == 6 or user_login()->user_type_id == 7): //เจ้าหน้าที่ประจำเขต?>
-				        	<ul>
-				        		<li><a href="nurseries/register">ตรวจสอบรายชื่อศูนย์เด็กเล็กปลอดโรค</a></li>
-				        		<li><a href="nurseries/register_form">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
-				        		<li><a href="nurseries/estimate/0">ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
-				        		<li><a href="officers">ตรวจสอบรายชื่อเจ้าหน้าที่สาธารณะสุข</a></li>
-				        		<li><a href="staffs">ตรวจสอบรายชื่อเจ้าหน้าที่ศูนย์เด็กเล็กปลอดโรค</a></li>
+				        	<ul id="nav">
+				        		<li><a href="nurseries/register"><img src="themes/hps/images/banner_menu_1.png" alt="ตรวจสอบรายชื่อศูนย์เด็กเล็กปลอดโรค"></a></li>
+				        		<li><a href="nurseries/register_form"><img src="themes/hps/images/banner_menu_2.png" alt="สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
+				        		<li><a href="nurseries/estimate/0"><img src="themes/hps/images/banner_menu_3.png" alt="ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
+				        		<li><a href="officers"><img src="themes/hps/images/banner_menu_4.png" alt="ตรวจสอบรายชื่อเจ้าหน้าที่สาธารณะสุข"></a></li>
+				        		<li><a href="staffs"><img src="themes/hps/images/banner_menu_5.png" alt="ตรวจสอบรายชื่อเจ้าหน้าที่ศูนย์เด็กเล็กปลอดโรค"></a></li>
 				        		<?php if(user_login()->user_type_id == 1): //ถ้าเป็นผู้ดูแลระบบ ?>
-						        	<li><a href="nurseries/reports/index/basic_column">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
+						        	<li><a href="nurseries/reports/index/basic_column"><img src="themes/hps/images/banner_menu_6.png" alt="รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
 					        	<?elseif(user_login()->user_type_id == 6): //ถ้าเป็นเจ้าหน้าที่เขต ?>
-					        		<li><a href="nurseries/reports/index/basic_column?year=&type=1&area_id=<?=user_login()->area_id?>">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
+					        		<li><a href="nurseries/reports/index/basic_column?year=&type=1&area_id=<?=user_login()->area_id?>"><img src="themes/hps/images/banner_menu_6.png" alt="รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
 					        	<?elseif(user_login()->user_type_id == 7): //ถ้าเป็นเจ้าหน้าที่ประจำจังหวัด ?>
-					        		<li><a href="nurseries/reports/index/basic_column?year=&type=2&area_id=&province_id=<?=user_login()->province_id?>&amphur_id=&district_id=">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
+					        		<li><a href="nurseries/reports/index/basic_column?year=&type=2&area_id=&province_id=<?=user_login()->province_id?>&amphur_id=&district_id="><img src="themes/hps/images/banner_menu_6.png" alt="รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
 					        	<?endif;?>
 				        	</ul>
 				        	<?elseif(user_login()->user_type_id == 8): //เจ้าหน้าที่ประจำอำเภอ?>
-				        	<ul>
-				        		<li><a href="nurseries/register">ตรวจสอบรายชื่อศูนย์เด็กเล็กปลอดโรค</a></li>
-				        		<li><a href="nurseries/register_form">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
-				        		<li><a href="nurseries/estimate/0">ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
-				        		<li><a href="staffs">ตรวจสอบรายชื่อเจ้าหน้าที่ศูนย์เด็กเล็กปลอดโรค</a></li>
-				        		<li><a href="nurseries/reports/index/basic_column?year=&type=3&area_id=&province_id=&amphur_id=<?=user_login()->amphur_id?>&district_id=">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
+				        	<ul id="nav">
+				        		<li><a href="nurseries/register"><img src="themes/hps/images/banner_menu_1.png" alt="ตรวจสอบรายชื่อศูนย์เด็กเล็กปลอดโรค"></a></li>
+				        		<li><a href="nurseries/register_form"><img src="themes/hps/images/banner_menu_2.png" alt="สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
+				        		<li><a href="nurseries/estimate/0"><img src="themes/hps/images/banner_menu_3.png" alt="ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
+				        		<li><a href="staffs"><img src="themes/hps/images/banner_menu_5.png" alt="ตรวจสอบรายชื่อเจ้าหน้าที่ศูนย์เด็กเล็กปลอดโรค"></a></li>
+				        		<li><a href="nurseries/reports/index/basic_column?year=&type=3&area_id=&province_id=&amphur_id=<?=user_login()->amphur_id?>&district_id="><img src="themes/hps/images/banner_menu_6.png" alt="รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
 				        	</ul>
 				        	<?elseif(user_login()->user_type_id == 9): //เจ้าหน้าที่ศูนย์?>
-				        	<ul>
-				        		<li><a href="teachers">จัดการครู / ผู้ดูอลเด็ก</a></li>
+				        	<ul id="nav">
+				        		<li><a href="childrens"><img src="themes/hps/images/banner_menu_7.png" alt="ตรวจสอบรายชื่อเด็กนักเรียน"></a></li>
+				        		<li><a href="classrooms"><img src="themes/hps/images/banner_menu_8.png" alt="ตรวจสอบรายชื่อห้องเรียน"></a></li>
+				        		<li><a href="teachers"><img src="themes/hps/images/banner_menu_9.png" alt="ตรวจสอบรายชื่อครู / เจ้าหน้าที่"></a></li>
+				        		<li><a href="diseases"><img src="themes/hps/images/banner_menu_10.png" alt="บันทึกแบบคัดกรองโรค"></a></li>
+				        		<li><a href="diseases/report"><img src="themes/hps/images/banner_menu_11.png" alt="รายงานแบบคัดกรองโรค"></a></li>
+				        		<li><a href="assessments/preview"><img src="themes/hps/images/banner_menu_12.png" alt="รายงานแบบประเมินเข้าร่วมโครงการ"></a></li>
 				        	</ul>
 				        	<?elseif(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก?>
-				        	<ul>
-				        		<li><a href="classrooms">ห้องเรียน ชั้นเรียน และเด็ก</a></li>
-				        		<li><a href="diseases/form?nursery_id=<?=user_login()->nursery_id?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=date("m")?>&year=<?=date("Y")+543?>" target="_blank">บันทึกผลแบบคัดกรองโรค</a></li>
+				        	<ul id="nav">
+				        		<li><a href="childrens"><img src="themes/hps/images/banner_menu_7.png" alt="ตรวจสอบรายชื่อเด็กนักเรียน"></a></li>
+				        		<li><a href="classrooms"><img src="themes/hps/images/banner_menu_8.png" alt="ตรวจสอบรายชื่อห้องเรียน"></a></li>
+				        		<li><a href="diseases"><img src="themes/hps/images/banner_menu_10.png" alt="บันทึกแบบคัดกรองโรค"></a></li>
+				        		<li><a href="diseases/report"><img src="themes/hps/images/banner_menu_11.png" alt="รายงานแบบคัดกรองโรค"></a></li>
+				        		<li><a href="assessments/preview"><img src="themes/hps/images/banner_menu_12.png" alt="รายงานแบบประเมินเข้าร่วมโครงการ"></a></li>
 				        	</ul>
 				        	<?endif;?>
-				        	<!-- จบเมนู -->
+				        	<!------- จบเมนู ------->
 				        	
 				        	<?endif; //is_login()?>
-				        	
+				        	<br clear="all">
 				        	<?php echo $template['body'] ?>
 				        </td>
 				        <td background="themes/hps/images/table_content_right.png">&nbsp;</td>

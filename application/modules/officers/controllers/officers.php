@@ -21,7 +21,7 @@ class Officers extends Public_Controller
 		if(@$_GET['m_status'])$data['users']->where("m_status = '".$_GET['m_status']."'");
         
         if(user_login()->user_type_id == 1){ // admin เห็นทั้งหมด
-            $data['users']->where('user_type_id > '.user_login()->user_type_id);
+            $data['users']->where('user_type_id > '.user_login()->user_type_id.' and user_type_id < 9 ');
         }elseif(user_login()->user_type_id == 6){ // เจ้าหน้าที่เขต เห็นเจ้าหน้าที่จังหวัด
             $data['users']->where('user_type_id = 7 and province_id in (select id from provinces where area_id = '.user_login()->area_id.')');
         }elseif(user_login()->user_type_id == 7){ // เจ้าหน้าที่จังหวัด เห็นเจ้าหน้าที่อำเภอ

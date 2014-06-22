@@ -198,4 +198,18 @@ function get_user_name($id=false){
 	return $name;
 }
 
+function chk_center_status($id=false){
+	$CI =& get_instance();
+	$u = new User();
+	$u->query("select id from users where user_type_id = 9 and nursery_id = ".$id);
+	if($u->exists())
+	{
+		return '<span style="color:#D14">ลงทะเบียนแล้ว</span>';
+	}
+	else
+	{
+		return '<a href="users/register_center_form/'.$id.'" class="btn btn-mini">ลงทะเบียน</a>';
+	}
+}
+
 ?>

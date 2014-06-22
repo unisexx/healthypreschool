@@ -1,9 +1,9 @@
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active">จัดการครู / ผู้ดูแลเด็ก</li>
+  <li class="active">ตรวจสอบรายชื่อครู / เจ้าหน้าที่</li>
 </ul>
 
-<h1><?=user_login()->nursery->nursery_category->title?><?=user_login()->nursery->name?> (ครู / ผู้ดูแลเด็ก)</h1>
+<h1> ตรวจสอบรายชื่อครู / เจ้าหน้าที่</h1>
 
 <div style="float:right; padding:10px 0;"><a href="teachers/form"><div class="btn">เพิ่มรายการ</div></a></div>
 <table class="table">

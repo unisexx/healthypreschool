@@ -1,9 +1,9 @@
 <?php
-class Disease extends ORM
+class Disease_log extends ORM
 {
-	public $table = "diseases";
+	public $table = "disease_logs";
 	
-	public $has_one = array("classroom_detail");
+	// public $has_one = array("classroom_detail");
 	
 	// public $has_many = array("classroom_detail");
 	
