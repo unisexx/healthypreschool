@@ -293,6 +293,13 @@ class Nurseries extends Public_Controller
 		}
 	}
 	
+	function get_nursery_data2(){
+		if($_GET){
+			$data['nursery'] = new Nursery($_GET['id']);
+			$this->load->view('get_nursery_data',$data);
+		}
+	}
+	
 	function save_status($id=false){
 		if($_POST){
 			if($_POST['approve_year'] == ""){
@@ -303,6 +310,7 @@ class Nurseries extends Public_Controller
 			$_POST['approve_date'] = date("Y-m-d H:i:s");
 			$_POST['approve_user_id'] = user_login()->id;
 			$_POST['approve_type'] = 1; // 1 = แบบประเมินแบบเก่า, 2 = แบบประเมิน 35 ข้อ
+			
 			$nursery = new Nursery($id);
 			$nursery->from_array($_POST);
 			$nursery->save();

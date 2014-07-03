@@ -151,7 +151,8 @@ $(function(){
                 <div class="controls">
                     <?php if(user_login()->user_type_id == 1): // admin เห็นทุกจังหวัด?>
                     <div>
-                		<?=form_dropdown('province_to_select_amphur',get_option('id','name','provinces order by name asc'),@$user->amphur_id,'class="input-xlarge"','--- เลือกจังหวัด ---');?>
+                
+                		<?=form_dropdown('province_to_select_amphur',get_option('id','name','provinces order by name asc'),@$user->amphur->province_id,'class="input-xlarge"','--- เลือกจังหวัด ---');?>
                 	</div>
                 	<div class="amphur-frm">
                 		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures'),@$user->amphur_id,'class="input-xlarge" style="margin-top:5px";','--- เลือกอำเภอ ---');?>

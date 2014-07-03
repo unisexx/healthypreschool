@@ -125,9 +125,9 @@ $(document).ready(function(){
 	        <td><?=$nursery->year?></td>
 	        <td>
 	        	<?php if($nursery->p_title == "นาย"):?>
-	        		<img class="icon-boy" src="themes/hps/images/boy.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
+	        		<img class="icon-boy" src="themes/hps/images/boy.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_other?><?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
 	        	<?php else:?>
-	        		<img class="icon-girl" src="themes/hps/images/girl.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
+	        		<img class="icon-girl" src="themes/hps/images/girl.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_other?><?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
 	        	<?php endif;?>
 	        </td>
 	        <td><?=mysql_to_th($nursery->approve_date)?></td>

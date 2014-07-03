@@ -51,7 +51,7 @@
 				                    	echo '('.user_login()->nursery->nursery_category->title.user_login()->nursery->name.')';
 										echo '<br><b>สถานะศูนย์เด็กเล็ก : </b>';
 										
-										echo '<a href="assessments/preview">';
+										echo '<a href="assessments/preview/'.user_login()->nursery_id.'">';
 										if(user_login()->nursery->status == 0){
 							        		if(user_login()->nursery->assessment->total != 0){
 							        			echo '<span style="color:#D14">ไม่ผ่านเกณฑ์ ('.user_login()->nursery->assessment->total.' คะแนน)</span>';
@@ -144,7 +144,7 @@
 				        		<li><a href="teachers"><img src="themes/hps/images/banner_menu_9.png" alt="ตรวจสอบรายชื่อครู / เจ้าหน้าที่"></a></li>
 				        		<li><a href="diseases"><img src="themes/hps/images/banner_menu_10.png" alt="บันทึกแบบคัดกรองโรค"></a></li>
 				        		<li><a href="diseases/report"><img src="themes/hps/images/banner_menu_11.png" alt="รายงานแบบคัดกรองโรค"></a></li>
-				        		<li><a href="assessments/preview"><img src="themes/hps/images/banner_menu_12.png" alt="รายงานแบบประเมินเข้าร่วมโครงการ"></a></li>
+				        		<li><a href="assessments/preview/<?=user_login()->nursery_id?>"><img src="themes/hps/images/banner_menu_12.png" alt="รายงานแบบประเมินเข้าร่วมโครงการ"></a></li>
 				        	</ul>
 				        	<?elseif(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก?>
 				        	<ul id="nav">
@@ -152,7 +152,7 @@
 				        		<li><a href="classrooms"><img src="themes/hps/images/banner_menu_8.png" alt="ตรวจสอบรายชื่อห้องเรียน"></a></li>
 				        		<li><a href="diseases"><img src="themes/hps/images/banner_menu_10.png" alt="บันทึกแบบคัดกรองโรค"></a></li>
 				        		<li><a href="diseases/report"><img src="themes/hps/images/banner_menu_11.png" alt="รายงานแบบคัดกรองโรค"></a></li>
-				        		<li><a href="assessments/preview"><img src="themes/hps/images/banner_menu_12.png" alt="รายงานแบบประเมินเข้าร่วมโครงการ"></a></li>
+				        		<li><a href="assessments/preview/<?=user_login()->nursery_id?>"><img src="themes/hps/images/banner_menu_12.png" alt="รายงานแบบประเมินเข้าร่วมโครงการ"></a></li>
 				        	</ul>
 				        	<?endif;?>
 				        	<!------- จบเมนู ------->

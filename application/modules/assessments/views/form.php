@@ -92,7 +92,7 @@ function estimate(){
 <p class="title"><strong>คำชี้แจง</strong> ให้ผู้ประเมินสอบถามครูและผู้ดูแลเด็กในการดำเนินงานป้องกันควบคุมโรค ภายในระยะเวลา 1 ปีที่ผ่านมา และตรวจสอบเอกสาร/หลักฐานในการดำเนินงาน ตามหัวข้อการประเมินที่กำหนดให้</p>
 
 
-<form method="post" action="assessments/save">
+<form method="post" action="assessments/save" enctype="multipart/form-data">
 <table width="98%" border="0" align="center" cellpadding="0"  class="table1">
   <tr  bgcolor="#cce5fe">
     <td align="center"><strong>ที่</strong></td>
@@ -448,6 +448,14 @@ function estimate(){
   	<td id="estimate" nowrap="nowrap"><?=($assessment->total >= 28)?"<span style='color:teal;'>ผ่านเกณฑ์</span>":"<span style='color:#D14;'>ไม่ผ่านเกณฑ์</span>";?></td>
   	<td></td>
   	<td></td>
+  </tr>
+  <tr>
+  	<td></td>
+	<td>แนบไฟล์แบบประเมิน</td>
+	<td><?=is_file('uploads/assessment/'.$assessment->files)? "<a href='uploads/assessment/".$assessment->files."' target='_blank'>ดูไฟล์แนบ</a>" : "";?></td>
+	<td>
+		<input type="file" name="files" />
+	</td>
   </tr>
 </table>
 

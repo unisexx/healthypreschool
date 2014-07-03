@@ -12,12 +12,12 @@ class Diseases extends Public_Controller{
 		if(user_login()->user_type_id == 9){ $condition = " and diseases.nursery_id = ".user_login()->nursery_id; }
 		if(user_login()->user_type_id == 10){ $condition = " and diseases.classroom_id in (select id from classrooms where user_id = ".user_login()->id.")"; }
 		
-		$sql = "SELECT DISTINCT diseases.year,`month`,classroom_id,room_name,users.name teacher_name,diseases.nursery_id,max(diseases.created) created,diseases.user_id from diseases
+		$sql = "SELECT DISTINCT diseases.year,`month`,classroom_id,room_name,users.name teacher_name,diseases.nursery_id,diseases.user_id from diseases
 LEFT JOIN classrooms ON classrooms.id = diseases.classroom_id
 LEFT JOIN nurseries ON nurseries.id = diseases.nursery_id
 LEFT JOIN users ON users.id = classrooms.user_id
 WHERE 1=1 ".$condition;
-
+		
 		$data['diseases'] = $disease->sql_page($sql);
     	$this->template->build('index',$data);
     }

@@ -44,12 +44,14 @@ class Users extends Public_Controller{
 	}
 	
 	function register_center_form($id=false){
-		$u = new User();
-		$u->query("select id from users where user_type_id = 9 and nursery_id = ".$id);
-		if($u->exists())
-		{
-			set_notify('success', 'ศูนย์เด็กเล็กนี้มีเจ้าหน้าที่ศูนย์แล้ว');
-			redirect('users/register_center');
+		if($id){
+			$u = new User();
+			$u->query("select id from users where user_type_id = 9 and nursery_id = ".$id);
+			if($u->exists())
+			{
+				set_notify('success', 'ศูนย์เด็กเล็กนี้มีเจ้าหน้าที่ศูนย์แล้ว');
+				redirect('users/register_center');
+			}	
 		}
 
 		$data['nursery'] = new Nursery($id);

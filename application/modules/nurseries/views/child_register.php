@@ -15,6 +15,16 @@ $(document).ready(function(){
 				$("#district").html(data);
 			});
 	});
+	
+	$(".btn-estimate").live("click",function(){
+		$('.loader').show();
+		$.get('nurseries/get_nursery_data2',{
+			'id' : $(this).prev('input[type=hidden]').val()
+		},function(data){
+			$('.modal-body-form').html(data);
+			$('.loader').hide();
+		});
+	});
 });
 </script>
 <ul class="breadcrumb">
@@ -126,7 +136,10 @@ $(document).ready(function(){
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
 	        <td><?=($key+1)+$nurseries->paged->current_row?></td>
-	        <td><?=$nursery->nursery_category->title?><?=$nursery->name?></td>
+	        <td>
+	        	<input type="hidden" name="id" value="<?=$nursery->id?>">
+	        	<a href="#myModal" class="btn-estimate" data-toggle="modal"><?=$nursery->nursery_category->title?><?=$nursery->name?></a>
+	        	</td>
 	        <td>จ.<?=$nursery->province->name?></td>
 	        <td>อ.<?=$nursery->amphur->amphur_name?><br>ต.<?=$nursery->district->district_name?> </td>
 	        <!-- <td><?=$nursery->year?></td> -->
@@ -143,25 +156,30 @@ $(document).ready(function(){
 	        	
 	        	<?if($nursery->status == 0):?>
 	        		<?if($nursery->assessment->total != 0):?>
+	        			<a href="assessments/preview/<?=$nursery->id?>" target="_blank">
 	        			<span style="color:#D14">ไม่ผ่านเกณฑ์ <br>(<?=$nursery->assessment->total?> คะแนน)</span>
+	        			</a>
 	        		<?else:?>
 	        			รอการประเมิน
 	        		<?endif;?>
 	        	<?else:?>
 	        		<span style="color:teal">
-	        		ผ่านเกณฑ์ <br>
 	        		<?if($nursery->approve_year != 0):?>
-	        			(พ.ศ. <?=$nursery->approve_year?>)
+	        			ผ่านเกณฑ์ <br>(พ.ศ. <?=$nursery->approve_year?>)<br>
+	        			<span style="color:#d14;">หมดอายุปี <?=$nursery->approve_year + 3?></span>
 	        		<?else:?>
-	        			(<?=$nursery->assessment->total?> คะแนน)
+	        		<a href="assessments/preview/<?=$nursery->id?>" target="_blank">
+	        			ผ่านเกณฑ์ <br>(<?=$nursery->assessment->total?> คะแนน)<br>
+	        			<span style="color:#d14;">หมดอายุปี <?=date("Y", strtotime($nursery->approve_date)) + 546;?></span>
+	        		</a>
 	        		<?endif;?>
 	        		</span>
 	        	<?endif;?>
+	        </td>
 	        <td><?=mysql_to_th($nursery->approve_date)?></td>
 	        <td><?=get_user_name($nursery->approve_user_id)?></td>
-	        </td>
 	        <td>
-	        	<a href="assessments/form?nursery_id=<?=$nursery->id?>" class='btn btn-mini' style="width:59px;">ประเมินผลแบบ 35 ข้อ</a>
+	        	<!-- <a href="assessments/form?nursery_id=<?=$nursery->id?>" class='btn btn-mini' style="width:59px;">ประเมินผลแบบ 35 ข้อ</a> -->
 	        	<a href="nurseries/register_form/<?=$nursery->id?>" class='btn btn-mini btn-info'>แก้ไข</a>
 	        	<a href="nurseries/delete/<?=$nursery->id?>" class="btn btn-mini btn-danger" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>
 	        </td>
@@ -170,3 +188,14 @@ $(document).ready(function(){
         </table>
         <?=$nurseries->pagination();?>
 	</div>
+	
+
+
+
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-body" style="height: 500px;">
+  	<div>&nbsp;<img class="loader" src="media/images/ajax-loader.gif"></div>
+  	<div class="modal-body-form"></div>
+  </div>
+</div>

@@ -23,7 +23,13 @@
 		<td><?=$month_th[$row->month]?> / <?=$row->year?></td>
 		<td><?=$row->room_name?></td>
 		<td><?=$row->teacher_name?></td>
-		<td><?=mysql_to_th($row->created)?></td>
+		<td>
+			<?
+				$d = new Disease();
+				$d->query("select max(created) created from diseases where year=".$row->year." and month = ".$row->month." and classroom_id = ".$row->classroom_id);
+				echo mysql_to_th($d->created);
+			?>
+		</td>
 		<td><?=get_user_name($row->user_id)?></td>
 		<td>
 			<a href="diseases/form?nursery_id=<?=$row->nursery_id?>&classroom_id=<?=$row->classroom_id?>&month=<?=$row->month?>&year=<?=$row->year?>" class="btn btn-mini">แก้ไข</a>

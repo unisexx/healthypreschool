@@ -1,7 +1,7 @@
 <style>
 	table th{width:150px;}
 </style>
-<form method="post" action="nurseries/save_status" enctype="multipart/form-data">
+<form method="post" action="nurseries/save_status">
   	<fieldset style="border:1px dashed #ccc; padding:10px;">
 	        <legend style="color:#01a8d2 !important; padding:0 5px; font-size:14px; font-weight:700; color:#666; margin:0px; border-bottom: none !important;">ข้อมูลศูนย์เด็กเล็ก (<?=$nursery->nursery_category->title?><?=$nursery->name?>)</legend>
 	<table class="table table-condensed">
@@ -49,32 +49,29 @@
 	<fieldset style="border:1px dashed #ccc; padding:10px;">
 	        <legend style="color:#01a8d2 !important; padding:0 5px; font-size:14px; font-weight:700; color:#666; margin:0px; border-bottom: none !important;">ผลการประเมิน</legend>
         <table class="table table-condensed">
-        	<tr>
-        		<th>แบบประเมิน 35 ข้อ</th>
-        		<td><a href="assessments/form?nursery_id=<?=$nursery->id?>">ประเมินผล</a></td>
-        	</tr>
 	   	    <tr>
-		      <th>ผ่านเกณฑ์</th>
+		      <th>ผลการประเมิน</th>
 		      <td>
-		      	<?php
-		      		// กำหนดปีที่ผ่านเกณฑ์เริ่มต้นจากปีที่เข้าร่วม
-		      		$year = $nursery->year; // ปีที่เข้าร่วม
-					$start_year = $year > 2554 ? $year : 2554;
-					$end_year = date("Y") + 543;
-					for($start=$start_year;$start<=$end_year;$start++){
-		      			$arr[$start] = 'ผ่านเกณฑ์ปี '.$start; 
-					}
-		      	?>
-		      	<?=form_dropdown('approve_year',$arr,$nursery->approve_year,'','ไม่ผ่านเกณฑ์ ');?>
-		      	<input type="hidden" name="id" value="<?=$nursery->id?>">
+		      	<?if($nursery->status == 0):?>
+	        		<?if($nursery->assessment->total != 0):?>
+	        			<span style="color:#D14">ไม่ผ่านเกณฑ์ <br>(<?=$nursery->assessment->total?> คะแนน)</span>
+	        		<?else:?>
+	        			รอการประเมิน
+	        		<?endif;?>
+	        	<?else:?>
+	        		<span style="color:teal">
+	        		ผ่านเกณฑ์ <br>
+	        		<?if($nursery->approve_year != 0):?>
+	        			(พ.ศ. <?=$nursery->approve_year?>)<br>
+	        			<span style="color:#d14;">หมดอายุปี <?=$nursery->approve_year + 3?></span>
+	        		<?else:?>
+	        			(<?=$nursery->assessment->total?> คะแนน)<br>
+	        			<span style="color:#d14;">หมดอายุปี <?=date("Y", strtotime($nursery->approve_date)) + 546;?></span>
+	        		<?endif;?>
+	        		
+	        		</span>
+	        	<?endif;?>
 		      </td>
-			</tr>
-			<tr>
-				<th></th>
-				<td>
-					<input type="submit" class="btn btn-primary btn-submit" value="บันทึก">
-					<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="ปิด">
-				</td>
 			</tr>
 	    </table>
 	</fieldset>

@@ -156,23 +156,27 @@ $(document).ready(function(){
 	</div>
 </form>
     	
-    	
+<div style="margin-bottom: 10px;">
+	พบเจ้าหน้าที่ทั้งหมด <a href="nurseries/register?status=1"> <span class="badge badge-success"><?=$users->paged->total_rows;?></span></a>
+</div>
+        
 <table class="table">
     <tr>
         <th>ลำดับ</th>
         <th>สถานะ</th>
-        <th>อีเมล์</th>
         <th>ชื่อ - นามสกุล</th>
+        <th>เบอร์โทรศัพท์</th>
         <th>ประเภท</th>
         <th>พื้นที่</th>
+        <th>วันที่สมัคร</th>
         <th width="80"><a class="btn btn-mini btn-info" href="officers/form">เพิ่มเจ้าหน้าที่</a></th>
     </tr>
     <?php foreach($users as $key=>$user):?>
         <tr>
             <td><?=($key+1)+$users->paged->current_row?></td>
             <td><?=($user->m_status == 'active')?'<div class="label label-info">เปิด</div>':'<div class="label">ปิด</div>';?></td>
-            <td><?=$user->email?></td>
             <td><?=$user->name?></td>
+            <td><?=$user->phone?></td>
             <td><?=$user->user_type->name?></td>
             <td>
                 <?php 
@@ -185,6 +189,7 @@ $(document).ready(function(){
                     }
                 ?>
             </td>
+            <td><?=mysql_to_th($user->created)?></td>
             <td>
                 <a class="btn btn-mini" href="officers/form/<?=$user->id?>">แก้ไข</a>
                 <a class="btn btn-mini" href="officers/delete/<?=$user->id?>" onclick="return confirm('<?php echo lang('notice_confirm_delete');?>')">ลบ</a>

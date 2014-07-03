@@ -266,7 +266,10 @@ $(document).ready(function(){
         <table class="table">
    	    <tr>
         	      <th>คำนำหน้า<strong> <span class="TxtRed">*</span></strong></th>
-        	      <td><?php echo form_dropdown('p_title',array('นาย'=>'นาย','นาง'=>'นาง','นางสาว'=>'นางสาว'),$nursery->p_title,'','--- เลือกคำนำหน้า ---');?></td>
+        	      <td>
+        	      	<?php echo form_dropdown('p_title',array('นาย'=>'นาย','นาง'=>'นาง','นางสาว'=>'นางสาว'),$nursery->p_title,'','--- เลือกคำนำหน้า ---');?>
+        	      	<input type="text" name="p_other" value="<?=$nursery->p_other?>" placeholder="อื่นๆ">
+        	      </td>
        	 	  </tr>
                  <tr>
         	      <th>ชื่อ<strong> <span class="TxtRed">*</span></strong></th>

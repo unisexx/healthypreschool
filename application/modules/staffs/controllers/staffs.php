@@ -14,6 +14,7 @@ class Staffs extends Public_Controller
     function index()
     {
         $data['users'] = new User();
+		if(@$_GET['name'])$data['users']->where("name like '%".$_GET['name']."%'");
 		if(@$_GET['user_type_id'])$data['users']->where("user_type_id = ".$_GET['user_type_id']);
 		if(@$_GET['area_id'])$data['users']->where("area_id = ".$_GET['area_id']);
 		if(@$_GET['province_id'])$data['users']->where("province_id = ".$_GET['province_id']);
@@ -30,6 +31,7 @@ class Staffs extends Public_Controller
             $data['users']->where('user_type_id = 9 and nursery_id in (select id from nurseries where amphur_id = '.user_login()->amphur_id.')');
         }
         $data['users']->order_by('id','desc')->get_page();
+		// $data['users']->check_last_query();
         $this->template->build('index',$data);
     }
     

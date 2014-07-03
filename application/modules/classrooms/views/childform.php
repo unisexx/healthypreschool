@@ -15,6 +15,12 @@
 	<div class="span12">
 		<form action="classrooms/childsave" method="post" class="form-horizontal">
 			<div class="control-group">
+		        <label class="control-label">ห้องเรียน<span class="TxtRed">*</span></label>
+		        <div class="controls">
+		          <input class="input-xlarge" type="text" name="" value="<?=$classroom->room_name?>" disabled>
+		        </div>
+		    </div>
+			<div class="control-group">
 		        <label class="control-label">คำนำหน้า<span class="TxtRed">*</span></label>
 		        <div class="controls">
 		          <select name="title">

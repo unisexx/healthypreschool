@@ -18,6 +18,15 @@ class Assessments extends Public_Controller{
 	function save(){
 		if($_POST){
 			$assessment = new Assessment();
+			
+			if($_FILES['files']['name'])
+			{
+				if($assessment->id){
+					$assessment->delete_file($assessment->id,'uploads/assessment','files');
+				}
+				$_POST['files'] = $assessment->upload($_FILES['files'],'uploads/assessment/');
+			}
+			
 	        $assessment->from_array($_POST);
 	        $assessment->save();	
 			
@@ -39,12 +48,12 @@ class Assessments extends Public_Controller{
 		redirect($_POST['referer']);
 	}
 	
-	function preview(){
+	function preview($nursery_id = false){
 		$this->template->set_layout('blank');
-		$data['nursery'] = new Nursery(user_login()->nursery_id);
+		$data['nursery'] = new Nursery($nursery_id);
 		
 		$assessment = new Assessment();
-		$data['assessment'] = $assessment->where('nursery_id = '.user_login()->nursery_id)->limit(1)->get();
+		$data['assessment'] = $assessment->where('nursery_id = '.$nursery_id)->limit(1)->get();
 		$this->template->build('preview',$data);
 	}
 }
