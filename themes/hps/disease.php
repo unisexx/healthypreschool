@@ -35,6 +35,7 @@ a:hover {color:#0190fe;}
 .officer ul li a { display:block;  margin:0; padding-right:10px; padding-left:10px; font-size:13px;  font-weight:bold; color:#686868; text-decoration:none; text-align:center;}
 .officer ul li.active a, .officer ul li a:hover{ padding:0px; padding-left:10px; padding-right:10px; margin:0; color:#4993ec}
 </style>
+<link rel="stylesheet" href="media/js/bootstrap/css/bootstrap.min.css" type="text/css">
 <? include "_script.php";?>
 </head>
 

@@ -8,7 +8,7 @@
 
 <h1>แบบคัดกรองโรค</h1>
 
-<div style="float:right; padding:10px 0;"><a href="diseases/form?nursery_id=<?=user_login()->nursery_id?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=date("m")?>&year=<?=date("Y")+543?>"><div class="btn">เพิ่มรายการ</div></a></div>
+<div style="float:right; padding:10px 0;"><a href="diseases/form?nursery_id=<?=user_login()->nursery_id?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=intval(date("m"))?>&year=<?=date("Y")+543?>"><div class="btn">เพิ่มรายการ</div></a></div>
 <table class="table">
 	<tr>
 		<th>ประจำเดือน / ปี	</th>

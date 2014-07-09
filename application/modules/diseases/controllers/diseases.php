@@ -37,9 +37,8 @@ WHERE 1=1 ".$condition;
 			$data['childs'] = $classroom_detail->where('classroom_id = '.$_GET['classroom_id'])->get();
 		}
 		
-		
-		
-		$this->template->build('form',$data);
+		// $this->template->build('form',$data);
+		$this->template->build('form2',$data);
 	}
 	
 	function save(){
@@ -121,6 +120,38 @@ WHERE 1=1 ".$condition;
 		$data['months'] = $disease->sql_page($sql);
 		
 		$this->template->build('report',$data);
+	}
+	
+	function form2(){
+		$this->template->set_layout('disease');
+		
+		// หาจำนวนห้อง
+		$classroom = new Classroom();
+		if(user_login()->user_type_id == 9){ $classroom->where('nursery_id = '.user_login()->nursery_id); }
+		if(user_login()->user_type_id == 10){ $classroom->where('user_id = '.user_login()->id); }
+		$data['classrooms'] = $classroom->get();
+		
+		// หาจำนวนเด็กในห้องที่เลือก
+		if($_GET['classroom_id'] != ""){
+			$classroom_detail = new Classroom_detail();
+			$data['childs'] = $classroom_detail->where('classroom_id = '.$_GET['classroom_id'])->get();
+		}
+		
+		$this->template->build('form2',$data);
+	}
+	
+	function get_disease_form(){
+		$data['disease'] = new Disease($_GET['id']);
+		$this->load->view('get_disease_form',$data);
+	}
+
+	function save_disease(){
+		$disease = new Disease($_GET['id']);
+		$disease->from_array($_GET);
+		$disease->save();
+		
+		echo $_GET['c1'].$_GET['c2'].$_GET['c3'].$_GET['c4'].$_GET['c5'];
+		echo '<input class="h_id" type="hidden" name="id[]" value="'.$disease->id.'">';
 	}
 }
 ?>
