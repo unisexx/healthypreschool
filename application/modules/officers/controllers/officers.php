@@ -14,6 +14,7 @@ class Officers extends Public_Controller
     function index()
     {
         $data['users'] = new User();
+		if(@$_GET['search'])$data['users']->where("name like '%".$_GET['search']."%' or email like '%".$_GET['search']."%'");
 		if(@$_GET['user_type_id'])$data['users']->where("user_type_id = ".$_GET['user_type_id']);
 		if(@$_GET['area_id'])$data['users']->where("area_id = ".$_GET['area_id']);
 		if(@$_GET['province_id'])$data['users']->where("province_id = ".$_GET['province_id']);

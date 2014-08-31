@@ -41,7 +41,7 @@ $(document).ready(function(){
 	    	<?=form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),@$_GET['nursery_category_id'],'','--- เลือกคำนำหน้า ---');?>
 	    	<input name="name" type="text" value="<?=@$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:280px;"/>
 			<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
-           		<?php echo form_dropdown('province_id',get_option('id','name','provinces'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
+           		<?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
            	<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร.?>
            		<?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
            	<?php endif;?>
@@ -103,6 +103,10 @@ $(document).ready(function(){
         	ไม่ผ่านเกณฑ์<a href="nurseries/register?status=2"> <span class="badge badge-important"><?=$nopass_count?></span></a>
         	รอการประเมิน<a href="nurseries/register?status=3"> <span class="badge"><?=$regis_count-($pass_count+$nopass_count)?></span></a>
         	เข้าร่วมโครงการ<a href="nurseries/register"> <span class="badge badge-info"><?=$regis_count?></span></a>
+        	<!-- ผ่านเกณฑ์ <span class="badge badge-success"><?=$pass_count?></span>
+        	ไม่ผ่านเกณฑ์ <span class="badge badge-important"><?=$nopass_count?></span>
+        	รอการประเมิน <span class="badge"><?=$regis_count-($pass_count+$nopass_count)?></span>
+        	เข้าร่วมโครงการ <span class="badge badge-info"><?=$regis_count?></span> -->
         </div>
         
         <!-- <div style="float:right; padding:10px 0;">
@@ -119,7 +123,7 @@ $(document).ready(function(){
         	<?endif;?>
         </div> -->
         
-    	<table class="table">
+    	<table class="table table-striped">
         <tr>
 	        <th>ลำดับ</th>
 	        <th>ชื่อศุนย์พัฒนาเด็กเล็ก</th>
@@ -138,8 +142,16 @@ $(document).ready(function(){
 	        <td><?=($key+1)+$nurseries->paged->current_row?></td>
 	        <td>
 	        	<input type="hidden" name="id" value="<?=$nursery->id?>">
-	        	<a href="#myModal" class="btn-estimate" data-toggle="modal"><?=$nursery->nursery_category->title?><?=$nursery->name?></a>
-	        	</td>
+	        	<a href="#myModal" class="btn-estimate" data-toggle="modal"><b><?=$nursery->nursery_category->title?><?=$nursery->name?></b></a>
+	        	<ul>
+	        		<li><a href="childrens/list_guest/<?=$nursery->id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a></li>
+	        		<li><a href="classrooms/list_guest/<?=$nursery->id?>" target="_blank">รายชื่อห้องเรียน</a></li>
+	        		<li><a href="teachers/list_guest/<?=$nursery->id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a></li>
+	        		<li><a href="diseases/list_guest/<?=$nursery->id?>" target="_blank">บันทึกแบบคัดกรองโรค</a></li>
+	        		<li><a href="diseases/report_guest?nursery_id=<?=$nursery->id?>" target="_blank">รายงานแบบคัดกรองโรค</a></li>
+	        		<li><a href="assessments/preview/<?=$nursery->id?>" target="_blank">รายงานแบบประเมินสมัครเข้าร่วมโครงการ</a></li>
+	        	</ul>
+	        </td>
 	        <td>จ.<?=$nursery->province->name?></td>
 	        <td>อ.<?=$nursery->amphur->amphur_name?><br>ต.<?=$nursery->district->district_name?> </td>
 	        <!-- <td><?=$nursery->year?></td> -->

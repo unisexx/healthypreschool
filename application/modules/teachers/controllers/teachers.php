@@ -44,5 +44,12 @@ class Teachers extends Public_Controller{
 		}
 		redirect($_SERVER['HTTP_REFERER']);
 	}
+	
+	function list_guest($nursery_id){
+		$data['nursery_id'] = $nursery_id;
+		$user = new User();
+		$data['teachers'] = $user->where('user_type_id = 10 and nursery_id = '.$nursery_id)->order_by('id','desc')->get_page();
+		$this->template->build('list_guest',$data);
+	}
 }
 ?>

@@ -122,6 +122,31 @@ WHERE 1=1 ".$condition;
 		$this->template->build('report',$data);
 	}
 	
+	function report_guest(){
+		$data['text'] = "สรุปรายงานแบบคัดกรองโรค ";
+		
+		// หาจำนวนห้อง
+		$classroom = new Classroom();
+		$classroom->where('nursery_id = '.$_GET['nursery_id']);
+		$data['classrooms'] = $classroom->get();
+		
+		// หาปี
+		$disease = new Disease();
+		$sql = "SELECT DISTINCT year
+				FROM diseases
+				WHERE nursery_id = ".$_GET['nursery_id'];
+		$data['years'] = $disease->sql_page($sql);
+		
+		// หาเดือน
+		$disease = new Disease();
+		$sql = "SELECT DISTINCT month
+				FROM diseases
+				WHERE nursery_id = ".$_GET['nursery_id'];
+		$data['months'] = $disease->sql_page($sql);
+		
+		$this->template->build('report_guest',$data);
+	}
+	
 	function form2(){
 		$this->template->set_layout('disease');
 		
@@ -152,6 +177,45 @@ WHERE 1=1 ".$condition;
 		
 		echo $_GET['c1'].$_GET['c2'].$_GET['c3'].$_GET['c4'].$_GET['c5'];
 		echo '<input class="h_id" type="hidden" name="id[]" value="'.$disease->id.'">';
+	}
+	
+	function list_guest($nursery_id){
+		$data['nursery_id'] = $nursery_id;
+		$disease = new Disease();
+		
+		$condition = " and diseases.nursery_id = ".$nursery_id;
+		
+		$sql = "SELECT DISTINCT diseases.year,`month`,classroom_id,room_name,users.name teacher_name,diseases.nursery_id,diseases.user_id from diseases
+LEFT JOIN classrooms ON classrooms.id = diseases.classroom_id
+LEFT JOIN nurseries ON nurseries.id = diseases.nursery_id
+LEFT JOIN users ON users.id = classrooms.user_id
+WHERE 1=1 ".$condition;
+		
+		$data['diseases'] = $disease->sql_page($sql);
+    	$this->template->build('list_guest',$data);
+	}
+	
+	function form_guest(){
+		$this->template->set_layout('disease');
+		
+		// หาจำนวนห้อง
+		$classroom = new Classroom();
+		$classroom->where('nursery_id = '.$_GET['nursery_id']); 
+		$data['classrooms'] = $classroom->get();
+		
+		// หาจำนวนเด็กในห้องที่เลือก
+		if($_GET['classroom_id'] != ""){
+			$classroom_detail = new Classroom_detail();
+			$data['childs'] = $classroom_detail->where('classroom_id = '.$_GET['classroom_id'])->get();
+		}
+		
+		// $this->template->build('form',$data);
+		$this->template->build('form_guest',$data);
+	}
+	
+	function get_disease_form_guest(){
+		$data['disease'] = new Disease($_GET['id']);
+		$this->load->view('get_disease_form_guest',$data);
 	}
 }
 ?>

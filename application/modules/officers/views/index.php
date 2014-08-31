@@ -107,6 +107,7 @@ $(document).ready(function(){
 
 <form method="get" action="officers">
 	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
+	<input type="text" name="search" value="<?=@$_GET['search']?>" placeholder="ค้นหาชื่อ,อีเมล์">
 	
 	<?=form_dropdown('m_status',array('active'=>'เปิด','deactive'=>'ปิด'),@$_GET['m_status'],'','--- เลือกสถานะ ---');?>
 	

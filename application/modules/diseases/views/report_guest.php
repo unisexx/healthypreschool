@@ -82,8 +82,14 @@ $(function(){
 
 <?php $arrayMonth = array('1' => 'มกราคม', '2' => 'กุมภาพันธ์', '3' => 'มีนาคม', '4' => 'เมษายน', '5' => 'พฤษภาคม', '6' => 'มิถุนายน', '7' => 'กรกฎาคม', '8' => 'สิงหาคม', '9' => 'กันยายน', '10' => 'ตุลาคม', '11' => 'พฤศจิกายน', '12' => 'ธันวาคม',);?>
 
+<ul class="breadcrumb">
+  <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
+  <li class="active"><?=get_nursery_name($_GET['nursery_id'])?> / รายงานแบบคัดกรองโรค</li>
+</ul>
 
-<form method="get" action="diseases/report">
+<h1>รายงานแบบคัดกรองโรค</h1>
+
+<form method="get" action="diseases/report_guest">
 <div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
 	<select name="classroom_id">
 	<option value="">-- ทุกห้องเรียน --</option>
@@ -108,6 +114,7 @@ $(function(){
 	<?endforeach;?>
 	</select>
 	
+	<input type="hidden" name="nursery_id" value="<?=$_GET['nursery_id']?>">
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 </div>
 
@@ -143,7 +150,7 @@ $(function(){
 				FROM
 				diseases d
 				INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-				WHERE 1=1 and cd.title = 'ด.ช.' and d.nursery_id = ".user_login()->nursery_id." and d.c1 = '".$row."' ".@$condition;
+				WHERE 1=1 and cd.title = 'ด.ช.' and d.nursery_id = ".$_GET['nursery_id']." and d.c1 = '".$row."' ".@$condition;
 				$disease = new Disease();
 				$disease->query($sql);
 				
@@ -152,7 +159,7 @@ $(function(){
 				FROM
 				diseases d
 				INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-				WHERE 1=1 and cd.title = 'ด.ญ.' and d.nursery_id = ".user_login()->nursery_id." and d.c1 = '".$row."' ".@$condition;
+				WHERE 1=1 and cd.title = 'ด.ญ.' and d.nursery_id = ".$_GET['nursery_id']." and d.c1 = '".$row."' ".@$condition;
 				$disease2 = new Disease();
 				$disease2->query($sql);
 			?>

@@ -4,18 +4,18 @@
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li>ตรวจสอบรายชื่อ / เด็กนักเรียน</li>
+  <li class="active"><?=get_nursery_name($nursery_id)?> / ตรวจสอบรายชื่อเด็ก/นักเรียน</li>
 </ul>
 
-<h1>ตรวจสอบรายชื่อ / เด็กนักเรียน</h1>
+<h1>ตรวจสอบรายชื่อเด็ก/นักเรียน</h1>
 
-<form method="get" action="childrens">
+<form method="get" action="">
 <div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
 	<input type="text" name="child_name" value="<?=@$_GET['child_name']?>" placeholder="ชื่อ - นามสกุล">
 	<?if(user_login()->user_type_id == 9):?>
-		<?php echo @form_dropdown('classroom_id',get_option('id','room_name','classrooms','where nursery_id = '.user_login()->nursery_id.' order by room_name asc'),@$_GET['classroom_id'],'','--- เลือกห้องเรียน ---')?> 
+		<?php echo  form_dropdown('classroom_id',get_option('id','room_name','classrooms','where nursery_id = '.user_login()->nursery_id.' order by room_name asc'),@$_GET['classroom_id'],'','--- เลือกห้องเรียน ---')?> 
 	<?elseif(user_login()->user_type_id == 10):?>
-		<?php echo @form_dropdown('classroom_id',get_option('id','room_name','classrooms','where user_id = '.user_login()->id.' order by room_name asc'),@$_GET['classroom_id'],'','--- เลือกห้องเรียน ---')?> 
+		<?php echo  form_dropdown('classroom_id',get_option('id','room_name','classrooms','where user_id = '.user_login()->id.' order by room_name asc'),@$_GET['classroom_id'],'','--- เลือกห้องเรียน ---')?> 
 	<?endif;?>
 	
 	ช่วงอายุ <input class="span1" type="text" name="lowage" value="<?=(@$_GET['lowage']) ? $_GET['lowage'] : '0' ;?>"> ถึง <input class="span1" type="text" name="hiage" value="<?=(@$_GET['hiage']) ? $_GET['hiage'] : 99 ;?>"><br> 
@@ -31,7 +31,7 @@
 </div>
 </form>
 
-<div style="float:right; padding:10px 0;"><a href="childrens/form"><div class="btn btn-small">เพิ่มรายชื่อเด็ก</div></a></div>
+<!-- <div style="float:right; padding:10px 0;"><a href="childrens/form"><div class="btn btn-small">เพิ่มรายชื่อเด็ก</div></a></div> -->
 <table class="table table-striped table-bordered">
 	<tr>
 		<th>ลำดับ</th>
@@ -40,7 +40,7 @@
 		<th>น้ำหนัก (กก) / ส่วนสูง (ซม)</th>
 		<th>ดัชนีมวลกาย (BMI)</th>
 		<th>ห้องเรียน</th>
-		<th>จัดการ</th>
+		<!-- <th>จัดการ</th> -->
 	</tr>
 	<?foreach($childs as $key=>$row):?>
 	<tr>
@@ -50,10 +50,10 @@
 		<td><?=$row->weight?> / <?=$row->height?></td>
 		<td><?=number_format($row->weight/(($row->height/100)*($row->height/100)),2)?></td>
 		<td><?=$row->classroom->room_name?></td>
-		<td>
+		<!-- <td>
 			<a href="childrens/form/<?=$row->id?>" class='btn btn-mini btn-info'>แก้ไข</a>
     		<a href="childrens/delete/<?=$row->id?>" class="btn btn-mini btn-danger" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>
-		</td>
+		</td> -->
 	</tr>
 	<?endforeach;?>
 </table>

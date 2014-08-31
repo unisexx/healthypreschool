@@ -66,5 +66,13 @@ class Classrooms extends Public_Controller{
 		}
 		redirect('classrooms/form/'.$_POST['classroom_id']);
 	}
+	
+	function list_guest($nursery_id){
+		$data['nursery_id'] = $nursery_id;
+		$classroom = new Classroom();
+		$classroom->where('nursery_id = '.$nursery_id);
+		$data['classes'] = $classroom->order_by('id','desc')->get_page();
+    	$this->template->build('list_guest',$data);
+	}
 }
 ?>

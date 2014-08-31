@@ -71,5 +71,24 @@ class Childrens extends Public_Controller{
 		
 		$this->template->build('profile',$data);
 	}
+	
+	function list_guest($nursery_id){
+		$data['nursery_id'] = $nursery_id;
+		$child = new Classroom_detail();
+		if(@$_GET['child_name']){ $child->where("child_name LIKE '%".$_GET['child_name']."%'"); }
+		if(@$_GET['classroom_id']){ $child->where("classroom_id = ".$_GET['classroom_id']); }
+		if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ $child->where("age between ".$_GET['lowage']." and ".$_GET['hiage']); }
+		if(@$_GET['bmi']){
+			if($_GET['bmi'] == 1){ $child->where("ROUND(weight / ((height/100) * (height/100)),2) between 20 and 24.9"); }
+			if($_GET['bmi'] == 2){ $child->where("ROUND(weight / ((height/100) * (height/100)),2) between 25 and 29.9"); }
+			if($_GET['bmi'] == 3){ $child->where("ROUND(weight / ((height/100) * (height/100)),2) between 30 and 34.9"); }
+			if($_GET['bmi'] == 4){ $child->where("ROUND(weight / ((height/100) * (height/100)),2) between 35 and 44.9"); }
+			if($_GET['bmi'] == 5){ $child->where("ROUND(weight / ((height/100) * (height/100)),2) between 45 and 49.9"); }
+			if($_GET['bmi'] == 6){ $child->where("ROUND(weight / ((height/100) * (height/100)),2) between 50 and 9999"); }
+		}
+		$child->where('nursery_id = '.$nursery_id);
+		$data['childs'] = $child->order_by('id','desc')->get();
+    	$this->template->build('list_guest',$data);
+	}
 }
 ?>

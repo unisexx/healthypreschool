@@ -14,7 +14,8 @@ class Staffs extends Public_Controller
     function index()
     {
         $data['users'] = new User();
-		if(@$_GET['name'])$data['users']->where("name like '%".$_GET['name']."%'");
+		if(@$_GET['search'])$data['users']->where("name like '%".$_GET['search']."%' or email like '%".$_GET['search']."%'");
+		if(@$_GET['nursery_name'])$data['users']->where_related_nursery("name like '%".$_GET['nursery_name']."%'");
 		if(@$_GET['user_type_id'])$data['users']->where("user_type_id = ".$_GET['user_type_id']);
 		if(@$_GET['area_id'])$data['users']->where("area_id = ".$_GET['area_id']);
 		if(@$_GET['province_id'])$data['users']->where("province_id = ".$_GET['province_id']);
@@ -22,20 +23,21 @@ class Staffs extends Public_Controller
 		if(@$_GET['m_status'])$data['users']->where("m_status = '".$_GET['m_status']."'");
         
         if(user_login()->user_type_id == 1){ // admin เห็นทั้งหมด
-            $data['users']->where('user_type_id = 9');
+            $data['users']->where('user_type_id between 9 and 10');
         }elseif(user_login()->user_type_id == 6){ // เจ้าหน้าที่เขต
-            $data['users']->where('user_type_id = 9 and nursery_id in (select id from nurseries where area_id = '.user_login()->area_id.')');
+            $data['users']->where('user_type_id between 9 and 10 and nursery_id in (select id from nurseries where area_id = '.user_login()->area_id.')');
         }elseif(user_login()->user_type_id == 7){ // เจ้าหน้าที่จังหวัด
-            $data['users']->where('user_type_id = 9 and nursery_id in (select id from nurseries where province_id = '.user_login()->province_id.')');
+            $data['users']->where('user_type_id between 9 and 10 and nursery_id in (select id from nurseries where province_id = '.user_login()->province_id.')');
         }elseif(user_login()->user_type_id == 8){ // เจ้าหน้าที่อำเภอ
-            $data['users']->where('user_type_id = 9 and nursery_id in (select id from nurseries where amphur_id = '.user_login()->amphur_id.')');
+            $data['users']->where('user_type_id between 9 and 10 and nursery_id in (select id from nurseries where amphur_id = '.user_login()->amphur_id.')');
         }
         $data['users']->order_by('id','desc')->get_page();
 		// $data['users']->check_last_query();
         $this->template->build('index',$data);
     }
     
-    function form($id=false){
+    function form($nursery_id,$id=false){
+    	$data['nursery'] = new Nursery($nursery_id);
         $data['user'] = new User($id);
         $this->template->build('form',$data);
     }

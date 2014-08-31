@@ -52,7 +52,7 @@ table{border-collapse: collapse;width:100%;}
 		
 		$(".openmodal").live("click",function(){
 			$('.loader').show();
-			$.get('diseases/get_disease_form',{
+			$.get('diseases/get_disease_form_guest',{
 				'nursery_name'			: $('input[name=room]').val(),
 				'classroom_name' 		: $("select[name=classroom_id] option:selected").html(),
 				'child_name'			: $(this).closest('tr').find('th:eq(1)').text(),
@@ -83,7 +83,7 @@ table{border-collapse: collapse;width:100%;}
 <table width="98%" border="0" align="center" cellpadding="0" cellspacing="0"  bgcolor="#F5F5F5" class="table2">
   <tr>
     <td width="44%" align="right">ชื่อศูนย์</td>
-    <td width="56%"><input name="room" type="text" id="room" value="<?=user_login()->nursery->nursery_category->title?><?=user_login()->nursery->name?>" size="50" readonly/></td>
+    <td width="56%"><input name="room" type="text" id="room" value="<?=get_nursery_name(@$_GET['nursery_id'])?>" size="50" readonly/></td>
   </tr>
   <tr>
     <td align="right">เลือกห้องเรียน / ชั้นเรียน</td>
@@ -227,7 +227,7 @@ table{border-collapse: collapse;width:100%;}
 
 <div style="text-align: center; padding:5px;">
 	<!-- <input type="submit" value=" บันทึก ">  -->
-	<a class="no-print" href="diseases"><input type="button" value=" กลับหน้าหลัก "></a>
+	<a class="no-print" href="<?=$_SERVER["HTTP_REFERER"]?>"><input type="button" value=" กลับหน้าหลัก "></a>
 	<input class="no-print" type="button" value=" พิมพ์หน้านี้ " onclick="myFunction()">
 </div>
 </form>

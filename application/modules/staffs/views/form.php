@@ -98,11 +98,11 @@ $(function(){
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="officers">เจ้าหน้าที่ศูนย์เด็กเล็ก</a> <span class="divider">/</span></li>
+  <li><a href="staffs">เจ้าหน้าที่ศูนย์เด็กเล็ก</a> <span class="divider">/</span></li>
   <li class="active">ฟอร์ม</li>
 </ul>
 
-<h1>เจ้าหน้าที่ศูนย์เด็กเล็ก</h1>
+<h1>เจ้าหน้าที่ครู / ผู้ดูแลเด็ก</h1>
 <br>
 
 <div class="row">
@@ -111,14 +111,14 @@ $(function(){
             <div class="control-group">
                 <label class="control-label" for="inputUsername">สถานะเจ้าหน้าที่</label>
                 <div class="controls">
-                  <?=form_dropdown('m_status',array('deactive'=>'ปิดการใช้งาน','active'=>'เปิดการใช้งาน'),$user->m_status,'class="input-xlarge"');?>
+                  <?=form_dropdown('m_status',array('active'=>'เปิดการใช้งาน','deactive'=>'ปิดการใช้งาน'),$user->m_status,'class="input-xlarge"');?>
                 </div>
             </div>
             <hr>
             <div class="control-group">
                 <label class="control-label">เจ้าหน้าที่ประจำศูนย์</label>
                 <div class="controls">
-                    <input type="text" value="<?=$user->nursery->nursery_category->title?><?=$user->nursery->name?>" readonly>
+                    <input type="text" value="<?=$nursery->nursery_category->title?><?=$nursery->name?>" readonly>
                 </div>
             </div>
             <div class="control-group">
@@ -155,7 +155,8 @@ $(function(){
             <div class="control-group">
                 <label class="control-label" for="inputPass">รหัสผ่าน <span class="TxtRed">*</span></label>
                 <div class="controls">
-                  <input class="input-xlarge" type="input" name="password" id="inputPass" value="<?=($user->password)?$user->password:randomPassword();?>">
+                  <!-- <input class="input-xlarge" type="input" name="password" id="inputPass" value="<?=($user->password)?$user->password:randomPassword();?>"> -->
+                  <input class="input-xlarge" type="text" name="password" id="inputPass" value="<?=$user->password?>">
                 </div>
             </div>
             <!-- <div class="control-group">
@@ -179,7 +180,15 @@ $(function(){
             </div>
             <div class="control-group">
                 <div class="controls">
+				  <input type="hidden" name="nursery_id" value="<?=@$nursery->id?>">
+				  <input type="hidden" name="user_type_id" value="10">
+                  <input type="hidden" name="area_id" value="<?=@$nursery->area_id?>">
+                  <input type="hidden" name="province_id" value="<?=@$nursery->province_id?>">
+                  <input type="hidden" name="amphur_id" value="<?=@$nursery->amphur_id?>">
+                  <input type="hidden" name="district_id" value="<?=@$nursery->district_id?>">
+                  <input type="hidden" name="id" value="<?=@$user->id?>">
                   <input type="submit" class="btn btn-small btn-info" value="บันทึก">
+                  <input type="button" class="btn btn-small btn-danger" value="ย้อนกลับ" onclick="history.back(-1)">
                 </div>
             </div>
         </form>

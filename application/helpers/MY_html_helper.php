@@ -212,4 +212,19 @@ function chk_center_status($id=false){
 	}
 }
 
+function get_nursery_name($nursery_id=false){
+	$CI =& get_instance();
+	
+	$u = new Nursery();
+	$u->query("SELECT
+	nurseries.name,
+	nursery_categories.title
+	FROM
+	nurseries
+	INNER JOIN nursery_categories ON nursery_categories.id = nurseries.nursery_category_id where nurseries.id =".$nursery_id);
+	$name = $u->title.$u->name;
+		
+	return $name;
+}
+
 ?>

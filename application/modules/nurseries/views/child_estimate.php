@@ -114,7 +114,11 @@ $(document).ready(function(){
 	        <th>หัวหน้าศูนย์</th>
 	        <th>วันที่ประเมิน</th>
 	        <th>ผู้ประเมิน</th>
-	        <th width="65">จัดการ</th>
+	        <?php if($this->uri->segment(3) == 1): //ถ้าเป็นแทบประเมินผล ให้แสดงผลการประเมิน?>
+	        	<th width="65">ประเมินผล</th>
+	        <?php else:?>
+	        	<th width="65">จัดการ</th>
+	        <?php endif;?>
         </tr>
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
@@ -133,10 +137,34 @@ $(document).ready(function(){
 	        <td><?=mysql_to_th($nursery->approve_date)?></td>
 	        <td><?=get_user_name($nursery->approve_user_id)?></td>
 	        <td>
-	        	<input type="hidden" name="id" value="<?=$nursery->id?>">
-	        	<a href="#myModal" role="button" data-toggle="modal" class='btn btn-mini btn-estimate btn-info'>ประเมินผล</a>
-	        	</td>
-	        </tr>
+	        <?php if($this->uri->segment(3) == 1): //ถ้าเป็นแทบประเมินผล ให้แสดงผลการประเมิน?>
+	        	<?if($nursery->status == 0):?>
+	        		<?if($nursery->assessment->total != 0):?>
+	        			<a href="assessments/preview/<?=$nursery->id?>" target="_blank">
+	        			<span style="color:#D14">ไม่ผ่านเกณฑ์ <br>(<?=$nursery->assessment->total?> คะแนน)</span>
+	        			</a>
+	        		<?else:?>
+	        			รอการประเมิน
+	        		<?endif;?>
+	        	<?else:?>
+	        		<span style="color:teal">
+	        		<?if($nursery->approve_year != 0):?>
+	        			ผ่านเกณฑ์ <br>(พ.ศ. <?=$nursery->approve_year?>)<br>
+	        			<span style="color:#d14;">หมดอายุปี <?=$nursery->approve_year + 3?></span>
+	        		<?else:?>
+	        		<a href="assessments/preview/<?=$nursery->id?>" target="_blank">
+	        			ผ่านเกณฑ์ <br>(<?=$nursery->assessment->total?> คะแนน)<br>
+	        			<span style="color:#d14;">หมดอายุปี <?=date("Y", strtotime($nursery->approve_date)) + 546;?></span>
+	        		</a>
+	        		<?endif;?>
+	        		</span>
+	        	<?endif;?>
+	        <?php else:?>
+		        	<input type="hidden" name="id" value="<?=$nursery->id?>">
+		        	<a href="#myModal" role="button" data-toggle="modal" class='btn btn-mini btn-estimate btn-info'>ประเมินผล</a>
+	        <?php endif;?>
+	        </td>
+		</tr>
 		<?php endforeach;?>
 	</table>
 	<?=$nurseries->pagination();?>
