@@ -108,4 +108,12 @@ if ( ! function_exists('mysql_to_relative'))
 	
 	//Usage :
 	//echo timeDiff("2002-04-16 10:00:00","2002-03-16 18:56:32");
+	
+	function newDatediff($d1,$d2){
+		$datetime1 = new DateTime($d1);
+		$datetime2 = new DateTime($d2);
+		$interval = $datetime1->diff($datetime2);
+		// echo $interval->format('%y years %m months and %d days');
+		return $interval->format('%y ปี %m เดือน');
+	}
 ?>

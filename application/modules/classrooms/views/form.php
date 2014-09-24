@@ -45,7 +45,7 @@
             </div>
 		</form>
 		
-		<?if($classroom->id != ""):?>
+		<!-- <?if($classroom->id != ""):?>
 		<div style="float:right; padding:10px 0;"><a href="classrooms/childform/<?=$classroom->id?>"><div class="btn btn-small">เพิ่มรายชื่อเด็ก</div></a></div>
 		<table class="table table-striped">
 			<tr>
@@ -72,7 +72,7 @@
 			</tr>
 			<?endforeach;?>
 		</table>
-		<?endif;?>
+		<?endif;?> -->
 		
 		<!-- <u>หมายเหตุ : การประเมินค่าดัชนีมวลกาย</u>
 		<ul>

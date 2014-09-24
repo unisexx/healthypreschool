@@ -4,9 +4,9 @@
 	<base href="<?php echo base_url(); ?>" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title><?php echo $template['title'] ?></title>
-	<?php echo $template['metadata'] ?>
 	<? include "_css.php";?>
     <? include "_script.php";?>
+    <?php echo $template['metadata'] ?>
 </head>
 <body>
 	<div class="main">
@@ -128,6 +128,8 @@
 					        	<?elseif(user_login()->user_type_id == 7): //ถ้าเป็นเจ้าหน้าที่ประจำจังหวัด ?>
 					        		<li><a href="nurseries/reports/index/basic_column?year=&type=2&area_id=&province_id=<?=user_login()->province_id?>&amphur_id=&district_id="><img src="themes/hps/images/banner_menu_6.png" alt="รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
 					        	<?endif;?>
+					        	
+					        	<li><a href="diseases/report_staff"><img src="themes/hps/images/banner_menu_11.png" alt="รายงานแบบคัดกรองโรค"></a></li>
 				        	</ul>
 				        	<?elseif(user_login()->user_type_id == 8): //เจ้าหน้าที่ประจำอำเภอ?>
 				        	<ul id="nav">

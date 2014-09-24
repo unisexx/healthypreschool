@@ -1,3 +1,5 @@
+<script type="text/javascript" src="media/js/highchart/highcharts.js"></script>
+<script type="text/javascript" src="media/js/highchart/modules/exporting.js"></script>
 <script type="text/javascript">
 $(function(){
 	// On document ready, call visualize on the datatable.
@@ -173,7 +175,9 @@ $(function(){
 		<?=form_dropdown('district_id',get_option('id','district_name','districts','order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
 	</span>
 	
-      <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
+	<?=form_dropdown('status',array('1'=>'เข้าร่วม','2'=>'ผ่านเกณฑ์','3'=>'รอประเมิน'),@$_GET['status'],'','--- สถานะ ---');?>
+	
+	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 	</div>
 </form>
 
@@ -218,9 +222,17 @@ $(function(){
 		<thead>
 			<tr>
 				<th></th>
+				<?if(@$_GET['status'] == 1):?>
+				<th>เข้าร่วม (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 2):?>
+				<th>ผ่านเกณฑ์ (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 3):?>
+				<th>รอการประเมิน (แห่ง)</th>
+				<?else:?>
 				<th>เข้าร่วม (แห่ง)</th>
 				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
+				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
@@ -238,11 +250,19 @@ $(function(){
 				?>
 			<tr>
 				<th>
-					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=2&province_id=<?=$province->id?>"><?=$province->name?></a>
+					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=2&province_id=<?=$province->id?>&status=<?=@$_GET['status']?>"><?=$province->name?></a>
 				</th>
+				<?if(@$_GET['status'] == 1):?>
+				<td><?=$all?></td>
+				<?elseif(@$_GET['status'] == 2):?>
+				<td><?=$pass?></td>
+				<?elseif(@$_GET['status'] == 3):?>
+				<td><?=$not?></td>
+				<?else:?>
 				<td><?=$all?></td>
 				<td><?=$pass?></td>
 				<td><?=$not?></td>
+				<?endif;?>
 			</tr>
 			<?php endforeach;?>
 		</tbody>
@@ -252,9 +272,17 @@ $(function(){
 		<thead>
 			<tr>
 				<th></th>
+				<?if(@$_GET['status'] == 1):?>
+				<th>เข้าร่วม (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 2):?>
+				<th>ผ่านเกณฑ์ (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 3):?>
+				<th>รอการประเมิน (แห่ง)</th>
+				<?else:?>
 				<th>เข้าร่วม (แห่ง)</th>
 				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
+				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
@@ -272,11 +300,19 @@ $(function(){
 				?>
 			<tr>
 				<th>
-					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=3&amphur_id=<?=$amphur->id?>"><?=$amphur->amphur_name?></a>
+					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=3&amphur_id=<?=$amphur->id?>&status=<?=@$_GET['status']?>"><?=$amphur->amphur_name?></a>
 				</th>
+				<?if(@$_GET['status'] == 1):?>
+				<td><?=$all?></td>
+				<?elseif(@$_GET['status'] == 2):?>
+				<td><?=$pass?></td>
+				<?elseif(@$_GET['status'] == 3):?>
+				<td><?=$not?></td>
+				<?else:?>
 				<td><?=$all?></td>
 				<td><?=$pass?></td>
 				<td><?=$not?></td>
+				<?endif;?>
 			</tr>
 			<?php endforeach;?>
 		</tbody>
@@ -286,9 +322,17 @@ $(function(){
 		<thead>
 			<tr>
 				<th></th>
+				<?if(@$_GET['status'] == 1):?>
+				<th>เข้าร่วม (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 2):?>
+				<th>ผ่านเกณฑ์ (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 3):?>
+				<th>รอการประเมิน (แห่ง)</th>
+				<?else:?>
 				<th>เข้าร่วม (แห่ง)</th>
 				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
+				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
@@ -306,11 +350,19 @@ $(function(){
 				?>
 			<tr>
 				<th>
-					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=4&district_id=<?=$district->id?>"><?=$district->district_name?></a>
+					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=4&district_id=<?=$district->id?>&status=<?=@$_GET['status']?>"><?=$district->district_name?></a>
 				</th>
+				<?if(@$_GET['status'] == 1):?>
+				<td><?=$all?></td>
+				<?elseif(@$_GET['status'] == 2):?>
+				<td><?=$pass?></td>
+				<?elseif(@$_GET['status'] == 3):?>
+				<td><?=$not?></td>
+				<?else:?>
 				<td><?=$all?></td>
 				<td><?=$pass?></td>
 				<td><?=$not?></td>
+				<?endif;?>
 			</tr>
 			<?php endforeach;?>
 		</tbody>
@@ -354,9 +406,17 @@ $(function(){
 		<thead>
 			<tr>
 				<th></th>
+				<?if(@$_GET['status'] == 1):?>
+				<th>เข้าร่วม (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 2):?>
+				<th>ผ่านเกณฑ์ (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 3):?>
+				<th>รอการประเมิน (แห่ง)</th>
+				<?else:?>
 				<th>เข้าร่วม (แห่ง)</th>
 				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
+				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
@@ -373,10 +433,18 @@ $(function(){
 					}
 				?>
 			<tr>
-				<th><a href="nurseries/reports/index/basic_column?year=&type=1&area_id=<?=$area->id?>"><?=$area->area_name?></a></th>
+				<th><a href="nurseries/reports/index/basic_column?year=&type=1&area_id=<?=$area->id?>&status=<?=@$_GET['status']?>"><?=$area->area_name?></a></th>
+				<?if(@$_GET['status'] == 1):?>
+				<td><?=$all?></td>
+				<?elseif(@$_GET['status'] == 2):?>
+				<td><?=$pass?></td>
+				<?elseif(@$_GET['status'] == 3):?>
+				<td><?=$not?></td>
+				<?else:?>
 				<td><?=$all?></td>
 				<td><?=$pass?></td>
 				<td><?=$not?></td>
+				<?endif;?>
 			</tr>
 			<?php endforeach;?>
 		</tbody>
@@ -403,13 +471,21 @@ $(function(){
 
 
 <?php if(@$_GET['type'] == 1):?>
-	<table class="table">
+	<table id="datatable" class="table">
 		<thead>
 			<tr>
 				<th></th>
+				<?if(@$_GET['status'] == 1):?>
+				<th>เข้าร่วม (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 2):?>
+				<th>ผ่านเกณฑ์ (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 3):?>
+				<th>รอการประเมิน (แห่ง)</th>
+				<?else:?>
 				<th>เข้าร่วม (แห่ง)</th>
 				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
+				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
@@ -427,11 +503,19 @@ $(function(){
 				?>
 			<tr>
 				<th>
-					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=2&province_id=<?=$province->id?>"><?=$province->name?></a>
+					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=2&province_id=<?=$province->id?>&status=<?=@$_GET['status']?>"><?=$province->name?></a>
 				</th>
+				<?if(@$_GET['status'] == 1):?>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>"><?=$all?></a></td>
+				<?elseif(@$_GET['status'] == 2):?>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=1"><?=$pass?></a></td>
+				<?elseif(@$_GET['status'] == 3):?>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=0"><?=$not?></a></td>
+				<?else:?>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>"><?=$all?></a></td>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=1"><?=$pass?></a></td>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=0"><?=$not?></a></td>
+				<?endif;?>
 			</tr>
 			
 				<?php
@@ -442,9 +526,17 @@ $(function(){
 			<?php endforeach;?>
 			<tr>
 				<th>รวมทั้งหมด</th>
+				<?if(@$_GET['status'] == 1):?>
+				<th><?=$totalAll?></th>
+				<?elseif(@$_GET['status'] == 2):?>
+				<th><?=$totalPass?></th>
+				<?elseif(@$_GET['status'] == 3):?>
+				<th><?=$totalNot?></th>
+				<?else:?>
 				<th><?=$totalAll?></th>
 				<th><?=$totalPass?></th>
 				<th><?=$totalNot?></th>
+				<?endif;?>
 			</tr>
 		</tbody>
 	</table>
@@ -453,9 +545,17 @@ $(function(){
 		<thead>
 			<tr>
 				<th></th>
+				<?if(@$_GET['status'] == 1):?>
+				<th>เข้าร่วม (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 2):?>
+				<th>ผ่านเกณฑ์ (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 3):?>
+				<th>รอการประเมิน (แห่ง)</th>
+				<?else:?>
 				<th>เข้าร่วม (แห่ง)</th>
 				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
+				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
@@ -473,11 +573,19 @@ $(function(){
 				?>
 			<tr>
 				<th>
-					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=3&amphur_id=<?=$amphur->id?>"><?=$amphur->amphur_name?></a>
+					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=3&amphur_id=<?=$amphur->id?>&status=<?=@$_GET['status']?>"><?=$amphur->amphur_name?></a>
 				</th>
+				<?if(@$_GET['status'] == 1):?>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>"><?=$all?></a></td>
+				<?elseif(@$_GET['status'] == 2):?>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=1"><?=$pass?></a></td>
+				<?elseif(@$_GET['status'] == 3):?>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=0"><?=$not?></a></td>
+				<?else:?>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>"><?=$all?></a></td>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=1"><?=$pass?></a></td>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=0"><?=$not?></a></td>
+				<?endif;?>
 			</tr>
 				<?php
 					@$totalAll += $all;
@@ -487,9 +595,17 @@ $(function(){
 			<?php endforeach;?>
 			<tr>
 				<th>รวมทั้งหมด</th>
+				<?if(@$_GET['status'] == 1):?>
+				<th><?=$totalAll?></th>
+				<?elseif(@$_GET['status'] == 2):?>
+				<th><?=$totalPass?></th>
+				<?elseif(@$_GET['status'] == 3):?>
+				<th><?=$totalNot?></th>
+				<?else:?>
 				<th><?=$totalAll?></th>
 				<th><?=$totalPass?></th>
 				<th><?=$totalNot?></th>
+				<?endif;?>
 			</tr>
 		</tbody>
 	</table>
@@ -498,9 +614,17 @@ $(function(){
 		<thead>
 			<tr>
 				<th></th>
+				<?if(@$_GET['status'] == 1):?>
+				<th>เข้าร่วม (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 2):?>
+				<th>ผ่านเกณฑ์ (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 3):?>
+				<th>รอการประเมิน (แห่ง)</th>
+				<?else:?>
 				<th>เข้าร่วม (แห่ง)</th>
 				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
+				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
@@ -518,11 +642,19 @@ $(function(){
 				?>
 			<tr>
 				<th>
-					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=4&district_id=<?=$district->id?>"><?=$district->district_name?></a>
+					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=4&district_id=<?=$district->id?>&status=<?=@$_GET['status']?>"><?=$district->district_name?></a>
 				</th>
+				<?if(@$_GET['status'] == 1):?>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>"><?=$all?></a></td>
+				<?elseif(@$_GET['status'] == 2):?>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=1"><?=$pass?></a></td>
+				<?elseif(@$_GET['status'] == 3):?>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=0"><?=$not?></a></td>
+				<?else:?>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>"><?=$all?></a></td>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=1"><?=$pass?></a></td>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=0"><?=$not?></a></td>
+				<?endif;?>
 			</tr>
 				<?php
 					@$totalAll += $all;
@@ -532,9 +664,17 @@ $(function(){
 			<?php endforeach;?>
 			<tr>
 				<th>รวมทั้งหมด</th>
+				<?if(@$_GET['status'] == 1):?>
+				<th><?=$totalAll?></th>
+				<?elseif(@$_GET['status'] == 2):?>
+				<th><?=$totalPass?></th>
+				<?elseif(@$_GET['status'] == 3):?>
+				<th><?=$totalNot?></th>
+				<?else:?>
 				<th><?=$totalAll?></th>
 				<th><?=$totalPass?></th>
 				<th><?=$totalNot?></th>
+				<?endif;?>
 			</tr>
 		</tbody>
 	</table>
@@ -577,9 +717,17 @@ $(function(){
 		<thead>
 			<tr>
 				<th></th>
+				<?if(@$_GET['status'] == 1):?>
+				<th>เข้าร่วม (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 2):?>
+				<th>ผ่านเกณฑ์ (แห่ง)</th>
+				<?elseif(@$_GET['status'] == 3):?>
+				<th>รอการประเมิน (แห่ง)</th>
+				<?else:?>
 				<th>เข้าร่วม (แห่ง)</th>
 				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
+				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
@@ -596,10 +744,18 @@ $(function(){
 					}
 				?>
 			<tr>
-				<th><a href="nurseries/reports/index/basic_column?year=&type=1&area_id=<?=$area->id?>"><?=$area->area_name?></a></th>
+				<th><a href="nurseries/reports/index/basic_column?year=&type=1&area_id=<?=$area->id?>&status=<?=@$_GET['status']?>"><?=$area->area_name?></a></th>
+				<?if(@$_GET['status'] == 1):?>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"><?=$all?></a></td>
+				<?elseif(@$_GET['status'] == 2):?>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=1><?=$pass?></a></td>
+				<?elseif(@$_GET['status'] == 3):?>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=0><?=$not?></a></td>
+				<?else:?>
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"><?=$all?></a></td>
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=1><?=$pass?></a></td>
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=0><?=$not?></a></td>
+				<?endif;?>
 			</tr>
 				<?php
 					@$totalAll += $all;
@@ -609,9 +765,17 @@ $(function(){
 			<?php endforeach;?>
 			<tr>
 				<th>รวมทั้งหมด</th>
+				<?if(@$_GET['status'] == 1):?>
+				<th><?=$totalAll?></th>
+				<?elseif(@$_GET['status'] == 2):?>
+				<th><?=$totalPass?></th>
+				<?elseif(@$_GET['status'] == 3):?>
+				<th><?=$totalNot?></th>
+				<?else:?>
 				<th><?=$totalAll?></th>
 				<th><?=$totalPass?></th>
 				<th><?=$totalNot?></th>
+				<?endif;?>
 			</tr>
 		</tbody>
 	</table>

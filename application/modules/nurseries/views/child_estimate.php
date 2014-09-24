@@ -60,8 +60,8 @@ $(document).ready(function(){
 
 
 	<ul class="nav nav-tabs home-nav-tabs estimate-tab">
-	  <li><a href="nurseries/estimate/1">ผ่านเกณฑ์ <span class="badge badge-success"><?=$pass_count?></span></a></li>
-	  <li><a href="nurseries/estimate/0">รอการประเมิน <span class="badge badge-important"><?=$regis_count?></span></a></li>
+	  <li><a href="nurseries/estimate/1?nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">ผ่านเกณฑ์ <span class="badge badge-success"><?=$pass_count?></span></a></li>
+	  <li><a href="nurseries/estimate/0?nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">รอการประเมิน <span class="badge badge-important"><?=$regis_count?></span></a></li>
 	</ul>
     	
 	<div id="data">

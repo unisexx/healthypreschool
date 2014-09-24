@@ -2,11 +2,6 @@
 <script type="text/javascript" src="media/js/jquery-1.8.2.min.js"></script>
 <script type="text/javascript" src="media/js/bootstrap/js/bootstrap.js"></script>
 <script type="text/javascript" src="media/js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="media/js/highchart/highcharts.js"></script>
-<script type="text/javascript" src="media/js/highchart/modules/exporting.js"></script>
-<!-- <script src="http://code.highcharts.com/highcharts.js"></script>
-<script src="http://code.highcharts.com/modules/data.js"></script>
-<script src="http://code.highcharts.com/modules/exporting.js"></script> -->
 <script type="text/javascript" src="media/js/jquery.validate.min.js"></script>
 <?php echo js_notify(); ?>
 <?php echo js_lightbox(); ?>

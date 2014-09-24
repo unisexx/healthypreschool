@@ -17,6 +17,8 @@ $(document).ready(function(){
 	});
 	
 	$("#frmnursery").validate({
+		onkeyup: false,
+		onclick: false,
 	rules: 
 	{
 		name: 
@@ -148,6 +150,25 @@ $(document).ready(function(){
         }
 	}
 	});
+	
+	$(".btn").click(function(){
+		var name = $('input[name=name]').val();
+		var province_name = $('select[name="province_id"] option:selected').text();
+		var amphur_name = $('select[name="province_id"] option:selected').text();
+		var district_name = $('select[name="district_id"] option:selected').text();
+		
+		$.get('nurseries/check_name',{
+			'name' : $('input[name=name]').val(),
+			'district_id' : $('select[name=district_id]').val()
+		},function(data){
+			if(data == "false"){
+				alert("มีชื่อศูนย์เด็กเล็ก"+name+"\nจังหวัด"+province_name+"\nอำเภอ"+amphur_name+"\nตำบล"+district_name+"\nอยู่ในระบบแล้ว");
+			}else{
+				$("#frmnursery").submit();
+			}
+		});
+	});
+	
 });
 </script>
 <ul class="breadcrumb">
@@ -184,7 +205,9 @@ $(document).ready(function(){
         		</tr>
 				<tr>
                    <th>ปีที่เข้าร่วมโครงการ<strong> <span class="TxtRed">*</span></strong></th>
-                   <td><?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),$nursery->year)?></td>
+                   <!-- <td><?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),$nursery->year)?></td> -->
+                   <td><?=date("Y")+543?>
+                   	<input type="hidden" name="year" value="<?=date("Y")+543?>"></td>
                  </tr>
                  <tr>
                  	<th>คำนำหน้า<strong> <span class="TxtRed">*</span></strong></th>
@@ -206,7 +229,7 @@ $(document).ready(function(){
                    <th>จังหวัด<strong> <span class="TxtRed">*</span></strong></th>
                    <td>
                    	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
-                   		<?php echo form_dropdown('province_id',get_option('id','name','provinces'),$nursery->province_id,'','--- เลือกจังหวัด ---') ?>
+                   		<?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),$nursery->province_id,'','--- เลือกจังหวัด ---') ?>
                    	<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร.?>
                    		<?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),$nursery->province_id,'','--- เลือกจังหวัด ---') ?>
                    	<?php elseif(user_login()->user_type_id == 7): //เจ้าหน้าที่จังหวัด?>
@@ -296,6 +319,6 @@ $(document).ready(function(){
                  </tr>
       	    </table>
           </fieldset>
-          <div style="margin-left:25%; padding-top:10px;"><input class="btn" type="submit" value=" ลงทะเบียน " /></div>
+          <div style="margin-left:25%; padding-top:10px;"><input class="btn" type="button" value=" ลงทะเบียน " /></div>
     </div>
 </form>

@@ -48,8 +48,8 @@
 			<th>สถานะเด็กป่วย</th>
 			<td>
 				<select name="c3">
-					<option value="x" <?=$disease->c3 == 'x' ? "selected" : "" ;?>>ไม่มาเรียน</option>
-					<option value="/" <?=$disease->c3 == '/' ? "selected" : "" ;?>>หยุดเรียน</option>
+					<option value="/" <?=$disease->c3 == '/' ? "selected" : "" ;?>>มาเรียน</option>
+					<option value="x" <?=$disease->c3 == 'x' ? "selected" : "" ;?>>หยุดเรียน</option>
 				</select>
 			</td>
 		</tr>
@@ -78,6 +78,7 @@
 				<input type="hidden" name="nursery_id" value="<?=$_GET['nursery_id']?>">
 				<input type="hidden" name="classroom_id" value="<?=$_GET['classroom_id']?>">
 				<input type="hidden" name="classroom_detail_id" value="<?=$_GET['classroom_detail_id']?>">
+				<input type="hidden" name="age" value="<?=$_GET['age']?>">
 				<input type="hidden" name="year" value="<?=$_GET['year']?>">
 				<input type="hidden" name="month" value="<?=$_GET['month']?>">
 				<input type="hidden" name="day" value="<?=$_GET['day']?>">

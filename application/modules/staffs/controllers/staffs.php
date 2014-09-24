@@ -20,6 +20,7 @@ class Staffs extends Public_Controller
 		if(@$_GET['area_id'])$data['users']->where("area_id = ".$_GET['area_id']);
 		if(@$_GET['province_id'])$data['users']->where("province_id = ".$_GET['province_id']);
 		if(@$_GET['amphur_id'])$data['users']->where("amphur_id = ".$_GET['amphur_id']);
+		if(@$_GET['district_id'])$data['users']->where("district_id = ".$_GET['district_id']);
 		if(@$_GET['m_status'])$data['users']->where("m_status = '".$_GET['m_status']."'");
         
         if(user_login()->user_type_id == 1){ // admin เห็นทั้งหมด

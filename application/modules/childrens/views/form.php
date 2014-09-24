@@ -2,6 +2,19 @@
 .form-horizontal .control-label {width:170px !important;}
 </style>
 
+<!-- load jQuery 1.4.2 -->
+<script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
+
+<link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
+<script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
+<script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
+<script type="text/javascript">
+var jQuery_1_4_2 = $.noConflict(true);
+$(document).ready(function(){
+jQuery_1_4_2("input.datepicker").date_input(); 
+});
+</script>
+
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
   <li><a href="childrens">ตรวจสอบรายชื่อเด็ก / นักเรียน</a> <span class="divider">/</span></li>
@@ -38,19 +51,25 @@
 		          <input class="input-xlarge" type="text" name="child_name" value="<?=$child->child_name?>">
 		        </div>
 		    </div>
-		    <div class="control-group">
+		    <!-- <div class="control-group">
 		        <label class="control-label">อายุ (ปี)<span class="TxtRed">*</span></label>
 		        <div class="controls">
 		          <input class="span1" type="text" name="age" value="<?=$child->age?>">
 		        </div>
-		    </div>
+		    </div> -->
 		    <div class="control-group">
+			    <label class="control-label">วันเกิด<span class="TxtRed">*</span></label>
+			    <div class="controls">
+			      <input type="text" name="birth_date" value="<?php echo DB2Date($child->birth_date)?>" class="datepicker" />
+			    </div>
+			</div>
+		    <!-- <div class="control-group">
 		        <label class="control-label">น้ำหนัก (กก) / ส่วนสูง (ซม)<span class="TxtRed">*</span></label>
 		        <div class="controls">
 		          <input class="span1" type="text" name="weight" value="<?=$child->weight?>"> / 
 		          <input class="span1" type="text" name="height" value="<?=$child->height?>">
 		        </div>
-		    </div>
+		    </div> -->
 		    <div class="control-group">
                 <div class="controls">
                   <input type="hidden" name="id" value="<?=$child->id?>">

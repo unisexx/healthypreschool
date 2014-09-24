@@ -15,13 +15,13 @@
 	</tr>
 </table>
 <?php echo $coverpages->pagination()?>
-<table class="list">
+<table class="table">
 	<tr>
 		<th width="70">แสดง</th>
 		<!-- <th>เริ่มวันที่</th> -->
 		<th>หัวข้อ</th>
 		<th>โดย</th>
-		<th width="90">
+		<th width="150">
 			<?php if(permission('coverpages', 'create')):?>
 			<a class="btn" href="coverpages/admin/coverpages/form">เพิ่มรายการ</a>
 			<?php endif;?>

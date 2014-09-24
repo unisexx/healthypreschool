@@ -1,7 +1,6 @@
 <div class="block_header">
 <div class="logo"></div>
-	<div class="searchform">	
-		<!-- Put the following javascript before the closing </head> tag. -->
+	<!-- <div class="searchform">	
 		<script>
 		  (function() {
 		    var cx = '008951094756729902779:zfz23003rqw';
@@ -11,9 +10,8 @@
 		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(gcse, s);
 		  })();
 		</script>
-		<!-- Place this tag where you want the search box to render -->
 		<gcse:searchbox-only></gcse:searchbox-only>
-	</div>
+	</div> -->
     <div class="clr"></div>
     <div class="topmenu_nav">
     	<table width="720" height="40" border="0" cellspacing="0" cellpadding="0">

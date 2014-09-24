@@ -28,10 +28,10 @@ $(document).ready(function(){
 		{ 
 			required: true
 		},
-		// nursery_category_id: 
-		// { 
-			// required: true
-		// },
+		nursery_category_id: 
+		{ 
+			required: true
+		},
 		number: 
 		{ 
 			required: true
@@ -93,10 +93,10 @@ $(document).ready(function(){
 		{
 			required: "กรุณาเลือกสคร.ค่ะ"
 		},
-		// nursery_category_id:
-		// {
-			// required: "กรุณาเลือกคำนำหน้าค่ะ"
-		// },
+		nursery_category_id:
+		{
+			required: "กรุณาเลือกคำนำหน้าค่ะ"
+		},
 		number:
 		{
 			required: "กรุณากรอกเลขที่"
@@ -148,6 +148,24 @@ $(document).ready(function(){
         }
 	}
 	});
+	
+	$(".btn").click(function(){
+		var name = $('input[name=name]').val();
+		var province_name = $('select[name="province_id"] option:selected').text();
+		var amphur_name = $('select[name="province_id"] option:selected').text();
+		var district_name = $('select[name="district_id"] option:selected').text();
+		
+		$.get('nurseries/check_name',{
+			'name' : $('input[name=name]').val(),
+			'district_id' : $('select[name=district_id]').val()
+		},function(data){
+			if(data == "false"){
+				alert("มีชื่อศูนย์เด็กเล็ก"+name+"\nจังหวัด"+province_name+"\nอำเภอ"+amphur_name+"\nตำบล"+district_name+"\nอยู่ในระบบแล้ว");
+			}else{
+				$("#frmnursery").submit();
+			}
+		});
+	});
 });
 </script>
 <ul class="breadcrumb">
@@ -166,12 +184,13 @@ $(document).ready(function(){
         	<table class="table">
 				<tr>
                    <th>ปีที่เข้าร่วมโครงการ<strong> <span class="TxtRed">*</span></strong></th>
-                   <td><?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),$nursery->year)?></td>
+                   <td><?=date("Y")+543?>
+                   	<input type="hidden" name="year" value="<?=date("Y")+543?>"></td>
                  </tr>
-                 <!-- <tr>
+                 <tr>
                  	<th>คำนำหน้า<strong> <span class="TxtRed">*</span></strong></th>
                  	<td><?php echo  form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),$nursery->nursery_category_id,'','--- เลือกประเภท ---')?></td>
-                 </tr> -->
+                 </tr>
         	    <tr>
         	      <th>ชื่อศูนย์เด็กเล็ก<strong> <span class="TxtRed">*</span></strong></th>
         	      <td><input type="text" name="name" value="<?=$nursery->name?>" id="textfield"  style="width:350px;"/></td>
@@ -187,7 +206,7 @@ $(document).ready(function(){
                  <tr>
                    <th>จังหวัด<strong> <span class="TxtRed">*</span></strong></th>
                    <td>
-					<?php echo form_dropdown('province_id',get_option('id','name','provinces'),$nursery->province_id,'','--- เลือกจังหวัด ---') ?>
+					<?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),$nursery->province_id,'','--- เลือกจังหวัด ---') ?>
 					
 					</td>
                  </tr>
@@ -270,6 +289,6 @@ $(document).ready(function(){
       	    </table>
           </fieldset>
           
-          <div style="margin-left:25%; padding-top:10px;"><input class="btn" type="submit" value=" ลงทะเบียน " /></div>
+          <div style="margin-left:25%; padding-top:10px;"><input class="btn" type="button" value=" ลงทะเบียน " /></div>
     </div>
 </form>

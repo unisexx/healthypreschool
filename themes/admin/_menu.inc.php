@@ -44,14 +44,14 @@
     <li <?php echo menu_active('downloads','downloads')?>><a href="contents/admin/contents/index/downloads">เอกสารดาวน์โหลด</a></li>
     <?php endif;?>
     
+    <?php if(permission('coverpages', 'read')):?>
+	<li <?php echo menu_active('coverpages','coverpages')?> ><a href="coverpages/admin/coverpages">หน้าแรก</a></li>
+	<?php endif;?>
+    
     <!-- <li <?php echo menu_active('nurseries','nurseries')?>><a href="nurseries/admin/nurseries/category_form">ศูนย์เด็กเล็กปลอดโรค</a></li> -->
     
     <!-- <?php if(permission('dashboards', 'read')):?>
 	<li <?php echo menu_active('dashboards','dashboards')?>><a href="dashboards/admin/dashboards">สถิติโดยรวม</a></li>
-	<?php endif;?>
-	
-	<?php if(permission('coverpages', 'read')):?>
-	<li <?php echo menu_active('coverpages','coverpages')?> ><a href="coverpages/admin/coverpages">หน้าแรก</a></li>
 	<?php endif;?>
 	
 	<?php if(permission('headers', 'read')):?>

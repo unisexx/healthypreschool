@@ -59,6 +59,7 @@ table{border-collapse: collapse;width:100%;}
 				'nursery_id' 			: $(this).find('.h_nursery_id').val(),
 				'classroom_id' 			: $(this).find('.h_classroom_id').val(),
 				'classroom_detail_id' 	: $(this).find('.h_classroom_detail_id').val(),
+				'age'					: $(this).find('.h_age').val(),
 				'day' 					: $(this).find('.h_day').val(),
 				'month' 				: $(this).find('.h_month').val(),
 				'year' 					: $(this).find('.h_year').val(),
@@ -126,7 +127,12 @@ table{border-collapse: collapse;width:100%;}
 
 </table>
 <br />
-
+<?
+	$yyear = $_GET['year']-543;
+	$mmonth = str_pad($_GET['month'], 2, '0', STR_PAD_LEFT);
+	//echo $d1 = $yyear.'-'.$mmonth;
+	$date1 = $yyear.'-'.$mmonth;
+?>
 
 <?if($_GET['classroom_id'] != ""):?>
 <form method="post" action="diseases/save">
@@ -153,7 +159,7 @@ table{border-collapse: collapse;width:100%;}
 			  <?foreach($childs as $key=>$row):?>
 			  <tr>
 			  	<th valign="top" ><?=$key+1?></th>
-			    <th><?=$row->title?> <?=$row->child_name?></th>
+			    <th><?=$row->title?> <?=$row->child_name?> (อายุ <?=newDatediff($date1,$row->birth_date)?>)</th>
 			    <?for($i=1;$i<=$arrayMonthDay[$_GET['month']];$i++):?>
 			    <?php
 			    	$sql = "select * from diseases where 
@@ -209,6 +215,7 @@ table{border-collapse: collapse;width:100%;}
 			        <input class="h_nursery_id" type="hidden" name="nursery_id[]" value="<?=$_GET['nursery_id']?>">
 			        <input class="h_classroom_id" type="hidden" name="classroom_id[]" value="<?=$_GET['classroom_id']?>">
 			        <input class="h_classroom_detail_id" type="hidden" name="classroom_detail_id[]" value="<?=$row->id?>">
+			        <input class="h_age" type="hidden" name="age[]" value="<?=newDatediff($date1,$row->birth_date)?>">
 			        <input class="h_day" type="hidden" name="day[]" value="<?=$i?>">
 			        <input class="h_month" type="hidden" name="month[]" value="<?=$_GET['month']?>">
 			        <input class="h_year" type="hidden" name="year[]" value="<?=$_GET['year']?>">
@@ -237,7 +244,7 @@ table{border-collapse: collapse;width:100%;}
 <ol>
 	<li>โรคที่พบบ่อย : หวัด = C, มือ เท้า ปาก = H, อุจจาระร่วงเฉียบพลัน = D, ไข้ = F, <br>ไข้ออกผื่น = R, อื่นๆ = O</li>
 	<li>การแยกเด็กป่วย : ไม่มีการแยกนอนแยกเล่น = 0, แยกนอน = 1, แยกเล่น = 2</li>
-	<li>ไม่มาเรียนให้ทำเครื่องหมาย x หากหยุดเรียนให้ใส่สัญลักษณ์โรค /</li>
+	<li>มาเรียนให้ทำเครื่องหมาย / หากหยุดเรียนให้ใส่สัญลักษณ์โรค x</li>
 	<li>กรณีเด็กได้ยารักษามาจากบ้าน O</li>
 	<li>กรณีมีคนที่บ้านป่วยด้วยโรคเดียวกันก่อนเด็กป่วย ให้ทำเครื่องหมาย *</li>
 </ol>

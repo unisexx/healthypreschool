@@ -48,8 +48,8 @@
 			<th>สถานะเด็กป่วย</th>
 			<td>
 				<select name="c3">
-					<option value="x" <?=$disease -> c3 == 'x' ? "selected" : ""; ?>>ไม่มาเรียน</option>
-					<option value="/" <?=$disease -> c3 == '/' ? "selected" : ""; ?>>หยุดเรียน</option>
+					<option value="/" <?=$disease -> c3 == '/' ? "selected" : ""; ?>>มาเรียน</option>
+					<option value="x" <?=$disease -> c3 == 'x' ? "selected" : ""; ?>>หยุดเรียน</option>
 				</select>
 			</td>
 		</tr>

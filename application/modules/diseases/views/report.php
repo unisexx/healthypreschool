@@ -1,3 +1,5 @@
+<script type="text/javascript" src="media/js/highchart/highcharts.js"></script>
+<script type="text/javascript" src="media/js/highchart/modules/exporting.js"></script>
 <script type="text/javascript">
 $(function(){
 	// On document ready, call visualize on the datatable.
@@ -53,6 +55,7 @@ $(function(){
                 }
             },
             yAxis: {
+            	allowDecimals: false,
                 title: {
                     text: 'จำนวนครั้งที่ป่วย'
                 }
@@ -92,7 +95,7 @@ $(function(){
 	<?endforeach;?>
 	</select>
 	
-	ช่วงอายุ <input class="span1" type="text" name="lowage" value="<?=(@$_GET['lowage']) ? $_GET['lowage'] : '0' ;?>"> ถึง <input class="span1" type="text" name="hiage" value="<?=(@$_GET['hiage']) ? $_GET['hiage'] : 99 ;?>">
+	ช่วงอายุ <input class="span1" type="text" name="lowage" value="<?=(@$_GET['lowage']) ? $_GET['lowage'] : '0' ;?>"> ถึง <input class="span1" type="text" name="hiage" value="<?=(@$_GET['hiage']) ? $_GET['hiage'] : 7 ;?>">
 	
 	<select name="year">
 	<option value="">-- เลือกทุกปี --</option>
@@ -112,6 +115,9 @@ $(function(){
 </div>
 
 <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<!-- <a href="diseases/export_graphpage2/word?type=<?=@$_GET['type']?>&year=<?=@$_GET['year']?>&area_id=<?=@$_GET['area_id']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>"><div class="btn btn-mini">word</div></a>
+<a href="diseases/export_graphpage2/excel?type=<?=@$_GET['type']?>&year=<?=@$_GET['year']?>&area_id=<?=@$_GET['area_id']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>"><div class="btn btn-mini">excel</div></a> -->
 
 <?php $diseasesArray = array(
 	'หวัด' => 'C', 
@@ -134,7 +140,7 @@ $(function(){
 		<?foreach($diseasesArray as $key=>$row):?>
 			<?
 				if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
-				if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and cd.age between ".$_GET['lowage']." and ".$_GET['hiage']; }
+				if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition .=" and TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) between ".$_GET['lowage']." and ".$_GET['hiage']; }
 				if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
 				if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 				

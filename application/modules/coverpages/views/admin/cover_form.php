@@ -55,13 +55,13 @@ $(function(){
 			<input type="text" name="title" rel="th" value="<?php echo $coverpage->title?>" class="full" />
 		</td>
 	</tr>
-	<!-- <tr>
+	<tr>
 		<th>รายละเอียด :</th>
 		<td>
 			<div rel="th"><textarea name="detail" class="full tinymce"><?php echo $coverpage->detail?></textarea></div>
 			
 		</td>
-	</tr> -->
+	</tr>
 	<tr>
 		<th>สีพื้นหลัง</th>
 		<td>

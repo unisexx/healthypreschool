@@ -75,6 +75,7 @@ $(document).ready(function(){
 
 <form method="get" action="staffs">
 	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
+	<?=form_dropdown('user_type_id',array('9'=>'เจ้าหน้าที่ศูนย์','10'=>'เจ้าหน้าที่ครู / ผู้ดูแลเด็ก'),@$_GET['user_type_id'],'','--- เลือกเจ้าหน้าที่ ---');?>
 	<input type="text" name="search" value="<?=@$_GET['search']?>" placeholder="ค้นหาชื่อ, อีเมล์">
 	<input type="text" name="nursery_name" value="<?=@$_GET['nursery_name']?>" placeholder="ค้นหาศูนย์เด็กเล็ก">
 	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
@@ -125,7 +126,7 @@ $(document).ready(function(){
         <th>อีเมล์</th>
         <th>ชื่อ - นามสกุล</th>
         <th>เจ้าหน้าที่ศูนย์เด็กเล็ก</th>
-        <!-- <th>ที่อยู่</th> -->
+        <th>ที่อยู่</th>
         <!-- <th>อำเภอ</th>
         <th>ตำบล</th> -->
         <th>วันที่สมัคร</th>
@@ -136,14 +137,21 @@ $(document).ready(function(){
     <?php foreach($users as $key=>$user):?>
         <tr>
             <td><?=($key+1)+$users->paged->current_row?></td>
-            <td><?=($user->user_type_id == 9)? 'เจ้าหน้าที่ศูนย์' : 'เจ้าหน้าที่ครู' ;?></td>
+            <td><?=($user->user_type_id == 9)? 'เจ้าหน้าที่ศูนย์' : 'เจ้าหน้าที่ครู / ผู้ดูแลเด็ก' ;?></td>
             <td><?=$user->email?></td>
             <td><?=$user->name?></td>
             <td>
-            	<?=$user->nursery->nursery_category->title?><?=$user->nursery->name?><br>
-            	จ.<?=$user->nursery->province->name?><br>อ.<?=$user->nursery->amphur->amphur_name?><br>ต.<?=$user->nursery->district->district_name?>
+            	<?=$user->nursery->nursery_category->title?><?=$user->nursery->name?>
+            	<ul>
+	        		<li><a href="childrens/list_guest/<?=$user->nursery->id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a></li>
+	        		<li><a href="classrooms/list_guest/<?=$user->nursery->id?>" target="_blank">รายชื่อห้องเรียน</a></li>
+	        		<li><a href="teachers/list_guest/<?=$user->nursery->id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a></li>
+	        		<li><a href="diseases/list_guest/<?=$user->nursery->id?>" target="_blank">บันทึกแบบคัดกรองโรค</a></li>
+	        		<li><a href="diseases/report_guest?nursery_id=<?=$user->nursery->id?>" target="_blank">รายงานแบบคัดกรองโรค</a></li>
+	        		<li><a href="assessments/preview/<?=$user->nursery->id?>" target="_blank">รายงานแบบประเมินสมัครเข้าร่วมโครงการ</a></li>
+	        	</ul>
             </td>
-            <!-- <td>จ.<?=$user->nursery->province->name?><br>อ.<?=$user->nursery->amphur->amphur_name?><br>ต.<?=$user->nursery->district->district_name?></td> -->
+            <td>จ.<?=$user->nursery->province->name?><br>อ.<?=$user->nursery->amphur->amphur_name?><br>ต.<?=$user->nursery->district->district_name?></td>
             <!-- <td><?=$user->nursery->amphur->amphur_name?></td>
             <td><?=$user->nursery->district->district_name?></td> -->
             <td><?=mysql_to_th($user->created)?></td>

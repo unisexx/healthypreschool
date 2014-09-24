@@ -5,6 +5,17 @@
 
 <h1> ตรวจสอบรายชื่อครู / เจ้าหน้าที่</h1>
 
+<form method="get" action="teachers">
+	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
+	<?=form_dropdown('m_status',array('active'=>'เปิด','deactive'=>'ปิด'),@$_GET['m_status'],'class="span2"','--- สถานะ ---');?>
+	<input type="text" name="name" value="<?=@$_GET['name']?>" placeholder="ค้นหาชื่อ">
+	<input type="text" name="email" value="<?=@$_GET['email']?>" placeholder="ค้นหาอีเมล์">
+	
+      <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
+      <img class="loading" style="display: none;" src="media/images/ajax-loader.gif">
+	</div>
+</form>
+
 <div style="float:right; padding:10px 0;"><a href="teachers/form"><div class="btn">เพิ่มรายการ</div></a></div>
 <table class="table">
 	<tr>

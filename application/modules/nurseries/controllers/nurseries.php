@@ -42,8 +42,8 @@ class Nurseries extends Public_Controller
 			$condition .= " and district_id = ".$_GET['district_id'];
 		}
 		if(@$_GET['year']){
-			$data['nurseries']->where("year = ".$_GET['year']);
-			$condition .= " and year = ".$_GET['year'];
+			$data['nurseries']->where("approve_year = ".$_GET['year']);
+			$condition .= " and approve_year = ".$_GET['year'];
 		}
 		
 		switch (@$_GET['status']) {
@@ -97,6 +97,8 @@ class Nurseries extends Public_Controller
             $data['nurseries']->order_by('id','desc')->get_page();
 			// $data['regis_count'] = $data['nurseries']->paged->total_rows; //นับจำนวนทั้งหมดในทุกหน้า
         }
+		
+		// $data['nurseries']->check_last_query();
 		$this->template->build('child_register',$data);
 	}
 	
@@ -110,9 +112,10 @@ class Nurseries extends Public_Controller
 		if($_POST){
 			$captcha = $this->session->userdata('captcha');
 			if(($_POST['captcha'] == $captcha) && !empty($captcha)){
+				
 				if($id == ""){
 					$nuchk = new Nursery();
-					$nuchk = $nuchk->where('year = '.$_POST['year'].' and name = "'.$_POST['name'].'" and district_id = '.$_POST['district_id'])->get()->result_count();
+					$nuchk = $nuchk->where('name like "%'.$_POST['name'].'%" and district_id = '.$_POST['district_id'])->get()->result_count();
 					if($nuchk > 0){
 						set_notify('error', 'ชื่อศูนย์เด็กเล็กนี้มีแล้วค่ะ');
 						redirect($_SERVER['HTTP_REFERER']);
@@ -296,12 +299,14 @@ class Nurseries extends Public_Controller
 		}
 		redirect('nurseries/category_form');
 	}
+
 	
 	function check_name()
 	{
-		$nursery = new Nursery();
-		$nursery->get_by_name($_GET['name']);
-		echo ($nursery->name)?"false":"true";
+		$nuchk = new Nursery();
+		if(@$_GET['district_id']){ $nuchk->where("district_id = ".$_GET['district_id']); }
+		$nuchk = $nuchk->where('name like "%'.$_GET['name'].'"')->get()->result_count();
+		echo ($nuchk > 0)?"false":"true";
 	}
 	
 	function get_nursery_data(){

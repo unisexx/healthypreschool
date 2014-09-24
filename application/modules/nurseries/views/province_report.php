@@ -1,3 +1,5 @@
+<script type="text/javascript" src="media/js/highchart/highcharts.js"></script>
+<script type="text/javascript" src="media/js/highchart/modules/exporting.js"></script>
 <script type="text/javascript">
 $(function(){
 	var chart;

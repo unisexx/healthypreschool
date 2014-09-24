@@ -147,6 +147,39 @@ WHERE 1=1 ".$condition;
 		$this->template->build('report_guest',$data);
 	}
 	
+	function report_staff($graphtype=false){
+		if(@$_GET['type'] == 1 ){ // สคร
+			$data['provinces'] = new Province();
+			$data['provinces']->where('area_id = '.$_GET['area_id'])->get();
+			if(@$_GET['year']){$year = 'ปี '.$_GET['year'];}
+			$data['text'] = "สรุปผลรายงานแบบคัดกรองโรค".@$year." (สคร.".$_GET['area_id'].")";
+		}elseif(@$_GET['type'] == 2 ){ // จังหวัด
+			$data['province'] = new Province($_GET['province_id']);
+			$data['amphurs'] = new Amphur();
+			$data['amphurs']->where('province_id = '.$_GET['province_id'])->get();
+			if(@$_GET['year']){$year = 'ปี '.$_GET['year'];}
+			$data['text'] = "สรุปผลรายงานแบบคัดกรองโรค".@$year." (จังหวัด".$data['province']->name.")";
+		}elseif(@$_GET['type'] == 3 ){ // อำเภอ
+			$data['amphur'] = new Amphur($_GET['amphur_id']);
+			$data['districts'] = new District();
+			$data['districts']->where('amphur_id = ',$_GET['amphur_id'])->get();
+			if(@$_GET['year']){$year = 'ปี '.$_GET['year'];}
+			$data['text'] = "สรุปผลรายงานแบบคัดกรองโรค".@$year." (อำเภอ".$data['amphur']->amphur_name.")";
+		}elseif(@$_GET['type'] == 4 ){ // ศูนย์เด็กเล็กในตำบล
+			$data['district'] = new District($_GET['district_id']);
+			$data['nurseries'] = new Nursery();
+			$data['nurseries']->where('district_id = ',$_GET['district_id'])->get();
+			if(@$_GET['year']){$year = 'ปี '.$_GET['year'];}
+			$data['text'] = "สรุปผลรายงานแบบคัดกรองโรค".@$year." (ตำบล".$data['district']->district_name.")";
+		}else{
+			$data['areas'] = new Area();
+			$data['areas']->order_by('id','asc')->get();
+			if(@$_GET['year']){@$year = 'ปี '.@$_GET['year'];}
+			$data['text'] = "สรุปผลรายงานแบบคัดกรองโรคทั้งหมด".@$year;
+		}
+		$this->template->build('report_staff',$data);
+	}
+	
 	function form2(){
 		$this->template->set_layout('disease');
 		
@@ -172,6 +205,9 @@ WHERE 1=1 ".$condition;
 
 	function save_disease(){
 		$disease = new Disease($_GET['id']);
+		$explode_age = explode(' ', $_GET['age']);
+		$_GET['child_age_year'] = $explode_age[0];
+		$_GET['child_age_month'] = $explode_age[2];
 		$disease->from_array($_GET);
 		$disease->save();
 		
@@ -216,6 +252,40 @@ WHERE 1=1 ".$condition;
 	function get_disease_form_guest(){
 		$data['disease'] = new Disease($_GET['id']);
 		$this->load->view('get_disease_form_guest',$data);
+	}
+	
+	function export_graphpage($filetype){
+		$data['filetype'] = $filetype;
+		(@$_GET['year'])?$txt="ปีงบประมาณ ".@$_GET['year']:$txt="โดยรวมทั้งหมด";
+		if(@$_GET['type'] == 1 ){ // สคร
+			$data['provinces'] = new Province();
+			$data['provinces']->where('area_id = '.$_GET['area_id'])->get();
+			$data['text'] = "สรุปผลรายงานแบบคัดกรองโรค".$txt." (สคร.".$_GET['area_id'].")";
+		}elseif(@$_GET['type'] == 2 ){ // จังหวัด
+			$data['province'] = new Province($_GET['province_id']);
+			$data['amphurs'] = new Amphur();
+			$data['amphurs']->where('province_id = '.$_GET['province_id'])->get();
+			$data['text'] = "สรุปผลรายงานแบบคัดกรองโรค".$txt." (จังหวัด".$data['province']->name.")";
+		}elseif(@$_GET['type'] == 3 ){ // อำเภอ
+			$data['amphur'] = new Amphur($_GET['amphur_id']);
+			$data['districts'] = new District();
+			$data['districts']->where('amphur_id = ',$_GET['amphur_id'])->get();
+			$data['text'] = "สรุปผลรายงานแบบคัดกรองโรค".$txt." (อำเภอ".$data['amphur']->amphur_name.")";
+		}elseif(@$_GET['type'] == 4 ){ // ตำบล
+			$data['district'] = new District($_GET['district_id']);
+			$data['nurseries'] = new Nursery();
+			$data['nurseries']->where('district_id = ',$_GET['district_id'])->get();
+			$data['text'] = "สรุปผลรายงานแบบคัดกรองโรค".$txt." (ตำบล".$data['district']->district_name.")";
+		}else{
+			$data['areas'] = new Area();
+			$data['areas']->order_by('id','asc')->get();
+			if(@$_GET['year']){
+				$data['text'] = "สรุปผลรายงานแบบคัดกรองโรคปีงบประมาณ ".$_GET['year'];
+			}else{
+				$data['text'] = "สรุปผลรายงานแบบคัดกรองโรคโดยรวมทั้งหมด";
+			}
+		}
+		$this->load->view('export_graphpage',$data);
 	}
 }
 ?>

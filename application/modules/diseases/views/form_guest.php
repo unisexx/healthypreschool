@@ -127,6 +127,12 @@ table{border-collapse: collapse;width:100%;}
 </table>
 <br />
 
+<?
+	$yyear = $_GET['year']-543;
+	$mmonth = str_pad($_GET['month'], 2, '0', STR_PAD_LEFT);
+	//echo $d1 = $yyear.'-'.$mmonth;
+	$date1 = $yyear.'-'.$mmonth;
+?>
 
 <?if($_GET['classroom_id'] != ""):?>
 <form method="post" action="diseases/save">
@@ -153,7 +159,7 @@ table{border-collapse: collapse;width:100%;}
 			  <?foreach($childs as $key=>$row):?>
 			  <tr>
 			  	<th valign="top" ><?=$key+1?></th>
-			    <th><?=$row->title?> <?=$row->child_name?></th>
+			    <th><?=$row->title?> <?=$row->child_name?> (อายุ <?=newDatediff($date1,$row->birth_date)?> ปี)</th>
 			    <?for($i=1;$i<=$arrayMonthDay[$_GET['month']];$i++):?>
 			    <?php
 			    	$sql = "select * from diseases where 

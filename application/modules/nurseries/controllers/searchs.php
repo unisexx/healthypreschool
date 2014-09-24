@@ -73,7 +73,7 @@ class Searchs extends Public_Controller
 				
 				if($id == ""){
 					$nuchk = new Nursery();
-					$nuchk = $nuchk->where('year = '.$_POST['year'].' and name = "'.$_POST['name'].'" and district_id = '.$_POST['district_id'])->get()->result_count();
+					$nuchk = $nuchk->where('name like "%'.$_POST['name'].'%" and district_id = '.$_POST['district_id'])->get()->result_count();
 					if($nuchk > 0){
 						set_notify('error', 'ชื่อศูนย์เด็กเล็กนี้มีแล้วค่ะ');
 						redirect($_SERVER['HTTP_REFERER']);

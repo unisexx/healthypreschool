@@ -38,7 +38,7 @@ class Classrooms extends Public_Controller{
 			$id = $id != '' ? $id : $classroom->id ; // ถ้า ไม่ใช่ฟอร์มแก้ไข เวลาเซฟให้ดึงไอดีล่าสุดมาใช้
             set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
 		}
-		redirect($_SERVER['HTTP_REFERER'].'/'.$id);
+		redirect('classrooms');
 	}
 	
 	function delete($id=false){
