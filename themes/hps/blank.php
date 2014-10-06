@@ -73,7 +73,11 @@
 				                ?>
 				                
 				            <?php if(user_login()->m_status == 'active'):?>
-		                		<b class="tabspace"><a href="home/menu">เมนูหลัก</a></b>
+		                		<?php if(user_login()->user_type_id == 1 || user_login()->user_type_id == 6 || user_login()->user_type_id == 7 || user_login()->user_type_id == 8):?>
+		                			<b class="tabspace"><a href="nurseries/register">เมนูหลัก</a></b>
+		                		<?php else:?>
+		                			<b class="tabspace"><a href="home/menu">เมนูหลัก</a></b>
+		                		<?php endif;?>
 			                <?php else:?>
 			                	สถานะ : <span style="color:orangered;">รอการตรวจสอบ</span>
 			                <?php endif;?>
@@ -118,7 +122,7 @@
 				        	<ul id="nav">
 				        		<li><a href="nurseries/register"><img src="themes/hps/images/banner_menu_1.png" alt="ตรวจสอบรายชื่อศูนย์เด็กเล็กปลอดโรค"></a></li>
 				        		<li><a href="nurseries/register_form"><img src="themes/hps/images/banner_menu_2.png" alt="สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
-				        		<li><a href="nurseries/estimate/0"><img src="themes/hps/images/banner_menu_3.png" alt="ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
+				        		<li><a href="nurseries/estimate?status=1"><img src="themes/hps/images/banner_menu_3.png" alt="ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
 				        		<li><a href="officers"><img src="themes/hps/images/banner_menu_4.png" alt="ตรวจสอบรายชื่อเจ้าหน้าที่สาธารณะสุข"></a></li>
 				        		<li><a href="staffs"><img src="themes/hps/images/banner_menu_5.png" alt="ตรวจสอบรายชื่อเจ้าหน้าที่ศูนย์เด็กเล็กปลอดโรค"></a></li>
 				        		<?php if(user_login()->user_type_id == 1): //ถ้าเป็นผู้ดูแลระบบ ?>
@@ -135,7 +139,7 @@
 				        	<ul id="nav">
 				        		<li><a href="nurseries/register"><img src="themes/hps/images/banner_menu_1.png" alt="ตรวจสอบรายชื่อศูนย์เด็กเล็กปลอดโรค"></a></li>
 				        		<li><a href="nurseries/register_form"><img src="themes/hps/images/banner_menu_2.png" alt="สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
-				        		<li><a href="nurseries/estimate/0"><img src="themes/hps/images/banner_menu_3.png" alt="ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
+				        		<li><a href="nurseries/estimate?status=1"><img src="themes/hps/images/banner_menu_3.png" alt="ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
 				        		<li><a href="staffs"><img src="themes/hps/images/banner_menu_5.png" alt="ตรวจสอบรายชื่อเจ้าหน้าที่ศูนย์เด็กเล็กปลอดโรค"></a></li>
 				        		<li><a href="nurseries/reports/index/basic_column?year=&type=3&area_id=&province_id=&amphur_id=<?=user_login()->amphur_id?>&district_id="><img src="themes/hps/images/banner_menu_6.png" alt="รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
 				        	</ul>

@@ -45,6 +45,25 @@ class Nurseries extends Public_Controller
 			$data['nurseries']->where("approve_year = ".$_GET['year']);
 			$condition .= " and approve_year = ".$_GET['year'];
 		}
+		if(@$_GET['start_date'] and @$_GET['end_date']){
+			$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+			$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+			
+			$data['nurseries']->where("created between ".$start_date." and ".$end_date);
+			$condition .= " and created between ".$start_date." and ".$end_date;
+		}
+		if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+			$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+			
+			$data['nurseries']->where("created >= ".$start_date);
+			$condition .= " and created >= ".$start_date;
+		}
+		if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+			$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+			
+			$data['nurseries']->where("created <= ".$end_date);
+			$condition .= " and created >= ".$end_date;
+		}
 		
 		switch (@$_GET['status']) {
 		    case 1: // ผ่านเกณฑ์
@@ -78,20 +97,24 @@ class Nurseries extends Public_Controller
 			$data['nurseries']->where_related_province('area_id = '.user_login()->area_id);
             $data['nurseries']->order_by('id','desc')->get_page();
         }elseif(user_login()->user_type_id==7){ // เจ้าหน้าที่จังหวัด
+        
         	$data['pass_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where status = 1 and province_id = ".user_login()->province_id.$condition)->result();
 			$data['pass_count'] = $data['pass_count'][0]->total;
 			$data['nopass_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where status = 0 and approve_type = 2 and province_id = ".user_login()->province_id.$condition)->result();
 			$data['nopass_count'] = $data['nopass_count'][0]->total;
             $data['regis_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where province_id = ".user_login()->province_id.$condition)->result();
+            $data['regis_count'] = $data['regis_count'][0]->total;
 			
             $data['nurseries']->where('province_id = '.user_login()->province_id);
             $data['nurseries']->order_by('id','desc')->get_page();
+			
         }elseif(user_login()->user_type_id==8){ // เจ้าหน้าที่อำเภอ
         	$data['pass_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where status = 1 and amphur_id = ".user_login()->amphur_id.$condition)->result();
 			$data['pass_count'] = $data['pass_count'][0]->total;
 			$data['nopass_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where status = 0 and amphur_id = 2 and province_id = ".user_login()->amphur_id.$condition)->result();
 			$data['nopass_count'] = $data['nopass_count'][0]->total;
             $data['regis_count'] = $this->db->query("SELECT COUNT(id) total FROM nurseries where amphur_id = ".user_login()->amphur_id.$condition)->result();
+            $data['regis_count'] = $data['regis_count'][0]->total;
         	
             $data['nurseries']->where('amphur_id = '.user_login()->amphur_id);
             $data['nurseries']->order_by('id','desc')->get_page();
@@ -145,7 +168,7 @@ class Nurseries extends Public_Controller
 		redirect('nurseries/register');
 	}
 	
-	function estimate($status=false){
+	function estimate(){
 		$this->template->set_layout('blank');
 		
 		$data['nurseries'] = new Nursery();
@@ -165,7 +188,17 @@ class Nurseries extends Public_Controller
 			$data['regis_count'] = $data['nurseries']->get_clone();
 			$data['regis_count']  = $data['regis_count']->where('status = 0')->get()->result_count();
 			
-			(@$status == 1)?$data['nurseries']->where("status = 1"):$data['nurseries']->where("status = 0");
+			$data['nopass_count'] = $data['nurseries']->get_clone();
+			$data['nopass_count'] = $data['nopass_count']->where_related_assessment('total < 28')->get()->result_count();
+			
+			if(@$_GET['status'] == 2){
+				$data['nurseries']->where("status = 0")->where_related_assessment('total < 28');
+			}elseif(@$_GET['status'] == 1){
+				$data['nurseries']->where("status = 1");
+			}else{
+				$data['nurseries']->where("status = 0");
+			}
+			
 			$data['nurseries']->order_by('id','desc')->get_page();
 		}elseif(user_login()->user_type_id==6){ // เจ้าหน้าที่สคร
 			$data['nurseries']->where_related_province('area_id = '.user_login()->area_id);
@@ -175,8 +208,18 @@ class Nurseries extends Public_Controller
 			
 			$data['regis_count'] = $data['nurseries']->get_clone();
 			$data['regis_count']  = $data['regis_count']->where('status = 0')->get()->result_count();
+			
+			$data['nopass_count'] = $data['nurseries']->get_clone();
+			$data['nopass_count'] = $data['nopass_count']->where_related_assessment('total < 28')->get()->result_count();
 		
-			(@$status == 1)?$data['nurseries']->where("status = 1"):$data['nurseries']->where("status = 0");
+			if(@$_GET['status'] == 2){
+				$data['nurseries']->where("status = 0")->where_related_assessment('total < 28');
+			}elseif(@$_GET['status'] == 1){
+				$data['nurseries']->where("status = 1");
+			}else{
+				$data['nurseries']->where("status = 0");
+			}
+			
 			$data['nurseries']->order_by('id','desc')->get_page();
 		}elseif(user_login()->user_type_id==7){ // เจ้าหน้าที่จังหวัด
 		
@@ -187,6 +230,17 @@ class Nurseries extends Public_Controller
 			
 			$data['regis_count'] = $data['nurseries']->get_clone();
 			$data['regis_count']  = $data['regis_count']->where('status = 0')->get()->result_count();
+			
+			$data['nopass_count'] = $data['nurseries']->get_clone();
+			$data['nopass_count'] = $data['nopass_count']->where_related_assessment('total < 28')->get()->result_count();
+			
+			if(@$_GET['status'] == 2){
+				$data['nurseries']->where("status = 0")->where_related_assessment('total < 28');
+			}elseif(@$_GET['status'] == 1){
+				$data['nurseries']->where("status = 1");
+			}else{
+				$data['nurseries']->where("status = 0");
+			}
 		    
 		    $data['nurseries']->order_by('id','desc')->get_page();
 		}elseif(user_login()->user_type_id==8){ // เจ้าหน้าที่อำเภอ
@@ -197,6 +251,17 @@ class Nurseries extends Public_Controller
 			
 			$data['regis_count'] = $data['nurseries']->get_clone();
 			$data['regis_count']  = $data['regis_count']->where('status = 0')->get()->result_count();
+			
+			$data['nopass_count'] = $data['nurseries']->get_clone();
+			$data['nopass_count'] = $data['nopass_count']->where_related_assessment('total < 28')->get()->result_count();
+			
+			if(@$_GET['status'] == 2){
+				$data['nurseries']->where("status = 0")->where_related_assessment('total < 28');
+			}elseif(@$_GET['status'] == 1){
+				$data['nurseries']->where("status = 1");
+			}else{
+				$data['nurseries']->where("status = 0");
+			}
 			
             $data['nurseries']->order_by('id','desc')->get_page();
         }

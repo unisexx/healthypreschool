@@ -186,7 +186,7 @@ $(document).ready(function(){
                     }elseif($user->user_type_id == 7){
                         echo $user->province->name;
                     }elseif($user->user_type_id == 8){
-                        echo $user->amphur->amphur_name.' / '.$user->province->name;
+                        echo $user->amphur->amphur_name.' / '.$user->amphur->province->name;
                     }
                 ?>
             </td>

@@ -15,6 +15,11 @@
 		$sex = 'จำแนกตามเพศหญิง';
 	}
 ?>
+<style>
+.tooltip-inner {
+    white-space:pre-wrap;
+}
+</style>
 <script type="text/javascript" src="media/js/highchart/highcharts.js"></script>
 <script type="text/javascript" src="media/js/highchart/modules/exporting.js"></script>
 <script type="text/javascript">
@@ -113,16 +118,32 @@ $(function(){
 			$("select[name=area_id],select[name=amphur_id],select[name=district_id]").val("0");
            break;
            case '3':
-			$("#amphur").show();
+			$("#province,#amphur").show();
 			$("#area,#district").hide();
 			$("select[name=province_id],select[name=area_id],select[name=district_id]").val("0");
            break;
            case '4':
-			$("#district").show();
+			$("#province,#amphur,#district").show();
 			$("#area").hide();
 			$("select[name=province_id],select[name=amphur_id],select[name=area_id]").val("0");
            break;
 		}
+	});
+	
+	$("select[name='province_id']").live("change",function(){
+		$.post('nurseries/get_amphur',{
+				'province_id' : $(this).val()
+			},function(data){
+				$("#amphur").html(data);
+			});
+	});
+	
+	$("select[name='amphur_id']").live("change",function(){
+		$.post('nurseries/get_district',{
+				'amphur_id' : $(this).val()
+			},function(data){
+				$("#district").html(data);
+			});
 	});
 	
 	$("input[type=submit]").click(function(){
@@ -145,7 +166,6 @@ $(function(){
 			return false;
 		}
 	});
-	
 });
 </script>
 
@@ -182,6 +202,10 @@ $(function(){
 		<?=form_dropdown('district_id',get_option('id','district_name','districts','order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
 	</span>
 	
+	<?=form_dropdown('diseases',array('C'=>'หวัด','H'=>'มือ เท้า ปาก','D'=>'อุจจาระร่วง','F'=>'ไข้','R'=>'ไข้ออกผื่น','O'=>'อื่นๆ'),@$_GET['diseases'],'','--- โรค ---');?>
+	
+	ช่วงอายุ <input class="span1" type="text" name="lowage" value="<?=(@$_GET['lowage']) ? $_GET['lowage'] : '0' ;?>"> ถึง <input class="span1" type="text" name="hiage" value="<?=(@$_GET['hiage']) ? $_GET['hiage'] : 7 ;?>">
+	
       <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 	</div>
 </form>
@@ -192,60 +216,95 @@ $(function(){
 <a href="diseases/export_graphpage/excel?type=<?=@$_GET['type']?>&year=<?=@$_GET['year']?>&area_id=<?=@$_GET['area_id']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>"><div class="btn btn-mini">excel</div></a>
 
 
-<div>
+
+
+
+<div style="display:none;">
 <?php if(@$_GET['type'] == 1):?>
 	<table id="datatable" class="table">
 		<thead>
 			<tr>
 				<th></th>
-				<? foreach($diseasesArray as $key=>$row):?>
-				<th><?=$key?></th>
-				<? endforeach;?>
+				<?if(@$_GET['diseases']):?>
+					<th><?=array_search($_GET['diseases'], $diseasesArray);?></th>
+				<?else:?>
+					<? foreach($diseasesArray as $key=>$row):?>
+					<th><?=$key?></th>
+					<? endforeach;?>
+				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($provinces as $province):?>
 			<tr>
 				<th>
-					<a href="diseases/report_staff/basic_column?year=<?=$_GET['year']?>&type=2&province_id=<?=$province->id?>"><?=$province->name?></a>
+					<a href="diseases/report_staff/basic_column?year=<?=$_GET['year']?>&type=2&province_id=<?=$province->id?>&diseases=<?=@$_GET['diseases']?>"><?=$province->name?></a>
 				</th>
+				<?if(@$_GET['diseases']):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$province->id){ @$condition.=" and n.province_id = ".$province->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+						?>
+						<td><?=$disease->total?></td>
+				<?else:?>
 				
-				<? foreach($diseasesArray as $key=>$row):?>
-					<?
-						$condition = "";
-						if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
-						if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and cd.age between ".$_GET['lowage']." and ".$_GET['hiage']; }
-						if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
-						if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
-						if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
-						if(@$province->id){ @$condition.=" and n.province_id = ".$province->id; }
+					<? foreach($diseasesArray as $key=>$row):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$province->id){ @$condition.=" and n.province_id = ".$province->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+	
+						?>
+						<td><?=$disease->total?></td>
+					<? endforeach;?>
 				
-						$sql = "
-						SELECT count(d.id) total
-						FROM
-						diseases d
-						INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-						INNER JOIN nurseries n ON d.nursery_id = n.id
-						WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
-						$disease = new Disease();
-						$disease->query($sql);
-
-					?>
-					<td><?=$disease->total?></td>
-				<? endforeach;?>
+				<?endif;?>
 			</tr>
-				<?php
-					@$totalAll += $all;
-					@$totalPass += $pass;
-					@$totalNot += $not;
-				?>
 			<?php endforeach;?>
-			<!-- <tr>
+			
+			<!-- <tr class="sum">
 				<th>รวมทั้งหมด</th>
-				<th><?=$totalAll?></th>
-				<th><?=$totalPass?></th>
-				<th><?=$totalNot?></th>
+				<?if(@$_GET['diseases']):?>
+			        <td id='t1'>0</td>
+			    <?else:?>
+					<td id='t1'>0</td>
+			        <td id='t2'>0</td>
+			        <td id='t3'>0</td>
+			        <td id='t4'>0</td>
+			        <td id='t5'>0</td>
+			        <td id='t6'>0</td>
+				<?endif;?>
 			</tr> -->
+			
 		</tbody>
 	</table>
 <?php elseif(@$_GET['type'] == 2):?>
@@ -253,55 +312,86 @@ $(function(){
 		<thead>
 			<tr>
 				<th></th>
-				<? foreach($diseasesArray as $key=>$row):?>
-				<th><?=$key?></th>
-				<? endforeach;?>
+				<?if(@$_GET['diseases']):?>
+					<th><?=array_search($_GET['diseases'], $diseasesArray);?></th>
+				<?else:?>
+					<? foreach($diseasesArray as $key=>$row):?>
+					<th><?=$key?></th>
+					<? endforeach;?>
+				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($amphurs as $amphur):?>
 			<tr>
 				<th>
-					<a href="diseases/report_staff/basic_column?year=<?=$_GET['year']?>&type=3&amphur_id=<?=$amphur->id?>"><?=$amphur->amphur_name?></a>
+					<a href="diseases/report_staff/basic_column?year=<?=$_GET['year']?>&type=3&amphur_id=<?=$amphur->id?>&diseases=<?=@$_GET['diseases']?>"><?=$amphur->amphur_name?></a>
 				</th>
+				<?if(@$_GET['diseases']):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$amphur->id){ @$condition.=" and n.amphur_id = ".$amphur->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+						?>
+						<td><?=$disease->total?></td>
+				<?else:?>
 				
-				<? foreach($diseasesArray as $key=>$row):?>
-					<?
-						$condition = "";
-						if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
-						if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and cd.age between ".$_GET['lowage']." and ".$_GET['hiage']; }
-						if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
-						if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
-						if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
-						if(@$amphur->id){ @$condition.=" and n.amphur_id = ".$amphur->id; }
+					<? foreach($diseasesArray as $key=>$row):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$amphur->id){ @$condition.=" and n.amphur_id = ".$amphur->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+	
+						?>
+						<td><?=$disease->total?></td>
+					<? endforeach;?>
 				
-						$sql = "
-						SELECT count(d.id) total
-						FROM
-						diseases d
-						INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-						INNER JOIN nurseries n ON d.nursery_id = n.id
-						WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
-						$disease = new Disease();
-						$disease->query($sql);
-
-					?>
-					<td><?=$disease->total?></td>
-				<? endforeach;?>
-				
+				<?endif;?>
 			</tr>
-				<?php
-					@$totalAll += $all;
-					@$totalPass += $pass;
-					@$totalNot += $not;
-				?>
 			<?php endforeach;?>
-			<!-- <tr>
+			
+			<!-- <tr class="sum">
 				<th>รวมทั้งหมด</th>
-				<th><?=$totalAll?></th>
-				<th><?=$totalPass?></th>
-				<th><?=$totalNot?></th>
+				<?if(@$_GET['diseases']):?>
+			        <td id='t1'>0</td>
+			    <?else:?>
+					<td id='t1'>0</td>
+			        <td id='t2'>0</td>
+			        <td id='t3'>0</td>
+			        <td id='t4'>0</td>
+			        <td id='t5'>0</td>
+			        <td id='t6'>0</td>
+				<?endif;?>
 			</tr> -->
+			
 		</tbody>
 	</table>
 <?php elseif(@$_GET['type'] == 3):?>
@@ -309,53 +399,86 @@ $(function(){
 		<thead>
 			<tr>
 				<th></th>
-				<? foreach($diseasesArray as $key=>$row):?>
-				<th><?=$key?></th>
-				<? endforeach;?>
+				<?if(@$_GET['diseases']):?>
+					<th><?=array_search($_GET['diseases'], $diseasesArray);?></th>
+				<?else:?>
+					<? foreach($diseasesArray as $key=>$row):?>
+					<th><?=$key?></th>
+					<? endforeach;?>
+				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($districts as $district):?>
 			<tr>
 				<th>
-					<a href="diseases/report_staff/basic_column?year=<?=$_GET['year']?>&type=4&district_id=<?=$district->id?>"><?=$district->district_name?></a>
+					<a href="diseases/report_staff/basic_column?year=<?=$_GET['year']?>&type=4&district_id=<?=$district->id?>&diseases=<?=@$_GET['diseases']?>"><?=$district->district_name?></a>
 				</th>
-				<? foreach($diseasesArray as $key=>$row):?>
-					<?
-						$condition = "";
-						if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
-						if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and cd.age between ".$_GET['lowage']." and ".$_GET['hiage']; }
-						if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
-						if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
-						if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
-						if(@$district->id){ @$condition.=" and n.district_id = ".$district->id; }
+				<?if(@$_GET['diseases']):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$district->id){ @$condition.=" and n.district_id = ".$district->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+						?>
+						<td><?=$disease->total?></td>
+				<?else:?>
 				
-						$sql = "
-						SELECT count(d.id) total
-						FROM
-						diseases d
-						INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-						INNER JOIN nurseries n ON d.nursery_id = n.id
-						WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
-						$disease = new Disease();
-						$disease->query($sql);
-
-					?>
-					<td><?=$disease->total?></td>
-				<? endforeach;?>
+					<? foreach($diseasesArray as $key=>$row):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$district->id){ @$condition.=" and n.district_id = ".$district->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+	
+						?>
+						<td><?=$disease->total?></td>
+					<? endforeach;?>
+				
+				<?endif;?>
 			</tr>
-				<?php
-					@$totalAll += $all;
-					@$totalPass += $pass;
-					@$totalNot += $not;
-				?>
 			<?php endforeach;?>
-			<tr>
-				<!-- <th>รวมทั้งหมด</th>
-				<th><?=$totalAll?></th>
-				<th><?=$totalPass?></th>
-				<th><?=$totalNot?></th>
+			
+			<!-- <tr class="sum">
+				<th>รวมทั้งหมด</th>
+				<?if(@$_GET['diseases']):?>
+			        <td id='t1'>0</td>
+			    <?else:?>
+					<td id='t1'>0</td>
+			        <td id='t2'>0</td>
+			        <td id='t3'>0</td>
+			        <td id='t4'>0</td>
+			        <td id='t5'>0</td>
+			        <td id='t6'>0</td>
+				<?endif;?>
 			</tr> -->
+
 		</tbody>
 	</table>
 <?php elseif(@$_GET['type'] == 4):?>
@@ -364,9 +487,13 @@ $(function(){
 		<thead>
 			<tr>
 		        <th>ศูนย์เด็กเล็กปลอดโรค</th>
-		        <? foreach($diseasesArray as $key=>$row):?>
-				<th><?=$key?></th>
-				<? endforeach;?>
+		        <?if(@$_GET['diseases']):?>
+					<th><?=array_search($_GET['diseases'], $diseasesArray);?></th>
+				<?else:?>
+					<? foreach($diseasesArray as $key=>$row):?>
+					<th><?=$key?></th>
+					<? endforeach;?>
+				<?endif;?>
 	        </tr>
 		</thead>
 		<tbody>
@@ -375,42 +502,71 @@ $(function(){
 				<th>
 					<?=$nursery->name?>
 				</th>
-				<? foreach($diseasesArray as $key=>$row):?>
-					<?
-						$condition = "";
-						if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
-						if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and cd.age between ".$_GET['lowage']." and ".$_GET['hiage']; }
-						if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
-						if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
-						if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
-						if(@$nursery->id){ @$condition.=" and n.id = ".$nursery->id; }
+				<?if(@$_GET['diseases']):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$nursery->id){ @$condition.=" and n.id = ".$nursery->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+						?>
+						<td><?=$disease->total?></td>
+				<?else:?>
 				
-						$sql = "
-						SELECT count(d.id) total
-						FROM
-						diseases d
-						INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-						INNER JOIN nurseries n ON d.nursery_id = n.id
-						WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
-						$disease = new Disease();
-						$disease->query($sql);
-
-					?>
-					<td><?=$disease->total?></td>
-				<? endforeach;?>
+					<? foreach($diseasesArray as $key=>$row):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$nursery->id){ @$condition.=" and n.id = ".$nursery->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+	
+						?>
+						<td><?=$disease->total?></td>
+					<? endforeach;?>
+				
+				<?endif;?>
 			</tr>
-				<?php
-					@$totalAll += $all;
-					@$totalPass += $pass;
-					@$totalNot += $not;
-				?>
 			<?php endforeach;?>
-			<tr>
-				<!-- <th>รวมทั้งหมด</th>
-				<th><?=$totalAll?></th>
-				<th><?=$totalPass?></th>
-				<th><?=$totalNot?></th>
+			
+			<!-- <tr class="sum">
+				<th>รวมทั้งหมด</th>
+				<?if(@$_GET['diseases']):?>
+			        <td id='t1'>0</td>
+			    <?else:?>
+					<td id='t1'>0</td>
+			        <td id='t2'>0</td>
+			        <td id='t3'>0</td>
+			        <td id='t4'>0</td>
+			        <td id='t5'>0</td>
+			        <td id='t6'>0</td>
+				<?endif;?>
 			</tr> -->
+			
 		</tbody>
 	</table>
 <?php else:?>
@@ -418,52 +574,723 @@ $(function(){
 		<thead>
 			<tr>
 				<th></th>
-				<? foreach($diseasesArray as $key=>$row):?>
-				<th><?=$key?></th>
-				<? endforeach;?>
+				<?if(@$_GET['diseases']):?>
+					<th><?=array_search($_GET['diseases'], $diseasesArray);?></th>
+				<?else:?>
+					<? foreach($diseasesArray as $key=>$row):?>
+					<th><?=$key?></th>
+					<? endforeach;?>
+				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($areas as $area):?>
 			<tr>
-				<th><a href="diseases/report_staff/basic_column?year=&type=1&area_id=<?=$area->id?>"><?=$area->area_name?></a></th>
-				<? foreach($diseasesArray as $key=>$row):?>
-					<?
-						$condition = "";
-						if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
-						if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and cd.age between ".$_GET['lowage']." and ".$_GET['hiage']; }
-						if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
-						if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
-						if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
-						if(@$area->id){ @$condition.=" and n.area_id = ".$area->id; }
+				<th><a href="diseases/report_staff/basic_column?year=&type=1&area_id=<?=$area->id?>&diseases=<?=@$_GET['diseases']?>"><?=$area->area_name?></a></th>
+				<?if(@$_GET['diseases']):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$area->id){ @$condition.=" and n.area_id = ".$area->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+						?>
+						<td><?=$disease->total?></td>
+				<?else:?>
 				
-						$sql = "
-						SELECT count(d.id) total
-						FROM
-						diseases d
-						INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-						INNER JOIN nurseries n ON d.nursery_id = n.id
-						WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
-						$disease = new Disease();
-						$disease->query($sql);
-
-					?>
-					<td><?=$disease->total?></td>
-				<? endforeach;?>
+					<? foreach($diseasesArray as $key=>$row):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$area->id){ @$condition.=" and n.area_id = ".$area->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+							
+						?>
+						<td><?=$disease->total?></td>
+					<? endforeach;?>
+				
+				<?endif;?>
 			</tr>
-				<?php
-					@$totalAll += $all;
-					@$totalPass += $pass;
-					@$totalNot += $not;
-				?>
+			
 			<?php endforeach;?>
-			<!-- <tr>
+			
+			<!-- <tr class="sum">
 				<th>รวมทั้งหมด</th>
-				<th><?=$totalAll?></th>
-				<th><?=$totalPass?></th>
-				<th><?=$totalNot?></th>
+				<?if(@$_GET['diseases']):?>
+			        <td id='t1'>0</td>
+			    <?else:?>
+					<td id='t1'>0</td>
+			        <td id='t2'>0</td>
+			        <td id='t3'>0</td>
+			        <td id='t4'>0</td>
+			        <td id='t5'>0</td>
+			        <td id='t6'>0</td>
+				<?endif;?>
 			</tr> -->
+				
 		</tbody>
 	</table>
 <?php endif;?>
 </div>
+
+
+
+<div>
+<?php if(@$_GET['type'] == 1):?>
+	<table id="datatable2" class="table">
+		<thead>
+			<tr>
+				<th></th>
+				<?if(@$_GET['diseases']):?>
+					<th><?=array_search($_GET['diseases'], $diseasesArray);?></th>
+				<?else:?>
+					<? foreach($diseasesArray as $key=>$row):?>
+					<th><?=$key?></th>
+					<? endforeach;?>
+				<?endif;?>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach($provinces as $province):?>
+			<tr>
+				<th>
+					<a href="diseases/report_staff/basic_column?year=<?=$_GET['year']?>&type=2&province_id=<?=$province->id?>&diseases=<?=@$_GET['diseases']?>"><?=$province->name?></a>
+				</th>
+				<?if(@$_GET['diseases']):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$province->id){ @$condition.=" and n.province_id = ".$province->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+						?>
+						<td>
+							<?if($disease->total != 0):?>
+								<?
+									$sql = "SELECT other
+											FROM
+											diseases d
+											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+											INNER JOIN nurseries n ON d.nursery_id = n.id
+											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
+									$others = new Disease();
+									$others->query($sql);
+								?>
+								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
+								<?endforeach;?>"><?=$disease->total?></a>
+							<?else:?>
+								<?=$disease->total?>
+							<?endif?>
+						</td>
+				<?else:?>
+				
+					<? foreach($diseasesArray as $key=>$row):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$province->id){ @$condition.=" and n.province_id = ".$province->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+	
+						?>
+						<td>
+							<?if($row == 'O' && $disease->total != 0):?>
+								<?
+									$sql = "SELECT other
+											FROM
+											diseases d
+											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+											INNER JOIN nurseries n ON d.nursery_id = n.id
+											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
+									$others = new Disease();
+									$others->query($sql);
+								?>
+								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
+								<?endforeach;?>"><?=$disease->total?></a>
+							<?else:?>
+								<?=$disease->total?>
+							<?endif?>
+						</td>
+					<? endforeach;?>
+				
+				<?endif;?>
+			</tr>
+			<?php endforeach;?>
+			
+			<tr class="sum">
+				<th>รวมทั้งหมด</th>
+				<?if(@$_GET['diseases']):?>
+			        <td id='t1'>0</td>
+			    <?else:?>
+					<td id='t1'>0</td>
+			        <td id='t2'>0</td>
+			        <td id='t3'>0</td>
+			        <td id='t4'>0</td>
+			        <td id='t5'>0</td>
+			        <td id='t6'>0</td>
+				<?endif;?>
+			</tr>
+			
+		</tbody>
+	</table>
+<?php elseif(@$_GET['type'] == 2):?>
+	<table id="datatable2" class="table">
+		<thead>
+			<tr>
+				<th></th>
+				<?if(@$_GET['diseases']):?>
+					<th><?=array_search($_GET['diseases'], $diseasesArray);?></th>
+				<?else:?>
+					<? foreach($diseasesArray as $key=>$row):?>
+					<th><?=$key?></th>
+					<? endforeach;?>
+				<?endif;?>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach($amphurs as $amphur):?>
+			<tr>
+				<th>
+					<a href="diseases/report_staff/basic_column?year=<?=$_GET['year']?>&type=3&amphur_id=<?=$amphur->id?>&diseases=<?=@$_GET['diseases']?>"><?=$amphur->amphur_name?></a>
+				</th>
+				<?if(@$_GET['diseases']):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$amphur->id){ @$condition.=" and n.amphur_id = ".$amphur->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+						?>
+						<td>
+							<?if($disease->total != 0):?>
+								<?
+									$sql = "SELECT other
+											FROM
+											diseases d
+											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+											INNER JOIN nurseries n ON d.nursery_id = n.id
+											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
+									$others = new Disease();
+									$others->query($sql);
+								?>
+								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
+								<?endforeach;?>"><?=$disease->total?></a>
+							<?else:?>
+								<?=$disease->total?>
+							<?endif?>
+						</td>
+				<?else:?>
+				
+					<? foreach($diseasesArray as $key=>$row):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$amphur->id){ @$condition.=" and n.amphur_id = ".$amphur->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+	
+						?>
+						<td>
+							<?if($row == 'O' && $disease->total != 0):?>
+								<?
+									$sql = "SELECT other
+											FROM
+											diseases d
+											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+											INNER JOIN nurseries n ON d.nursery_id = n.id
+											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
+									$others = new Disease();
+									$others->query($sql);
+								?>
+								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
+								<?endforeach;?>"><?=$disease->total?></a>
+							<?else:?>
+								<?=$disease->total?>
+							<?endif?>
+						</td>
+					<? endforeach;?>
+				
+				<?endif;?>
+			</tr>
+			<?php endforeach;?>
+			
+			<tr class="sum">
+				<th>รวมทั้งหมด</th>
+				<?if(@$_GET['diseases']):?>
+			        <td id='t1'>0</td>
+			    <?else:?>
+					<td id='t1'>0</td>
+			        <td id='t2'>0</td>
+			        <td id='t3'>0</td>
+			        <td id='t4'>0</td>
+			        <td id='t5'>0</td>
+			        <td id='t6'>0</td>
+				<?endif;?>
+			</tr>
+			
+		</tbody>
+	</table>
+<?php elseif(@$_GET['type'] == 3):?>
+	<table id="datatable2" class="table">
+		<thead>
+			<tr>
+				<th></th>
+				<?if(@$_GET['diseases']):?>
+					<th><?=array_search($_GET['diseases'], $diseasesArray);?></th>
+				<?else:?>
+					<? foreach($diseasesArray as $key=>$row):?>
+					<th><?=$key?></th>
+					<? endforeach;?>
+				<?endif;?>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach($districts as $district):?>
+			<tr>
+				<th>
+					<a href="diseases/report_staff/basic_column?year=<?=$_GET['year']?>&type=4&district_id=<?=$district->id?>&diseases=<?=@$_GET['diseases']?>"><?=$district->district_name?></a>
+				</th>
+				<?if(@$_GET['diseases']):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$district->id){ @$condition.=" and n.district_id = ".$district->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+						?>
+						<td>
+							<?if($disease->total != 0):?>
+								<?
+									$sql = "SELECT other
+											FROM
+											diseases d
+											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+											INNER JOIN nurseries n ON d.nursery_id = n.id
+											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
+									$others = new Disease();
+									$others->query($sql);
+								?>
+								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
+								<?endforeach;?>"><?=$disease->total?></a>
+							<?else:?>
+								<?=$disease->total?>
+							<?endif?>
+						</td>
+				<?else:?>
+				
+					<? foreach($diseasesArray as $key=>$row):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$district->id){ @$condition.=" and n.district_id = ".$district->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+	
+						?>
+						<td>
+							<?if($row == 'O' && $disease->total != 0):?>
+								<?
+									$sql = "SELECT other
+											FROM
+											diseases d
+											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+											INNER JOIN nurseries n ON d.nursery_id = n.id
+											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
+									$others = new Disease();
+									$others->query($sql);
+								?>
+								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
+								<?endforeach;?>"><?=$disease->total?></a>
+							<?else:?>
+								<?=$disease->total?>
+							<?endif?>
+						</td>
+					<? endforeach;?>
+				
+				<?endif;?>
+			</tr>
+			<?php endforeach;?>
+			
+			<tr class="sum">
+				<th>รวมทั้งหมด</th>
+				<?if(@$_GET['diseases']):?>
+			        <td id='t1'>0</td>
+			    <?else:?>
+					<td id='t1'>0</td>
+			        <td id='t2'>0</td>
+			        <td id='t3'>0</td>
+			        <td id='t4'>0</td>
+			        <td id='t5'>0</td>
+			        <td id='t6'>0</td>
+				<?endif;?>
+			</tr>
+
+		</tbody>
+	</table>
+<?php elseif(@$_GET['type'] == 4):?>
+	<div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#01a8d2"><?=$text?></div>
+	<table id="datatable2" class="table">
+		<thead>
+			<tr>
+		        <th>ศูนย์เด็กเล็กปลอดโรค</th>
+		        <?if(@$_GET['diseases']):?>
+					<th><?=array_search($_GET['diseases'], $diseasesArray);?></th>
+				<?else:?>
+					<? foreach($diseasesArray as $key=>$row):?>
+					<th><?=$key?></th>
+					<? endforeach;?>
+				<?endif;?>
+	        </tr>
+		</thead>
+		<tbody>
+			<?php foreach($nurseries as $nursery):?>
+			<tr>
+				<th>
+					<?=$nursery->name?>
+				</th>
+				<?if(@$_GET['diseases']):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$nursery->id){ @$condition.=" and n.id = ".$nursery->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+						?>
+						<td>
+							<?if($disease->total != 0):?>
+								<?
+									$sql = "SELECT other
+											FROM
+											diseases d
+											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+											INNER JOIN nurseries n ON d.nursery_id = n.id
+											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
+									$others = new Disease();
+									$others->query($sql);
+								?>
+								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
+								<?endforeach;?>"><?=$disease->total?></a>
+							<?else:?>
+								<?=$disease->total?>
+							<?endif?>
+						</td>
+				<?else:?>
+				
+					<? foreach($diseasesArray as $key=>$row):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$nursery->id){ @$condition.=" and n.id = ".$nursery->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+	
+						?>
+						<td>
+							<?if($row == 'O' && $disease->total != 0):?>
+								<?
+									$sql = "SELECT other
+											FROM
+											diseases d
+											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+											INNER JOIN nurseries n ON d.nursery_id = n.id
+											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
+									$others = new Disease();
+									$others->query($sql);
+								?>
+								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
+								<?endforeach;?>"><?=$disease->total?></a>
+							<?else:?>
+								<?=$disease->total?>
+							<?endif?>
+						</td>
+					<? endforeach;?>
+				
+				<?endif;?>
+			</tr>
+			<?php endforeach;?>
+			
+			<tr class="sum">
+				<th>รวมทั้งหมด</th>
+				<?if(@$_GET['diseases']):?>
+			        <td id='t1'>0</td>
+			    <?else:?>
+					<td id='t1'>0</td>
+			        <td id='t2'>0</td>
+			        <td id='t3'>0</td>
+			        <td id='t4'>0</td>
+			        <td id='t5'>0</td>
+			        <td id='t6'>0</td>
+				<?endif;?>
+			</tr>
+			
+		</tbody>
+	</table>
+<?php else:?>
+	<table id="datatable2" class="table">
+		<thead>
+			<tr>
+				<th></th>
+				<?if(@$_GET['diseases']):?>
+					<th><?=array_search($_GET['diseases'], $diseasesArray);?></th>
+				<?else:?>
+					<? foreach($diseasesArray as $key=>$row):?>
+					<th><?=$key?></th>
+					<? endforeach;?>
+				<?endif;?>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach($areas as $area):?>
+			<tr>
+				<th><a href="diseases/report_staff/basic_column?year=&type=1&area_id=<?=$area->id?>&diseases=<?=@$_GET['diseases']?>"><?=$area->area_name?></a></th>
+				<?if(@$_GET['diseases']):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$area->id){ @$condition.=" and n.area_id = ".$area->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+						?>
+						<td>
+							<?if($disease->total != 0):?>
+								<?
+									$sql = "SELECT other
+											FROM
+											diseases d
+											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+											INNER JOIN nurseries n ON d.nursery_id = n.id
+											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
+									$others = new Disease();
+									$others->query($sql);
+								?>
+								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
+								<?endforeach;?>"><?=$disease->total?></a>
+							<?else:?>
+								<?=$disease->total?>
+							<?endif?>
+						</td>
+				<?else:?>
+				
+					<? foreach($diseasesArray as $key=>$row):?>
+						<?
+							$condition = "";
+							if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+							if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+							if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+							if(@$area->id){ @$condition.=" and n.area_id = ".$area->id; }
+					
+							$sql = "
+							SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							$disease = new Disease();
+							$disease->query($sql);
+							
+						?>
+						<td>
+							<?if($row == 'O' && $disease->total != 0):?>
+								<?
+									$sql = "SELECT other
+											FROM
+											diseases d
+											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+											INNER JOIN nurseries n ON d.nursery_id = n.id
+											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
+									$others = new Disease();
+									$others->query($sql);
+								?>
+								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
+								<?endforeach;?>"><?=$disease->total?></a>
+							<?else:?>
+								<?=$disease->total?>
+							<?endif?>
+						</td>
+					<? endforeach;?>
+				
+				<?endif;?>
+			</tr>
+			
+			<?php endforeach;?>
+			
+			<tr class="sum">
+				<th>รวมทั้งหมด</th>
+				<?if(@$_GET['diseases']):?>
+			        <td id='t1'>0</td>
+			    <?else:?>
+					<td id='t1'>0</td>
+			        <td id='t2'>0</td>
+			        <td id='t3'>0</td>
+			        <td id='t4'>0</td>
+			        <td id='t5'>0</td>
+			        <td id='t6'>0</td>
+				<?endif;?>
+			</tr>
+				
+		</tbody>
+	</table>
+<?php endif;?>
+</div>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#t1").html(sumOfColumns("datatable2", 2, true));
+	$("#t2").html(sumOfColumns("datatable2", 3, true));
+	$("#t3").html(sumOfColumns("datatable2", 4, true));
+	$("#t4").html(sumOfColumns("datatable2", 5, true));
+	$("#t5").html(sumOfColumns("datatable2", 6, true));
+	$("#t6").html(sumOfColumns("datatable2", 7, true));
+	
+	$('.tooltp').tooltip();
+});
+
+
+function sumOfColumns(tableID, columnIndex, hasHeader) {
+  var tot = 0;
+  $("#" + tableID + " tr" + (hasHeader ? ":gt(0)" : ""))
+  .children("td:nth-child(" + columnIndex + ")")
+  .each(function() {
+    tot += parseInt($(this).text());
+  });
+  return tot;
+}
+</script>

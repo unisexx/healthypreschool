@@ -8,6 +8,9 @@ $(function(){
         { 
             required: true
         },
+        user_type_id:{
+        	required: true
+        },
     	sex: 
         { 
             required: true
@@ -33,6 +36,10 @@ $(function(){
     	name: 
         { 
             required: "กรุณากรอกชื่อ - นามสกุล"
+        },
+        user_type_id:
+        {
+        	required: "กรุณาเลือกตำแหน่ง"
         },
     	sex: 
         { 
@@ -80,10 +87,10 @@ $(function(){
     
     $("select[name='area_id']").live("change",function(){
 		$.post('users/get_province_under_area',{
-				'area_id' : $(this).val()
-			},function(data){
-				$(".underprovince").html(data);
-			});
+			'area_id' : $(this).val()
+		},function(data){
+			$(".underprovince").html(data);
+		});
 	});
 	
 	$("select[name='province_to_select_amphur']").live("change",function(){
@@ -92,6 +99,42 @@ $(function(){
 			},function(data){
 				$(".amphur-frm").html(data);
 			});
+	});
+	
+	$('.btnclickform').live("click",function(){
+		var user_type_id = $('select[name=user_type_id] option:selected').val();
+		var area_id = $('select[name=area_id] option:selected').val();
+		var province_id = $('#province_select option:selected').val();
+		var province_id2 = $('select[name=province_to_select_amphur] option:selected').val();
+		var amphur_id = $('select[name=amphur_id] option:selected').val();
+		
+		if(user_type_id == 6){
+			if(area_id == ""){
+				alert('กรุณาเลือกพื้นที่');
+				return false;
+			}else{
+				$('#regisform').submit();
+			}
+		}else if(user_type_id == 7){
+			if(province_id == ""){
+				alert('กรุณาเลือกจังหวัด');
+				return false;
+			}else{
+				$('#regisform').submit();
+			}
+		}else if(user_type_id == 8){
+			if(province_id2 == ""){
+				alert('กรุณาเลือกจังหวัด');
+				return false;
+			}else if(amphur_id == ""){
+				alert('กรุณาเลือกตำบล');
+				return false;
+			}else{
+				$('#regisform').submit();
+			}
+		}else{
+			alert('กรุณาเลือกประเภท');
+		}
 	});
 });
 </script>
@@ -140,9 +183,9 @@ $(function(){
                 <label class="control-label">เจ้าหน้าที่ประจำจังหวัด</label>
                 <div class="controls">
                     <?php if(user_login()->user_type_id == 1): // admin เห็นทุกจังหวัด?>
-                    <?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),$user->province_id,'class="input-xlarge"','--- เลือกจังหวัด ---') ?>
+                    <?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),$user->province_id,'id="province_select" class="input-xlarge"','--- เลือกจังหวัด ---') ?>
                     <?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร. เห็นจังหวัดในเขตตัวเอง?>
-                        <?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),$user->province_id,'','--- เลือกจังหวัด ---') ?>
+                        <?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),$user->province_id,'id="province_select"','--- เลือกจังหวัด ---') ?>
                     <?php endif;?>
                 </div>
             </div>
@@ -220,7 +263,7 @@ $(function(){
             </div>
             <div class="control-group">
                 <div class="controls">
-                  <input type="submit" class="btn btn-small btn-info" value="บันทึก">
+                  <input type="button" class="btn btn-small btn-info btnclickform" value="บันทึก">
                 </div>
             </div>
         </form>

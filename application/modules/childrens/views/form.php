@@ -29,7 +29,10 @@ jQuery_1_4_2("input.datepicker").date_input();
 			<div class="control-group">
 		        <label class="control-label">ห้องเรียน<span class="TxtRed">*</span></label>
 		        <div class="controls">
-		          <?if(user_login()->user_type_id == 9):?>
+		        	
+		          <?if(user_login()->user_type_id == 1 || user_login()->user_type_id == 6 || user_login()->user_type_id == 7 || user_login()->user_type_id == 8):?>
+		          	<?php echo @form_dropdown('classroom_id',get_option('id','room_name','classrooms','where nursery_id = '.$_GET['nursery_id'].' order by room_name asc'),@$child->classroom_id,'','--- เลือกห้องเรียน ---')?>
+		          <?elseif(user_login()->user_type_id == 9):?>
 		          	<?php echo  form_dropdown('classroom_id',get_option('id','room_name','classrooms','where nursery_id = '.user_login()->nursery_id.' order by room_name asc'),@$child->classroom_id,'','--- เลือกห้องเรียน ---')?>
 		          <?elseif(user_login()->user_type_id == 10):?>
 		          	<?php echo  form_dropdown('classroom_id',get_option('id','room_name','classrooms','where user_id = '.user_login()->id.' order by room_name asc'),@$child->classroom_id,'','--- เลือกห้องเรียน ---')?>

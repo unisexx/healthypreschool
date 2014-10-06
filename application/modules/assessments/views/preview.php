@@ -446,4 +446,12 @@ function estimate(){
   	<td></td>
   	<td></td>
   </tr>
+  <tr>
+  	<td></td>
+	<td>แนบไฟล์แบบประเมิน</td>
+	<td><?=is_file('uploads/assessment/'.$assessment->files)? "<a href='uploads/assessment/".$assessment->files."' target='_blank'>ดูไฟล์แนบ</a>" : "";?></td>
+	<td>
+		<input type="file" name="files" />
+	</td>
+  </tr>
 </table>

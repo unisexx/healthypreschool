@@ -33,14 +33,6 @@ $(document).ready(function(){
 			});
 	});
 	
-	var pathname = $(location).attr('href');
-    var getpath = pathname.split('/');
-	switch(getpath[6].substr(0,1))
-	{
-       case '1': $(".estimate-tab li").eq(0).addClass("active");break;
-       case '0': $(".estimate-tab li").eq(1).addClass("active");break;
-	}
-	
 	$(".btn-estimate").live("click",function(){
 		$('.loader').show();
 		$.get('nurseries/get_nursery_data',{
@@ -60,8 +52,9 @@ $(document).ready(function(){
 
 
 	<ul class="nav nav-tabs home-nav-tabs estimate-tab">
-	  <li><a href="nurseries/estimate/1?nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">ผ่านเกณฑ์ <span class="badge badge-success"><?=$pass_count?></span></a></li>
-	  <li><a href="nurseries/estimate/0?nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">รอการประเมิน <span class="badge badge-important"><?=$regis_count?></span></a></li>
+	  <li <?=$_GET['status']==1 ?"class='active'" : "" ;?>><a href="nurseries/estimate?status=1&nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">ผ่านเกณฑ์ <span class="badge badge-success"><?=$pass_count?></span></a></li>
+	  <li <?=$_GET['status']==2 ?"class='active'" : "" ;?>><a href="nurseries/estimate?status=2&nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">ไม่ผ่านเกณฑ์ <span class="badge badge-important"><?=$nopass_count?></a></li>
+	  <li <?=$_GET['status']==0 ?"class='active'" : "" ;?>><a href="nurseries/estimate?status=0&nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">รอการประเมิน <span class="badge"><?=$regis_count?></span></a></li>
 	</ul>
     	
 	<div id="data">
@@ -73,14 +66,14 @@ $(document).ready(function(){
     	<?=form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),@$_GET['nursery_category_id'],'','--- เลือกคำนำหน้า ---');?>	
     	<input name="name" type="text" value="<?=@$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:280px;" />
 		<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
-       		<?php echo form_dropdown('province_id',get_option('id','name','provinces'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
+       		<?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
        	<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร.?>
        		<?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
        	<?php endif;?>
        	
     	  <span id="amphur">
     	  	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกอำเภอ?>
-				<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
+				<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
 			<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร.?>
 				<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id in (select id from provinces where area_id = '.user_login()->area_id.') order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
 			<?php elseif(user_login()->user_type_id == 7): //เจ้าหน้าที่จังหวัด?>
@@ -90,7 +83,7 @@ $(document).ready(function(){
     	  
     	  <span id="district">
     	  	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกตำบล?>
-				<?=form_dropdown('district_id',get_option('id','district_name','districts'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
+				<?=form_dropdown('district_id',get_option('id','district_name','districts order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
 			<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร.?>
 				<?=form_dropdown('district_id',get_option('id','district_name','districts','where province_id in (select id from provinces where area_id = '.user_login()->area_id.') order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
 			<?php elseif(user_login()->user_type_id == 7): //เจ้าหน้าที่จังหวัด?>
@@ -99,7 +92,8 @@ $(document).ready(function(){
                     <?=form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.user_login()->amphur_id.' order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
                 <?php endif;?>
     	  </span>
-    	  <?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),@$_GET['year'],'','--- เลือกปี ---');?>
+    	  <?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),@$_GET['year'],'','--- เลือกปีที่เข้าร่วม ---');?>
+    	  <?=form_dropdown('status',array('1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์','0'=>'รอการประเมิน'),@$_GET['status'],'','--- เลือกสถานะ ---');?>
   	      <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
     	</div>
 	</form>

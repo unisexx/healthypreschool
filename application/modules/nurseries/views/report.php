@@ -111,12 +111,12 @@ $(function(){
 			$("select[name=area_id],select[name=amphur_id],select[name=district_id]").val("0");
            break;
            case '3':
-			$("#amphur").show();
+			$("#province,#amphur").show();
 			$("#area,#district").hide();
 			$("select[name=province_id],select[name=area_id],select[name=district_id]").val("0");
            break;
            case '4':
-			$("#district").show();
+			$("#province,#amphur,#district").show();
 			$("#area").hide();
 			$("select[name=province_id],select[name=amphur_id],select[name=area_id]").val("0");
            break;

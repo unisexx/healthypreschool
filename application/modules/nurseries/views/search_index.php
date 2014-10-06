@@ -75,7 +75,30 @@ $(document).ready(function(){
 		        		<img class="icon-girl" src="themes/hps/images/girl.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
 		        	<?php endif;?>
 		        </td>
-		        <td><?=($nursery->status == 0)?"รอการประเมิน":"ผ่านเกณฑ์ <br>(พ.ศ. ".$nursery->approve_year.")";?></td>
+		        <td>
+		        	<!-- <?=($nursery->status == 0)?"รอการประเมิน":"ผ่านเกณฑ์ <br>(พ.ศ. ".$nursery->approve_year.")";?> -->
+		        	<?if($nursery->status == 0):?>
+		        		<?if($nursery->assessment->total != 0):?>
+		        			<a href="assessments/preview/<?=$nursery->id?>" target="_blank">
+		        			<span style="color:#D14">ไม่ผ่านเกณฑ์ <br>(<?=$nursery->assessment->total?> คะแนน)</span>
+		        			</a>
+		        		<?else:?>
+		        			รอการประเมิน
+		        		<?endif;?>
+		        	<?else:?>
+		        		<span style="color:teal">
+		        		<?if($nursery->approve_year != 0):?>
+		        			ผ่านเกณฑ์ <br>(พ.ศ. <?=$nursery->approve_year?>)<br>
+		        			<span style="color:#d14;">หมดอายุปี <?=$nursery->approve_year + 3?></span>
+		        		<?else:?>
+		        		<a href="assessments/preview/<?=$nursery->id?>" target="_blank">
+		        			ผ่านเกณฑ์ <br>(<?=$nursery->assessment->total?> คะแนน)<br>
+		        			<span style="color:#d14;">หมดอายุปี <?=date("Y", strtotime($nursery->approve_date)) + 546;?></span>
+		        		</a>
+		        		<?endif;?>
+		        		</span>
+		        	<?endif;?>
+		        </td>
 	        </tr>
 		<?php endforeach;?>
         </table>

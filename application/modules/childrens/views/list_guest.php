@@ -35,7 +35,7 @@
 </div>
 </form>
 
-<!-- <div style="float:right; padding:10px 0;"><a href="childrens/form"><div class="btn btn-small">เพิ่มรายชื่อเด็ก</div></a></div> -->
+<!-- <div style="float:right; padding:10px 0;"><a href="childrens/form?nursery_id=<?=$this->uri->segment(3)?>"><div class="btn btn-small">เพิ่มรายชื่อเด็ก</div></a></div> -->
 <table class="table table-striped table-bordered">
 	<tr>
 		<th>ลำดับ</th>

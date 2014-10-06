@@ -27,6 +27,20 @@ $(document).ready(function(){
 	});
 });
 </script>
+
+<!-- load jQuery 1.4.2 -->
+<script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
+
+<link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
+<script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
+<script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
+<script type="text/javascript">
+var jQuery_1_4_2 = $.noConflict(true);
+$(document).ready(function(){
+jQuery_1_4_2("input.datepicker").date_input(); 
+});
+</script>
+
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
   <li><a href="nurseries">ศูนย์เด็กเล็กปลอดโรค</a> <span class="divider">/</span></li>
@@ -94,7 +108,9 @@ $(document).ready(function(){
 				<?php endif;?>
 			</span>
 	    	  <?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557'),@$_GET['year'],'','--- เลือกปี ---');?>
-	    	  <?=form_dropdown('status',array('1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์','3'=>'รอการประเมิน','0'=>'เข้าร่วมโครงการ'),@$_GET['status'],'','--- เลือกสถานะ ---');?>
+	    	  <?=form_dropdown('status',array('1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์','3'=>'รอการประเมิน','0'=>'เข้าร่วมโครงการ'),@$_GET['status'],'','--- เลือกสถานะ ---');?><br>
+	    	  วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
+	    	  วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
 	  	      <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 	    	</div>
     	</form>
@@ -103,6 +119,7 @@ $(document).ready(function(){
         	ไม่ผ่านเกณฑ์<a href="nurseries/register?status=2"> <span class="badge badge-important"><?=$nopass_count?></span></a>
         	รอการประเมิน<a href="nurseries/register?status=3"> <span class="badge"><?=$regis_count-($pass_count+$nopass_count)?></span></a>
         	เข้าร่วมโครงการ<a href="nurseries/register"> <span class="badge badge-info"><?=$regis_count?></span></a>
+        	
         	<!-- ผ่านเกณฑ์ <span class="badge badge-success"><?=$pass_count?></span>
         	ไม่ผ่านเกณฑ์ <span class="badge badge-important"><?=$nopass_count?></span>
         	รอการประเมิน <span class="badge"><?=$regis_count-($pass_count+$nopass_count)?></span>
@@ -162,7 +179,14 @@ $(document).ready(function(){
 	        		<img class="icon-girl" src="themes/hps/images/girl.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
 	        	<?php endif;?>
 	        </td>
-	        <td nowrap="nowrap"><?=mysql_to_th($nursery->created)?></td>
+	        <td nowrap="nowrap">
+	        	<?=mysql_to_th($nursery->created)?>
+	        	<?
+	        		if(!empty($nursery->user_id)){
+	        			echo "<br>(".get_user_name($nursery->user_id).")";
+					}
+	        	?>
+	        </td>
 	        <td nowrap="nowrap">
 	        	<?//=($nursery->status == 0)?"รอการประเมิน":"ผ่านเกณฑ์ <br>(พ.ศ. ".$nursery->approve_year.")";?>
 	        	

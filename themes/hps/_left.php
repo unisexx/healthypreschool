@@ -19,7 +19,11 @@
 	                ?></div>
 	                <div class="login-menu">
 	                	<?php if(user_login()->m_status == 'active'):?>
-	                		<b class="tabspace"><a href="home/menu">เมนูหลัก</a></b>
+	                		<?php if(user_login()->user_type_id == 1 || user_login()->user_type_id == 6 || user_login()->user_type_id == 7 || user_login()->user_type_id == 8):?>
+	                			<b class="tabspace"><a href="nurseries/register">เมนูหลัก</a></b>
+	                		<?php else:?>
+	                			<b class="tabspace"><a href="home/menu">เมนูหลัก</a></b>
+	                		<?php endif;?>
 		                <?php else:?>
 		                	สถานะ : <span style="color:orangered;">รอการตรวจสอบ</span>
 		                <?php endif;?>

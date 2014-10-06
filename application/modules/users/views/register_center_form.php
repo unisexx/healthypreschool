@@ -146,7 +146,7 @@ $(document).ready(function(){
             <div class="control-group">
                 <label class="control-label">จังหวัด/อำเภอ/ตำบล</label>
                 <div class="controls">
-                  <?php echo form_dropdown('province_id',get_option('id','name','provinces'),@$nursery->province_id,'','--- เลือกจังหวัด ---') ?>
+                  <?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),@$nursery->province_id,'','--- เลือกจังหวัด ---') ?>
 	           	
 					<span id="amphur">
 						<?php if(@$nursery->amphur_id):?>
