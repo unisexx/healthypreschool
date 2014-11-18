@@ -105,7 +105,12 @@ class Reports extends Public_Controller
 			$data['nurseries']->where("year = ".$_GET['year']);
 			$data['year'] = "ปี ".$_GET['year'];
 		}
+		if(isset($_GET['status'])){
+			$data['nurseries']->where("status = ".$_GET['status']);
+		}
+		
 		$data['nurseries']->order_by('id','desc')->get_page();
+		// $data['nurseries']->check_last_query();
 		
 		$this->template->build('report_detail',$data);
 	}

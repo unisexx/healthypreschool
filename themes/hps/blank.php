@@ -134,6 +134,7 @@
 					        	<?endif;?>
 					        	
 					        	<li><a href="diseases/report_staff"><img src="themes/hps/images/banner_menu_11.png" alt="รายงานแบบคัดกรองโรค"></a></li>
+					        	<li><a href="surveillances/index"><img src="themes/hps/images/report_banner.png" alt="รายงานติดตามการเฝ้าระวังโรค"></a></li>
 				        	</ul>
 				        	<?elseif(user_login()->user_type_id == 8): //เจ้าหน้าที่ประจำอำเภอ?>
 				        	<ul id="nav">
@@ -142,6 +143,7 @@
 				        		<li><a href="nurseries/estimate?status=1"><img src="themes/hps/images/banner_menu_3.png" alt="ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
 				        		<li><a href="staffs"><img src="themes/hps/images/banner_menu_5.png" alt="ตรวจสอบรายชื่อเจ้าหน้าที่ศูนย์เด็กเล็กปลอดโรค"></a></li>
 				        		<li><a href="nurseries/reports/index/basic_column?year=&type=3&area_id=&province_id=&amphur_id=<?=user_login()->amphur_id?>&district_id="><img src="themes/hps/images/banner_menu_6.png" alt="รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
+				        		<li><a href="surveillances/index"><img src="themes/hps/images/report_banner.png" alt="รายงานติดตามการเฝ้าระวังโรค"></a></li>
 				        	</ul>
 				        	<?elseif(user_login()->user_type_id == 9): //เจ้าหน้าที่ศูนย์?>
 				        	<ul id="nav">
@@ -151,6 +153,7 @@
 				        		<li><a href="diseases"><img src="themes/hps/images/banner_menu_10.png" alt="บันทึกแบบคัดกรองโรค"></a></li>
 				        		<li><a href="diseases/report"><img src="themes/hps/images/banner_menu_11.png" alt="รายงานแบบคัดกรองโรค"></a></li>
 				        		<li><a href="assessments/preview/<?=user_login()->nursery_id?>"><img src="themes/hps/images/banner_menu_12.png" alt="รายงานแบบประเมินเข้าร่วมโครงการ"></a></li>
+				        		<li><a href="surveillances/index"><img src="themes/hps/images/report_banner.png" alt="รายงานติดตามการเฝ้าระวังโรค"></a></li>
 				        	</ul>
 				        	<?elseif(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก?>
 				        	<ul id="nav">
@@ -159,6 +162,7 @@
 				        		<li><a href="diseases"><img src="themes/hps/images/banner_menu_10.png" alt="บันทึกแบบคัดกรองโรค"></a></li>
 				        		<li><a href="diseases/report"><img src="themes/hps/images/banner_menu_11.png" alt="รายงานแบบคัดกรองโรค"></a></li>
 				        		<li><a href="assessments/preview/<?=user_login()->nursery_id?>"><img src="themes/hps/images/banner_menu_12.png" alt="รายงานแบบประเมินเข้าร่วมโครงการ"></a></li>
+				        		<li><a href="surveillances/index"><img src="themes/hps/images/report_banner.png" alt="รายงานติดตามการเฝ้าระวังโรค"></a></li>
 				        	</ul>
 				        	<?endif;?>
 				        	<!------- จบเมนู ------->

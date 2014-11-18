@@ -702,22 +702,11 @@ $(function(){
 							$disease->query($sql);
 						?>
 						<td>
-							<?if($disease->total != 0):?>
-								<?
-									$sql = "SELECT other
-											FROM
-											diseases d
-											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-											INNER JOIN nurseries n ON d.nursery_id = n.id
-											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
-									$others = new Disease();
-									$others->query($sql);
-								?>
-								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
-								<?endforeach;?>"><?=$disease->total?></a>
+							<?if($disease->total > 0):?>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&province_id=<?=$province->id?>&c1=<?=@$_GET['diseases']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
-							<?endif?>
+							<?endif;?>
 						</td>
 				<?else:?>
 				
@@ -743,22 +732,11 @@ $(function(){
 	
 						?>
 						<td>
-							<?if($row == 'O' && $disease->total != 0):?>
-								<?
-									$sql = "SELECT other
-											FROM
-											diseases d
-											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-											INNER JOIN nurseries n ON d.nursery_id = n.id
-											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
-									$others = new Disease();
-									$others->query($sql);
-								?>
-								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
-								<?endforeach;?>"><?=$disease->total?></a>
+							<?if($disease->total > 0):?>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&province_id=<?=$province->id?>&c1=<?=@$row?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
-							<?endif?>
+							<?endif;?>
 						</td>
 					<? endforeach;?>
 				
@@ -823,22 +801,11 @@ $(function(){
 							$disease->query($sql);
 						?>
 						<td>
-							<?if($disease->total != 0):?>
-								<?
-									$sql = "SELECT other
-											FROM
-											diseases d
-											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-											INNER JOIN nurseries n ON d.nursery_id = n.id
-											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
-									$others = new Disease();
-									$others->query($sql);
-								?>
-								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
-								<?endforeach;?>"><?=$disease->total?></a>
+							<?if($disease->total > 0):?>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&amphur_id=<?=@$amphur->id?>&c1=<?=@$_GET['diseases']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
-							<?endif?>
+							<?endif;?>
 						</td>
 				<?else:?>
 				
@@ -878,7 +845,11 @@ $(function(){
 								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
 								<?endforeach;?>"><?=$disease->total?></a>
 							<?else:?>
-								<?=$disease->total?>
+								<?if($disease->total > 0):?>
+									<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&amphur_id=<?=@$amphur->id?>&c1=<?=@$row?>" target="_blank"><?=$disease->total?></a>
+								<?else:?>
+									<?=$disease->total?>
+								<?endif;?>
 							<?endif?>
 						</td>
 					<? endforeach;?>
@@ -944,22 +915,11 @@ $(function(){
 							$disease->query($sql);
 						?>
 						<td>
-							<?if($disease->total != 0):?>
-								<?
-									$sql = "SELECT other
-											FROM
-											diseases d
-											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-											INNER JOIN nurseries n ON d.nursery_id = n.id
-											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
-									$others = new Disease();
-									$others->query($sql);
-								?>
-								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
-								<?endforeach;?>"><?=$disease->total?></a>
+							<?if($disease->total > 0):?>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&district_id=<?=@$district->id?>&c1=<?=@$_GET['diseases']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
-							<?endif?>
+							<?endif;?>
 						</td>
 				<?else:?>
 				
@@ -985,22 +945,11 @@ $(function(){
 	
 						?>
 						<td>
-							<?if($row == 'O' && $disease->total != 0):?>
-								<?
-									$sql = "SELECT other
-											FROM
-											diseases d
-											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-											INNER JOIN nurseries n ON d.nursery_id = n.id
-											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
-									$others = new Disease();
-									$others->query($sql);
-								?>
-								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
-								<?endforeach;?>"><?=$disease->total?></a>
+							<?if($disease->total > 0):?>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&district_id=<?=@$district->id?>&c1=<?=@$row?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
-							<?endif?>
+							<?endif;?>
 						</td>
 					<? endforeach;?>
 				
@@ -1066,22 +1015,11 @@ $(function(){
 							$disease->query($sql);
 						?>
 						<td>
-							<?if($disease->total != 0):?>
-								<?
-									$sql = "SELECT other
-											FROM
-											diseases d
-											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-											INNER JOIN nurseries n ON d.nursery_id = n.id
-											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
-									$others = new Disease();
-									$others->query($sql);
-								?>
-								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
-								<?endforeach;?>"><?=$disease->total?></a>
+							<?if($disease->total > 0):?>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&nursery_id=<?=@$nursery->id?>&c1=<?=@$_GET['diseases']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
-							<?endif?>
+							<?endif;?>
 						</td>
 				<?else:?>
 				
@@ -1107,22 +1045,11 @@ $(function(){
 	
 						?>
 						<td>
-							<?if($row == 'O' && $disease->total != 0):?>
-								<?
-									$sql = "SELECT other
-											FROM
-											diseases d
-											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-											INNER JOIN nurseries n ON d.nursery_id = n.id
-											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
-									$others = new Disease();
-									$others->query($sql);
-								?>
-								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
-								<?endforeach;?>"><?=$disease->total?></a>
+							<?if($disease->total > 0):?>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&nursery_id=<?=@$nursery->id?>&c1=<?=@$row?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
-							<?endif?>
+							<?endif;?>
 						</td>
 					<? endforeach;?>
 				
@@ -1185,22 +1112,11 @@ $(function(){
 							$disease->query($sql);
 						?>
 						<td>
-							<?if($disease->total != 0):?>
-								<?
-									$sql = "SELECT other
-											FROM
-											diseases d
-											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-											INNER JOIN nurseries n ON d.nursery_id = n.id
-											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
-									$others = new Disease();
-									$others->query($sql);
-								?>
-								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
-								<?endforeach;?>"><?=$disease->total?></a>
+							<?if($disease->total > 0):?>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&area_id=<?=@$area->id?>&c1=<?=@$_GET['diseases']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
-							<?endif?>
+							<?endif;?>
 						</td>
 				<?else:?>
 				
@@ -1226,22 +1142,11 @@ $(function(){
 							
 						?>
 						<td>
-							<?if($row == 'O' && $disease->total != 0):?>
-								<?
-									$sql = "SELECT other
-											FROM
-											diseases d
-											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-											INNER JOIN nurseries n ON d.nursery_id = n.id
-											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
-									$others = new Disease();
-									$others->query($sql);
-								?>
-								<a class="tooltp" data-toggle="tooltip" title="<?foreach($others as $key => $other):?><?=($key+1).'.'.$other->other?>
-								<?endforeach;?>"><?=$disease->total?></a>
+							<?if($disease->total > 0):?>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&area_id=<?=@$area->id?>&c1=<?=@$row?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
-							<?endif?>
+							<?endif;?>
 						</td>
 					<? endforeach;?>
 				

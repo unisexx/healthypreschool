@@ -87,7 +87,7 @@ class Staffs extends Public_Controller
 		}
     }
 	
-	function send_mail($_POST){
+	function send_mail(){
         
         $config = Array(
             'protocol' => 'smtp',

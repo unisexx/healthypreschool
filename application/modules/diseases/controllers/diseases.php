@@ -179,6 +179,85 @@ WHERE 1=1 ".$condition;
 		}
 		$this->template->build('report_staff',$data);
 	}
+
+	function detail2(){
+		$condition = "";
+		if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+		if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+		if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+		if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+		if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+		if(@$_GET['area_id']){ @$condition.=" and n.area_id = ".$_GET['area_id']; }
+		if(@$_GET['province_id']){ @$condition.=" and n.province_id = ".$_GET['province_id']; }
+		if(@$_GET['amphur_id']){ @$condition.=" and n.amphur_id = ".$_GET['amphur_id']; }
+		if(@$_GET['district_id']){ @$condition.=" and n.district_id = ".$_GET['district_id']; }
+		if(@$_GET['nursery_id']){ @$condition.=" and n.id = ".$_GET['nursery_id']; }
+
+		$sql = "
+		SELECT
+		d.id,
+		d.nursery_id,
+		d.classroom_id,
+		d.classroom_detail_id,
+		d.`year`,
+		d.`month`,
+		d.`day`,
+		d.child_age_year,
+		d.child_age_month,
+		d.c1,
+		d.c2,
+		d.c3,
+		d.c4,
+		d.c5,
+		d.other,
+		n.`name` AS nursery_name,
+		n.number,
+		n.moo,
+		n.area_id,
+		n.`code`,
+		cd.title,
+		cd.child_name,
+		amphures.amphur_name,
+		districts.district_name,
+		provinces.`name` AS province_name
+		FROM
+		diseases AS d
+		INNER JOIN classroom_details AS cd ON d.classroom_detail_id = cd.id
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN provinces ON n.province_id = provinces.id
+		INNER JOIN amphures ON n.amphur_id = amphures.id
+		INNER JOIN districts ON n.district_id = districts.id
+		WHERE 1=1 and d.c1 = '".$_GET['c1']."' ".@$condition;
+		$disease = new Disease();
+		$data['diseases'] = $disease->query($sql);
+		// echo $sql;
+		$this->template->build('report_detail',$data);
+	}
+
+	function detail(){
+		$condition = "";
+		if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+		if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage']; }
+		if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+		if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+		if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+		if(@$_GET['area_id']){ @$condition.=" and n.area_id = ".$_GET['area_id']; }
+		if(@$_GET['province_id']){ @$condition.=" and n.province_id = ".$_GET['province_id']; }
+		if(@$_GET['amphur_id']){ @$condition.=" and n.amphur_id = ".$_GET['amphur_id']; }
+		if(@$_GET['district_id']){ @$condition.=" and n.district_id = ".$_GET['district_id']; }
+		if(@$_GET['nursery_id']){ @$condition.=" and n.id = ".$_GET['nursery_id']; }
+
+		$sql = "
+		SELECT d.nursery_id, (select count(id) from diseases WHERE 1=1 and c1 = '".$_GET['c1']."' AND nursery_id = d.nursery_id) as disease_total
+		FROM diseases AS d 
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id INNER JOIN provinces ON n.province_id = provinces.id 
+		WHERE 1=1 and d.c1 = '".$_GET['c1']."' ".@$condition."
+		group by n.id";
+		$disease = new Disease();
+		$data['diseases'] = $disease->query($sql);
+		// echo $sql;
+		$this->template->build('report_detail2',$data);
+	}
 	
 	function form2(){
 		$this->template->set_layout('disease');

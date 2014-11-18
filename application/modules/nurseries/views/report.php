@@ -753,8 +753,8 @@ $(function(){
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=0><?=$not?></a></td>
 				<?else:?>
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"><?=$all?></a></td>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=1><?=$pass?></a></td>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=0><?=$not?></a></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=1&year=<?=@$_GET['year']?>"><?=$pass?></a></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=0&year=<?=@$_GET['year']?>"><?=$not?></a></td>
 				<?endif;?>
 			</tr>
 				<?php
