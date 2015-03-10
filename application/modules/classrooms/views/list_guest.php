@@ -6,7 +6,7 @@
 <h1>ห้องเรียน / ชั้นเรียน และเด็ก</h1>
 
 <!-- <div style="float:right; padding:10px 0;"><a href="classrooms/form"><div class="btn">เพิ่มรายการ</div></a></div> -->
-<table class="table">
+<table class="table table-striped table-bordered">
 	<tr>
 		<th>ลำดับ</td>
 		<th>ชื่อห้องเรียน / ชั้นเรียน</th>

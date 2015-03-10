@@ -11,8 +11,9 @@
 
 <form method="get" action="">
 <div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-	<input type="text" name="child_name" value="<?=@$_GET['child_name']?>" placeholder="ชื่อ - นามสกุล">
+	<?=form_dropdown('classroom_id',get_option('id','room_name','classrooms where nursery_id = '.$nursery_id.' order by id asc'),@$_GET['classroom_id'],'','--- ห้องเรียน ---');?>
 	
+	<input type="text" name="child_name" value="<?=@$_GET['child_name']?>" placeholder="ชื่อ - นามสกุล">
 	<?=form_dropdown('sex',array('ด.ช.'=>'ชาย','ด.ญ.'=>'หญิง'),@$_GET['sex'],'class="span2"','--- เพศ ---');?>
 	
 	ช่วงอายุ <input class="span1" type="text" name="lowage" value="<?=(@$_GET['lowage']) ? $_GET['lowage'] : '0' ;?>"> ถึง <input class="span1" type="text" name="hiage" value="<?=(@$_GET['hiage']) ? $_GET['hiage'] : 7 ;?>">
@@ -41,7 +42,7 @@
 		<th>ลำดับ</th>
 		<th>ชื่อ - สกุล เด็ก</th>
 		<th>อายุ (ปี)</th>
-		<th>น้ำหนัก (กก) / ส่วนสูง (ซม)</th>
+		<th>น้ำหนัก (กก) / ส่วนสูง (ซม) (บันทึกล่าสุด)</th>
 		<!-- <th>ดัชนีมวลกาย (BMI)</th> -->
 		<th>เกณฑ์การเจริญเติบโต</th>
 		<th>ห้องเรียน</th>

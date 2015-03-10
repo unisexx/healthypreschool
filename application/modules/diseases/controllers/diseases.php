@@ -97,7 +97,12 @@ WHERE 1=1 ".$condition;
 	}
 	
 	function report(){
-		$data['text'] = "สรุปรายงานแบบคัดกรองโรค ";
+		$data['text'] = "สรุปรายงานแบบคัดกรองโรค<br>";
+		if(user_login()->nursery_id != ""){ $data['text'] .= get_nursery_name(user_login()->nursery_id); }
+		if(@$_GET['classroom_id'] != ""){ $data['text'] .= " ห้องเรียน".get_student_room_name($_GET['classroom_id']); }
+		if(@$_GET['month'] != ""){ $data['text'] .= " ประจำเดือน".get_month_name($_GET['month']); }
+		if(@$_GET['year'] != ""){ $data['text'] .= " ปีพ.ศ. ".$_GET['year']; }
+		if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ $data['text'] .= "ช่วงอายุระหว่าง ".$_GET['lowage']." ถึง ".$_GET['hiage']." ปี"; }
 		
 		// หาจำนวนห้อง
 		$classroom = new Classroom();
@@ -192,6 +197,7 @@ WHERE 1=1 ".$condition;
 		if(@$_GET['amphur_id']){ @$condition.=" and n.amphur_id = ".$_GET['amphur_id']; }
 		if(@$_GET['district_id']){ @$condition.=" and n.district_id = ".$_GET['district_id']; }
 		if(@$_GET['nursery_id']){ @$condition.=" and n.id = ".$_GET['nursery_id']; }
+		if(@$_GET['title']){ @$condition.=" and cd.title = '".$_GET['title']."'"; }
 
 		$sql = "
 		SELECT
@@ -202,6 +208,8 @@ WHERE 1=1 ".$condition;
 		d.`year`,
 		d.`month`,
 		d.`day`,
+		d.start_date,
+		d.end_date,
 		d.child_age_year,
 		d.child_age_month,
 		d.c1,
@@ -219,7 +227,8 @@ WHERE 1=1 ".$condition;
 		cd.child_name,
 		amphures.amphur_name,
 		districts.district_name,
-		provinces.`name` AS province_name
+		provinces.`name` AS province_name,
+		classrooms.room_name
 		FROM
 		diseases AS d
 		INNER JOIN classroom_details AS cd ON d.classroom_detail_id = cd.id
@@ -227,7 +236,8 @@ WHERE 1=1 ".$condition;
 		INNER JOIN provinces ON n.province_id = provinces.id
 		INNER JOIN amphures ON n.amphur_id = amphures.id
 		INNER JOIN districts ON n.district_id = districts.id
-		WHERE 1=1 and d.c1 = '".$_GET['c1']."' ".@$condition;
+		INNER JOIN classrooms ON d.classroom_id = classrooms.id
+		WHERE 1=1 and d.c1 = '".$_GET['c1']."' ".@$condition." and start_date IS NOT NULL order by d.start_date desc";
 		$disease = new Disease();
 		$data['diseases'] = $disease->query($sql);
 		// echo $sql;
@@ -246,9 +256,40 @@ WHERE 1=1 ".$condition;
 		if(@$_GET['amphur_id']){ @$condition.=" and n.amphur_id = ".$_GET['amphur_id']; }
 		if(@$_GET['district_id']){ @$condition.=" and n.district_id = ".$_GET['district_id']; }
 		if(@$_GET['nursery_id']){ @$condition.=" and n.id = ".$_GET['nursery_id']; }
+		if(@$_GET['start_date'] and @$_GET['end_date']){
+			$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+			$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+			$condition .= " and start_date between ".$start_date." and ".$end_date;
+		}
+		if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+			$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+			$condition .= " and start_date >= ".$start_date;
+		}
+		if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+			$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+			$condition .= " and start_date >= ".$end_date;
+		}
 
 		$sql = "
-		SELECT d.nursery_id, (select count(id) from diseases WHERE 1=1 and c1 = '".$_GET['c1']."' AND nursery_id = d.nursery_id) as disease_total
+		SELECT d.nursery_id, 
+		(SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and d.c1 = '".$_GET['c1']."' ".@$condition."  and start_date IS NOT NULL) as disease_total,
+		(SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and cd.title = 'ด.ช.' and d.c1 = '".$_GET['c1']."' ".@$condition."  and start_date IS NOT NULL) as boy,
+		(SELECT count(d.id) total
+							FROM
+							diseases d
+							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+							INNER JOIN nurseries n ON d.nursery_id = n.id
+							WHERE 1=1 and cd.title = 'ด.ญ.' and d.c1 = '".$_GET['c1']."' ".@$condition."  and start_date IS NOT NULL) as girl
 		FROM diseases AS d 
 		INNER JOIN nurseries AS n ON d.nursery_id = n.id INNER JOIN provinces ON n.province_id = provinces.id 
 		WHERE 1=1 and d.c1 = '".$_GET['c1']."' ".@$condition."
@@ -279,6 +320,13 @@ WHERE 1=1 ".$condition;
 	
 	function get_disease_form(){
 		$data['disease'] = new Disease($_GET['id']);
+		
+		// หาวันที่กำลังป่วย (ถ้ามีอยู่ในระหว่างวันที่เลือกไม่ต้องให้ datepicker แสดง)
+		$data['sick_date'] = new Disease();
+		$data['sick_date']->where("start_date <= '".$_GET['date']."' and '".$_GET['date']."' <= end_date and classroom_detail_id = ".$_GET['classroom_detail_id'])->get();
+		
+		// $data['sick_date']->check_last_query();
+		
 		$this->load->view('get_disease_form',$data);
 	}
 
@@ -287,11 +335,19 @@ WHERE 1=1 ".$condition;
 		$explode_age = explode(' ', $_GET['age']);
 		$_GET['child_age_year'] = $explode_age[0];
 		$_GET['child_age_month'] = $explode_age[2];
+		$_GET['start_date'] = @Date2DB($_GET['start_date']);
+        $_GET['end_date'] = @Date2DB($_GET['end_date']);
 		$disease->from_array($_GET);
 		$disease->save();
 		
-		echo $_GET['c1'].$_GET['c2'].$_GET['c3'].$_GET['c4'].$_GET['c5'];
+		echo $_GET['c1'].$_GET['c2'].$_GET['c3'].$_GET['c5'];
 		echo '<input class="h_id" type="hidden" name="id[]" value="'.$disease->id.'">';
+	}
+
+	function delete_disease(){
+		$disease = new Disease($_GET['id']);
+		$disease->delete();
+		echo '';
 	}
 	
 	function list_guest($nursery_id){

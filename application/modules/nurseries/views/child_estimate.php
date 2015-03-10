@@ -52,9 +52,9 @@ $(document).ready(function(){
 
 
 	<ul class="nav nav-tabs home-nav-tabs estimate-tab">
+	  <li <?=$_GET['status']==0 ?"class='active'" : "" ;?>><a href="nurseries/estimate?status=0&nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">รอการประเมิน <span class="badge"><?=$regis_count?></span></a></li>
 	  <li <?=$_GET['status']==1 ?"class='active'" : "" ;?>><a href="nurseries/estimate?status=1&nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">ผ่านเกณฑ์ <span class="badge badge-success"><?=$pass_count?></span></a></li>
 	  <li <?=$_GET['status']==2 ?"class='active'" : "" ;?>><a href="nurseries/estimate?status=2&nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">ไม่ผ่านเกณฑ์ <span class="badge badge-important"><?=$nopass_count?></a></li>
-	  <li <?=$_GET['status']==0 ?"class='active'" : "" ;?>><a href="nurseries/estimate?status=0&nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">รอการประเมิน <span class="badge"><?=$regis_count?></span></a></li>
 	</ul>
     	
 	<div id="data">
@@ -92,7 +92,7 @@ $(document).ready(function(){
                     <?=form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.user_login()->amphur_id.' order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
                 <?php endif;?>
     	  </span>
-    	  <?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),@$_GET['year'],'','--- เลือกปีที่เข้าร่วม ---');?>
+    	  <?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558'),@$_GET['year'],'','--- เลือกปีที่เข้าร่วม ---');?>
     	  <?=form_dropdown('status',array('1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์','0'=>'รอการประเมิน'),@$_GET['status'],'','--- เลือกสถานะ ---');?>
   	      <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
     	</div>

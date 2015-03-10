@@ -42,13 +42,15 @@
 
 <h1>รายงานแบบคัดกรองโรค <?=@$text?></h1>
 
-<table class="table">
+<table class="table table-bordered table-striped">
 	<thead>
 		<tr>
 			<th>ลำดับ</th>
 			<th>ศูนย์เด็กเล็ก</th>
 			<th>โรค</th>
 			<th>จำนวนครั้งที่ป่วย</th>
+			<th>ชาย</th>
+			<th>หญิง</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -62,6 +64,8 @@
 			<td><?=get_nursery_name($row->nursery_id)?></td>
 			<td><?=$diseasesArray[$_GET['c1']]?></td>
 			<td><?=$row->disease_total?></td>
+			<td><?=$row->boy?></td>
+			<td><?=$row->girl?></td>
 		</tr>
 		<?$i++;?>
 		<?endforeach;?>

@@ -36,6 +36,9 @@ th {
 table{border-collapse: collapse;width:100%;}
 .table3 td,.table3 th{border: 1px solid #ccc;}
 .table2 tr{background-color:#f1f1f1;}
+.modal{width:690px !important;}
+.modal.fade.in{top:5% !important;}
+.modal-body{height:555px !important; max-height:555px !important;}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -63,6 +66,7 @@ table{border-collapse: collapse;width:100%;}
 				'day' 					: $(this).find('.h_day').val(),
 				'month' 				: $(this).find('.h_month').val(),
 				'year' 					: $(this).find('.h_year').val(),
+				'date' 					: $(this).find('.h_date').val(),
 				'user_id' 				: $(this).find('.h_user_id').val(),
 				'id' 					: $(this).find('.h_id').val()
 			},function(data){
@@ -114,8 +118,8 @@ table{border-collapse: collapse;width:100%;}
 		  พ.ศ. <select name="year" id="room2" style="margin-bottom:5px;" onchange="window.open(this.options[this.selectedIndex].value,'_self')">
 	            <option>เลือกปี</option>
 	            <?php
-	            	$firstYear = (int)date('Y') + 543;
-					$lastYear = $firstYear + 20;
+	            	$firstYear = ((int)date('Y') + 543) - 8;
+					$lastYear = $firstYear + 8;
 					for($i=$firstYear;$i<=$lastYear;$i++):
 				?>
 					<option value="diseases/form2?nursery_id=<?=@$_GET['nursery_id']?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=@$_GET['month']?>&year=<?=$i?>" <?=($_GET['year']==$i)?"selected":"";?>><?=$i?></option>
@@ -159,7 +163,7 @@ table{border-collapse: collapse;width:100%;}
 			  <?foreach($childs as $key=>$row):?>
 			  <tr>
 			  	<th valign="top" ><?=$key+1?></th>
-			    <th><?=$row->title?> <?=$row->child_name?> (อายุ <?=newDatediff($date1,$row->birth_date)?>)</th>
+			    <th style="text-align: left; padding-left: 10px;"><?=$row->title?> <?=$row->child_name?> <!--(อายุ <?=newDatediff($date1,$row->birth_date)?>)--> (อายุ <?=newDatediff(date("Y-m-d H:i:s"),$row->birth_date)?>)</th>
 			    <?for($i=1;$i<=$arrayMonthDay[$_GET['month']];$i++):?>
 			    <?php
 			    	$sql = "select * from diseases where 
@@ -178,47 +182,15 @@ table{border-collapse: collapse;width:100%;}
 			    	<span class="c<?=$row->id?>_d<?=$i?>">
 			    		<?=$disease->c1?><?=$disease->c2?><?=$disease->c3?><?=$disease->c4?><?=$disease->c5?>
 			    	</span>
-			    	<!-- <?=$sql?>
-			    	<?=$disease->id?> -->
-			    	<!-- <select name="c1[]" style="margin-bottom:5px;">
-			    	  <option value="-"></option>
-			    	  <option value="A" <?=($disease->c1 == 'A')?'selected':'';?>>หวัด</option>
-			    	  <option value="B" <?=($disease->c1 == 'C')?'selected':'';?>>ไข้หวัดใหญ่ตามฤดูกาล</option>
-			    	  <option value="C" <?=($disease->c1 == 'C')?'selected':'';?>>ไข้หวัดใหญ่สายพันธุ์ใหม่ 2009</option>
-			    	  <option value="D" <?=($disease->c1 == 'D')?'selected':'';?>>อุจจาระร่วงเฉียบพลัน</option>
-			    	  <option value="E" <?=($disease->c1 == 'E')?'selected':'';?>>อีสุกอีใส</option>
-			    	  <option value="F" <?=($disease->c1 == 'F')?'selected':'';?>>คางทูม</option>
-			    	  <option value="G" <?=($disease->c1 == 'G')?'selected':'';?>>ตาแดงหรือเยื่อบุตาอักเสบ</option>
-			    	  <option value="H" <?=($disease->c1 == 'H')?'selected':'';?>>พิษสุนัขบ้าหรือโรคกลัวน้ำ</option>
-			    	  <option value="I" <?=($disease->c1 == 'I')?'selected':'';?>>ไข้เลือดออก</option>
-			    	  <option value="J" <?=($disease->c1 == 'J')?'selected':'';?>>ผิวหนังอักเสบจากเชื้อแบคทีเรีย</option>
-			    	</select> -->
-			    	<!-- <select name="c2[]" style="margin-bottom:5px;">
-			    	  <option value="-">-</option>
-			    	  <option value="0" <?=($disease->c2 == '0')?'selected':'';?>>0</option>
-			    	  <option value="1" <?=($disease->c2 == '1')?'selected':'';?>>1</option>
-			    	  <option value="2" <?=($disease->c2 == '2')?'selected':'';?>>2</option>
-			</select>
-			    	<select name="c3[]" style="margin-bottom:5px;">
-			    	  <option value="-">-</option>
-			    	  <option value="x" <?=($disease->c3 == 'x')?'selected':'';?>>x</option>
-			    	  <option value="/" <?=($disease->c3 == '/')?'selected':'';?>>/</option>
-			        </select>
-			    	<select name="c4[]" style="margin-bottom:5px;">
-			    	  <option value="-">-</option>
-			    	  <option value="0" <?=($disease->c4 == '0')?'selected':'';?>>O</option>
-			        </select>
-			    	<select name="c5[]" style="margin-bottom:5px;">
-			    	  <option value="-">-</option>
-			    	  <option value="*" <?=($disease->c5 == '*')?'selected':'';?>>*</option>
-			        </select> -->
+			    	
 			        <input class="h_nursery_id" type="hidden" name="nursery_id[]" value="<?=$_GET['nursery_id']?>">
 			        <input class="h_classroom_id" type="hidden" name="classroom_id[]" value="<?=$_GET['classroom_id']?>">
 			        <input class="h_classroom_detail_id" type="hidden" name="classroom_detail_id[]" value="<?=$row->id?>">
-			        <input class="h_age" type="hidden" name="age[]" value="<?=newDatediff($date1,$row->birth_date)?>">
+			        <input class="h_age" type="hidden" name="age[]" value="<?=newDatediff(date("Y-m-d H:i:s"),$row->birth_date)?>">
 			        <input class="h_day" type="hidden" name="day[]" value="<?=$i?>">
 			        <input class="h_month" type="hidden" name="month[]" value="<?=$_GET['month']?>">
 			        <input class="h_year" type="hidden" name="year[]" value="<?=$_GET['year']?>">
+			        <input class="h_date" type="hidden" name="date[]" value="<?=@($_GET['year']-543)?>-<?=sprintf("%02d", $_GET['month'])?>-<?=sprintf("%02d", $i)?>">
 			        <input class="h_id" type="hidden" name="id[]" value="<?=@$disease->id?>">
 			        <input class="h_user_id" type="hidden" name="user_id[]" value="<?=user_login()->id?>">
 			    </td>

@@ -7,7 +7,17 @@
 <script type="text/javascript">
 var jQuery_1_4_2 = $.noConflict(true);
 $(document).ready(function(){
-jQuery_1_4_2("input.datepicker").date_input(); 
+	jQuery_1_4_2("input.datepicker").date_input();
+	
+	
+	$('input.calage').click(function(){
+		$.get('childrens/ajax_calAge',{
+			'birth_date' : $('input[name=birth_date]').val(),
+			'input_date' : $('input[name=input_date]').val()
+		},function(data){
+			$("#showage").html(data);
+		});
+	});
 });
 </script>
 
@@ -27,6 +37,13 @@ jQuery_1_4_2("input.datepicker").date_input();
     </div>
 </div> -->
 <div class="control-group">
+    <label class="control-label">วันเกิด<span class="TxtRed">*</span></label>
+    <div class="controls">
+      <input class="span2" type="text" name="birth_date_full" value="<?=mysql_to_th($child->birth_date)?>" disabled="disabled">
+      <input type='hidden' class="birth_date" value="<?=$child->birth_date?>">
+    </div>
+</div>
+<div class="control-group">
     <label class="control-label">น้ำหนัก (กก) / ส่วนสูง (ซม)<span class="TxtRed">*</span></label>
     <div class="controls">
       <input class="span1" type="text" name="weight" value="<?=$bmi->weight?>"> / 
@@ -36,7 +53,8 @@ jQuery_1_4_2("input.datepicker").date_input();
 <div class="control-group">
     <label class="control-label">วันที่บันทึก<span class="TxtRed">*</span></label>
     <div class="controls">
-      <input type="text" name="input_date" value="<?php echo DB2Date($bmi->input_date)?>" class="datepicker" />
+      <input type="text" name="input_date" value="<?php echo DB2Date($bmi->input_date)?>" class="datepicker span2" /> <input type="button" class="btn calage" value="คำนวนอายุ">
+      <div id="showage"></div>
     </div>
 </div>
 <div class="control-group">
@@ -64,7 +82,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	<?foreach($bmis as $row):?>
 	<tr>
 		<td><?=mysql_to_th($row->input_date)?></td>
-		<td><?=$row->child_age_year?> ปี <?=$row->child_age_month?> เดือน</td>
+		<td><?=$row->child_age_year?> ปี <?=$row->child_age_month?> เดือน <?=$row->child_age_day?> วัน</td>
 		<td><?=$row->weight?></td>
 		<td><?=$row->height?></td>
 		<td>

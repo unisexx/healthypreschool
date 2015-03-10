@@ -52,7 +52,7 @@ jQuery_1_4_2("input.datepicker").date_input();
     	<form method="get" action="nurseries/register">
 	    	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
 	    		
-	    	<?=form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),@$_GET['nursery_category_id'],'','--- เลือกคำนำหน้า ---');?>
+	    	<?// =form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),@$_GET['nursery_category_id'],'','--- เลือกคำนำหน้า ---');?>
 	    	<input name="name" type="text" value="<?=@$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:280px;"/>
 			<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
            		<?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
@@ -107,18 +107,18 @@ jQuery_1_4_2("input.datepicker").date_input();
                     <?=form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.user_login()->amphur_id.' order by id asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
 				<?php endif;?>
 			</span>
-	    	  <?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557'),@$_GET['year'],'','--- เลือกปี ---');?>
-	    	  <?=form_dropdown('status',array('1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์','3'=>'รอการประเมิน','0'=>'เข้าร่วมโครงการ'),@$_GET['status'],'','--- เลือกสถานะ ---');?><br>
+	    	  <?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557'),@$_GET['year'],'','--- ปีที่เข้าร่วมโครงการ ---');?>
+	    	  <?=form_dropdown('status',array('1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์','3'=>'รอการประเมิน','0'=>'เข้าร่วมโครงการ','4'=>'หมดอายุแล้ว'),@$_GET['status'],'','--- เลือกสถานะ ---');?><br>
 	    	  วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
 	    	  วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
 	  	      <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 	    	</div>
     	</form>
         <div style="margin-bottom: 10px;">
-        	ผ่านเกณฑ์<a href="nurseries/register?status=1"> <span class="badge badge-success"><?=$pass_count?></span></a>
-        	ไม่ผ่านเกณฑ์<a href="nurseries/register?status=2"> <span class="badge badge-important"><?=$nopass_count?></span></a>
-        	รอการประเมิน<a href="nurseries/register?status=3"> <span class="badge"><?=$regis_count-($pass_count+$nopass_count)?></span></a>
-        	เข้าร่วมโครงการ<a href="nurseries/register"> <span class="badge badge-info"><?=$regis_count?></span></a>
+        	ผ่านเกณฑ์<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=1"> <span class="badge badge-success"><?=$pass_count?></span></a>
+        	ไม่ผ่านเกณฑ์<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=2"> <span class="badge badge-important"><?=$nopass_count?></span></a>
+        	รอการประเมิน<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=3"> <span class="badge"><?=$regis_count-($pass_count+$nopass_count)?></span></a>
+        	เข้าร่วมโครงการ<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=0"> <span class="badge badge-info"><?=$regis_count?></span></a>
         	
         	<!-- ผ่านเกณฑ์ <span class="badge badge-success"><?=$pass_count?></span>
         	ไม่ผ่านเกณฑ์ <span class="badge badge-important"><?=$nopass_count?></span>
@@ -152,18 +152,36 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        <th>ผลการประเมิน</th>
 	        <th>วันที่ประเมิน</th>
 	        <th>ผู้ประเมิน</th>
-	        <th width="100">จัดการ</th>
+	        <th width="77">จัดการ</th>
         </tr>
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
 	        <td><?=($key+1)+$nurseries->paged->current_row?></td>
 	        <td>
 	        	<input type="hidden" name="id" value="<?=$nursery->id?>">
-	        	<a href="#myModal" class="btn-estimate" data-toggle="modal"><b><?=$nursery->nursery_category->title?><?=$nursery->name?></b></a>
+	        	<a href="#myModal" class="btn-estimate" data-toggle="modal"><b><?//=$nursery->nursery_category->title?><?=$nursery->name?></b></a>
 	        	<ul>
-	        		<li><a href="childrens/list_guest/<?=$nursery->id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a></li>
-	        		<li><a href="classrooms/list_guest/<?=$nursery->id?>" target="_blank">รายชื่อห้องเรียน</a></li>
-	        		<li><a href="teachers/list_guest/<?=$nursery->id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a></li>
+	        		<li>
+	        			<a href="childrens/list_guest/<?=$nursery->id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a>
+	        			<?
+	        				$rs = $this->db->query("SELECT COUNT(id) total FROM classroom_details where nursery_id = ".$nursery->id)->row_array();
+							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
+	        			?>
+	        		</li>
+	        		<li>
+	        			<a href="classrooms/list_guest/<?=$nursery->id?>" target="_blank">รายชื่อห้องเรียน</a>
+	        			<?
+	        				$rs = $this->db->query("SELECT COUNT(id) total FROM classrooms where nursery_id = ".$nursery->id)->row_array();
+							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
+	        			?>
+	        		</li>
+	        		<li>
+	        			<a href="teachers/list_guest/<?=$nursery->id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a>
+	        			<?
+	        				$rs = $this->db->query("SELECT COUNT(id) total FROM users where user_type_id = 10 and nursery_id = ".$nursery->id)->row_array();
+							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
+	        			?>
+	        		</li>
 	        		<li><a href="diseases/list_guest/<?=$nursery->id?>" target="_blank">บันทึกแบบคัดกรองโรค</a></li>
 	        		<li><a href="diseases/report_guest?nursery_id=<?=$nursery->id?>" target="_blank">รายงานแบบคัดกรองโรค</a></li>
 	        		<li><a href="assessments/preview/<?=$nursery->id?>" target="_blank">รายงานแบบประเมินสมัครเข้าร่วมโครงการ</a></li>
@@ -180,7 +198,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        	<?php endif;?>
 	        </td>
 	        <td nowrap="nowrap">
-	        	<?=mysql_to_th($nursery->created)?>
+	        	<?=mysql_to_th($nursery->created,'S',TRUE)?> น.
 	        	<?
 	        		if(!empty($nursery->user_id)){
 	        			echo "<br>(".get_user_name($nursery->user_id).")";

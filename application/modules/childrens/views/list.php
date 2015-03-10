@@ -1,5 +1,6 @@
 <style type="text/css">
 .form-horizontal .control-label {width:170px !important;}
+.table th,.table td{vertical-align: middle !important;}
 </style>
 
 <ul class="breadcrumb">
@@ -41,9 +42,10 @@
 		<th>ลำดับ</th>
 		<th>ชื่อ - สกุล เด็ก</th>
 		<th>อายุ (ปี)</th>
-		<th>น้ำหนัก (กก) / ส่วนสูง (ซม)</th>
+		<th>น้ำหนัก (กก) / ส่วนสูง (ซม)<br>(วันที่บันทึกล่าสุด)</th>
 		<!-- <th>ดัชนีมวลกาย (BMI)</th> -->
 		<th>เกณฑ์การเจริญเติบโต</th>
+		<th>ประวัติการป่วย</th>
 		<th>ห้องเรียน</th>
 		<th>จัดการ</th>
 	</tr>
@@ -53,10 +55,11 @@
 		<td><a href="childrens/profile/<?=$row->id?>"><?=$row->title?> <?=$row->child_name?></a></td>
 		<td><?//=@calAge($row->birth_date)?><?=newDatediff(date("Y-m-d H:i:s"),$row->birth_date)?></td>
 		<td>
-			<?=$row->bmi->order_by('input_date','desc')->get(1)->weight?> / <?=$row->bmi->order_by('input_date','desc')->get(1)->height?> (<?=mysql_to_th($row->bmi->input_date)?>)
+			<?=$row->bmi->order_by('input_date','desc')->get(1)->weight?> / <?=$row->bmi->order_by('input_date','desc')->get(1)->height?> <br>(<?=mysql_to_th($row->bmi->input_date)?>)
 		</td>
 		<!-- <td><?=number_format($row->weight/(($row->height/100)*($row->height/100)),2)?></td> -->
-		<th><a href="childrens/growth/<?=$row->id?>" target="_blank"><i class="fa fa-area-chart"></i></a></th>
+		<td><a href="childrens/growth/<?=$row->id?>" target="_blank"><i class="fa fa-area-chart"></i></a></td>
+		<td><a href="childrens/sick_history/<?=$row->id?>"><i class="fa fa-file-text-o"></i></a></td>
 		<td><?=$row->classroom->room_name?></td>
 		<td>
 			<a href="childrens/form/<?=$row->id?>" class='btn btn-mini btn-info'>แก้ไข</a>

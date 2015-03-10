@@ -35,6 +35,15 @@
 			</td>
 		</tr>
 		<tr>
+			<th>สถานะเด็กป่วย</th>
+			<td>
+				<select name="c3">
+					<option value="/" <?=$disease -> c3 == '/' ? "selected" : ""; ?>>มาเรียน</option>
+					<option value="x" <?=$disease -> c3 == 'x' ? "selected" : ""; ?>>หยุดเรียน</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="trc2">
 			<th>การแยกเด็กป่วย</th>
 			<td>
 				<select name="c2">
@@ -44,16 +53,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr>
-			<th>สถานะเด็กป่วย</th>
-			<td>
-				<select name="c3">
-					<option value="/" <?=$disease -> c3 == '/' ? "selected" : ""; ?>>มาเรียน</option>
-					<option value="x" <?=$disease -> c3 == 'x' ? "selected" : ""; ?>>หยุดเรียน</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
+		<!-- <tr class="trc4">
 			<th>การรับยา</th>
 			<td>
 				<select name="c4">
@@ -61,7 +61,7 @@
 					<option value="O" <?=$disease -> c4 == 'O' ? "selected" : ""; ?>>ได้รับยามาจากบ้าน</option>
 				</select>
 			</td>
-		</tr>
+		</tr> -->
 		<tr>
 			<th>กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน</th>
 			<td>
@@ -93,28 +93,36 @@
 
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('#submitform').click(function() {
-			var children_id = $('input[name=classroom_detail_id]').val();
-			var day = $('input[name=day]').val();
+$(document).ready(function() {
+	$('#submitform').click(function() {
+		var children_id = $('input[name=classroom_detail_id]').val();
+		var day = $('input[name=day]').val();
 
-			$.get('diseases/save_disease?' + $('#diseaseform').serialize(), function(data) {
-				$('.c' + children_id + '_d' + day).html(data);
-			});
-		});
-
-		if($("select[name=c1] option:selected").val() == 'O'){
-			$('.other').show();
-		}else{
-			$('.other').hide();
-		}
-		
-		$('select[name=c1]').change(function() {
-			if ($(this).val() == "O") {
-				$('.other').show();
-			} else {
-				$('.other').hide();
-			}
+		$.get('diseases/save_disease?' + $('#diseaseform').serialize(), function(data) {
+			$('.c' + children_id + '_d' + day).html(data);
 		});
 	});
+
+	if($("select[name=c1] option:selected").val() == 'O'){
+		$('.other').show();
+	}else{
+		$('.other').hide();
+	}
+	
+	$('select[name=c1]').change(function() {
+		if ($(this).val() == "O") {
+			$('.other').show();
+		} else {
+			$('.other').hide();
+		}
+	});
+	
+	$('select[name=c3]').change(function() {
+		if ($(this).val() == "/") {
+			$('.trc2').show();
+		} else {
+			$('.trc2').hide();
+		}
+	});
+});
 </script>

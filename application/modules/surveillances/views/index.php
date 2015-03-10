@@ -1,6 +1,6 @@
 <?php
 // ถ้าไม่มีการเลือกจากการค้นหา ให้กำหนด เป็นเดือนปัจจุบัน ปีปัจจุบัน สคร.1 โรคหวัด
-@$_GET['month'] = !$_GET['month'] ? date("m") : $_GET['month'];
+@$_GET['month'] = !$_GET['month'] ? intval(date("m")) : $_GET['month'];
 @$_GET['year'] = !$_GET['year'] ? date("Y")+543 : $_GET['year'];
 @$_GET['diseases'] = !$_GET['diseases'] ? 'C' : $_GET['diseases'];
 @$_GET['type'] = !$_GET['type'] ? '1' : $_GET['type'];
@@ -9,6 +9,15 @@
 @$_GET['amphur_id'] = !$_GET['amphur_id'] ? $_GET['amphur_id'] : $_GET['amphur_id'];
 @$_GET['district_id'] = !$_GET['district_id'] ? $_GET['district_id'] : $_GET['district_id'];
 @$_GET['nursery_id'] = !$_GET['nursery_id'] ? $_GET['nursery_id'] : $_GET['nursery_id'];
+
+if(user_login()->user_type_id == 9 || user_login()->user_type_id == 10){ // ถ้าเป็นเจ้าหน้าที่ศูนย์ กับเจ้าหน้าที่ครู ผู้ดูแลเด็ก
+	@$_GET['type'] = '5';
+	@$_GET['area_id'] =  user_login()->nursery->area_id;
+	@$_GET['province_id'] = user_login()->nursery->province_id;
+	@$_GET['amphur_id'] = user_login()->nursery->amphur_id;
+	@$_GET['district_id'] = user_login()->nursery->district_id;
+	@$_GET['nursery_id'] = user_login()->nursery_id;
+}
 
 $arrdiseases = array('C'=>'หวัด','H'=>'มือ เท้า ปาก','D'=>'อุจจาระร่วง','F'=>'ไข้','R'=>'ไข้ออกผื่น','O'=>'อื่นๆ');
 
@@ -50,7 +59,7 @@ for($i=1;$i<=$arrayMonthDay[$_GET['month']];$i++):
 	classroom_details
 	INNER JOIN diseases ON diseases.classroom_detail_id = classroom_details.id
 	INNER JOIN nurseries ON classroom_details.nursery_id = nurseries.id
-	WHERE ".$condition." AND classroom_details.title='ด.ช.' AND diseases.day = ".$i;
+	WHERE ".$condition." AND classroom_details.title='ด.ช.' AND diseases.start_date IS NOT NULL AND diseases.day = ".$i;
 	$data['disease_count'] = $this->db->query($sql)->result();
 	
 	$replacements[$i] = $data['disease_count'][0]->total;
@@ -64,7 +73,7 @@ for($i=1;$i<=$arrayMonthDay[$_GET['month']];$i++):
 	classroom_details
 	INNER JOIN diseases ON diseases.classroom_detail_id = classroom_details.id
 	INNER JOIN nurseries ON classroom_details.nursery_id = nurseries.id
-	WHERE ".$condition." AND classroom_details.title='ด.ญ.' AND diseases.day = ".$i;
+	WHERE ".$condition." AND classroom_details.title='ด.ญ.' AND diseases.start_date IS NOT NULL AND diseases.day = ".$i;
 	$data['disease_count'] = $this->db->query($sql)->result();
 	
 	$replacements[$i] = $data['disease_count'][0]->total;
@@ -134,11 +143,20 @@ $(function () {
             name: 'หญิง',
             data: [<?foreach($girls as $girl):?><?=$girl?>,<?endforeach;?>]
         }],
-        exporting: { enabled: false }
+        exporting: {
+            buttons: {
+                contextButton: {
+                    menuItems: null,
+                    onclick: function () {
+                        this.print();
+                    }
+                }
+            }
+        }
     });
     
     $("select[name='province_id']").live("change",function(){
-		$.post('nurseries/nurseries/get_amphur',{
+		$.post('surveillances/get_amphur',{
 				'province_id' : $(this).val()
 			},function(data){
 				$("#amphur").html(data);
@@ -146,7 +164,7 @@ $(function () {
 	});
 	
 	$("select[name='amphur_id']").live("change",function(){
-		$.post('nurseries/nurseries/get_district',{
+		$.post('surveillances/get_district',{
 				'amphur_id' : $(this).val()
 			},function(data){
 				$("#district").html(data);
@@ -165,27 +183,27 @@ $(function () {
 		//alert( this.value );
 		switch(this.value)
 		{
-           case '1':
+           case '1': // สคร
 			$("#area").show();
 			$("#province,#amphur,#district").hide();
 			$("select[name=province_id],select[name=amphur_id],select[name=district_id]").val("0");
            break;
-           case '2':
+           case '2': // จังหวัด
 			$("#province").show();
 			$("#area,#amphur,#district").hide();
 			$("select[name=area_id],select[name=amphur_id],select[name=district_id]").val("0");
            break;
-           case '3':
+           case '3': // อำเภอ
 			$("#province,#amphur").show();
 			$("#area,#district").hide();
 			$("select[name=province_id],select[name=area_id],select[name=district_id]").val("0");
            break;
-           case '4':
+           case '4': // ตำบล
 			$("#province,#amphur,#district").show();
 			$("#area").hide();
 			$("select[name=province_id],select[name=amphur_id],select[name=area_id]").val("0");
            break;
-           case '5':
+           case '5': // ศูนย์เด็กเล็ก
 			$("#province,#amphur,#district,#nursery").show();
 			$("#area").hide();
 			$("select[name=province_id],select[name=amphur_id],select[name=district_id],select[name=area_id]").val("0");
@@ -210,7 +228,7 @@ $(function () {
     <?endfor;?>
     </select>
         	
-	<?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557'),@$_GET['year']);?>
+	<?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558'),@$_GET['year']);?>
 	
 	<?=form_dropdown('type',array('1'=>'สคร.','2'=>'จังหวัด','3'=>'อำเภอ','4'=>'ตำบล','5'=>'ศูนย์เด็กเล็ก'),@$_GET['type'],'','--- แยกตาม ---');?>
 	
@@ -229,11 +247,11 @@ $(function () {
 	
 	<span id="district" <?=(@$_GET['district_id'] == "")?'style="display:none;"':'';?>>
 		<?
-			$condition3 .= " where 1=1 ";
-			$condition3 .= $_GET['province_id'] ? " and province_id = ".$_GET['province_id'] : '' ; 
-			$condition3 .= $_GET['amphur_id'] ? " and amphur_id = ".$_GET['amphur_id'] : '' ; 
+			@$condition3 .= " where 1=1 ";
+			@$condition3 .= $_GET['province_id'] ? " and province_id = ".$_GET['province_id'] : '' ; 
+			@$condition3 .= $_GET['amphur_id'] ? " and amphur_id = ".$_GET['amphur_id'] : '' ; 
 		?>
-		<?=form_dropdown('district_id',get_option('id','district_name','districts',$condition3.' order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
+		<?=form_dropdown('district_id',get_option('id','district_name','districts',@$condition3.' order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
 	</span>
 	
 	<span id="nursery" <?=(@$_GET['nursery_id'] == "")?'style="display:none;"':'';?>>

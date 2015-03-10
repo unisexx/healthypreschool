@@ -114,6 +114,6 @@ if ( ! function_exists('mysql_to_relative'))
 		$datetime2 = new DateTime($d2);
 		$interval = $datetime1->diff($datetime2);
 		// echo $interval->format('%y years %m months and %d days');
-		return $interval->format('%y ปี %m เดือน');
+		return $interval->format('%y ปี %m เดือน %d วัน');
 	}
 ?>

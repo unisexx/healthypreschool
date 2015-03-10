@@ -75,6 +75,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 		    </div> -->
 		    <div class="control-group">
                 <div class="controls">
+                  <?php echo form_referer() ?>
                   <input type="hidden" name="id" value="<?=$child->id?>">
                   <input type="hidden" name="nursery_id" value="<?php echo user_login()->nursery_id ?>">
                   <input type="submit" class="btn btn-small btn-info" value="บันทึก">

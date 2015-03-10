@@ -169,6 +169,19 @@ $(function(){
 });
 </script>
 
+<!-- load jQuery 1.4.2 -->
+<script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
+
+<link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
+<script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
+<script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
+<script type="text/javascript">
+var jQuery_1_4_2 = $.noConflict(true);
+$(document).ready(function(){
+jQuery_1_4_2("input.datepicker").date_input(); 
+});
+</script>
+
 <?php $arrayMonth = array('1' => 'มกราคม', '2' => 'กุมภาพันธ์', '3' => 'มีนาคม', '4' => 'เมษายน', '5' => 'พฤษภาคม', '6' => 'มิถุนายน', '7' => 'กรกฎาคม', '8' => 'สิงหาคม', '9' => 'กันยายน', '10' => 'ตุลาคม', '11' => 'พฤศจิกายน', '12' => 'ธันวาคม',);?>
 
 <ul class="breadcrumb">
@@ -206,6 +219,9 @@ $(function(){
 	
 	ช่วงอายุ <input class="span1" type="text" name="lowage" value="<?=(@$_GET['lowage']) ? $_GET['lowage'] : '0' ;?>"> ถึง <input class="span1" type="text" name="hiage" value="<?=(@$_GET['hiage']) ? $_GET['hiage'] : 7 ;?>">
 	
+	วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
+	วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
+	
       <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 	</div>
 </form>
@@ -214,9 +230,6 @@ $(function(){
 
 <a href="diseases/export_graphpage/word?type=<?=@$_GET['type']?>&year=<?=@$_GET['year']?>&area_id=<?=@$_GET['area_id']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>"><div class="btn btn-mini">word</div></a>
 <a href="diseases/export_graphpage/excel?type=<?=@$_GET['type']?>&year=<?=@$_GET['year']?>&area_id=<?=@$_GET['area_id']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>"><div class="btn btn-mini">excel</div></a>
-
-
-
 
 
 <div style="display:none;">
@@ -249,6 +262,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$province->id){ @$condition.=" and n.province_id = ".$province->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -256,7 +282,7 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 						?>
@@ -272,6 +298,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$province->id){ @$condition.=" and n.province_id = ".$province->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -279,7 +318,7 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 	
@@ -336,6 +375,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$amphur->id){ @$condition.=" and n.amphur_id = ".$amphur->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -343,7 +395,7 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 						?>
@@ -359,6 +411,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$amphur->id){ @$condition.=" and n.amphur_id = ".$amphur->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -366,7 +431,7 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 	
@@ -423,6 +488,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$district->id){ @$condition.=" and n.district_id = ".$district->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -430,7 +508,7 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 						?>
@@ -446,6 +524,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$district->id){ @$condition.=" and n.district_id = ".$district->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -453,7 +544,7 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 	
@@ -511,6 +602,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$nursery->id){ @$condition.=" and n.id = ".$nursery->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -518,7 +622,7 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 						?>
@@ -534,6 +638,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$nursery->id){ @$condition.=" and n.id = ".$nursery->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -541,7 +658,7 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 	
@@ -596,6 +713,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$area->id){ @$condition.=" and n.area_id = ".$area->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -603,7 +733,7 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 						?>
@@ -619,6 +749,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$area->id){ @$condition.=" and n.area_id = ".$area->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -626,7 +769,7 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 							
@@ -660,6 +803,28 @@ $(function(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div>
 <?php if(@$_GET['type'] == 1):?>
 	<table id="datatable2" class="table">
@@ -690,6 +855,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$province->id){ @$condition.=" and n.province_id = ".$province->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -697,13 +875,13 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 						?>
 						<td>
 							<?if($disease->total > 0):?>
-								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&province_id=<?=$province->id?>&c1=<?=@$_GET['diseases']?>" target="_blank"><?=$disease->total?></a>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&province_id=<?=$province->id?>&c1=<?=@$_GET['diseases']?>&start_date=<?=@$_GET['start_date']?>&end_date=<?=@$_GET['end_date']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
 							<?endif;?>
@@ -719,6 +897,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$province->id){ @$condition.=" and n.province_id = ".$province->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -726,14 +917,14 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 	
 						?>
 						<td>
 							<?if($disease->total > 0):?>
-								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&province_id=<?=$province->id?>&c1=<?=@$row?>" target="_blank"><?=$disease->total?></a>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&province_id=<?=$province->id?>&c1=<?=@$row?>&start_date=<?=@$_GET['start_date']?>&end_date=<?=@$_GET['end_date']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
 							<?endif;?>
@@ -789,6 +980,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$amphur->id){ @$condition.=" and n.amphur_id = ".$amphur->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -796,13 +1000,13 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 						?>
 						<td>
 							<?if($disease->total > 0):?>
-								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&amphur_id=<?=@$amphur->id?>&c1=<?=@$_GET['diseases']?>" target="_blank"><?=$disease->total?></a>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&amphur_id=<?=@$amphur->id?>&c1=<?=@$_GET['diseases']?>&start_date=<?=@$_GET['start_date']?>&end_date=<?=@$_GET['end_date']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
 							<?endif;?>
@@ -818,6 +1022,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$amphur->id){ @$condition.=" and n.amphur_id = ".$amphur->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -825,7 +1042,7 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 	
@@ -838,7 +1055,7 @@ $(function(){
 											diseases d
 											INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 											INNER JOIN nurseries n ON d.nursery_id = n.id
-											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition;
+											WHERE 1=1 and d.c1 = 0 and d.other != ''".@$condition."  and start_date IS NOT NULL";
 									$others = new Disease();
 									$others->query($sql);
 								?>
@@ -846,7 +1063,7 @@ $(function(){
 								<?endforeach;?>"><?=$disease->total?></a>
 							<?else:?>
 								<?if($disease->total > 0):?>
-									<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&amphur_id=<?=@$amphur->id?>&c1=<?=@$row?>" target="_blank"><?=$disease->total?></a>
+									<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&amphur_id=<?=@$amphur->id?>&c1=<?=@$row?>&start_date=<?=@$_GET['start_date']?>&end_date=<?=@$_GET['end_date']?>" target="_blank"><?=$disease->total?></a>
 								<?else:?>
 									<?=$disease->total?>
 								<?endif;?>
@@ -903,6 +1120,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$district->id){ @$condition.=" and n.district_id = ".$district->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -910,13 +1140,13 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 						?>
 						<td>
 							<?if($disease->total > 0):?>
-								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&district_id=<?=@$district->id?>&c1=<?=@$_GET['diseases']?>" target="_blank"><?=$disease->total?></a>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&district_id=<?=@$district->id?>&c1=<?=@$_GET['diseases']?>&start_date=<?=@$_GET['start_date']?>&end_date=<?=@$_GET['end_date']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
 							<?endif;?>
@@ -932,6 +1162,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$district->id){ @$condition.=" and n.district_id = ".$district->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -939,14 +1182,14 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 	
 						?>
 						<td>
 							<?if($disease->total > 0):?>
-								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&district_id=<?=@$district->id?>&c1=<?=@$row?>" target="_blank"><?=$disease->total?></a>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&district_id=<?=@$district->id?>&c1=<?=@$row?>&start_date=<?=@$_GET['start_date']?>&end_date=<?=@$_GET['end_date']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
 							<?endif;?>
@@ -1003,6 +1246,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$nursery->id){ @$condition.=" and n.id = ".$nursery->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -1010,13 +1266,13 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 						?>
 						<td>
 							<?if($disease->total > 0):?>
-								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&nursery_id=<?=@$nursery->id?>&c1=<?=@$_GET['diseases']?>" target="_blank"><?=$disease->total?></a>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&nursery_id=<?=@$nursery->id?>&c1=<?=@$_GET['diseases']?>&start_date=<?=@$_GET['start_date']?>&end_date=<?=@$_GET['end_date']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
 							<?endif;?>
@@ -1032,6 +1288,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$nursery->id){ @$condition.=" and n.id = ".$nursery->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -1039,14 +1308,14 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
 	
 						?>
 						<td>
 							<?if($disease->total > 0):?>
-								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&nursery_id=<?=@$nursery->id?>&c1=<?=@$row?>" target="_blank"><?=$disease->total?></a>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&nursery_id=<?=@$nursery->id?>&c1=<?=@$row?>&start_date=<?=@$_GET['start_date']?>&end_date=<?=@$_GET['end_date']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
 							<?endif;?>
@@ -1100,6 +1369,19 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$area->id){ @$condition.=" and n.area_id = ".$area->id; }
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
 					
 							$sql = "
 							SELECT count(d.id) total
@@ -1107,13 +1389,14 @@ $(function(){
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$_GET['diseases']."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
+							// echo $sql."<br><br>";
 						?>
 						<td>
 							<?if($disease->total > 0):?>
-								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&area_id=<?=@$area->id?>&c1=<?=@$_GET['diseases']?>" target="_blank"><?=$disease->total?></a>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&area_id=<?=@$area->id?>&c1=<?=@$_GET['diseases']?>&start_date=<?=@$_GET['start_date']?>&end_date=<?=@$_GET['end_date']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
 							<?endif;?>
@@ -1129,21 +1412,33 @@ $(function(){
 							if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
 							if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 							if(@$area->id){ @$condition.=" and n.area_id = ".$area->id; }
-					
+							if(@$_GET['start_date'] and @$_GET['end_date']){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date between ".$start_date." and ".$end_date;
+							}
+							if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+								$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+								$condition .= " and start_date >= ".$start_date;
+							}
+							if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+								$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+								$condition .= " and start_date >= ".$end_date;
+							}
+							
 							$sql = "
 							SELECT count(d.id) total
 							FROM
 							diseases d
 							INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 							INNER JOIN nurseries n ON d.nursery_id = n.id
-							WHERE 1=1 and d.c1 = '".$row."' ".@$condition;
+							WHERE 1=1 and d.c1 = '".$row."' ".@$condition."  and start_date IS NOT NULL";
 							$disease = new Disease();
 							$disease->query($sql);
-							
 						?>
 						<td>
 							<?if($disease->total > 0):?>
-								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&area_id=<?=@$area->id?>&c1=<?=@$row?>" target="_blank"><?=$disease->total?></a>
+								<a href="diseases/detail?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&area_id=<?=@$area->id?>&c1=<?=@$row?>&start_date=<?=@$_GET['start_date']?>&end_date=<?=@$_GET['end_date']?>" target="_blank"><?=$disease->total?></a>
 							<?else:?>
 								<?=$disease->total?>
 							<?endif;?>
@@ -1173,7 +1468,6 @@ $(function(){
 	</table>
 <?php endif;?>
 </div>
-
 
 
 <script type="text/javascript">

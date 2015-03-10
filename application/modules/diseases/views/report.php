@@ -43,7 +43,8 @@ $(function(){
         options = {
             chart: {
                 renderTo: 'container',
-                type: 'column'
+                type: 'column',
+                marginTop : 75
             },
             title: {
                 text: "<?=$text?>"
@@ -128,6 +129,7 @@ $(function(){
 	'อื่นๆ' => 'O'
 );?>
 
+<div style="display:none;">
 <table id="datatable" class="table">
 	<thead>
 		<tr>
@@ -149,7 +151,7 @@ $(function(){
 				FROM
 				diseases d
 				INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-				WHERE 1=1 and cd.title = 'ด.ช.' and d.nursery_id = ".user_login()->nursery_id." and d.c1 = '".$row."' ".@$condition;
+				WHERE 1=1 and cd.title = 'ด.ช.' and d.nursery_id = ".user_login()->nursery_id." and d.c1 = '".$row."' ".@$condition." and start_date IS NOT NULL";
 				$disease = new Disease();
 				$disease->query($sql);
 				
@@ -158,7 +160,7 @@ $(function(){
 				FROM
 				diseases d
 				INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-				WHERE 1=1 and cd.title = 'ด.ญ.' and d.nursery_id = ".user_login()->nursery_id." and d.c1 = '".$row."' ".@$condition;
+				WHERE 1=1 and cd.title = 'ด.ญ.' and d.nursery_id = ".user_login()->nursery_id." and d.c1 = '".$row."' ".@$condition." and start_date IS NOT NULL";
 				$disease2 = new Disease();
 				$disease2->query($sql);
 			?>
@@ -166,6 +168,82 @@ $(function(){
 			<th><?=$key?></th>
 			<td><?=$disease->boy?></td>
 			<td><?=$disease2->girl?></td>
+		</tr>
+		<?endforeach;?>
+	</tbody>
+</table>
+</div>
+
+
+<table class="table">
+	<thead>
+		<tr>
+			<th></th>
+			<th>ชาย</th>
+			<th>หญิง</th>
+			<th>รวม</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?foreach($diseasesArray as $key=>$row):?>
+			<?
+				if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+				if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition .=" and TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) between ".$_GET['lowage']." and ".$_GET['hiage']; }
+				if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+				if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+				
+				// หาจำนวนครั้งที่เด็กป่วย
+				$sql = "
+				SELECT count(d.id) boy
+				FROM
+				diseases d
+				INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+				WHERE 1=1 and cd.title = 'ด.ช.' and d.nursery_id = ".user_login()->nursery_id." and d.c1 = '".$row."' ".@$condition." and start_date IS NOT NULL";
+				$disease = new Disease();
+				$disease->query($sql);
+				// echo @$sql."<br><br>";
+				
+				$sql = "
+				SELECT count(d.id) girl
+				FROM
+				diseases d
+				INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+				WHERE 1=1 and cd.title = 'ด.ญ.' and d.nursery_id = ".user_login()->nursery_id." and d.c1 = '".$row."' ".@$condition." and start_date IS NOT NULL";;
+				$disease2 = new Disease();
+				$disease2->query($sql);
+				
+				$sql = "
+				SELECT count(d.id) total
+				FROM
+				diseases d
+				INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+				WHERE 1=1 and d.nursery_id = ".user_login()->nursery_id." and d.c1 = '".$row."' ".@$condition." and start_date IS NOT NULL";;
+				$disease3 = new Disease();
+				$disease3->query($sql);
+			?>
+		<tr>
+			<th><?=$key?></th>
+			<td>
+				<?if($disease->boy > 0):?>
+					<a href="diseases/detail2?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&area_id=<?=@$area->id?>&c1=<?=@$row?>&title=ด.ช.&nursery_id=<?=user_login()->nursery_id?>" target="_blank"><?=$disease->boy?></a>
+				<?else:?>
+					<?=$disease->boy?>
+				<?endif;?>
+			</td>
+			<td>
+				<?if($disease2->girl > 0):?>
+					<a href="diseases/detail2?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&area_id=<?=@$area->id?>&c1=<?=@$row?>&title=ด.ญ.&nursery_id=<?=user_login()->nursery_id?>" target="_blank"><?=$disease2->girl?></a>
+				<?else:?>
+					<?=$disease2->girl?>
+				<?endif;?>
+			</td>
+			<td>
+				<?if($disease3->total > 0):?>
+					<a href="diseases/detail2?classroom_id=<?=@$_GET['classroom_id']?>&lowage=<?=@$_GET['lowage']?>&hiage=<?=@$_GET['hiage']?>&year=<?=@$_GET['year']?>&month=<?=@$_GET['month']?>&sex=<?=@$_GET['sex']?>&area_id=<?=@$area->id?>&c1=<?=@$row?>&nursery_id=<?=user_login()->nursery_id?>" target="_blank"><?=$disease3->total?></a>
+				<?else:?>
+					<?=$disease3->total?>
+				<?endif;?>
+			</td>
 		</tr>
 		<?endforeach;?>
 	</tbody>

@@ -31,6 +31,9 @@ class Childrens extends Public_Controller{
             $classroom->from_array($_POST);
             $classroom->save();
 			
+			// ย้ายประวัติการป่วยของเด็ก ในกรณีที่เด็กย้ายห้องเรียน
+			$this->db->query("UPDATE diseases SET classroom_id = ".$_POST['classroom_id']." where classroom_detail_id = ".$_POST['id']);
+			
 			// $classroom_detail = new Classroom_detail();
 			// $classroom_detail->order_by('id','desc')->get(1);
 			// $classroom_detail_id = $classroom->id != '' ? $classroom->id : $classroom_detail->id ; // ถ้า ไม่ใช่ฟอร์มแก้ไข เวลาเซฟให้ดึงไอดีล่าสุดมาใช้
@@ -46,7 +49,7 @@ class Childrens extends Public_Controller{
             
             set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
 		}
-		redirect('childrens');
+		redirect($_POST['referer']);
 	}
 	
 	function delete($id=false){
@@ -64,7 +67,7 @@ class Childrens extends Public_Controller{
 		$data['bmi'] = new Bmi(@$_GET['id']);
 		
 		$bmi = new Bmi();
-		$data['bmis'] = $bmi->where('classroom_detail_id = '.$id)->order_by('child_age_year','ace')->get();
+		$data['bmis'] = $bmi->where('classroom_detail_id = '.$id)->order_by('input_date','ace')->get();
 		
 		// $this->template->append_metadata(js_datepicker());
 		$this->template->build('profile',$data);
@@ -81,6 +84,7 @@ class Childrens extends Public_Controller{
 			$explode_age = explode(' ', $fullage);
 			$_POST['child_age_year'] = $explode_age[0];
 			$_POST['child_age_month'] = $explode_age[2];
+			$_POST['child_age_day'] = $explode_age[4];
 			
             $bmi->from_array($_POST);
             $bmi->save();
@@ -128,6 +132,21 @@ class Childrens extends Public_Controller{
 		$data['diseases'] = new Disease();
 		$data['diseases']->where('classroom_detail_id = '.$id)->get();
 		$this->template->build('report_diseases',$data);
+	}
+	
+	
+	function ajax_calAge(){
+		$_GET['input_date'] = Date2DB($_GET['input_date']);
+		$fullage = newDatediff($_GET['input_date'],$_GET['birth_date']);
+		echo $fullage;
+	}
+	
+	function sick_history($id){
+		$data['classroom_detail'] = new Classroom_detail($id);
+		
+		$data['diseases'] = new Disease();
+		$data['diseases']->where('classroom_detail_id = '.$id)->get();
+		$this->template->build('sick_history',$data);
 	}
 }
 ?>

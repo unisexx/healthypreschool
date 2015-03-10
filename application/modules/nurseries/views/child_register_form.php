@@ -205,9 +205,9 @@ $(document).ready(function(){
         		</tr>
 				<tr>
                    <th>ปีที่เข้าร่วมโครงการ<strong> <span class="TxtRed">*</span></strong></th>
-                   <!-- <td><?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),$nursery->year)?></td> -->
-                   <td><?=date("Y")+543?>
-                   	<input type="hidden" name="year" value="<?=date("Y")+543?>"></td>
+                   <td><?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558'),$nursery->year)?></td>
+                   <td><!-- <?=date("Y")+543?>
+                   	<input type="hidden" name="year" value="<?=date("Y")+543?>"> --></td>
                  </tr>
                  <tr>
                  	<th>คำนำหน้า<strong> <span class="TxtRed">*</span></strong></th>

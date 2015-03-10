@@ -17,7 +17,7 @@ $(document).ready(function(){
 			<li>
 				<div>
 					<a href="<?=$hilight->url?>">
-						<?php echo thumb("uploads/hilight/".$hilight->image,710,211,1)?>
+						<?php echo thumb("uploads/hilight/".$hilight->image,710,211,0)?>
 					</a>
 					<div class="clear"></div>
 				</div>

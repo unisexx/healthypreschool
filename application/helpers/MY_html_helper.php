@@ -222,8 +222,8 @@ function get_nursery_name($nursery_id=false){
 	FROM
 	nurseries
 	INNER JOIN nursery_categories ON nursery_categories.id = nurseries.nursery_category_id where nurseries.id =".$nursery_id);
-	$name = $u->title.$u->name;
-		
+	// $name = $u->title.$u->name;
+	$name = $u->name;
 	return $name;
 }
 
@@ -254,5 +254,36 @@ function get_district_name($id=false){
 	return $name;
 }
 
+function get_student_room_name($id=false){
+	$CI =& get_instance();
+	$c= new Classroom();
+	$c->query("select room_name from classrooms where id =".$id);
+	$name = $c->room_name;
+	
+	return $name;
+}
 
+function get_month_name($id=false){
+	$arrayMonth = array('1' => 'มกราคม', '2' => 'กุมภาพันธ์', '3' => 'มีนาคม', '4' => 'เมษายน', '5' => 'พฤษภาคม', '6' => 'มิถุนายน', '7' => 'กรกฎาคม', '8' => 'สิงหาคม', '9' => 'กันยายน', '10' => 'ตุลาคม', '11' => 'พฤศจิกายน', '12' => 'ธันวาคม');
+	
+	return $arrayMonth[$id];
+}
+
+function get_diseases_name($id=false){
+	$arrayDisease = array('C' => 'หวัด', 'H' => 'มือ เท้า ปาก', 'D' => "อุจจาระร่วง", 'F' => 'ไข้', 'R' => 'ไข้ออกผื่น', 'O' => 'อื่นๆ');
+	
+	return $arrayDisease[$id];
+}
+
+function get_querystring($url=false){
+	if($url==""){
+		$url = basename($_SERVER['REQUEST_URI']);
+	}
+	preg_match("/\?(.+)/", $url, $matches);
+	if (!$matches) {
+	    // no matches
+	}
+	
+	return $matches[1];
+}
 ?>

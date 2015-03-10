@@ -42,8 +42,8 @@ class Nurseries extends Public_Controller
 			$condition .= " and district_id = ".$_GET['district_id'];
 		}
 		if(@$_GET['year']){
-			$data['nurseries']->where("approve_year = ".$_GET['year']);
-			$condition .= " and approve_year = ".$_GET['year'];
+			$data['nurseries']->where("nurseries.created LIKE '".($_GET['year']-543)."%'");
+			$condition .= " and nurseries.created LIKE '".($_GET['year']-543)."%'";
 		}
 		if(@$_GET['start_date'] and @$_GET['end_date']){
 			$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
@@ -74,6 +74,12 @@ class Nurseries extends Public_Controller
 		        break;
 			case 3: // รอการประเมิน
 		        $data['nurseries']->where("status = 0")->where_related_assessment('total IS NULL');
+		        break;
+			case 4: // หมดอายุ ระบบเก่า
+		        $data['nurseries']->where("status = 1 and approve_type = 1 and approve_year < ".(date("Y")+540));
+		        break;
+			case 5: // หมดอายุ ระบบใหม่ ฟอร์ม 35 ข้อ
+		        $data['nurseries']->where("status = 1 and approve_type = 2 and year(approve_date) < ".(date("Y")-3));
 		        break;
 		}
 		

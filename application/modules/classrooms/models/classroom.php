@@ -5,7 +5,7 @@ class Classroom extends ORM
 	
 	public $has_one = array("nursery","user");
 	
-	public $has_many = array("classroom_detail");
+	public $has_many = array("classroom_detail","disease");
 	
 	public function __construct($id = NULL)
 	{

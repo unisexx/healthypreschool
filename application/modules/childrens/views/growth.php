@@ -28,7 +28,8 @@ foreach($bmis as $bmi){
 $(function () {
     $('#container1').highcharts({
         chart: {
-            type: 'areaspline'
+            // type: 'areaspline'
+            type: 'spline'
         },
         title: {
             text: 'กราฟแสดงเกณฑ์อ้างอิงการเจริญเติบโตของเพศชาย อายุ 2-7 ปี'
@@ -71,7 +72,7 @@ $(function () {
         },
         series: [{
         	visible: false,
-            name: 'ค่อนข้างสูง',
+            name: 'สูง',
             data: [93, null, null, null, null, null, null, null, null, null, null, null, 
             	  102.5, null, null, null, null, null, null, null, null, null, null, null, 
             	  110, null, null, null, null, null, null, null, null, null, null, null, 
@@ -80,7 +81,7 @@ $(function () {
             	  130]
         }, {
         	visible: false,
-            name: 'สูง',
+            name: 'ค่อนข้างสูง',
             data: [91.5, null, null, null, null, null, null, null, null, null, null, null, 
             		101, null, null, null, null, null, null, null, null, null, null, null, 
             		108, null, null, null, null, null, null, null, null, null, null, null, 
@@ -89,6 +90,7 @@ $(function () {
             		127.5]
         }, {
         	visible: false,
+        	dashStyle: 'shortdot',
             name: 'ส่วนสูงตามเกณฑ์',
             data: [87, null, null, null, null, null, null, null, null, null, null, null, 
             		95, null, null, null, null, null, null, null, null, null, null, null, 
@@ -118,13 +120,23 @@ $(function () {
             name: '<?=$classroom_detail->title.''.$classroom_detail->child_name?>',
             data: [<?foreach($heights as $heitht):?><?=$heitht?>,<?endforeach;?>]
         }],
-        exporting: { enabled: false }
+        exporting: {
+            buttons: {
+                contextButton: {
+                    menuItems: null,
+                    onclick: function () {
+                        this.print();
+                    }
+                }
+            }
+        }
     });
     
     
     $('#container2').highcharts({
         chart: {
-            type: 'areaspline'
+            // type: 'areaspline'
+            type: 'spline'
         },
         title: {
         	visible: false,
@@ -185,6 +197,7 @@ $(function () {
             		29]
         }, {
         	visible: false,
+        	dashStyle: 'shortdot',
             name: 'น้ำหนักตามเกณฑ์',
             data: [12.5, null, null, null, null, null, null, null, null, null, null, null, 
             		14.5, null, null, null, null, null, null, null, null, null, null, null,  
@@ -214,27 +227,45 @@ $(function () {
             name: '<?=$classroom_detail->title.''.$classroom_detail->child_name?>',
             data: [<?foreach($weights as $weight):?><?=$weight?>,<?endforeach;?>]
         }],
-        exporting: { enabled: false }
+        exporting: {
+            buttons: {
+                contextButton: {
+                    menuItems: null,
+                    onclick: function () {
+                        this.print();
+                    }
+                }
+            }
+        }
     });
+    
     
     $('#container3').highcharts({
         chart: {
-            type: 'areaspline'
+            type: 'spline'
         },
         title: {
             text: 'กราฟแสดงเกณฑ์อ้างอิงการเจริญเติบโตของเพศหญิง อายุ 2-7 ปี'
         },
         xAxis: {
         	title: {
-                text: 'อายุ (ปี)'
+                text: 'อายุ (ปี)-(เดือน)'
             },
-            categories: ['2','3','4','5','6','7',]
+            categories: ['2','2-1','2-2','2-3','2-4','2-5','2-6','2-7','2-8','2-9','2-10','2-11',
+            			'3','3-1','3-2','3-3','3-4','3-5','3-6','3-7','3-8','3-9','3-10','3-11',
+            			'4','4-1','4-2','4-3','4-4','4-5','4-6','4-7','4-8','4-9','4-10','4-11',
+            			'5','5-1','5-2','5-3','5-4','5-5','5-6','5-7','5-8','5-9','5-10','5-11',
+            			'6','6-1','6-2','6-3','6-4','6-5','3-6','6-7','6-8','6-9','6-10','6-11',
+            			'7'],
+            labels: {
+                step: 12
+            }
         },
         yAxis: {
         	title: {
                 text: 'ส่วนสูง (ซม.)'
             },
-            tickPositions: [80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130]
+            tickPositions: [75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130]
         },
         tooltip: {
             shared: true,
@@ -246,39 +277,77 @@ $(function () {
         plotOptions: {
             areaspline: {
                 fillOpacity: 0.5
+            },
+            series: {
+                connectNulls: true
             }
         },
         series: [{
         	visible: false,
-            name: 'ค่อนข้างสูง',
-            data: [92,101,109,116,123,129]
-        }, {
-        	visible: false,
             name: 'สูง',
-            data: [90,99,107,114,121,127]
+            data: [92, null, null, null, null, null, null, null, null, null, null, null, 
+            	  101, null, null, null, null, null, null, null, null, null, null, null, 
+            	  109, null, null, null, null, null, null, null, null, null, null, null, 
+            	  116, null, null, null, null, null, null, null, null, null, null, null, 
+            	  123, null, null, null, null, null, null, null, null, null, null, null, 
+            	  129]
         }, {
         	visible: false,
+            name: 'ค่อนข้างสูง',
+            data: [90, null, null, null, null, null, null, null, null, null, null, null, 
+            		99, null, null, null, null, null, null, null, null, null, null, null, 
+            		107, null, null, null, null, null, null, null, null, null, null, null, 
+            		114, null, null, null, null, null, null, null, null, null, null, null, 
+            		121, null, null, null, null, null, null, null, null, null, null, null, 
+            		127]
+        }, {
+        	visible: false,
+        	dashStyle: 'shortdot',
             name: 'ส่วนสูงตามเกณฑ์',
-            data: [85,94,101,107.5,114,120]
+            data: [85, null, null, null, null, null, null, null, null, null, null, null, 
+            		94, null, null, null, null, null, null, null, null, null, null, null, 
+            		101, null, null, null, null, null, null, null, null, null, null, null, 
+            		107.5, null, null, null, null, null, null, null, null, null, null, null, 
+            		114, null, null, null, null, null, null, null, null, null, null, null, 
+            		120]
         }, {
         	visible: false,
             name: 'ค่อนข้างเตี๊ย',
-            data: [80,88,95,101,107.5,112.5]
+            data: [80, null, null, null, null, null, null, null, null, null, null, null, 
+            		88, null, null, null, null, null, null, null, null, null, null, null, 
+            		95, null, null, null, null, null, null, null, null, null, null, null, 
+            		101, null, null, null, null, null, null, null, null, null, null, null, 
+            		107.5, null, null, null, null, null, null, null, null, null, null, null, 
+            		112.5]
         }, {
         	visible: false,
             name: 'เตี๊ย',
-            data: [78.5,86,93,99,105,110]
+            data: [78.5, null, null, null, null, null, null, null, null, null, null, null, 
+            		86, null, null, null, null, null, null, null, null, null, null, null, 
+            		93, null, null, null, null, null, null, null, null, null, null, null, 
+            		99, null, null, null, null, null, null, null, null, null, null, null, 
+            		105, null, null, null, null, null, null, null, null, null, null, null, 
+            		110]
         }, {
             name: '<?=$classroom_detail->title.''.$classroom_detail->child_name?>',
-            data: [<?foreach($bmis as $bmi):?><?=$bmi->height?>,<?endforeach;?>]
+            data: [<?foreach($heights as $heitht):?><?=$heitht?>,<?endforeach;?>]
         }],
-        exporting: { enabled: false }
+        exporting: {
+            buttons: {
+                contextButton: {
+                    menuItems: null,
+                    onclick: function () {
+                        this.print();
+                    }
+                }
+            }
+        }
     });
     
     
     $('#container4').highcharts({
         chart: {
-            type: 'areaspline'
+            type: 'spline'
         },
         title: {
         	visible: false,
@@ -288,7 +357,15 @@ $(function () {
         	title: {
                 text: 'อายุ (ปี)'
             },
-            categories: ['2','3','4','5','6','7',]
+            categories: ['2','2-1','2-2','2-3','2-4','2-5','2-6','2-7','2-8','2-9','2-10','2-11',
+            			'3','3-1','3-2','3-3','3-4','3-5','3-6','3-7','3-8','3-9','3-10','3-11',
+            			'4','4-1','4-2','4-3','4-4','4-5','4-6','4-7','4-8','4-9','4-10','4-11',
+            			'5','5-1','5-2','5-3','5-4','5-5','5-6','5-7','5-8','5-9','5-10','5-11',
+            			'6','6-1','6-2','6-3','6-4','6-5','3-6','6-7','6-8','6-9','6-10','6-11',
+            			'7'],
+            labels: {
+                step: 12
+            }
         },
         yAxis: {
         	title: {
@@ -306,34 +383,78 @@ $(function () {
         plotOptions: {
             areaspline: {
                 fillOpacity: 0.5
+            },
+            series: {
+                connectNulls: true
             }
         },
         series: [{
         	visible: false,
+        	// color: '#1B9850',
             name: 'น้ำหนักมากเกินเกณฑ์',
-            data: [14.5,17.5,20.5,23,26.5,31]
+            data: [14.5, null, null, null, null, null, null, null, null, null, null, null, 
+            		17.5, null, null, null, null, null, null, null, null, null, null, null, 
+            		20.5, null, null, null, null, null, null, null, null, null, null, null, 
+            		23, null, null, null, null, null, null, null, null, null, null, null, 
+            		26.5, null, null, null, null, null, null, null, null, null, null, null, 
+            		31]
         }, {
         	visible: false,
+        	// color: '#66BD6D',
             name: 'น้ำหนักค่อนข้างมาก',
-            data: [13.75,16.5,19,21.5,24.75,28.5]
+            data: [13.75, null, null, null, null, null, null, null, null, null, null, null, 
+            		16.5, null, null, null, null, null, null, null, null, null, null, null, 
+            		19, null, null, null, null, null, null, null, null, null, null, null,  
+            		21.5, null, null, null, null, null, null, null, null, null, null, null,  
+            		24.75, null, null, null, null, null, null, null, null, null, null, null, 
+            		28.5]
         }, {
         	visible: false,
+        	// color: '#66BD6D',
+        	dashStyle: 'shortdot',
             name: 'น้ำหนักตามเกณฑ์',
-            data: [11.5,14,15.75,17.5,19.5,21.5]
+            data: [11.5, null, null, null, null, null, null, null, null, null, null, null, 
+            		14, null, null, null, null, null, null, null, null, null, null, null,  
+            		15.75, null, null, null, null, null, null, null, null, null, null, null,  
+            		17.5, null, null, null, null, null, null, null, null, null, null, null,  
+            		19.5, null, null, null, null, null, null, null, null, null, null, null,  
+            		21.5]
         }, {
         	visible: false,
+        	// color: '#9AD595',
             name: 'ค่อนข้างน้อย',
-            data: [9.7,11.5,13,14.5,16.25,17.5]
+            data: [9.7, null, null, null, null, null, null, null, null, null, null, null, 
+            		11.5, null, null, null, null, null, null, null, null, null, null, null, 
+            		13, null, null, null, null, null, null, null, null, null, null, null, 
+            		14.5, null, null, null, null, null, null, null, null, null, null, null, 
+            		16.25, null, null, null, null, null, null, null, null, null, null, null, 
+            		17.5]
         }, {
         	visible: false,
+        	// color: '#FE8014',
             name: 'น้อยกว่าเกณฑ์',
-            data: [9,10.5,12,13.5,15,16.5]
+            data: [9,  null, null, null, null, null, null, null, null, null, null, null, 
+		            10.5,  null, null, null, null, null, null, null, null, null, null, null, 
+		            12,  null, null, null, null, null, null, null, null, null, null, null, 
+		            13.5,  null, null, null, null, null, null, null, null, null, null, null, 
+		            15,  null, null, null, null, null, null, null, null, null, null, null, 
+		            16.5]
         }, {
             name: '<?=$classroom_detail->title.''.$classroom_detail->child_name?>',
-            data: [<?foreach($bmis as $bmi):?><?=$bmi->weight?>,<?endforeach;?>]
+            data: [<?foreach($weights as $weight):?><?=$weight?>,<?endforeach;?>]
         }],
-        exporting: { enabled: false }
+        exporting: {
+            buttons: {
+                contextButton: {
+                    menuItems: null,
+                    onclick: function () {
+                        this.print();
+                    }
+                }
+            }
+        }
     });
+    
 });
 </script>
 
