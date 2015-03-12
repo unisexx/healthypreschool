@@ -1,3 +1,5 @@
+<? $arrayTotalAll = array("720", "705", "1298", "2000", "1971", "3433", "2916", "835", "1189", "2776", "1069", "1230");?>
+
 <script type="text/javascript" src="media/js/highchart/highcharts.js"></script>
 <script type="text/javascript" src="media/js/highchart/modules/exporting.js"></script>
 <script type="text/javascript">
@@ -416,11 +418,12 @@ $(function(){
 				<th>เข้าร่วม (แห่ง)</th>
 				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
+				<th>จำนวนทั้งหมดในพื้นที่  (แห่ง)</th>
 				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach($areas as $area):?>
+			<?php foreach($areas as $key=>$area):?>
 				<?php
 					if(@$_GET['year']){
 						$all = $area->nurseries->where("year = ".@$_GET['year'])->get()->result_count();
@@ -444,6 +447,7 @@ $(function(){
 				<td><?=$all?></td>
 				<td><?=$pass?></td>
 				<td><?=$not?></td>
+				<td><?=$arrayTotalAll[$key]?></td>
 				<?endif;?>
 			</tr>
 			<?php endforeach;?>
@@ -727,11 +731,12 @@ $(function(){
 				<th>เข้าร่วม (แห่ง)</th>
 				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
+				<th>จำนวนทั้งหมดในพื้นที่  (แห่ง)</th>
 				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach($areas as $area):?>
+			<?php foreach($areas as $key=>$area):?>
 				<?php
 					if(@$_GET['year']){
 						$all = $area->nurseries->where("year = ".@$_GET['year'])->get()->result_count();
@@ -755,6 +760,7 @@ $(function(){
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"><?=$all?></a></td>
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=1&year=<?=@$_GET['year']?>"><?=$pass?></a></td>
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=0&year=<?=@$_GET['year']?>"><?=$not?></a></td>
+				<td><?=$arrayTotalAll[$key]?></td>
 				<?endif;?>
 			</tr>
 				<?php
@@ -775,6 +781,7 @@ $(function(){
 				<th><?=$totalAll?></th>
 				<th><?=$totalPass?></th>
 				<th><?=$totalNot?></th>
+				<th>20142</th>
 				<?endif;?>
 			</tr>
 		</tbody>

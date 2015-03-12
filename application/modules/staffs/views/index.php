@@ -141,11 +141,29 @@ $(document).ready(function(){
             <td><?=$user->email?></td>
             <td><?=$user->name?></td>
             <td>
-            	<?=$user->nursery->nursery_category->title?><?=$user->nursery->name?>
+            	<?//=$user->nursery->nursery_category->title?><?=$user->nursery->name?>
             	<ul>
-	        		<li><a href="childrens/list_guest/<?=$user->nursery->id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a></li>
-	        		<li><a href="classrooms/list_guest/<?=$user->nursery->id?>" target="_blank">รายชื่อห้องเรียน</a></li>
-	        		<li><a href="teachers/list_guest/<?=$user->nursery->id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a></li>
+	        		<li>
+	        			<a href="childrens/list_guest/<?=$user->nursery->id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a>
+	        			<?
+	        				$rs = $this->db->query("SELECT COUNT(id) total FROM classroom_details where nursery_id = ".$user->nursery->id)->row_array();
+							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
+	        			?>
+	        		</li>
+	        		<li>
+	        			<a href="classrooms/list_guest/<?=$user->nursery->id?>" target="_blank">รายชื่อห้องเรียน</a>
+	        			<?
+	        				$rs = $this->db->query("SELECT COUNT(id) total FROM classrooms where nursery_id = ".$user->nursery->id)->row_array();
+							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
+	        			?>
+	        		</li>
+	        		<li>
+	        			<a href="teachers/list_guest/<?=$user->nursery->id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a>
+	        			<?
+	        				$rs = $this->db->query("SELECT COUNT(id) total FROM users where user_type_id = 10 and nursery_id = ".$user->nursery->id)->row_array();
+							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
+	        			?>
+	        		</li>
 	        		<li><a href="diseases/list_guest/<?=$user->nursery->id?>" target="_blank">บันทึกแบบคัดกรองโรค</a></li>
 	        		<li><a href="diseases/report_guest?nursery_id=<?=$user->nursery->id?>" target="_blank">รายงานแบบคัดกรองโรค</a></li>
 	        		<li><a href="assessments/preview/<?=$user->nursery->id?>" target="_blank">รายงานแบบประเมินสมัครเข้าร่วมโครงการ</a></li>

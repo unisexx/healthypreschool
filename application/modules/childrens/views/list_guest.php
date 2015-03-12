@@ -11,7 +11,7 @@
 
 <form method="get" action="">
 <div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-	<?=form_dropdown('classroom_id',get_option('id','room_name','classrooms where nursery_id = '.$nursery_id.' order by id asc'),@$_GET['classroom_id'],'','--- ห้องเรียน ---');?>
+	<?=@form_dropdown('classroom_id',@get_option('id','room_name','classrooms where nursery_id = '.@$nursery_id.' order by id asc'),@$_GET['classroom_id'],'','--- ห้องเรียน ---');?>
 	
 	<input type="text" name="child_name" value="<?=@$_GET['child_name']?>" placeholder="ชื่อ - นามสกุล">
 	<?=form_dropdown('sex',array('ด.ช.'=>'ชาย','ด.ญ.'=>'หญิง'),@$_GET['sex'],'class="span2"','--- เพศ ---');?>
