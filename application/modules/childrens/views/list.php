@@ -36,7 +36,7 @@
 </div>
 </form>
 
-<div style="float:right; padding:10px 0;"><a href="childrens/form"><div class="btn btn-small">เพิ่มรายชื่อเด็ก</div></a></div>
+<div style="float:right; padding:10px 0;"><a href="childrens/form?nursery_id=<?=$_GET['nursery_id']?>"><div class="btn btn-small">เพิ่มรายชื่อเด็ก</div></a></div>
 <table class="table table-striped table-bordered">
 	<tr>
 		<th>ลำดับ</th>
@@ -52,17 +52,17 @@
 	<?foreach($childs as $key=>$row):?>
 	<tr>
 		<td><?=$key+1?></td>
-		<td><a href="childrens/profile/<?=$row->id?>"><?=$row->title?> <?=$row->child_name?></a></td>
+		<td><a href="childrens/profile/<?=$row->id?>?nursery_id=<?=$_GET['nursery_id']?>"><?=$row->title?> <?=$row->child_name?></a></td>
 		<td><?//=@calAge($row->birth_date)?><?=newDatediff(date("Y-m-d H:i:s"),$row->birth_date)?></td>
 		<td>
 			<?=$row->bmi->order_by('input_date','desc')->get(1)->weight?> / <?=$row->bmi->order_by('input_date','desc')->get(1)->height?> <br>(<?=mysql_to_th($row->bmi->input_date)?>)
 		</td>
 		<!-- <td><?=number_format($row->weight/(($row->height/100)*($row->height/100)),2)?></td> -->
-		<td><a href="childrens/growth/<?=$row->id?>" target="_blank"><i class="fa fa-area-chart"></i></a></td>
-		<td><a href="childrens/sick_history/<?=$row->id?>"><i class="fa fa-file-text-o"></i></a></td>
+		<td><a href="childrens/growth/<?=$row->id?>?nursery_id=<?=$_GET['nursery_id']?>" target="_blank"><i class="fa fa-area-chart"></i></a></td>
+		<td><a href="childrens/sick_history/<?=$row->id?>?nursery_id=<?=$_GET['nursery_id']?>"><i class="fa fa-file-text-o"></i></a></td>
 		<td><?=$row->classroom->room_name?></td>
 		<td>
-			<a href="childrens/form/<?=$row->id?>" class='btn btn-mini btn-info'>แก้ไข</a>
+			<a href="childrens/form/<?=$row->id?>?nursery_id=<?=$_GET['nursery_id']?>" class='btn btn-mini btn-info'>แก้ไข</a>
     		<a href="childrens/delete/<?=$row->id?>" class="btn btn-mini btn-danger" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>
 		</td>
 	</tr>

@@ -17,7 +17,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="childrens">ตรวจสอบรายชื่อเด็ก / นักเรียน</a> <span class="divider">/</span></li>
+  <li><a href="childrens?nursery_id=<?=$_GET['nursery_id']?>">ตรวจสอบรายชื่อเด็ก / นักเรียน</a> <span class="divider">/</span></li>
   <li>ฟอร์มเด็ก</li>
 </ul>
 
@@ -77,7 +77,7 @@ jQuery_1_4_2("input.datepicker").date_input();
                 <div class="controls">
                   <?php echo form_referer() ?>
                   <input type="hidden" name="id" value="<?=$child->id?>">
-                  <input type="hidden" name="nursery_id" value="<?php echo user_login()->nursery_id ?>">
+                  <input type="hidden" name="nursery_id" value="<?=@$_GET['nursery_id']?>">
                   <input type="submit" class="btn btn-small btn-info" value="บันทึก">
                   <input type="button" class="btn btn-small btn-danger" value="ย้อนกลับ" onclick="history.back(-1)">
                 </div>

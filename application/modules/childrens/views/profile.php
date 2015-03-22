@@ -23,7 +23,7 @@ $(document).ready(function(){
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="childrens">ตรวจสอบรายชื่อเด็ก / นักเรียน</a> <span class="divider">/</span></li>
+  <li><a href="childrens?nursery_id=<?=$_GET['nursery_id']?>">ตรวจสอบรายชื่อเด็ก / นักเรียน</a> <span class="divider">/</span></li>
   <li>ข้อมูลเด็ก</li>
 </ul>
 
@@ -70,7 +70,7 @@ $(document).ready(function(){
 
 
 <br>
-<h2>รายงานบันทึกการเจริญเติบโตในเด็ก <a href="childrens/growth/<?=$child->id?>" target="_blank"><i class="fa fa-area-chart"></i></a></h2>
+<h2>รายงานบันทึกการเจริญเติบโตในเด็ก <a href="childrens/growth/<?=$child->id?>?nursery_id=<?=$_GET['nursery_id']?>" target="_blank"><i class="fa fa-area-chart"></i></a></h2>
 <table class="table">
 	<tr>
 		<th>วันที่บันทึก</th>

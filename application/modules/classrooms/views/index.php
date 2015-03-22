@@ -5,7 +5,7 @@
 
 <h1>ห้องเรียน / ชั้นเรียน และเด็ก</h1>
 
-<div style="float:right; padding:10px 0;"><a href="classrooms/form"><div class="btn">เพิ่มห้องเรียน</div></a></div>
+<div style="float:right; padding:10px 0;"><a href="classrooms/form?nursery_id=<?=$_GET['nursery_id']?>"><div class="btn">เพิ่มห้องเรียน</div></a></div>
 <table class="table table-striped table-bordered">
 	<tr>
 		<th>ลำดับ</td>
@@ -25,7 +25,7 @@
 		<td><?=$class->classroom_detail->where('title = "ด.ช."')->count()?></td>
 		<td><?=$class->classroom_detail->where('title = "ด.ญ."')->count()?></td>
 		<td>
-			<a href="classrooms/form/<?=$class->id?>" class='btn btn-mini btn-info'>ตรวจสอบ</a>
+			<a href="classrooms/form/<?=$class->id?>?nursery_id=<?=$_GET['nursery_id']?>" class='btn btn-mini btn-info'>ตรวจสอบ</a>
 	        <a href="classrooms/delete/<?=$class->id?>" class="btn btn-mini btn-danger" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>
 		</td>
 	</tr>

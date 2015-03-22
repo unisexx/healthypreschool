@@ -5,7 +5,7 @@
 
 <h1>ตรวจสอบรายชื่อครู / เจ้าหน้าที่</h1>
 
-<!-- <div style="float:right; padding:10px 0;"><a href="teachers/form"><div class="btn">เพิ่มรายการ</div></a></div> -->
+<!-- <div style="float:right; padding:10px 0;"><a href="teachers/form?nursery_id=<?=$_GET['nursery_id']?>"><div class="btn">เพิ่มรายการ</div></a></div> -->
 <table class="table table-striped table-bordered">
 	<tr>
 		<th>ลำดับ</th>

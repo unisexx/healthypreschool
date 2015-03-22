@@ -1,6 +1,6 @@
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="childrens">ตรวจสอบรายชื่อ / เด็กนักเรียน</a> <span class="divider">/</span></li>
+  <li><a href="childrens?nursery_id=<?=$_GET['nursery_id']?>">ตรวจสอบรายชื่อ / เด็กนักเรียน</a> <span class="divider">/</span></li>
   <li>รายการแบบคัดกรองโรค</li>
 </ul>
 

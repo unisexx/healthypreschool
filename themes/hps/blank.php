@@ -48,7 +48,7 @@
 				                        echo user_login()->amphur->amphur_name;
 				                    }elseif(user_login()->user_type_id == 9 or user_login()->user_type_id == 10){
 										
-				                    	echo '('.user_login()->nursery->nursery_category->title.user_login()->nursery->name.')';
+				                    	echo '('.user_login()->nursery->name.')';
 										echo '<br><b>สถานะศูนย์เด็กเล็ก : </b>';
 										
 										echo '<a href="assessments/preview/'.user_login()->nursery_id.'">';
@@ -147,9 +147,9 @@
 				        	</ul>
 				        	<?elseif(user_login()->user_type_id == 9): //เจ้าหน้าที่ศูนย์?>
 				        	<ul id="nav">
-				        		<li><a href="teachers"><img src="themes/hps/images/banner_menu_9.png" alt="ตรวจสอบรายชื่อครู / เจ้าหน้าที่"></a></li>
-				        		<li><a href="classrooms"><img src="themes/hps/images/banner_menu_8.png" alt="ตรวจสอบรายชื่อห้องเรียน"></a></li>
-				        		<li><a href="childrens"><img src="themes/hps/images/banner_menu_7.png" alt="ตรวจสอบรายชื่อเด็กนักเรียน"></a></li>
+				        		<li><a href="teachers?nursery_id=<?=user_login()->nursery_id?>"><img src="themes/hps/images/banner_menu_9.png" alt="ตรวจสอบรายชื่อครู / เจ้าหน้าที่"></a></li>
+				        		<li><a href="classrooms?nursery_id=<?=user_login()->nursery_id?>"><img src="themes/hps/images/banner_menu_8.png" alt="ตรวจสอบรายชื่อห้องเรียน"></a></li>
+				        		<li><a href="childrens?nursery_id=<?=user_login()->nursery_id?>"><img src="themes/hps/images/banner_menu_7.png" alt="ตรวจสอบรายชื่อเด็กนักเรียน"></a></li>
 				        		<li><a href="diseases"><img src="themes/hps/images/banner_menu_10.png" alt="บันทึกแบบคัดกรองโรค"></a></li>
 				        		<li><a href="diseases/report"><img src="themes/hps/images/banner_menu_11.png" alt="รายงานแบบคัดกรองโรค"></a></li>
 				        		<li><a href="assessments/preview/<?=user_login()->nursery_id?>"><img src="themes/hps/images/banner_menu_12.png" alt="รายงานแบบประเมินเข้าร่วมโครงการ"></a></li>
@@ -157,8 +157,8 @@
 				        	</ul>
 				        	<?elseif(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก?>
 				        	<ul id="nav">
-				        		<li><a href="classrooms"><img src="themes/hps/images/banner_menu_8.png" alt="ตรวจสอบรายชื่อห้องเรียน"></a></li>
-				        		<li><a href="childrens"><img src="themes/hps/images/banner_menu_7.png" alt="ตรวจสอบรายชื่อเด็กนักเรียน"></a></li>
+				        		<li><a href="classrooms?nursery_id=<?=user_login()->nursery_id?>"><img src="themes/hps/images/banner_menu_8.png" alt="ตรวจสอบรายชื่อห้องเรียน"></a></li>
+				        		<li><a href="childrens?nursery_id=<?=user_login()->nursery_id?>"><img src="themes/hps/images/banner_menu_7.png" alt="ตรวจสอบรายชื่อเด็กนักเรียน"></a></li>
 				        		<li><a href="diseases"><img src="themes/hps/images/banner_menu_10.png" alt="บันทึกแบบคัดกรองโรค"></a></li>
 				        		<li><a href="diseases/report"><img src="themes/hps/images/banner_menu_11.png" alt="รายงานแบบคัดกรองโรค"></a></li>
 				        		<li><a href="assessments/preview/<?=user_login()->nursery_id?>"><img src="themes/hps/images/banner_menu_12.png" alt="รายงานแบบประเมินเข้าร่วมโครงการ"></a></li>

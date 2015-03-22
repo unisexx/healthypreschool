@@ -196,9 +196,9 @@ class Users extends Public_Controller{
 				if(user_login()->user_type_id == 1 || user_login()->user_type_id == 6 || user_login()->user_type_id == 7 || user_login()->user_type_id == 8){
 					redirect('nurseries/register');
 				}elseif(user_login()->user_type_id == 9){
-					redirect('teachers');
+					redirect('teachers?nursery_id='.user_login()->nursery_id);
 				}elseif(user_login()->user_type_id == 10){
-					redirect('classrooms');
+					redirect('classrooms?nursery_id='.user_login()->nursery_id);
 				}
 				
 				// redirect('home/menu');

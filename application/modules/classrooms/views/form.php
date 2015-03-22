@@ -19,11 +19,11 @@
 		          <input class="input-xlarge" type="text" name="room_name" value="<?=$classroom->room_name?>" placeholder="ชื่อห้องเรียน">
 		        </div>
 		    </div>
-		    <?if(user_login()->user_type_id == 9): //เจ้าหน้าที่ศูนย์ สามารถเลือกเจ้าหน้าที่ครูได้?>
+		    <?if(user_login()->user_type_id == 9 or user_login()->user_type_id == 1 or user_login()->user_type_id == 6 or user_login()->user_type_id == 7): //เจ้าหน้าที่ศูนย์และเจ้าหน้าที่ประจำเขต สามารถเลือกเจ้าหน้าที่ครูได้?>
 		    <div class="control-group">
 		        <label class="control-label">ครูประจำชั้น / ครูผู้ดูแลเด็ก <span class="TxtRed">*</span></label>
 		        <div class="controls">
-		          <?=form_dropdown('user_id',get_option('id','name','users where user_type_id = 10 and nursery_id = '.user_login()->nursery_id.' order by name asc'),@$classroom->user_id,'class="input-xlarge"','--- เจ้าหน้าที่ครู ---');?>
+		          <?=form_dropdown('user_id',get_option('id','name','users where user_type_id = 10 and nursery_id = '.$_GET['nursery_id'].' and m_status = "active" order by name asc'),@$classroom->user_id,'class="input-xlarge"','--- เจ้าหน้าที่ครู ---');?>
 		        </div>
 		    </div>
 		    <?elseif(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก เพิ่มของตัวเองได้อย่างเดียว?>
@@ -37,7 +37,8 @@
 		    <?endif;?>
 		    <div class="control-group">
                 <div class="controls">
-                  <input type="hidden" name="nursery_id" value="<?=$classroom->nursery_id == ''? user_login()->nursery_id : $classroom->nursery_id ;?>">
+                  <?php echo form_referer() ?>
+                  <input type="hidden" name="nursery_id" value="<?=$classroom->nursery_id == ''? $_GET['nursery_id'] : $classroom->nursery_id ;?>">
                   <input type="hidden" name="id" value="<?=$classroom->id?>">
                   <input type="submit" class="btn btn-small btn-info" value="บันทึก">
                   <input type="button" class="btn btn-small btn-danger" value="ย้อนกลับ" onclick="history.back(-1)">

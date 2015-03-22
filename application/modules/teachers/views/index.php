@@ -10,14 +10,14 @@
 	<?=form_dropdown('m_status',array('active'=>'เปิด','deactive'=>'ปิด'),@$_GET['m_status'],'class="span2"','--- สถานะ ---');?>
 	<input type="text" name="name" value="<?=@$_GET['name']?>" placeholder="ค้นหาชื่อ">
 	<input type="text" name="email" value="<?=@$_GET['email']?>" placeholder="ค้นหาอีเมล์">
-	
+	<input type="hidden" name="nursery_id" value="<?=$_GET['nursery_id']?>">
       <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
       <img class="loading" style="display: none;" src="media/images/ajax-loader.gif">
 	</div>
 </form>
 
-<div style="float:right; padding:10px 0;"><a href="teachers/form"><div class="btn">เพิ่มรายการ</div></a></div>
-<table class="table">
+<div style="float:right; padding:10px 0;"><a href="teachers/form?nursery_id=<?=$_GET['nursery_id']?>"><div class="btn">เพิ่มรายการ</div></a></div>
+<table class="table table-striped table-bordered">
 	<tr>
 		<th>ลำดับ</th>
 		<th>สถานะ</th>
@@ -32,7 +32,7 @@
 		<td><?=$row->name?></td>
 		<td><?=$row->email?> / <?=$row->phone?></td>
 		<td>
-			<a href="teachers/form/<?=$row->id?>" class='btn btn-mini btn-info'>แก้ไข</a>
+			<a href="teachers/form/<?=$row->id?>?nursery_id=<?=$_GET['nursery_id']?>" class='btn btn-mini btn-info'>แก้ไข</a>
 	        <a href="teachers/delete/<?=$row->id?>" class="btn btn-mini btn-danger" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>
 		</td>
 	</tr>

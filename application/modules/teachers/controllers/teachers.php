@@ -15,13 +15,14 @@ class Teachers extends Public_Controller{
 		if(@$_GET['name'])$user->where("name like '%".$_GET['name']."%'");
 		if(@$_GET['email'])$user->where("email like '%".$_GET['email']."%'");
 		if(@$_GET['m_status'])$user->where("m_status = '".$_GET['m_status']."'");
-		$data['teachers'] = $user->where('user_type_id = 10 and nursery_id = '.user_login()->nursery_id)->order_by('id','desc')->get_page();
+		$data['teachers'] = $user->where('user_type_id = 10 and nursery_id = '.$_GET['nursery_id'])->order_by('id','desc')->get_page();
 		// $data['teachers']->check_last_query();
     	$this->template->build('index',$data);
     }
 	
 	function form($id=false){
 		$data['teacher'] = new User($id);
+		$data['nursery'] = new Nursery($_GET['nursery_id']);
 		$this->template->build('form',$data);
 	}
 	
@@ -37,7 +38,7 @@ class Teachers extends Public_Controller{
 				set_notify('error','กรอกรหัสไม่ถูกต้อง');
 			}
 		}
-		redirect('teachers');
+		redirect($_POST['referer']);
 	}
 	
 	function delete($id=false){
@@ -49,10 +50,10 @@ class Teachers extends Public_Controller{
 		redirect($_SERVER['HTTP_REFERER']);
 	}
 	
-	function list_guest($nursery_id){
-		$data['nursery_id'] = $nursery_id;
+	function list_guest(){
+		$data['nursery_id'] = $_GET['nursery_id'];
 		$user = new User();
-		$data['teachers'] = $user->where('user_type_id = 10 and nursery_id = '.$nursery_id)->order_by('id','desc')->get_page();
+		$data['teachers'] = $user->where('user_type_id = 10 and nursery_id = '.$data['nursery_id'])->order_by('id','desc')->get_page();
 		$this->template->build('list_guest',$data);
 	}
 }

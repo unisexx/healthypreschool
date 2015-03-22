@@ -13,7 +13,7 @@ class Childrens extends Public_Controller{
 		if(@$_GET['sex']){ $child->where("title = '".$_GET['sex']."'"); }
 		if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ $child->where("TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) between ".$_GET['lowage']." and ".$_GET['hiage']); }
 		
-		$child->where('nursery_id = '.user_login()->nursery_id);
+		$child->where('nursery_id = '.$_GET['nursery_id']);
 		if(user_login()->user_type_id == 10){ $child->where('classroom_id in (select id from classrooms where user_id = '.user_login()->id.')'); }
 		$data['childs'] = $child->order_by('id','desc')->get();
     	$this->template->build('list',$data);
@@ -32,7 +32,9 @@ class Childrens extends Public_Controller{
             $classroom->save();
 			
 			// ย้ายประวัติการป่วยของเด็ก ในกรณีที่เด็กย้ายห้องเรียน
-			$this->db->query("UPDATE diseases SET classroom_id = ".$_POST['classroom_id']." where classroom_detail_id = ".$_POST['id']);
+			if($_POST['id']){
+				$this->db->query("UPDATE diseases SET classroom_id = ".$_POST['classroom_id']." where classroom_detail_id = ".$_POST['id']);	
+			}
 			
 			// $classroom_detail = new Classroom_detail();
 			// $classroom_detail->order_by('id','desc')->get(1);

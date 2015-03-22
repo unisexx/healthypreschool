@@ -8,8 +8,8 @@ class Classrooms extends Public_Controller{
     
     function index(){
     	$classroom = new Classroom();
-		if(user_login()->user_type_id == 9){ //เจ้าหน้าที่ศูนย์
-			$classroom->where('nursery_id = '.user_login()->nursery_id);
+		if(user_login()->user_type_id == 9 or user_login()->user_type_id == 1 or user_login()->user_type_id == 6 or user_login()->user_type_id == 7){ //เจ้าหน้าที่ศูนย์ & สาธารณะสุข
+			$classroom->where('nursery_id = '.$_GET['nursery_id']);
 		}elseif(user_login()->user_type_id == 10){ //เจ้าหน้าที่ครู ผู้ดูแลเด็ก
 			$classroom->where('user_id = '.user_login()->id);
 		}
@@ -38,7 +38,7 @@ class Classrooms extends Public_Controller{
 			$id = $id != '' ? $id : $classroom->id ; // ถ้า ไม่ใช่ฟอร์มแก้ไข เวลาเซฟให้ดึงไอดีล่าสุดมาใช้
             set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
 		}
-		redirect('classrooms');
+		redirect($_POST['referer']);
 	}
 	
 	function delete($id=false){

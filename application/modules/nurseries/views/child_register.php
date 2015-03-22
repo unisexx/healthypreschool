@@ -162,21 +162,21 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        	<a href="#myModal" class="btn-estimate" data-toggle="modal"><b><?//=$nursery->nursery_category->title?><?=$nursery->name?></b></a>
 	        	<ul>
 	        		<li>
-	        			<a href="childrens/list_guest/<?=$nursery->id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a>
+	        			<a href="childrens?nursery_id=<?=$nursery->id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a>
 	        			<?
 	        				$rs = $this->db->query("SELECT COUNT(id) total FROM classroom_details where nursery_id = ".$nursery->id)->row_array();
 							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
 	        			?>
 	        		</li>
 	        		<li>
-	        			<a href="classrooms/list_guest/<?=$nursery->id?>" target="_blank">รายชื่อห้องเรียน</a>
+	        			<a href="classrooms?nursery_id=<?=$nursery->id?>" target="_blank">รายชื่อห้องเรียน</a>
 	        			<?
 	        				$rs = $this->db->query("SELECT COUNT(id) total FROM classrooms where nursery_id = ".$nursery->id)->row_array();
 							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
 	        			?>
 	        		</li>
 	        		<li>
-	        			<a href="teachers/list_guest/<?=$nursery->id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a>
+	        			<a href="teachers?nursery_id=<?=$nursery->id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a>
 	        			<?
 	        				$rs = $this->db->query("SELECT COUNT(id) total FROM users where user_type_id = 10 and nursery_id = ".$nursery->id)->row_array();
 							echo '<span style="color:#666666;">('.$rs['total'].')</span>';

@@ -81,7 +81,7 @@ $(function(){
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="teachers">ตรวจสอบรายชื่อครู / เจ้าหน้าที่</a> <span class="divider">/</span></li>
+  <li><a href="teachers?nursery_id=<?=$_GET['nursery_id']?>">ตรวจสอบรายชื่อครู / เจ้าหน้าที่</a> <span class="divider">/</span></li>
   <li class="active">ฟอร์ม</li>
 </ul>
 
@@ -155,12 +155,13 @@ $(function(){
             </div>
 		    <div class="control-group">
                 <div class="controls">
-                  <input type="hidden" name="nursery_id" value="<?=user_login()->nursery_id?>">
+                  <?php echo form_referer() ?>
+                  <input type="hidden" name="nursery_id" value="<?=$nursery->id?>">
                   <input type="hidden" name="user_type_id" value="10">
-                  <input type="hidden" name="area_id" value="<?=user_login()->area_id?>">
-                  <input type="hidden" name="province_id" value="<?=user_login()->province_id?>">
-                  <input type="hidden" name="amphur_id" value="<?=user_login()->amphur_id?>">
-                  <input type="hidden" name="district_id" value="<?=user_login()->district_id?>">
+                  <input type="hidden" name="area_id" value="<?=$nursery->area_id?>">
+                  <input type="hidden" name="province_id" value="<?=$nursery->province_id?>">
+                  <input type="hidden" name="amphur_id" value="<?=$nursery->amphur_id?>">
+                  <input type="hidden" name="district_id" value="<?=$nursery->district_id?>">
                   <input type="hidden" name="id" value="<?=$teacher->id?>">
                   <input type="submit" class="btn btn-small btn-info" value="บันทึก">
                   <input type="button" class="btn btn-small btn-danger" value="ย้อนกลับ" onclick="history.back(-1)">
