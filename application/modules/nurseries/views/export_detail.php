@@ -10,7 +10,7 @@ if($filetype == 'excel'){
 ?>
 <h3>รายละเอียดศูนย์เด็กเล็ก <?=@$district?> <?=@$amphur?> <?=@$province?> <?=@$area?> <?=@$year?></h3>
 </div>
-	<table class="table">
+	<table class="table" border="1">
 	<thead>
 		<tr>
 	        <th>ลำดับ</th>

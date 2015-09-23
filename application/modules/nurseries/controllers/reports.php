@@ -180,5 +180,19 @@ class Reports extends Public_Controller
 		$data['nurseries']->order_by('id','desc')->get();
 		$this->load->view('export_detail',$data);
 	}
+
+	function export_province($filetype){
+		$data['filetype'] = $filetype;
+		for ($x = 1; $x <= 77; $x++) {
+			$data['nurseries'] = new Nursery();
+			
+			$data['nurseries']->where('province_id',$x);
+			$province = new Province($x);
+			$data['province'] = "จังหวัด".$province->name;
+			
+			$data['nurseries']->order_by('id','desc')->get();
+			$this->load->view('export_detail',$data);
+		} 
+	}
 }
 ?>

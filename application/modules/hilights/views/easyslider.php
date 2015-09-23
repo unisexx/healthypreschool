@@ -3,7 +3,7 @@
 <script type="text/javascript">
 $(document).ready(function(){	
 	$("#slider").easySlider({
-		auto: true, 
+		auto: false, 
 		numeric: true,
 		numericId: 'controls',
 		continuous: true
@@ -16,7 +16,7 @@ $(document).ready(function(){
 		<?php foreach($hilights as $key=>$hilight):?>
 			<li>
 				<div>
-					<a href="<?=$hilight->url?>">
+					<a href="<?=$hilight->url?>" target="_blank">
 						<?php echo thumb("uploads/hilight/".$hilight->image,710,211,0)?>
 					</a>
 					<div class="clear"></div>

@@ -34,6 +34,12 @@ class Contents extends Public_Controller
 		$this->load->view('inc_home_articles',$data);
 	}
 	
+	function inc_home_newsletter(){
+		$data['contents'] = new Content();
+		$data['contents']->where("module = 'newsletters'")->order_by('id','desc')->get(7);
+		$this->load->view('inc_home_newsletter',$data);
+	}
+	
 	function inc_home_vdos(){
 		$data['contents'] = new Content();
 		$data['contents']->where("module = 'vdos'")->order_by('id','desc')->get(7);

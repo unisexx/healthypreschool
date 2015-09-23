@@ -128,9 +128,12 @@
         <td background="themes/hps/images/bg_col1.png">
         <div id="banner">
           <ul>
-          	  <li><a href="nurseries/reports/index/basic_column"><img src="themes/hps/images/banner_Overall_result.jpg" width="226" height="118" /></a></li>
+          	  <!-- <li><a href="nurseries/reports/index/basic_column"><img src="themes/hps/images/banner_Overall_result.jpg" width="226" height="118" /></a></li>
               <li><a href="http://thaigcd.ddc.moph.go.th/e-learning/wp-login.php?action=register" target="_blank"><img src="themes/hps/images/banner_e-learning.jpg" width="226" height="118" /></a></li>
-              <li><img src="themes/hps/images/banner_evaluation.jpg" width="226" height="118" /></li>
+              <li><img src="themes/hps/images/banner_evaluation.jpg" width="226" height="118" /></li> -->
+              <li><a href="http://demo.favouritedesign.com/healthypreschool/nurseries/reports/index/basic_column" target="_blank"><?php echo thumb("uploads/hilight/54b5d9550d496.jpg",226,false,1)?></a></li>
+              <li><a href="http://demo.favouritedesign.com/healthypreschool/diseases/report_staff" target="_blank"><?php echo thumb("uploads/hilight/54b5d9ca1d50d.jpg",226,false,1)?></a></li>
+              <li><a href="http://demo.favouritedesign.com/healthypreschool/surveillances/index" target="_blank"><?php echo thumb("uploads/hilight/54fe9860bdc9e.jpg",226,false,1)?></a></li>
           </ul>
          </div>
         </td>

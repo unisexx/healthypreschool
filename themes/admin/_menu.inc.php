@@ -7,6 +7,10 @@
 	<li <?php echo menu_active('permissions','permissions')?>><a href="permissions/admin/permissions/">สิทธิ์การใช้งาน</a></li>
 	<?php endif;?> -->
 	
+	<?php if(permission('coverpages', 'read')):?>
+	<li <?php echo menu_active('coverpages','coverpages')?> ><a href="coverpages/admin/coverpages">หน้าแรก</a></li>
+	<?php endif;?>
+	
 	<?php if(permission('histories', 'update')):?>
 	<li><a href="contents/admin/contents/form/histories/25">ความเป็นมาศูนย์เด็กเล็กปลอดโรค</a>
 	<?php endif;?>
@@ -43,10 +47,8 @@
     <?php if(permission('downloads', 'read')):?>
     <li <?php echo menu_active('downloads','downloads')?>><a href="contents/admin/contents/index/downloads">เอกสารดาวน์โหลด</a></li>
     <?php endif;?>
-    
-    <?php if(permission('coverpages', 'read')):?>
-	<li <?php echo menu_active('coverpages','coverpages')?> ><a href="coverpages/admin/coverpages">หน้าแรก</a></li>
-	<?php endif;?>
+	
+	<li><a href="elearnings/admin/elearnings">บทเรียน E-learning</a></li>
     
     <!-- <li <?php echo menu_active('nurseries','nurseries')?>><a href="nurseries/admin/nurseries/category_form">ศูนย์เด็กเล็กปลอดโรค</a></li> -->
     
