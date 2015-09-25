@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="themes/admin/media/css/stylesheet.css" type="text/css" media="screen" charset="utf-8" /> 
 		<link rel="stylesheet" href="media/js/bootstrap/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="media/js/bootstrap/css/bootstrap-responsive.min.css" type="text/css">
+		<link rel="stylesheet" href="media/css/font-awesome-4.4.0/css/font-awesome.min.css">
 		<script src="media/js/jquery-1.4.2.min.js" type="text/javascript"></script>
 		<script type="text/javascript" src="media/js/jquery.validate.min.js"></script>
 		<?php echo $template['metadata']; ?>

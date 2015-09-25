@@ -29,19 +29,21 @@ class Elearnings extends Admin_Controller
 	function form($id = NULL)
 	{
 		$data['topic'] = new Topic($id);
-		$this->template->build('form',$data);
+		$this->template->build('admin/form',$data);
 	}
 
 	function save($id = NULL)
 	{
-		/*echo '<pre>';
-		print_r($_POST);
-		echo '</pre>';
-		exit();*/
+		// echo '<pre>';
+		// print_r($_POST);
+		// echo '</pre>';
+		// exit();
 		$topic = new Topic($id);
 		$topic->title = $_POST['title'];
 		$topic->detail = $_POST['detail'];
 		$topic->status = $_POST['status'];
+		$topic->pass = $_POST['pass'];
+		$topic->random = $_POST['random'];
 		if(!$id)$topic->user_id = $this->session->userdata('id');
 		$topic->save();
 		foreach($_POST['question_id'] as $key => $value)
@@ -68,6 +70,7 @@ class Elearnings extends Admin_Controller
 					{
 						$choice = new Choice(@$_POST['choice_id'][$key][$index]);
 						$choice->name = $data;
+						$choice->score = (@$_POST['score'][$key][$index] == "")? 0 : @$_POST['score'][$key][$index];
 						$choice->questionaire_id = $question->id;
 						$choice->save();
 					}
@@ -75,7 +78,7 @@ class Elearnings extends Admin_Controller
 			}
 		}
 		set_notify('success','บันทึกข้อมูลเรียบร้อยแล้วค่ะ');
-		redirect('docs/index');
+		redirect('elearnings/admin/elearnings');
 	}
 	
 	function questionaire($id)

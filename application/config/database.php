@@ -41,17 +41,14 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'mysql1.favouritehosting.com';
-$db['default']['username'] = 'preschool';
-$db['default']['database'] = 'preschool';
-// $db['default']['hostname'] = 'db1.favouritehosting.com';
-// $db['default']['username'] = 'c1hprschool';
-// $db['default']['database'] = 'c1hprschool';
-$db['default']['password'] = 'hprs@20!3';
-// $db['default']['hostname'] = 'localhost';
-// $db['default']['username'] = 'root';
-// $db['default']['password'] = '1234';
-// $db['default']['database'] = 'hps';
+// $db['default']['hostname'] = 'mysql1.favouritehosting.com';
+// $db['default']['username'] = 'preschool';
+// $db['default']['database'] = 'preschool';
+// $db['default']['password'] = 'hprs@20!3';
+$db['default']['hostname'] = 'localhost';
+$db['default']['username'] = 'root';
+$db['default']['password'] = '1234';
+$db['default']['database'] = 'healthypreschool';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;

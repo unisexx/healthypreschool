@@ -48,7 +48,7 @@
     <li <?php echo menu_active('downloads','downloads')?>><a href="contents/admin/contents/index/downloads">เอกสารดาวน์โหลด</a></li>
     <?php endif;?>
 	
-	<li><a href="elearnings/admin/elearnings">บทเรียน E-learning</a></li>
+	<li <?php echo menu_active('elearnings','elearnings')?>><a href="elearnings/admin/elearnings">บทเรียน E-learning</a></li>
     
     <!-- <li <?php echo menu_active('nurseries','nurseries')?>><a href="nurseries/admin/nurseries/category_form">ศูนย์เด็กเล็กปลอดโรค</a></li> -->
     

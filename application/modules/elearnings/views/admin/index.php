@@ -6,48 +6,29 @@
 		<th>แบบสอบถาม</th>
 		<th>โดย</th>
 		<th>วันที่สร้าง</th>
+		<th>รายงาน</th>
 		<th width="90">
-			<?php if(permission('galleries', 'create')):?>
-			<a class="btn btn-mini btn-primary" href="albums/admin/albums/form" class="tiny">เพิ่มรายการ</a>
-			<?php endif;?>
+			<?php // if(permission('galleries', 'create')):?>
+			<a class="btn btn-mini btn-primary" href="elearnings/admin/elearnings/form" class="tiny">เพิ่มรายการ</a>
+			<?php // endif;?>
 		</th>
 	</tr>
 	<?php foreach($topics as $topic): ?>
 	<tr <?php echo cycle()?>>
-		<td><input type="checkbox" name="status" value="<?php echo $topic->id ?>" <?php echo ($topic->status=="1")?'checked="checked"':'' ?> /></td>
+		<td><input type="checkbox" name="status" value="<?php echo $topic->id ?>" <?php echo ($topic->status=="approve")?'checked="checked"':'' ?> /></td>
 		<td class="span8"><a href="docs/publics/questionaire/<?php echo $topic->id ?>" target="_blank"><?php echo $topic->title ?></a></td>
 		<td><?php echo @$topic->user->name?></a></td>
 		<td><?php echo mysql_to_th($topic->created) ?></a></td>
 		<td><a href="docs/report/<?php echo $topic->id ?>" >รายงาน</a></td>
 		<td>
-			<?php if(permission('galleries', 'update')):?>
-			<a class="btn btn-mini" href="docs/form/<?php echo $topic->id ?>" >แก้ไข</a>
-			<?php endif;?>
-			<?php if(permission('galleries', 'delete')):?>
-			<a class="btn btn-mini" href="docs/delete/<?php echo $topic->id ?>" onclick="return confirm('คุณต้องการลบแบบสอบถาม ?')">ลบ</a>
-			<?php endif;?>
+			<?php // if(permission('galleries', 'update')):?>
+			<a class="btn btn-mini" href="elearnings/admin/elearnings/form/<?php echo $topic->id ?>" >แก้ไข</a>
+			<?php // endif;?>
+			<?php // if(permission('galleries', 'delete')):?>
+			<a class="btn btn-mini" href="elearnings/admin/elearnings/delete/<?php echo $topic->id ?>" onclick="return confirm('คุณต้องการลบแบบสอบถาม ?')">ลบ</a>
+			<?php // endif;?>
 		</td>
 	</tr>
 	<?php endforeach; ?>
 </table>
 <?php echo $topics->pagination()?>
-
-
-
-
-
-
-<script type="text/javascript">
-$(function() {
-	$(':checkbox').iphoneStyle({
-  checkedLabel: 'เปิด',
-  uncheckedLabel: 'ปิด'
-});
-$('input[type=checkbox]').change(function(){
-	var status = 0;
-	if(this.checked == true)status=1;
-	$.post('docs/status',{'id':$(this).val(),'status':status});
-})
-
-});
-</script>
