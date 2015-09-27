@@ -16,10 +16,10 @@
 	<?php foreach($topics as $topic): ?>
 	<tr <?php echo cycle()?>>
 		<td><input type="checkbox" name="status" value="<?php echo $topic->id ?>" <?php echo ($topic->status=="approve")?'checked="checked"':'' ?> /></td>
-		<td class="span8"><a href="docs/publics/questionaire/<?php echo $topic->id ?>" target="_blank"><?php echo $topic->title ?></a></td>
+		<td class="span8"><a href="elearnings/questionaire/<?php echo $topic->id ?>" target="_blank"><?php echo $topic->title ?></a></td>
 		<td><?php echo @$topic->user->name?></a></td>
 		<td><?php echo mysql_to_th($topic->created) ?></a></td>
-		<td><a href="docs/report/<?php echo $topic->id ?>" >รายงาน</a></td>
+		<td><a href="elearnings/admin/elearnings/report/<?php echo $topic->id ?>" ><i class="fa fa-pie-chart"></i> รายงาน</a></td>
 		<td>
 			<?php // if(permission('galleries', 'update')):?>
 			<a class="btn btn-mini" href="elearnings/admin/elearnings/form/<?php echo $topic->id ?>" >แก้ไข</a>

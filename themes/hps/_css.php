@@ -6,3 +6,4 @@
 <link rel='stylesheet' type='text/css' href='media/js/fullcalendar-1.4.3/fullcalendar-my.css' />
 <!-- Calendar -->
 <link href="themes/hps/style.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="media/css/elearnings.css">

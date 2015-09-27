@@ -182,7 +182,7 @@ class Elearnings extends Admin_Controller
 	function report($id)
 	{
 		$data['topic'] = new Topic($id);
-		$this->template->build('report',$data);
+		$this->template->build('admin/report',$data);
 	}
 	
 	function delete($id)

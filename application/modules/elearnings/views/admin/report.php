@@ -21,8 +21,7 @@ $(function(){
 })
 </script>
 
-<div id="container">
-	<div id="content" class="report">
+<div class="report">
 		<h1 style="font-size:20px;" class="cufon">รายงานแบบสอบถาม<?php echo $topic->title ?></h1>
 <?php foreach($topic->questionaire->order_by('sequence','asc')->get() as $key => $question): ?>
 <?php if($question->type=='text'): ?>
@@ -406,5 +405,4 @@ $(function(){
 <?php endif; ?>
 <?php endforeach; ?>
 
-</div>
 </div>
