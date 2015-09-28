@@ -16,8 +16,12 @@ $(function(){
         var w = $(window).width();
         $("#form-body").css('height',h-menu);
     });
+    
+    // $(".command .left input[type=button]").click(function(){
+		// $('.dummy .box.' + $(this).attr('name')).clone().appendTo('#form-body .form-inner ul');
+	// })
 	
-	$(".command .left input[type=button]").click(function(){
+	$(".command input[type=button]").click(function(){
 		$('.dummy .box.' + $(this).attr('name')).clone().appendTo('#form-body .form-inner ul');
 	})
 	
@@ -169,15 +173,16 @@ $(function(){
 });
 
 </script>
+<h1>E-learning</h1>
 <form action="elearnings/admin/elearnings/save/<?php echo $topic->id ?>" method="post">
-<div class="command">
+<!-- <div class="command">
 	<div class="left">
-		<!-- <input type="button" value="Text" name="text" />
+		<input type="button" value="Text" name="text" />
 		<input type="button" value="Paragraph Text" name="textarea" />
 		<input type="button" value="Multiple choice" name="radio" />
 		<input type="button" value="Checkboxes" name="checkbox" />
 		<input type="button" value="Scale" name="scale" />
-		<input type="button" value="Grid" name="grid" /> -->
+		<input type="button" value="Grid" name="grid" />
 		<input type="button" value="เพิ่มหัวข้อคำถาม" name="radio" />
 		<select name="status">
 			<option value="draft" <?php echo ($topic->status=='draft')?'selected="selected"':'' ?>>ปิด</option>
@@ -185,11 +190,11 @@ $(function(){
 		</select>
 	</div>
 	<div class="right">
-		<!-- <input type="button" value="Full Screen" name="fullscreen" /> -->
+		<input type="button" value="Full Screen" name="fullscreen" />
 		<input type="submit" value="บันทึก" />
 	</div>
 	<div class="clear"></div>
-</div>
+</div> -->
 <div id="form-body" style="overflow:auto;" >
 	<div class="form-inner">
 		<p><label><strong>หัวข้อแบบทดสอบ</strong></label><br /><input type="text" name="title" class="full" value="<?php echo $topic->title ?>" /></p>
@@ -197,12 +202,21 @@ $(function(){
 		<p><label><strong>คะแนนที่ผ่านการทดสอบ</strong></label><input type="number" name="pass" value="<?=$topic->pass?>"> คะแนน</p>
 		<p><label><strong>สุ่มหัวข้อแบบทดสอบ</strong></label><input type="number" name="random" value="<?=$topic->random?>"> หัวข้อ</p>
 		<hr>
+		
+		<div class="command">
+			<input type="button" value="เพิ่มหัวข้อคำถาม" name="radio" />
+		</div>
+		
 		<ul id="sortable">
 			<?php foreach($topic->questionaire->order_by('sequence')->get() as $question): ?>
 			<?php question_form($question) ?>
 			<?php endforeach; ?>
 		</ul>
 	</div>
+</div>
+
+<div class="right" style="margin-top: 10px;">
+	<input class="btn btn-primary" type="submit" value="บันทึก" />
 </div>
 </form>
 
@@ -350,3 +364,7 @@ $(function(){
 			<input type="hidden" name="question_id[]" value="" />
 		</li>
 </ul>
+
+<!-- <style>
+.command{background-color: #0080c0; color: #ffffff;}
+</style> -->
