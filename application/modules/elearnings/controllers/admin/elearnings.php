@@ -20,7 +20,7 @@ class Elearnings extends Admin_Controller
 		// if(@$_GET['group_id'])$data['topics']->where_related('user','group_id',$_GET['group_id']);
 		if(@$_GET['start'])$data['topics']->where('DATE(question_topics.created) >= DATE(\''.Date2DB($_GET['start']).'\')');
 		if(@$_GET['end'])$data['topics']->where('DATE(question_topics.created) <= DATE(\''.Date2DB($_GET['end']).'\')');
-		$data['topics']->order_by('id','desc')->get_page();
+		$data['topics']->order_by('orderlist','asc')->get_page();
 		$this->template->append_metadata(js_lightbox());
 		$this->template->append_metadata(js_checkbox('approve'));
 		$this->template->build('admin/index',$data);
@@ -234,7 +234,36 @@ class Elearnings extends Admin_Controller
 			$topic->from_array($_POST);
 			$topic->save();
 		}
-
+	}
+	
+	function save_orderlist($id=FALSE){
+        if($_POST)
+        {
+                foreach($_POST['orderlist'] as $key => $item)
+                {
+                    if($item)
+                    {
+                        $topic = new Topic(@$_POST['orderid'][$key]);
+                        $topic->from_array(array('orderlist' => $item));
+                        $topic->save();
+                    }
+                }
+            set_notify('success', lang('save_data_complete'));
+        }
+        redirect($_SERVER['HTTP_REFERER']);
+    }
+	
+	function set_final($id)
+	{
+		$data = new Topic($id);
+		$data->set_final = 1;
+		$data->save();
+		$data->clear();
+		$data->where('id <>', $id)->get();
+		$data->update_all('set_final',0);
+		
+		set_notify('success', 'ตั้งค่าแบบทดสอบสุดท้ายเรียบร้อย');
+		redirect($_SERVER['HTTP_REFERER']);
 	}
 	
 }
