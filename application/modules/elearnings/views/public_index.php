@@ -11,35 +11,57 @@ $(function() {
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
   <li class="active">E-learning</li>
 </ul>
-
-<!--<div class="search">
-	<form method="get">
-	<label>แบบสอบถาม: </label><input type="text" name="search" size="30" value="<?php echo @$_GET['search'] ?>" />
-	<label> กลุ่มงาน: </label><?php // echo form_dropdown('group_id',get_option('id','name','groups'),@$_GET['group_id'],'class="group_ddl"','ทุกกลุ่มงาน');?>
-	<label> ตั้งแต่วันที่: </label><input class="datepicker" size="10" type="text" name="start" value="<?php echo @$_GET['start'] ?>" />
-	<label> ถึง: </label><input class="datepicker" size="10" type="text" name="end" value="<?php echo @$_GET['end'] ?>" />
-	<input type="submit" value="ค้นหา" />
-	</form>
-</div>-->
-
 <table class="table">
 	<tr>
 		<th>แบบทดสอบ</th>
-		<th>ผ่านเกณ</th>
+		<th>จำนวนข้อที่ทำ</th>
 		<!-- <th>กลุ่มงาน</th> -->
-		<th>ทำได้</th>
-		<th style="text-align:center;">สถานะ</th>
+		<th>คะแนนที่ได้</th>
+		<th style="text-align:center;">ผลการทดสอบ</th>
+		<th></th>
 	</tr>
 	<?php foreach($topics as $topic): ?>
 	<tr <?php echo cycle() ?>>
-		<td><a class="title" href="elearnings/questionaire/<?php echo $topic->id ?>" target="_blank" ><?php echo $topic->title ?></a></td>
-		<td><?php echo @$topic->user->name?></a></td>
-		<!--<td><?php //echo lang_decode($topic->user->group->name,'th') ?></a></td>-->
-		<td><?php echo mysql_to_th($topic->created) ?></a></td>
+		<td>
+			<?php echo $topic->title ?>
+		</td>
+		<td>
+			<?php if($topic->n_answer > 0){echo $topic->n_answer.'/'.$topic->n_question;}else{echo 'รอการทดสอบ';}?>
+		</td>
+		<td>
+			<?php 
+				if($topic->n_answer == $topic->n_question)
+				{
+					echo $topic->score;
+				}else{
+					echo 'รอการทดสอบ';
+				}
+			?>
+		</td>
 		<td style="text-align:center;">
-			<?php $ans = new answer; ?><?php echo round($ans->select('user_id,session')->distinct()->where_related('questionaire','topic_id',$topic->id)->get()->result_count()) ?>
+			<?php 
+				if($topic->n_answer == $topic->n_question)
+				{
+					
+					echo  $status = $topic->score >= $topic->pass ? "ผ่าน" : "ไม่ผ่าน";
+				}else{
+					echo 'รอการทดสอบ';
+				}
+			?>
+		</td>
+		<td>
+			<?php
+			if($topic->n_answer == $topic->n_question && $topic->score < $topic->pass){
+			?>
+			<a href="elearnings/reset/<?php echo $topic->topic_id;?>" class="btn btn-small btn-danger">ทำใหม่อีกครั้ง</a>
+			<?php }else if($topic->n_answer != $topic->n_question && $topic->n_answer > 0){ ?>
+			<a href="elearnings/testing/<?php echo $topic->topic_id;?>" class="btn btn-small btn-info">ทำแบบทดสอบต่อ</a>
+			<?php } ?> 
+			<?php if($topic->n_answer < 1){ ?>
+			<a href="elearnings/testing/<?php echo $topic->topic_id;?>" class="btn btn-small btn-primary">เริ่มทำแบบทดสอบ</a>
+			<?php } ?>
 		</td>
 	</tr>
 	<?php endforeach; ?>
 </table>
-<?php echo $topics->pagination() ?>
+<a href="#"class="btn btn-large btn-success">พิมพ์ใบประกาศนียบัตร</a>
