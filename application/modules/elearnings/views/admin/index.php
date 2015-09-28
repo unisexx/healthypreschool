@@ -6,7 +6,7 @@
 		<th>แบบสอบถาม</th>
 		<th>โดย</th>
 		<th>วันที่สร้าง</th>
-		<th>รายงาน</th>
+		<!-- <th>รายงาน</th> -->
 		<th width="90">
 			<?php // if(permission('galleries', 'create')):?>
 			<a class="btn btn-mini btn-primary" href="elearnings/admin/elearnings/form" class="tiny">เพิ่มรายการ</a>
@@ -19,7 +19,7 @@
 		<td class="span8"><a href="elearnings/questionaire/<?php echo $topic->id ?>" target="_blank"><?php echo $topic->title ?></a></td>
 		<td><?php echo @$topic->user->name?></a></td>
 		<td><?php echo mysql_to_th($topic->created) ?></a></td>
-		<td><a href="elearnings/admin/elearnings/report/<?php echo $topic->id ?>" ><i class="fa fa-pie-chart"></i> รายงาน</a></td>
+		<!-- <td><a href="elearnings/admin/elearnings/report/<?php echo $topic->id ?>" ><i class="fa fa-pie-chart"></i> รายงาน</a></td> -->
 		<td>
 			<?php // if(permission('galleries', 'update')):?>
 			<a class="btn btn-mini" href="elearnings/admin/elearnings/form/<?php echo $topic->id ?>" >แก้ไข</a>

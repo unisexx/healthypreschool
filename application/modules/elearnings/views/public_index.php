@@ -7,6 +7,11 @@ $(function() {
 
 });
 </script>
+<ul class="breadcrumb">
+  <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
+  <li class="active">E-learning</li>
+</ul>
+
 <!--<div class="search">
 	<form method="get">
 	<label>แบบสอบถาม: </label><input type="text" name="search" size="30" value="<?php echo @$_GET['search'] ?>" />
@@ -19,11 +24,11 @@ $(function() {
 
 <table class="table">
 	<tr>
-		<th>แบบสอบถาม</th>
-		<th>สร้างโดย</th>
+		<th>แบบทดสอบ</th>
+		<th>ผ่านเกณ</th>
 		<!-- <th>กลุ่มงาน</th> -->
-		<th>วันที่สร้าง</th>
-		<th style="text-align:center;">คะแนน</th>
+		<th>ทำได้</th>
+		<th style="text-align:center;">สถานะ</th>
 	</tr>
 	<?php foreach($topics as $topic): ?>
 	<tr <?php echo cycle() ?>>

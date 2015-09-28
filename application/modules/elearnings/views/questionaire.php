@@ -19,6 +19,14 @@ $(function(){
 	<?php // endif; ?>
 });
 </script>
+
+<ul class="breadcrumb">
+  <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
+  <li><a href="elearnings">E-learning</a> <span class="divider">/</span></li>
+  <li class="active"><?php echo $topic->title ?></li>
+</ul>
+
+
 <form action="elearnings/questionaire_save" method="post">
 <div class="command">
 	<div class="left">
