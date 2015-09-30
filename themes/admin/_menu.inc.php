@@ -49,6 +49,10 @@
     <?php endif;?>
 	
 	<li <?php echo menu_active('elearnings','elearnings')?>><a href="elearnings/admin/elearnings">บทเรียน E-learning</a></li>
+	
+	<li <?php echo menu_active('elearnings','ereports')?>><a href="elearnings/admin/ereports">รายงาน E-learning</a></li>
+	
+	<li <?php echo menu_active('elearnings','certs')?>><a href="elearnings/admin/certs">ออกใบประกาศนียบัตร</a></li>
     
     <!-- <li <?php echo menu_active('nurseries','nurseries')?>><a href="nurseries/admin/nurseries/category_form">ศูนย์เด็กเล็กปลอดโรค</a></li> -->
     

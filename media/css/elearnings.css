@@ -37,7 +37,7 @@ ul#saturday li a.current,ul#saturday li a.current:hover{color:#fff;background:tr
 }
 #content h3{line-height:22px;}*/
 
-.search{
+/*.search{
 	text-align:center;
 	border-top:1px solid #CCC;
 	border-bottom:1px solid #CCC;
@@ -45,7 +45,7 @@ ul#saturday li a.current,ul#saturday li a.current:hover{color:#fff;background:tr
 	padding:5px 0;
 	margin:0 0 15px;
 }
-.search label{font-weight:bold;}
+.search label{font-weight:bold;}*/
 ol, ul {
     list-style: none;
 }
