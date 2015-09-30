@@ -98,7 +98,7 @@ class CI_Parser {
 			}
 			else
 			{
-				$template = $this->_parse_single($key, (string)$val, $template);
+				$template = @$this->_parse_single($key, (string)$val, $template);
 			}
 		}
 

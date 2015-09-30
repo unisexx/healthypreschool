@@ -1,0 +1,25 @@
+-005lesson1
+  -intro>>http://www.youtube.com/watch?v=wH0xaKAjiss&feature=youtu.be
+  -fever>>http://www.youtube.com/watch?v=-YkAuhtmhMM&feature=youtu.be
+  -hand>>http://www.youtube.com/watch?v=IqJXbUZMDRk&feature=youtu.be
+  -ahiwa>>http://www.youtube.com/watch?v=i0EHZ7Bpbcs&feature=youtu.be
+-008lesson4_1
+  -Exercise1>>http://www.youtube.com/watch?v=KUMLHDJLU5w
+  -Exercise2>>http://www.youtube.com/watch?v=yQ_LqtcpDZI&feature=related
+  -Exercise3>>http://www.youtube.com/watch?v=YudX3w0hKN8&feature=related
+-008lesson4_2_1
+  -wash_hand>>http://www.youtube.com/watch?v=X0ec2wghnuA&feature=youtu.be
+  -cartoon>>http://www.youtube.com/watch?v=oXColIH5bM8&feature=youtu.be
+-008lesson4_2_2
+  -sneeze>>http://www.youtube.com/watch?v=e2QAGVMlns4
+-009lesson5_2
+  -glucose>>http://www.youtube.com/watch?v=ewFov8Iv0sA&feature=youtu.be
+-010lesson6
+  -cup>>http://www.youtube.com/watch?v=4RIbH4bM2yw&feature=youtu.be
+  -toy>>http://www.youtube.com/watch?v=kdh0T4hy4Fw&feature=youtu.be
+///////////
+มีวิธีการเซ็ทเล็กน้อย เนื่องจากปัจจุบันแฟลชมีระบบรักษาความปลอดภัย ทำให้ไม่สามารถเปิดเว๊ปไซต์ต่างๆได้ตามใจชอบ  
+เมื่อมีการเรียกให้เปิดเว็ป จะมีหน้าต่างalertขึ้นมา ให้เลือก setting หรือถ้าไม่ขึ้น
+ให้เข้าตามลิงค์นี้ http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager04.html
+จะเห็นหน้าต่างเล็กๆชื่อ Global Security Settings panel ตรงขวาล่าง จะเห็น Edit locations
+คลิ๊กแล้วเลือก Add location แล้ว Browse for folder เลือกโฟลเดอร์ที่ไฟล์แฟลชอยู่ จากนั้น Confirm ไฟล์แฟลชในโฟลเดอร์นั้นก็จะสามารถเข้าเว็ปไซต์ได้ทุกไฟล์ครับ

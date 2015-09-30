@@ -8,25 +8,25 @@
 			<?php if(is_login()):?>
 				<div style="padding:10px 0 0 15px;">
 	                <div>สวัสดี : <?php echo user_login()->email ?></div>
-	                <div>ประเภท : <?=user_login()->user_type->name?> <?php 
-	                    if(user_login()->user_type_id == 6){
-	                        echo user_login()->area->area_name;
-	                    }elseif(user_login()->user_type_id == 7){
-	                        echo user_login()->province->name;
-	                    }elseif(user_login()->user_type_id == 8){
-	                        echo user_login()->amphur->amphur_name;
-	                    }
+	                <div>ประเภท : <?=user_login() -> user_type -> name ?> <?php
+					if (user_login() -> user_type_id == 6) {
+						echo user_login() -> area -> area_name;
+					} elseif (user_login() -> user_type_id == 7) {
+						echo user_login() -> province -> name;
+					} elseif (user_login() -> user_type_id == 8) {
+						echo user_login() -> amphur -> amphur_name;
+					}
 	                ?></div>
 	                <div class="login-menu">
 	                	<?php if(user_login()->m_status == 'active'):?>
 	                		<?php if(user_login()->user_type_id == 1 || user_login()->user_type_id == 6 || user_login()->user_type_id == 7 || user_login()->user_type_id == 8):?>
 	                			<b class="tabspace"><a href="nurseries/register">เมนูหลัก</a></b>
-	                		<?php else:?>
+	                		<?php else: ?>
 	                			<b class="tabspace"><a href="home/menu">เมนูหลัก</a></b>
-	                		<?php endif;?>
-		                <?php else:?>
+	                		<?php endif; ?>
+		                <?php else: ?>
 		                	สถานะ : <span style="color:orangered;">รอการตรวจสอบ</span>
-		                <?php endif;?>
+		                <?php endif; ?>
 	                </div>
 					<!-- <div class="Chick" style="padding-left:45px;"> -->
 					<label style="padding-left:45px;">
@@ -34,11 +34,17 @@
 						<a href="users/logout"><div class="btn btn-mini btn-info">ล็อกเอ้า</div></a>
 					</div>
 				</div>
-            <?php else:?>
+            <?php else: ?>
             	<style type="text/css">
-            	 #loginfrm .controls{margin-left:65px;}
-            	 #loginfrm .control-label{width:73px;}
-            	 #loginfrm .control-group{margin-bottom:0px;}
+					#loginfrm .controls {
+						margin-left: 65px;
+					}
+					#loginfrm .control-label {
+						width: 73px;
+					}
+					#loginfrm .control-group {
+						margin-bottom: 0px;
+					}
             	</style>
             	<h5 style="margin-left: 10px;"><u>เข้าสู่ระบบ</u></h5>
                 <form id="loginfrm" action="users/login" method="post"  class="form-horizontal">
@@ -81,7 +87,7 @@
 						<a href="users/forget_pass"><div class="btn btn-mini">ลืมรหัสผ่าน</div></a>
 					</label> -->
 				</form>
-            <?php endif;?>
+            <?php endif; ?>
             <hr>
 		</div>
         
@@ -100,13 +106,27 @@
 	         <hr>
         </td>
       </tr>
+      </tr>
+       <tr>
+        <td background="themes/hps/images/bg_col1.png">
+        	<h5 style="margin:0 0 0 10px;" ><u>E-Learning สำหรับผู้ดูแลเด็ก</u></h5>
+        	<div class="menuleft">
+	         <ul>
+	            <li><a href="elearnings/contents">คำแนะนำ</a></li>
+	            <li><a href="elearnings/learns">บทเรียน</a></li>
+	            <li><a href="elearnings/testing_index">แบบทดสอบ</a></li>
+	         </ul>
+	         </div>
+	         <hr style="margin-bottom:-1px;">
+        </td>
+      </tr>
       <tr>
         <td background="themes/hps/images/bg_col1.png">
         <div class="menuleft">
          <ul>
             <li><a href="contents/view/histories/25">ความเป็นมาศูนย์เด็กเล็กปลอดโรค</a></li>
-            <li><a href="nurseries/searchs">สมัครเข้าร่วมโครงการ</a></li>
-            <li><a href="http://thaigcd.ddc.moph.go.th/e-learning" target="_blank">e-Learning สำหรับผู้ดูแลเด็ก</a></li>
+            <!--<li><a href="nurseries/searchs">สมัครเข้าร่วมโครงการ</a></li>-->
+            <!--<li><a href="elearnings/index">e-Learning สำหรับผู้ดูแลเด็ก</a></li>-->
             <li><a href="contents/more/newsletters">จดหมายข่าว</a></li>
             <li><a href="contents/more/articles">บทความที่น่าสนใจ</a></li>
             <li><a href="contents/more/downloads">เอกสารดาวน์โหลด</a></li>
