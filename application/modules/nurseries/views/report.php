@@ -157,7 +157,7 @@ $(function(){
     	
 <form method="get" action="nurseries/reports/index/basic_column">
 	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-	<?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),@$_GET['year'],'','--- ทุกปี ---');?>
+	<?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),@$_GET['year'],'','--- ผลการดำเนินงานสะสม 3 ปี ---');?>
 		
 	<?=form_dropdown('type',array('1'=>'สคร.','2'=>'จังหวัด','3'=>'อำเภอ','4'=>'ตำบล'),@$_GET['type'],'','--- แยกตาม ---');?>
 	

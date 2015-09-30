@@ -27,10 +27,9 @@ $percent = $topic->n_answer < 1  || $topic->n_question < 1 ? 0 : $topic->n_answe
 <br>
 <div align="center">
 <?php
-if($topic->score < $topic->pass)
-{
-	echo '<a href="elearnings/reset/'.$topic->topic_id.'" class="btn btn-small btn-danger">ทำใหม่อีกครั้ง</a>';
-}
+	if ($topic -> score < $topic -> pass) {
+		echo '<a href="elearnings/reset/' . $topic -> topic_id . '" class="btn btn-small btn-danger">ทำใหม่อีกครั้ง</a>';
+	}
 	echo '<a href="elearnings/testing_index" class="btn btn-small btn-primary">กลับไปหน้ารายการ</a>';
-?>
+ ?>
 </div>
