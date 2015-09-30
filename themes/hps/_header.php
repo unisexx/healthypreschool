@@ -23,7 +23,7 @@
                   <li><a href="nurseries/searchs">ข้อมูลศูนย์เด็กเล็ก</a></li>
                   <li><a href="contents/more/articles">บทความ</a></li>
                   <li><a href="contents/more/newsletters">จดหมายข่าว</a></li>
-                  <li><a href="http://thaigcd.ddc.moph.go.th/e-learning" target="_blank">e-Learning</a></li>
+                  <li><a href="elearnings/contents">e-Learning</a></li>
                   <li><a href="contents/more/downloads">ดาวน์โหลด</a></li>
                 </ul>
         	</td>

@@ -100,13 +100,27 @@
 	         <hr>
         </td>
       </tr>
+      </tr>
+       <tr>
+        <td background="themes/hps/images/bg_col1.png">
+        	<h5 style="margin:0 0 0 10px;" ><u>E-Learning สำหรับผู้ดูแลเด็ก</u></h5>
+        	<div class="menuleft">
+	         <ul>
+	            <li><a href="elearnings/contents">คำแนะนำ</a></li>
+	            <li><a href="elearnings/learns">บทเรียน</a></li>
+	            <li><a href="elearnings/testing_index">แบบทดสอบ</a></li>
+	         </ul>
+	         </div>
+	         <hr style="margin-bottom:-1px;">
+        </td>
+      </tr>
       <tr>
         <td background="themes/hps/images/bg_col1.png">
         <div class="menuleft">
          <ul>
             <li><a href="contents/view/histories/25">ความเป็นมาศูนย์เด็กเล็กปลอดโรค</a></li>
-            <li><a href="nurseries/searchs">สมัครเข้าร่วมโครงการ</a></li>
-            <li><a href="http://thaigcd.ddc.moph.go.th/e-learning" target="_blank">e-Learning สำหรับผู้ดูแลเด็ก</a></li>
+            <!--<li><a href="nurseries/searchs">สมัครเข้าร่วมโครงการ</a></li>-->
+            <!--<li><a href="elearnings/index">e-Learning สำหรับผู้ดูแลเด็ก</a></li>-->
             <li><a href="contents/more/newsletters">จดหมายข่าว</a></li>
             <li><a href="contents/more/articles">บทความที่น่าสนใจ</a></li>
             <li><a href="contents/more/downloads">เอกสารดาวน์โหลด</a></li>

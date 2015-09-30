@@ -25,26 +25,28 @@ $(function() {
 <?php
 $percent = $topic->n_answer < 1  || $topic->n_question < 1 ? 0 : $topic->n_answer / $topic->n_question * 100; 
 ?>	
-	<?php echo number_format($topic->n_answer,0);?> / <? echo number_format($topic->n_question,0);?>
+<div id="dv_question">
 	<div class="progress progress-success progress-striped">
 	  <div class="bar" style="width: <?php echo number_format($percent,0);?>%">
 	  	<?php echo number_format($topic->n_answer,0);?> / <? echo number_format($topic->n_question,0);?>
 	  </div>
 	</div>
-	<div id="question">
-		<h4><?php echo $question->question;?></h4
+	<div align="center" style="width:100%;padding:10px 0px;padding-left:5px;text-align:left;border:2px dashed #F4F4F4;background:#fffee6;">
+		<h4 style="padding-left:20px;">ข้อที่ <?php echo $topic->n_answer+1;?>. <?php echo $question->question;?></h4>
+			<ul>
+				<? foreach($answers as $answer): ?>
+				<li>
+					<input type="radio" name="answer_id" value="<?php echo $answer->id;?>"><?php echo $answer->name;?>			
+				</li>
+				<? endforeach;?>
+			</ul>
 	</div>
-	<div id="answer">
-		<ul>
-			<? foreach($answers as $answer): ?>
-			<li>
-				<input type="radio" name="answer_id" value="<?php echo $answer->id;?>"><?php echo $answer->name;?>			
-			</li>
-			<? endforeach;?>
-		</ul>
-	</div>
+	<br>
+	<div align="center" style="color:red;">*** สำหรับผู้ทดสอบ สามารถ ปิดหน้าเว็บไซต์ และกลับมาทำแบบทดสอบในครั้งต่อไปได้ จนกว่าจะผ่านแบบทดสอบ  ***</div>
+	<br>
 	<div style="margin:0 auto;" align="center">
 		<input type="hidden" name="question_id" value="<?php echo $question->id;?>">
 		<input type="hidden" name="topic_id" value="<?php echo $topic->topic_id;?>">
 		<input type="button" id="btn_save" class='btn btn-primary' value="ยืนยันคำตอบ">
 	</div>
+</div>
