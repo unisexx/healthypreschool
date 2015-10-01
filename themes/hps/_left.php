@@ -112,7 +112,7 @@
         	<h5 style="margin:0 0 0 10px;" ><u>E-Learning สำหรับผู้ดูแลเด็ก</u></h5>
         	<div class="menuleft">
 	         <ul>
-	            <li><a href="elearnings/contents">คำแนะนำ</a></li>
+	            <li><a href="pages/view/1">คำแนะนำ</a></li>
 	            <li><a href="elearnings/learns">บทเรียน</a></li>
 	            <li><a href="elearnings/testing_index">แบบทดสอบ</a></li>
 	         </ul>

@@ -1,5 +1,5 @@
 <?php
-class Ereports extends Admin_Controller
+class Certs extends Admin_Controller
 {
 	
 	function __construct()
@@ -15,8 +15,7 @@ class Ereports extends Admin_Controller
 	function index()
 	{
 		$data['reports'] = new Questionresult();
-		if(@$_GET['topic_id'])$data['reports']->where("topic_id = '".$_GET['topic_id']."'");
-		if(@$_GET['status']) ($_GET['status'] == 1)? $data['reports']->where("score < pass") : $data['reports']->where("score >= pass") ;
+		$data['reports']->where("score >= pass and set_final = 1") ;
 		if(@$_GET['date_status']) ($_GET['date_status'] == 1)? $data['reports']->where("(create_date BETWEEN '".Date2DB($_GET['start_date'])."' AND '".Date2DB($_GET['end_date'])."')") : $data['reports']->where("(update_date BETWEEN '".Date2DB($_GET['start_date'])."' AND '".Date2DB($_GET['end_date'])."')") ;
 		if(@$_GET['search'])$data['reports']->where("name like '%".$_GET['search']."%'");
 		if(@$_GET['user_type_id'])$data['reports']->where_related_user("user_type_id = ".$_GET['user_type_id']);
@@ -28,7 +27,12 @@ class Ereports extends Admin_Controller
 		
 		// $data['reports']->check_last_query();
         $this->template->append_metadata(js_datepicker());
-		$this->template->build('admin/reports/index',$data);
+		$this->template->build('admin/certs/index',$data);
+	}
+
+	function printcert($id){
+		$data['user'] = new User($id);
+		$this->load->view('admin/certs/diploma',$data);
 	}
 }
 ?>

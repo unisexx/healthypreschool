@@ -48,6 +48,8 @@
     <li <?php echo menu_active('downloads','downloads')?>><a href="contents/admin/contents/index/downloads">เอกสารดาวน์โหลด</a></li>
     <?php endif;?>
 	
+	<li <?php echo menu_active('pages','pages')?>><a href="pages/admin/pages">หน้าเพจ</a></li>
+	
 	<li <?php echo menu_active('elearnings','elearnings')?>><a href="elearnings/admin/elearnings">บทเรียน E-learning</a></li>
 	
 	<li <?php echo menu_active('elearnings','ereports')?>><a href="elearnings/admin/ereports">รายงาน E-learning</a></li>

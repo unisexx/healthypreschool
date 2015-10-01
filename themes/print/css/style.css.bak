@@ -1,0 +1,30 @@
+@font-face {
+  font-family: 'dbJariyathamX';  src: url('../fonts/dbJariyathamX.eot') format('eot');
+  src: url('../fonts/dbJariyathamX.eot?#iefix') format('embedded-opentype'), 
+  url('../fonts/dbJariyathamX.woff') format('woff'), 
+  url('../fonts/dbJariyathamX.ttf') format('truetype'), 
+  url('../fonts/dbJariyathamX.svg#dbJariyathamX') format('svg');
+}
+.dbJariyathamX {  font-family: 'dbJariyathamX';  }
+
+@font-face {
+  font-family: 'dbJariyathamXbd';  src: url('../fonts/dbJariyathamXbd.eot') format('eot');
+  src: url('../fonts/dbJariyathamXbd.eot?#iefix') format('embedded-opentype'), 
+  url('../fonts/dbJariyathamXbd.woff') format('woff'), 
+  url('../fonts/dbJariyathamXbd.ttf') format('truetype'), 
+  url('../fonts/dbJariyathamXbd.svg#dbJariyathamXbd') format('svg');
+}
+
+.dbJariyathamXbd {  font-family: 'dbJariyathamXbd';  }
+
+
+#bg-diploma{width:1100px; height:832px; margin:0 auto; background-image:url(../images/bg-diploma.jpg);}
+.logo{text-align:center;  margin:0 auto; width:135px; height:135px; background-image:url(../images/logo-ddc.png);}
+.text1{  font-family: 'dbJariyathamX';  font-size:35px; text-align:center; }
+
+
+
+
+
+
+

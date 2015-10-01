@@ -1,14 +1,11 @@
-<h1>รายงาน E-learning</h1>
+<h1>ออกใบประกาศนียบัตร</h1>
 <div class="search">
 	<form class="form-inline" method="get">
 		<table class="form">
 			<tr>
 				<td>
-					<?=form_dropdown('topic_id',get_option('id','title','question_topics where status = "approve"'),@$_GET['topic_id'],'','--- เลือกแบบทดสอบ ---');?>
-					<?=form_dropdown('status',array('1'=>'ไม่ผ่าน','2'=>'ผ่าน'),@$_GET['status'],'','--- เลือกสถานะการทดสอบ ---');?>
-					<?=form_dropdown('date_status',array('1'=>'เริ่มทำแบบทดสอบ','2'=>'ทำแบบทดสอบเสร็จ'),@$_GET['date_status'],'','--- เลือกช่วงเวลา ---');?>
-					<input type="text" name="start_date" value="<?=@$_GET['date_status'] ? @$_GET['start_date'] : "" ;?>" class="datepicker" />
-					<input type="text" name="end_date" value="<?=@$_GET['date_status'] ? @$_GET['end_date'] : "" ;?>" class="datepicker" />
+					<input type="text" name="start_date" value="<?=@$_GET['date_status'] ? @$_GET['start_date'] : "" ;?>" class="datepicker" placeholder="วันที่เริ่ม" />
+					<input type="text" name="end_date" value="<?=@$_GET['date_status'] ? @$_GET['end_date'] : "" ;?>" class="datepicker" placeholder="วันที่สิ้นสุด" />
 				</td>
 			</tr>
 			<tr>
@@ -64,18 +61,14 @@
 <table class="table table-striped">
 	<tr>
 		<th>ชื่อ</th>
-		<th>แบบทดสอบ</th>
-		<th>ผ่านเกณฑ์</th>
-		<th>ทำได้</th>
-		<th>สถานะ</th>
+		<th>วันที่ผ่านการทดสอบ</th>
+		<th></th>
 	</tr>
 	<?foreach($reports as $row):?>
 	<tr>
 		<td><?=$row->name?></td>
-		<td><?=$row->topic_title?></td>
-		<td><?=$row->pass?></td>
-		<td><?=$row->score?></td>
-		<td><?=$row->score >= $row->pass ? "ผ่าน" : "ไม่ผ่าน";?></td>
+		<td><?=$row->update_date?></td>
+		<td><a href="elearnings/admin/certs/printcert/<?=$row->user_id?>" target="_blank"><div class="btn btn-success">พิมพ์ใบประกาศ</div></a></td>
 	</tr>
 	<?endforeach;?>
 </table>
