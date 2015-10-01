@@ -67,7 +67,7 @@
 	<?foreach($reports as $row):?>
 	<tr>
 		<td><?=$row->name?></td>
-		<td><?=$row->update_date?></td>
+		<td><?=thainumDigit(mysql_to_th_cert($row->update_date,"F"))?></td>
 		<td><a href="elearnings/admin/certs/printcert/<?=$row->user_id?>" target="_blank"><div class="btn btn-success">พิมพ์ใบประกาศ</div></a></td>
 	</tr>
 	<?endforeach;?>
