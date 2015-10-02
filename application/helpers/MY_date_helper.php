@@ -26,6 +26,33 @@ if ( ! function_exists('mysql_to_th'))
 	}
 }
 
+if ( ! function_exists('mysql_to_th_cert'))
+{
+	function mysql_to_th_cert($datetime = '',$format = 'S' ,$time = FALSE)
+	{
+		if($datetime == '0000-00-00' || $datetime=='')return false;
+		if($format == 'F')
+		{
+			$month_th = array( 1 =>'มกราคม',2 => 'กุมภาพันธ์',3=>'มีนาคม',4=>'เมษายน',5=>'พฤษภาคม',6=>'มิถุนายน',7=>'กรกฏาคม',8=>'สิงหาคม',9=>'กันยายน',10=>'ตุลาคม',11=>'พฤศจิกายน',12=>'ธันวาคม');
+		}
+		else
+		{
+			$month_th = array( 1 =>'ม.ค.',2 => 'ก.พ.',3=>'มี.ค.',4=>'เม.ย',5=>'พ.ค.',6=>'มิ.ย',7=>'ก.ค.',8=>'ส.ค.',9=>'ก.ย.',10=>'ต.ค.',11=>'พ.ย.',12=>'ธ.ค.');
+		}
+		
+		$datetime = mysql_to_unix($datetime);
+		
+		$r = 'วันที่ '.date('d', $datetime).' เดือน '.$month_th[date('n', $datetime)].' พ.ศ. '.(date('Y', $datetime) + 543); 
+
+		if($time)
+		{
+				$r .= ' - '.date('H', $datetime).':'.date('i', $datetime);
+		}
+	
+		return $r;
+	}
+}
+
 function DB2Date($Dt){ 
 	if(($Dt!=NULL)&&($Dt != '0000-00-00')){
 		@list($date,$time) = explode(" ",$Dt);

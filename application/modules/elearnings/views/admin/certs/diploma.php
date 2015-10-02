@@ -27,7 +27,7 @@
 
 เป็นผู้ที่ผ่านการทดสอบความรู้ทางสื่อออนไลน์<br>
 เรื่องการป้องกันควบคุมโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล<br>
-ให้ไว้ ณ วันที่<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>เดือน<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>พ.ศ.<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br>
+ให้ไว้ ณ <?=thainumDigit(mysql_to_th_cert($user->questionresult->where("set_final = 1")->update_date,"F"))?><br>
 
 <div style="margin-top:160px; font-size:32px;">(นายแพทย์ โอภาส การย์กวิินพงศ์)<br>
 อธิบดีกรมควบคุมโรค</div>
