@@ -32,7 +32,7 @@
 						<a href="contents/more/newsletters">จดหมายข่าว</a>
 					</li>
 					<li>
-						<a href="elearnings/contents">e-Learning</a>
+						<a href="pages/view/1">e-Learning</a>
 					</li>
 					<li>
 						<a href="contents/more/downloads">ดาวน์โหลด</a>
