@@ -54,6 +54,7 @@ $_GET['district_id'] ? @$text .= " ตำบล".get_district_name($_GET['distri
 $_GET['nursery_id'] ? @$text .= " ศูนย์เด็กเล็ก".get_nursery_name($_GET['nursery_id']) : '';
 
 for($i=1;$i<=$arrayMonthDay[$_GET['month']];$i++):
+	// เด็กชาย
 	$sql = "SELECT count(diseases.id) total
 	FROM
 	classroom_details
@@ -62,12 +63,9 @@ for($i=1;$i<=$arrayMonthDay[$_GET['month']];$i++):
 	WHERE ".$condition." AND classroom_details.title='ด.ช.' AND diseases.start_date IS NOT NULL AND diseases.day = ".$i;
 	$data['disease_count'] = $this->db->query($sql)->result();
 	
-	$replacements[$i] = $data['disease_count'][0]->total;
-endfor;
-
-@$boys = array_replace($base, $replacements);
-
-for($i=1;$i<=$arrayMonthDay[$_GET['month']];$i++):
+	$replacements_boy[$i] = $data['disease_count'][0]->total;
+	
+	// เด็กหญิง
 	$sql = "SELECT count(diseases.id) total
 	FROM
 	classroom_details
@@ -76,10 +74,29 @@ for($i=1;$i<=$arrayMonthDay[$_GET['month']];$i++):
 	WHERE ".$condition." AND classroom_details.title='ด.ญ.' AND diseases.start_date IS NOT NULL AND diseases.day = ".$i;
 	$data['disease_count'] = $this->db->query($sql)->result();
 	
-	$replacements[$i] = $data['disease_count'][0]->total;
+	$replacements_girl[$i] = $data['disease_count'][0]->total;
 endfor;
 
-@$girls = array_replace($base, $replacements);
+// print_r($replacements);
+// echo "<br><br><br><br>";
+// print_r($base);
+// echo "<br><br><br><br>";
+
+// echo '<pre>';
+// print_r(array_merge($base, $replacements));
+// echo '</pre>';
+// @$boys = array_replace($base, $replacements);
+
+// @$girls = array_replace($base, $replacements);
+
+foreach ($replacements_boy as $key => $value) {
+  $boys[$key] = $value;
+}
+
+foreach ($replacements_girl as $key => $value) {
+  $girls[$key] = $value;
+}
+
 ?>
 
 <script src="http://code.highcharts.com/highcharts.js"></script>
@@ -255,8 +272,10 @@ $(function () {
 	</span>
 	
 	<span id="nursery" <?=(@$_GET['nursery_id'] == "")?'style="display:none;"':'';?>>
+		<?if(@$_GET['nursery_id'] != ""):?>
 		<?$condition4 = $_GET['district_id'] ? " where district_id = ".$_GET['district_id'] : '' ; ?>
 		<?=form_dropdown('nursery_id',get_option('id','name','nurseries',$condition4.' order by name asc'),@$_GET['nursery_id'],'','--- เลือกศูนย์เด็กเล็ก ---');?>
+		<?endif;?>
 	</span>
 	
 	<?=form_dropdown('diseases',array('C'=>'หวัด','H'=>'มือ เท้า ปาก','D'=>'อุจจาระร่วง','F'=>'ไข้','R'=>'ไข้ออกผื่น','O'=>'อื่นๆ'),@$_GET['diseases'],'');?>
