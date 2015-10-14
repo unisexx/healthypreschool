@@ -114,7 +114,7 @@
 	         <ul>
 	            <li><a href="pages/view/1">คำแนะนำ</a></li>
 	            <li><a href="elearnings/learns">บทเรียน</a></li>
-	            <li><a href="elearnings/testing_index">แบบทดสอบ</a></li>
+	            <li><a href="elearnings/testing_index">แบบทดสอบ</a> </li>
 	         </ul>
 	         </div>
 	         <hr style="margin-bottom:-1px;">
