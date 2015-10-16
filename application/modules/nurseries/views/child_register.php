@@ -102,9 +102,15 @@ jQuery_1_4_2("input.datepicker").date_input();
 					<?php endif;?>
 					
                 <?php elseif(user_login()->user_type_id == 7 && $_GET): //เจ้าหน้าที่จังหวัด?>
-                    <?=form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.$_GET['amphur_id'].' order by id asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
+                	
+                	<?php if(@$_GET['amphur_id']):?>
+                    <?=form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.@$_GET['amphur_id'].' order by id asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
+                    <?php endif;?>
+                    
                 <?php elseif(user_login()->user_type_id == 8): //เจ้าหน้าที่อำเภอ?>
+                	
                     <?=form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.user_login()->amphur_id.' order by id asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
+                    
 				<?php endif;?>
 			</span>
 	    	  <?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557'),@$_GET['year'],'','--- ปีที่เข้าร่วมโครงการ ---');?>
