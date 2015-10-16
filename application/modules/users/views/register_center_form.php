@@ -21,7 +21,7 @@ $(document).ready(function(){
 	$("#regisform").validate({
     rules: 
     {
-    	nursery_category_id:{required: true},
+    	/*nursery_category_id:{required: true},*/
     	name:{required: true},
         email: 
         { 
@@ -46,7 +46,7 @@ $(document).ready(function(){
     },
     messages:
     {
-    	nursery_category_id:{required: "กรุณาเลือกคำนำหน้าชื่อ"},
+    	/*nursery_category_id:{required: "กรุณาเลือกคำนำหน้าชื่อ"},*/
     	name:{required: "กรุณากรอกชื่อศูนย์เด็กเล็ก"},
         email: 
         { 
@@ -115,12 +115,12 @@ $(document).ready(function(){
 
         <form id="regisform" class="form-horizontal" method="post" action="users/signup_center/<?=$nursery->id?>">
         	
-        	<div class="control-group">
+        	<!-- <div class="control-group">
                 <label class="control-label">คำนำหน้า</label>
                 <div class="controls">
                   <?php echo  form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),@$nursery->nursery_category_id,'','--- เลือกประเภท ---')?>
                 </div>
-            </div>
+            </div> -->
             
             <div class="control-group">
                 <label class="control-label">ชื่อศูนย์เด็กเล็ก<span class="TxtRed">*</span></label>

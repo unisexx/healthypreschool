@@ -199,6 +199,32 @@ $(function(){
 	<div class="form-inner">
 		<p><label><strong>หัวข้อแบบทดสอบ</strong></label><br /><input type="text" name="title" class="full" value="<?php echo $topic->title ?>" /></p>
 		<p><label><strong>คำชี้แจง</strong></label><br /><textarea name="detail" class="full"><?php echo $topic->detail ?></textarea></p>
+		
+		<?if($topic->set_final == 1):?>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$('button[name=CategoryAdd]').click(function(){
+					alert('add');
+				});
+			});
+		</script>
+		<div style="border:1px solid #aaa; padding:10px;">
+		  <h1>หมวดข้อสอบ</h1>
+		  <div class="input-append">
+			  <input class="span4" id="appendedInputButton" type="text" name="topic_category">
+			  <button class="btn" type="button" value="เพิ่มหมวด" name="CategoryAdd">เพิ่มหมวด</button>
+		  </div>
+		  <table class="table table-bordered">
+		  	<tr>
+		  		<th>ชื่อหมวด</th>
+		  		<th>สุ่มจำนวน (ข้อ)</th>
+		  		<th>มีอยู่ในระบบ (ข้อ)</th>
+		  	</tr>
+		  </table>
+		</div>
+		<?endif;?>
+		  
+		<hr>
 		<p><label><strong>คะแนนที่ผ่านการทดสอบ</strong></label><input type="number" name="pass" value="<?=$topic->pass?>"> คะแนน</p>
 		<p><label><strong>สุ่มหัวข้อแบบทดสอบ</strong></label><input type="number" name="random" value="<?=$topic->random?>"> หัวข้อ</p>
 		<hr>

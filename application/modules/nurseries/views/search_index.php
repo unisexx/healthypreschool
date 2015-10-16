@@ -65,7 +65,7 @@ $(document).ready(function(){
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
 		        <td><?=($key+1)+$nurseries->paged->current_row?></td>
-		        <td><?=$nursery->title?><?=$nursery->name?></td>
+		        <td><?//=$nursery->title?><?=$nursery->name?></td>
 		        <td>ต.<?=$nursery->district_name?><br>อ.<?=$nursery->amphur_name?><br>จ.<?=$nursery->province_name?></td>
 		        <td><?=$nursery->year?></td>
 		        <td>

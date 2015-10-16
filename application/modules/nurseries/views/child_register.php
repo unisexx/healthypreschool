@@ -149,7 +149,7 @@ jQuery_1_4_2("input.datepicker").date_input();
     	<table class="table table-striped">
         <tr>
 	        <th>ลำดับ</th>
-	        <th>ชื่อศุนย์พัฒนาเด็กเล็ก</th>
+	        <th>ชื่อศุนย์พัฒนาเด็กเล็ก<br>(ไอดีศูนย์เด็กเล็ก)</th>
 	        <th>จังหวัด</th>
 	        <th>ที่อยู่</th>
 	        <!-- <th>ปีที่เข้าร่วม</th> -->
@@ -165,7 +165,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        <td><?=($key+1)+$nurseries->paged->current_row?></td>
 	        <td>
 	        	<input type="hidden" name="id" value="<?=$nursery->id?>">
-	        	<a href="#myModal" class="btn-estimate" data-toggle="modal"><b><?//=$nursery->nursery_category->title?><?=$nursery->name?></b></a>
+	        	<a href="#myModal" class="btn-estimate" data-toggle="modal"><b><?//=$nursery->nursery_category->title?><?=$nursery->name?> (<?=$nursery->id?>)</b></a>
 	        	<ul>
 	        		<li>
 	        			<a href="childrens?nursery_id=<?=$nursery->id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a>

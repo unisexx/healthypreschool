@@ -117,7 +117,7 @@ $(document).ready(function(){
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
 		        <td><?=($key+1)+$nurseries->paged->current_row?></td>
-		        <td><?=$nursery->nursery_category->title?><?=$nursery->name?></td>
+		        <td><?//=$nursery->nursery_category->title?><?=$nursery->name?></td>
 		        <td>ต.<?=$nursery->district->district_name?><br>อ.<?=$nursery->amphur->amphur_name?><br>จ.<?=$nursery->province->name?></td>
 		        <td><?=$nursery->year?></td>
 		        <td>
