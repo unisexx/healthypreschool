@@ -58,4 +58,10 @@ if($topic->n_answer == $topic->n_question && $topic->score < $topic->pass){
 <div align="center" style="color:red;">
 	*** ผู้ทำแบบทดสอบจะต้องทำแบบทดสอบระหว่างเรียน ผ่านทั้งหมด จึงจะทำแบบทดสอบท้ายบทเรียนได้ ***
 </div>
-<!--<a href="#"class="btn btn-large btn-success">พิมพ์ใบประกาศนียบัตร</a>-->
+<hr>
+<?php if($pass_final_status == TRUE){ ?>
+<div style="margin:0 auto;width:100%;padding:10px 15px;text-align:center;">
+	<h4>คุณทำแบบทดสอบหลังเรียนผ่านแล้ว  สามารถพิมพ์ใบประกาศนียบัตรได้ที่ปุ่มด้านล่าง</h4>	
+	<a href="elearnings/cert" target="_blank" class="btn btn-large btn-success">พิมพ์ใบประกาศนียบัตร</a>
+</div>
+<?php } ?>

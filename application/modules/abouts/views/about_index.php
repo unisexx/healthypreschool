@@ -24,7 +24,7 @@
 	    			<div>ตำแหน่ง <?=$row->position?></div>
 	    		</td>
 	    		<td>
-	    			<table class="table pdetail">
+	    			<table class="table pdetail"> 
 	    				<tr>
 	    					<th>โทรศัพท์</th>
 	    					<td><?=$row->tel?></td>
