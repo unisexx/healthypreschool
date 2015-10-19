@@ -174,6 +174,67 @@ $(function(){
 
 </script>
 <h1>E-learning</h1>
+<?if($topic->set_final == 1):?>
+<script type="text/javascript">
+	$(document).ready(function(){
+		// $('button[name=CategoryAdd]').click(function(){
+			// $.get('elearnings/admin/elearnings/save_topic_category',{
+				// 'amphur_id' : $(this).val()
+			// },function(data){
+				// $("#district").html(data);
+			// });
+		// });
+		
+		$('.edit_category_name').click(function(){
+			// alert('edit');
+			var category_name = $(this).closest('tr').find('.category_name').val();
+			var category_id = $(this).closest('tr').find('.category_id').val();
+			
+			$('.input_category_name').val(category_name);
+			$('.input_category_id').val(category_id);
+			
+			return false;
+		});
+	});
+</script>
+<form method="post" action="elearnings/admin/elearnings/save_topic_category">
+<div style="border:1px solid #aaa; padding:10px;">
+  <h1>หมวดข้อสอบ</h1>
+  <div class="input-append">
+	  <input class="span4 input_category_name" type="text" name="name">
+	  <input class="input_category_id" type="hidden" name="category_id" value="">
+	  <button class="btn" type="submit" value="เพิ่มหมวด" name="CategoryAdd">บันทึกหมวดคำถาม</button>
+  </div>
+</form>
+<form method="post" action="elearnings/admin/elearnings/save_random">
+  <table class="table table-bordered table-striped">
+  	<tr>
+  		<th>ชื่อหมวด</th>
+  		<th>สุ่มจำนวน (ข้อ)</th>
+  		<th>มีอยู่ในระบบ (ข้อ)</th>
+  	</tr>
+  	<?foreach($categories as $row):?>
+  	<tr>
+  		<td>
+  			<?=$row->name;?><br>
+  			<a class="edit_category_name" href="#" style="font-size: 8px;">แก้ไข</a> | 
+  			<a href="elearnings/admin/elearnings/delete_category/<?=$row->id?>" style="font-size: 8px;" onclick="return confirm('คำเดือน หากดำเนินการลบ คำถามทั้งหมดที่อยู่ในหมวดนี้จะถูกลบด้วย ต้องการลบหรือไม่?')">ลบ</a>
+  		</td>
+  		<td>
+  			<input class="span1" type="number" name="random[]" value="<?=$row->random?>">
+  			<input class="category_name" type="hidden" value="<?=$row->name?>">
+  			<input class="category_id" type="hidden" name="category_id[]" value="<?=$row->id?>">
+  		</td>
+  		<td><?=$row->questionaire->count();?></td>
+  	</tr>
+  	<?endforeach;?>
+  </table>
+  <input type="submit" value="บันทึก">
+</form>
+</div>
+<br>
+<?endif;?>
+		
 <form action="elearnings/admin/elearnings/save/<?php echo $topic->id ?>" method="post">
 <!-- <div class="command">
 	<div class="left">
@@ -199,32 +260,6 @@ $(function(){
 	<div class="form-inner">
 		<p><label><strong>หัวข้อแบบทดสอบ</strong></label><br /><input type="text" name="title" class="full" value="<?php echo $topic->title ?>" /></p>
 		<p><label><strong>คำชี้แจง</strong></label><br /><textarea name="detail" class="full"><?php echo $topic->detail ?></textarea></p>
-		
-		<?if($topic->set_final == 1):?>
-		<script type="text/javascript">
-			$(document).ready(function(){
-				$('button[name=CategoryAdd]').click(function(){
-					alert('add');
-				});
-			});
-		</script>
-		<div style="border:1px solid #aaa; padding:10px;">
-		  <h1>หมวดข้อสอบ</h1>
-		  <div class="input-append">
-			  <input class="span4" id="appendedInputButton" type="text" name="topic_category">
-			  <button class="btn" type="button" value="เพิ่มหมวด" name="CategoryAdd">เพิ่มหมวด</button>
-		  </div>
-		  <table class="table table-bordered">
-		  	<tr>
-		  		<th>ชื่อหมวด</th>
-		  		<th>สุ่มจำนวน (ข้อ)</th>
-		  		<th>มีอยู่ในระบบ (ข้อ)</th>
-		  	</tr>
-		  </table>
-		</div>
-		<?endif;?>
-		  
-		<hr>
 		<p><label><strong>คะแนนที่ผ่านการทดสอบ</strong></label><input type="number" name="pass" value="<?=$topic->pass?>"> คะแนน</p>
 		<p><label><strong>สุ่มหัวข้อแบบทดสอบ</strong></label><input type="number" name="random" value="<?=$topic->random?>"> หัวข้อ</p>
 		<hr>
@@ -235,7 +270,11 @@ $(function(){
 		
 		<ul id="sortable">
 			<?php foreach($topic->questionaire->order_by('sequence')->get() as $question): ?>
-			<?php question_form($question) ?>
+				<?if($topic->set_final == 1):?>
+					<?php question_form_final($question) ?>
+				<?else:?>
+					<?php question_form($question) ?>
+				<?endif;?>
 			<?php endforeach; ?>
 		</ul>
 	</div>
@@ -276,7 +315,9 @@ $(function(){
 				<a rel="bin" href="#"><span class="icon icon-bin"></span> <a rel="copy" href="#"><span class="icon icon-page-copy"></span></a>
 			</div>
 			<table width="100%">
-				<tr><th>หัวข้อคำถาม</th><td><input type="text" name="question[]" class="full" value="" /><input type="button" value="เพิ่มคำตอบ" name="add" /> <!-- <input type="checkbox" name="other" value="1" /> อื่นๆ โปรดระบุ --></td></tr>
+				<tr><th>หัวข้อคำถาม</th><td><input type="text" name="question[]" class="full" value="" /><input type="button" value="เพิ่มคำตอบ" name="add" /> <!-- <input type="checkbox" name="other" value="1" /> อื่นๆ โปรดระบุ -->
+					<br><?php echo form_dropdown('question_category_id[]',get_option('id','name','question_categories order by name asc'),@$question->question_category_id,'class="full" style="margin-top:7px;" ','--- เลือกหมวดคำถาม ---') ?>
+				</td></tr>
 				<tr>
 					<th></th>
 					<td>

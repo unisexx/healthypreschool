@@ -484,4 +484,182 @@ function question_form2($question,$key)
 <?php
 	}
 }
+
+function question_form_final($question)
+{
+	if($question->type=="text")
+	{
+?>
+	<li class="box text">
+		<div class="option">
+			<a rel="bin" href="#"><span class="icon icon-bin"></span> <a rel="copy" href="#"><span class="icon icon-page-copy"></span></a>
+		</div>
+		<table width="100%">
+			<tr><th>หัวข้อคำถาม</th><td><input type="text" name="question[]" class="full" value="<?php echo $question->question ?>" /></td></tr>
+			<tr><th></th><td><input type="text" class="disable" value="คำตอบ" disabled="disabled" /></td></tr>
+		</table>
+		<input type="hidden" name="type[]" value="text" />
+		<input type="hidden" name="question_id[]" value="<?php echo $question->id ?>" />
+	</li>
+<?php
+	}
+	if($question->type=="textarea")
+	{
+?>
+	<li class="box textarea">
+		<div class="option">
+			<a rel="bin" href="#"><span class="icon icon-bin"></span> <a rel="copy" href="#"><span class="icon icon-page-copy"></span></a>
+		</div>
+		<table width="100%">
+			<tr><th>หัวข้อคำถาม</th><td><input type="text" name="question[]" class="full" value="<?php echo $question->question ?>" /></td></tr>
+			<tr><th></th><td><textarea class="disable" disabled="disabled" >คำตอบ</textarea></td></tr>
+		</table>
+		<input type="hidden" name="type[]" value="textarea" />
+		<input type="hidden" name="question_id[]" value="<?php echo $question->id ?>" />
+	</li>
+<?php
+	}
+	if($question->type=="radio")
+	{
+?>
+	<li class="box radio">
+		<div class="option">
+			<a rel="bin" href="#"><span class="icon icon-bin"></span> <a rel="copy" href="#"><span class="icon icon-page-copy"></span></a>
+		</div>
+		<table width="100%">
+			<tr><th>หัวข้อคำถาม</th><td><input type="text" name="question[]" class="full" value="<?php echo $question->question ?>" /><input type="button" value="เพิ่มคำตอบ" name="add" /> <!--<input type="checkbox" name="other" value="1" <?php echo ($question->other==1)?'checked="checked"':''?> /> อื่นๆ โปรดระบุ -->
+				<br><?php echo form_dropdown('question_category_id[]',get_option('id','name','question_categories order by name asc'),@$question->question_category_id,'class="full" style="margin-top:7px;" ','--- เลือกหมวดคำถาม ---') ?>
+			</td></td></tr>
+			<?php foreach($question->choice->order_by('id','asc')->get() as $choice): ?>
+			<tr>
+				<th></th>
+				<td>
+					<input type="radio" name="radio[]" /> 
+					<input type="text" class="half" name="choice" value="<?php echo $choice->name ?>" />
+					<input type="number" class="half4x" name="score" value="<?php echo $choice->score ?>" />
+					 <a rel="del_choice" href="elearnings/admin/elearnings/delete_choice/<?php echo $choice->id ?>"><i class="fa fa-times"></i></a>
+					<input type="hidden" name="choice_id" value="<?php echo $choice->id ?>" />
+				</td>
+			</tr>
+			<?php endforeach; ?>
+		</table>
+		<input type="hidden" name="type[]" value="radio" />
+		<input type="hidden" name="question_id[]" value="<?php echo $question->id ?>" />
+	</li>
+<?php
+	}
+	if($question->type=="checkbox")
+	{
+?>
+	<li class="box checkbox">
+		<div class="option">
+			<a rel="bin" href="#"><span class="icon icon-bin"></span> <a rel="copy" href="#"><span class="icon icon-page-copy"></span></a>
+		</div>
+		<table width="100%">
+			<tr><th>หัวข้อคำถาม</th><td><input type="text" name="question[]" class="full" value="<?php echo $question->question ?>" /><input type="button" value="เพิ่มคำตอบ" name="add" /> <input type="checkbox" name="other" value="1" <?php echo ($question->other==1)?'checked="checked"':''?> /> อื่นๆ โปรดระบุ </td></tr>
+			<?php foreach($question->choice->order_by('id','asc')->get() as $choice): ?>
+			<tr>
+				<th></th>
+				<td>
+					<input type="checkbox" name="checkbox[]" /> 
+					<input type="text" class="half" name="choice" value="<?php echo $choice->name ?>" />
+					 <a rel="del_choice" href="docs/delete_choice/<?php echo $choice->id ?>"><span class="icon icon-delete"></span></a>
+					<input type="hidden" name="choice_id" value="<?php echo $choice->id ?>" />
+				</td>
+			</tr>
+			<?php endforeach; ?>
+		</table>
+		<input type="hidden" name="type[]" value="checkbox" />
+		<input type="hidden" name="question_id[]" value="<?php echo $question->id ?>" />
+	</li>
+<?php
+	}
+	if($question->type=="scale")
+	{
+		$optional = json_decode($question->optional,TRUE);
+?>
+	<li class="box scale">
+		<div class="option">
+			<a rel="bin" href="#"><span class="icon icon-bin"></span> <a rel="copy" href="#"><span class="icon icon-page-copy"></span></a>
+		</div>
+		<table width="100%">
+			<tr><th>หัวข้อคำถาม</th><td><input type="text" name="question[]" class="full" value="<?php echo $question->question ?>" /></td></tr>
+			<tr>
+				<th>ระดับ</th>
+				<td>
+					<select name="min">
+						<option value="0" <?php echo ($question->min==0)?'selected="selected"':'' ?>>0</option>
+						<option value="1" <?php echo ($question->min==1)?'selected="selected"':'' ?>>1</option>
+					</select>
+					ถึง
+					<select name="max">
+						<option value="3" <?php echo ($question->max==3)?'selected="selected"':'' ?>>3</option>
+						<option value="4" <?php echo ($question->max==4)?'selected="selected"':'' ?>>4</option>
+						<option value="5" <?php echo ($question->max==5)?'selected="selected"':'' ?>>5</option>
+						<option value="6" <?php echo ($question->max==6)?'selected="selected"':'' ?>>6</option>
+						<option value="7" <?php echo ($question->max==7)?'selected="selected"':'' ?>>7</option>
+						<option value="8" <?php echo ($question->max==8)?'selected="selected"':'' ?>>8</option>
+						<option value="9" <?php echo ($question->max==9)?'selected="selected"':'' ?>>9</option>
+						<option value="10" <?php echo ($question->max==10)?'selected="selected"':'' ?>>10</option>
+					</select>
+				</td>
+			</tr>
+			<tr><th></th><td><span><?php echo $question->min ?></span> : <input type="text" class="half" name="optional" value="<?php echo $optional[0] ?>" /></td></tr>
+			<tr><th></th><td><span><?php echo $question->max ?></span> : <input type="text" class="half" name="optional" value="<?php echo $optional[1] ?>" /></td></tr>
+		</table>
+		<input type="hidden" name="type[]" value="scale" />
+		<input type="hidden" name="question_id[]" value="<?php echo $question->id ?>" />
+	</li>
+<?php
+	}
+	if($question->type=="grid")
+	{
+		$optional = json_decode($question->optional,TRUE);
+?>
+	<li class="box grid">
+		<div class="option">
+			<a rel="bin" href="#"><span class="icon icon-bin"></span> <a rel="copy" href="#"><span class="icon icon-page-copy"></span></a>
+		</div>
+		<table width="100%">
+			<tr><th>หัวข้อคำถาม</th><td><input type="text" name="question[]" class="full" value="<?php echo $question->question ?>" /><input type="button" value="เพิ่มแถว" name="add" /></td></tr>
+			<tr>
+				<th>จำนวนคอลัมน์</th>
+				<td>
+					<select name="range">
+						<option value="1" <?php echo ($question->range==1)?'selected="selected"':'' ?>>1</option>
+						<option value="2" <?php echo ($question->range==2)?'selected="selected"':'' ?>>2</option>
+						<option value="3" <?php echo ($question->range==3)?'selected="selected"':'' ?>>3</option>
+						<option value="4" <?php echo ($question->range==4)?'selected="selected"':'' ?>>4</option>
+						<option value="5" <?php echo ($question->range==5)?'selected="selected"':'' ?>>5</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th></th>
+				<td>
+					<table width="100%">
+					<tr>
+						<th>แถว\คอลัมน์</th>
+						<td rel="range">
+							<?php for($i=1;$i<=$question->range;$i++): ?>
+							<input type="text" class="num" name="optional" value="<?php echo (@$optional[$i-1])?$optional[$i-1]:$i ?>" />
+							<?php endfor; ?>
+						</td>
+					</tr>
+					<?php foreach($question->choice->order_by('id','asc')->get() as $key => $choice): ?>
+					<tr>
+						<th><input type="text" name="choice" class="full" value="<?php echo $choice->name ?>" /><input type="hidden" name="choice_id" value="<?php echo $choice->id ?>" /> <a rel="del_choice" href="docs/delete_choice/<?php echo $choice->id ?>"><span class="icon icon-delete"></span></a></th>
+						<td><?php for($i=1;$i<=$question->range;$i++): ?><input type="radio" class="num" /><?php endfor; ?></td>
+					</tr>
+					<?php endforeach; ?>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<input type="hidden" name="type[]" value="grid" />
+		<input type="hidden" name="question_id[]" value="<?php echo $question->id ?>" />
+	</li>
+<?php
+	}
+}
 ?>

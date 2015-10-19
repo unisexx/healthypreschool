@@ -29,6 +29,10 @@ class Elearnings extends Admin_Controller
 	function form($id = NULL)
 	{
 		$data['topic'] = new Topic($id);
+		if($data['topic']->set_final == 1){
+			$data['categories'] = new Question_category();
+			$data['categories']->get();
+		}
 		$this->template->build('admin/form',$data);
 	}
 
@@ -53,6 +57,7 @@ class Elearnings extends Admin_Controller
 				$question = new Questionaire($value);
 				$question->question = $_POST['question'][$key];
 				$question->type = $_POST['type'][$key];
+				if(@$_POST['question_category_id'][$key]) $question->question_category_id = $_POST['question_category_id'][$key];
 				if(@$_POST['min'][$key]) $question->min = $_POST['min'][$key];
 				if(@$_POST['max'][$key]) $question->max = $_POST['max'][$key];
 				if(@$_POST['range'][$key]) $question->range = $_POST['range'][$key];
@@ -263,6 +268,38 @@ class Elearnings extends Admin_Controller
 		$data->update_all('set_final',0);
 		
 		set_notify('success', 'ตั้งค่าแบบทดสอบสุดท้ายเรียบร้อย');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+	
+	function save_topic_category($id=FALSE){
+		if($_POST){
+			$rs = new Question_category($_POST['category_id']);
+			$rs->from_array($_POST);
+			$rs->save();
+			set_notify('success', 'เพิ่มหมวดคำถามเรียบร้อย');
+		}
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+	
+	function save_random(){
+		if($_POST){
+			foreach($_POST['category_id'] as $key=>$item){
+				$rs = new Question_category(@$item);
+				$rs->random = $_POST['category_id'][$key];
+                $rs->from_array();
+                $rs->save();
+			}
+			set_notify('success', 'เพิ่มหมวดคำถามเรียบร้อย');
+		}
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+	
+	function delete_category($id=false){
+		if($id){
+			$rs = new Question_category($id);
+			$rs->delete();
+			set_notify('success','ลบข้อมูลเรียบร้อยแล้วค่ะ');
+		}
 		redirect($_SERVER['HTTP_REFERER']);
 	}
 	
