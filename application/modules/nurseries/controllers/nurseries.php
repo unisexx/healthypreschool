@@ -25,6 +25,10 @@ class Nurseries extends Public_Controller
 			$data['nurseries']->where("nursery_category_id = ".$_GET['nursery_category_id']);
 			$condition .= " and nursery_category_id = ".$_GET['nursery_category_id'];
 		}
+		if(@$_GET['id']){
+			$data['nurseries']->where('id',$_GET['id']);
+			$condition .= " and id = ".$_GET['id'];
+		}
 		if(@$_GET['name']){
 			$data['nurseries']->where("name like '%".$_GET['name']."%'");
 			$condition .= " and name like '%".$_GET['name']."%'";

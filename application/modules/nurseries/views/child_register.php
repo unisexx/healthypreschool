@@ -53,6 +53,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	    	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
 	    		
 	    	<?// =form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),@$_GET['nursery_category_id'],'','--- เลือกคำนำหน้า ---');?>
+	    	<input name="id" type="number" value="<?=@$_GET['id']?>" placeholder="หมายเลขศูนย์" style="width:100px;"/>
 	    	<input name="name" type="text" value="<?=@$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:280px;"/>
 			<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
            		<?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
