@@ -285,7 +285,7 @@ class Elearnings extends Admin_Controller
 		if($_POST){
 			foreach($_POST['category_id'] as $key=>$item){
 				$rs = new Question_category(@$item);
-				$rs->random = $_POST['category_id'][$key];
+				$rs->random = $_POST['random'][$key];
                 $rs->from_array();
                 $rs->save();
 			}

@@ -176,26 +176,36 @@ $(function(){
 <h1>E-learning</h1>
 <?if($topic->set_final == 1):?>
 <script type="text/javascript">
-	$(document).ready(function(){
-		// $('button[name=CategoryAdd]').click(function(){
-			// $.get('elearnings/admin/elearnings/save_topic_category',{
-				// 'amphur_id' : $(this).val()
-			// },function(data){
-				// $("#district").html(data);
-			// });
-		// });
+$(document).ready(function(){
+	// แก้ไขชื่อหมวด
+	$('.edit_category_name').click(function(){
+		// alert('edit');
+		var category_name = $(this).closest('tr').find('.category_name').val();
+		var category_id = $(this).closest('tr').find('.category_id').val();
 		
-		$('.edit_category_name').click(function(){
-			// alert('edit');
-			var category_name = $(this).closest('tr').find('.category_name').val();
-			var category_id = $(this).closest('tr').find('.category_id').val();
-			
-			$('.input_category_name').val(category_name);
-			$('.input_category_id').val(category_id);
-			
-			return false;
-		});
+		$('.input_category_name').val(category_name);
+		$('.input_category_id').val(category_id);
+		
+		return false;
 	});
+	
+	$('.question_category_random').change(function() {
+		 total_question_random();
+	});
+	
+	 total_question_random();
+	
+});
+
+function total_question_random(){
+	// ผลรวมของจำนวนข้อสอบที่สุ่ม
+	var total_random = 0;
+	$('.question_category_random').each(function(){
+		total_random += Number($(this).val());
+		// console.log($(this).val());
+		$('.random').val(total_random).attr('readonly',true);
+	});
+}
 </script>
 <form method="post" action="elearnings/admin/elearnings/save_topic_category">
 <div style="border:1px solid #aaa; padding:10px;">
@@ -221,7 +231,7 @@ $(function(){
   			<a href="elearnings/admin/elearnings/delete_category/<?=$row->id?>" style="font-size: 8px;" onclick="return confirm('คำเดือน หากดำเนินการลบ คำถามทั้งหมดที่อยู่ในหมวดนี้จะถูกลบด้วย ต้องการลบหรือไม่?')">ลบ</a>
   		</td>
   		<td>
-  			<input class="span1" type="number" name="random[]" value="<?=$row->random?>">
+  			<input class="span1 question_category_random" type="number" name="random[]" value="<?=$row->random?>">
   			<input class="category_name" type="hidden" value="<?=$row->name?>">
   			<input class="category_id" type="hidden" name="category_id[]" value="<?=$row->id?>">
   		</td>
@@ -261,11 +271,11 @@ $(function(){
 		<p><label><strong>หัวข้อแบบทดสอบ</strong></label><br /><input type="text" name="title" class="full" value="<?php echo $topic->title ?>" /></p>
 		<p><label><strong>คำชี้แจง</strong></label><br /><textarea name="detail" class="full"><?php echo $topic->detail ?></textarea></p>
 		<p><label><strong>คะแนนที่ผ่านการทดสอบ</strong></label><input type="number" name="pass" value="<?=$topic->pass?>"> คะแนน</p>
-		<p><label><strong>สุ่มหัวข้อแบบทดสอบ</strong></label><input type="number" name="random" value="<?=$topic->random?>"> หัวข้อ</p>
+		<p><label><strong>สุ่มหัวข้อแบบทดสอบ</strong></label><input type="number" class="random" name="random" value="<?=$topic->random?>"> หัวข้อ</p>
 		<hr>
 		
 		<div class="command">
-			<input type="button" value="เพิ่มหัวข้อคำถาม" name="radio" />
+			<input  type="button" value="เพิ่มหัวข้อคำถาม" name="radio" />
 		</div>
 		
 		<ul id="sortable">
@@ -277,6 +287,10 @@ $(function(){
 				<?endif;?>
 			<?php endforeach; ?>
 		</ul>
+		
+		<div class="command">
+			<input  type="button" value="เพิ่มหัวข้อคำถาม" name="radio" />
+		</div>
 	</div>
 </div>
 
