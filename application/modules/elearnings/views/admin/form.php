@@ -272,6 +272,7 @@ function total_question_random(){
 		<p><label><strong>คำชี้แจง</strong></label><br /><textarea name="detail" class="full"><?php echo $topic->detail ?></textarea></p>
 		<p><label><strong>คะแนนที่ผ่านการทดสอบ</strong></label><input type="number" name="pass" value="<?=$topic->pass?>"> คะแนน</p>
 		<p><label><strong>สุ่มหัวข้อแบบทดสอบ</strong></label><input type="number" class="random" name="random" value="<?=$topic->random?>"> หัวข้อ</p>
+		<p><label><strong>สถานะ</strong></label><?=form_dropdown('status',array('draft'=>'ปิดการใช้งาน','approve'=>'เปิดการใช้งาน'),$topic->status,'');?></p>
 		<hr>
 		
 		<div class="command">
