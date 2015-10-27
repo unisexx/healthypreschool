@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>ไปรษนียบัตร</title>
+<title>ประกาศนียบัตร</title>
 <link href="/healthypreschool/themes/print/css/style.css"type="text/css" rel="stylesheet"/>
 <style>
 	@media print{
@@ -17,7 +17,7 @@
 
 <body>
 <div id="bg-diploma">
-	<div style="padding-top:40px;">&nbsp;</div>
+	<div style="margin-top:-10px;margin-left:-10px;">&nbsp;</div>
 	<div class="logo">&nbsp;</div>
 	<div class="text1">
     	<div style="color:#009; font-size:39px; margin-top:22px;">สำนักโรคติดต่อทั่วไป กรมควบคุมโรค</div>
@@ -29,7 +29,7 @@
 เรื่องการป้องกันควบคุมโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล<br>
 ให้ไว้ ณ <?=thainumDigit(mysql_to_th_cert($user->questionresult->where("set_final = 1")->update_date,"F"))?><br>
 
-<div style="margin-top:160px; font-size:32px;">(นายแพทย์ โอภาส การย์กวิินพงศ์)<br>
+<div style="margin-top:160px; font-size:32px;">(นายอำนวย  กาจีนะ)<br>
 อธิบดีกรมควบคุมโรค</div>
     </div>
 </div>

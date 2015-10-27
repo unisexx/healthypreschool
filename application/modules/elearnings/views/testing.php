@@ -1,9 +1,11 @@
 <script type="text/javascript">
 	$(function() {
-		<?php if(!is_login()): ?>
+	hide_preload();	
+	<?php if(!is_login()): ?>
 			$("#saturday").hide();
 	<?php endif; ?>
 		$("#btn_save").click(function(){
+		show_preload();	
 		var selected_value = $('input[name=answer_id]:checked', 'body').val();
 		var question_id = $('input[name=question_id]').val();
 		var topic_id = $('input[name=topic_id]').val();
@@ -13,13 +15,20 @@
 		'question_id' : question_id,
 		'answer_id' : selected_value,
 		},function(data){
-		$("#dv_question").html(data);
+			$("#dv_question").html(data);
+			hide_preload();	
 		});
 		}else{
 		alert('กรุณาเลือกคำตอบ');
 		}
 		})
 		});
+	function hide_preload(){
+		$("#loader-wrapper").hide();
+	}
+	function show_preload(){
+		$("#loader-wrapper").show();
+	}
 </script>
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span> <a href="elearnings">E-Learning</a></li>
@@ -38,7 +47,7 @@ $percent = $topic -> n_answer < 1 || $topic -> n_question < 1 ? 0 : $topic -> n_
 	  </div>
 	</div>
 	<div align="center" style="width:100%;padding:10px 0px;padding-left:5px;text-align:left;border:2px dashed #F4F4F4;background:#fffee6;">
-		<h4 style="padding-left:20px;">ข้อที่ <?php echo $topic -> n_answer + 1; ?>. <?php echo $question -> question; ?></h4>
+		<h4 style="padding-left:20px;">ข้อที่ <?php echo $topic -> n_answer + 1; ?>. <?php echo $question -> question; ?> </h4>
 			<ul>
 				<? foreach($answers as $answer): ?>
 				<li style="list-style-type: none;">
@@ -54,5 +63,16 @@ $percent = $topic -> n_answer < 1 || $topic -> n_question < 1 ? 0 : $topic -> n_
 		<input type="hidden" name="question_id" value="<?php echo $question -> id; ?>">
 		<input type="hidden" name="topic_id" value="<?php echo $topic -> topic_id; ?>">
 		<input type="button" id="btn_save" class='btn btn-primary' value="ยืนยันคำตอบ">
+	</div>
+</div>
+
+<div id="loader-wrapper">
+	<div id="loader">
+		<ul class="spinner">
+		    <li></li>
+		    <li></li>
+		    <li></li>
+		    <li></li>
+		</ul>
 	</div>
 </div>

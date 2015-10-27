@@ -1,25 +1,35 @@
 <script type="text/javascript">
 	$(function() {
+		hide_preload();	
 		<?php if(!is_login()): ?>
 			$("#saturday").hide();
-	<?php endif; ?>
+		<?php endif; ?>
 		$("#btn_save").click(function(){
-		var selected_value = $('input[name=answer_id]:checked', 'body').val();
-		var question_id = $('input[name=question_id]').val();
-		var topic_id = $('input[name=topic_id]').val();
-		if(selected_value){
-		$.post('elearnings/save',{
-		'topic_id' : topic_id,
-		'question_id' : question_id,
-		'answer_id' : selected_value,
-		},function(data){
-		$("#dv_question").html(data);
-		});
-		}else{
-		alert('กรุณาเลือกคำตอบ');
-		}
+			show_preload();
+			var selected_value = $('input[name=answer_id]:checked', 'body').val();
+			var question_id = $('input[name=question_id]').val();
+			var topic_id = $('input[name=topic_id]').val();
+			if(selected_value){
+				$.post('elearnings/save',{
+					'topic_id' : topic_id,
+					'question_id' : question_id,
+					'answer_id' : selected_value,
+				},function(data){
+					$("#dv_question").html(data);
+					hide_preload()
+				});
+			}else{
+				hide_preload();
+				alert('กรุณาเลือกคำตอบ');
+			}
 		})
-		});
+	});
+	function hide_preload(){
+		$("#loader-wrapper").hide();
+	}
+	function show_preload(){
+		$("#loader-wrapper").show();
+	}
 </script>
 <?php
 $percent = $topic -> n_answer < 1 || $topic -> n_question < 1 ? 0 : $topic -> n_answer / $topic -> n_question * 100;

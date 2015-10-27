@@ -8,7 +8,7 @@ function get_pass_all_status($user_id = false) {
 					questionresults
 				WHERE
 					user_id = " . $user_id . "
-				and set_final = 0
+				and ifnull(set_final,0) = 0
 				and topic_status = 'approve'
 				and score < pass";
 	$result = $CI -> db -> query($sql) -> result();
@@ -25,7 +25,7 @@ function get_pass_final_status($user_id = false){
 					questionresults
 				WHERE
 					user_id = " . $user_id . "
-				and set_final = 1
+				and ifnull(set_final,0) = 1
 				and topic_status = 'approve'
 				and score >= pass ";
 	$result = $CI -> db -> query($sql) -> result();

@@ -115,6 +115,7 @@ class Elearnings extends Public_Controller {
             )
 		     ORDER BY orderlist
 		";
+		//echo $sql;
         $data['topic'] = $this -> db -> query($sql) -> row();
         $pass_all_status = get_pass_all_status($user_id);
         $data['pass_all_status'] = get_pass_all_status($user_id);
@@ -122,7 +123,32 @@ class Elearnings extends Public_Controller {
             if ($data['topic'] -> n_answer == $data['topic'] -> n_question) {
                 $this -> template -> build('testing_result', $data);
             } else {
-                $sql = "SELECT * from question_titles WHERE topic_id = " . $topic_id . " ORDER BY RAND() LIMIT 1 ";
+            	$ext_condition = '';
+            	if($data['topic']->set_final == 1){
+            		$ext_category = '';
+            		$sql = "select 
+					q_cat.id
+					,q_cat.`name`
+					,q_cat.random n_question
+					,(select count(*) from question_answers qa 
+						inner join question_titles qt on qa.questionaire_id = qt.id 
+						where 
+						qt.topic_id = ".$topic_id." 
+						and qa.user_id = ".$user_id." 
+						and qt.question_category_id = q_cat.id
+						)n_answer
+					FROM question_categories q_cat
+					";
+					$result = $this->db->query($sql)->result();
+					foreach($result as $row){
+						if($row->n_question > $row->n_answer){
+							$ext_category.= $ext_category!= '' ? ",".$row->id : $row->id;
+						}
+					}
+					$ext_condition = $ext_category != '' ? " AND question_category_id IN (".$ext_category.") " :  "";
+            	}
+            	$ext_condition .= " AND id NOT IN (SELECT questionaire_id FROM question_answers WHERE user_id = ".$user_id.")";
+                $sql = "SELECT * from question_titles WHERE topic_id = " . $topic_id .$ext_condition. " ORDER BY RAND() LIMIT 1 ";
                 $data['question'] = $this -> db -> query($sql) -> row();
                 $data['answers'] = $this -> db -> query("select * from question_choices WHERE questionaire_id = " . $data['question'] -> id . " ORDER BY RAND() ") -> result();
                 $this -> template -> build('testing', $data);
@@ -298,7 +324,32 @@ class Elearnings extends Public_Controller {
              ORDER BY orderlist
         ";
         $data['topic'] = $this -> db -> query($sql) -> row();
-        $sql = "SELECT * from question_titles WHERE topic_id = " . $topic_id . " ORDER BY RAND() LIMIT 1 ";
+        $ext_condition = '';
+    	if($data['topic']->set_final == 1){
+    		$ext_category = '';
+    		$sql = "select 
+			q_cat.id
+			,q_cat.`name`
+			,q_cat.random n_question
+			,(select count(*) from question_answers qa 
+				inner join question_titles qt on qa.questionaire_id = qt.id 
+				where 
+				qt.topic_id = ".$topic_id." 
+				and qa.user_id = ".$user_id." 
+				and qt.question_category_id = q_cat.id
+				)n_answer
+			FROM question_categories q_cat
+			";
+			$result = $this->db->query($sql)->result();
+			foreach($result as $row){
+				if($row->n_question > $row->n_answer){
+					$ext_category.= $ext_category!= '' ? ",".$row->id : $row->id;
+				}
+			}
+			$ext_condition = $ext_category != '' ? " AND question_category_id IN (".$ext_category.") " :  "";
+    	}
+        $ext_condition = " AND id NOT IN (SELECT questionaire_id FROM question_answers WHERE user_id = ".$user_id.")";
+        $sql = "SELECT * from question_titles WHERE topic_id = " . $topic_id .$ext_condition. " ORDER BY RAND() LIMIT 1 ";
         $data['question'] = $this -> db -> query($sql) -> row();
         $data['answers'] = $this -> db -> query("select * from question_choices WHERE questionaire_id = " . $data['question'] -> id . " ORDER BY RAND() ") -> result();
         $this -> load -> view('ajax_testing', $data);

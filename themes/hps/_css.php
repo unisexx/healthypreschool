@@ -7,3 +7,4 @@
 <!-- Calendar -->
 <link href="themes/hps/style.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="media/css/elearnings.css">
+<link rel="stylesheet" href="media/css/bokeh_animation.css">
