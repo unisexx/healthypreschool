@@ -430,9 +430,9 @@ $(function(){
 						$pass = $area->nurseries->where("year = ".@$_GET['year']." and status = 1")->get()->result_count();
 						$not = $area->nurseries->where("year = ".@$_GET['year']." and status = 0")->get()->result_count();
 					}else{
-						$all = $area->nurseries->get()->result_count();
-						$pass = $area->nurseries->where("status = 1")->get()->result_count();
-						$not = $area->nurseries->where("status = 0")->get()->result_count();
+						$all = $area->nurseries->where_related('provinces', 'area_id', $area->id)->get()->result_count();
+						$pass = $area->nurseries->where("status = 1")->where_related('provinces', 'area_id', $area->id)->get()->result_count();
+						$not = $area->nurseries->where("status = 0")->where_related('provinces', 'area_id', $area->id)->get()->result_count();
 					}
 				?>
 			<tr>
@@ -743,9 +743,9 @@ $(function(){
 						$pass = $area->nurseries->where("year = ".@$_GET['year']." and status = 1")->get()->result_count();
 						$not = $area->nurseries->where("year = ".@$_GET['year']." and status = 0")->get()->result_count();
 					}else{
-						$all = $area->nurseries->get()->result_count();
-						$pass = $area->nurseries->where("status = 1")->get()->result_count();
-						$not = $area->nurseries->where("status = 0")->get()->result_count();
+						$all = $area->nurseries->where_related('provinces', 'area_id', $area->id)->get()->result_count();
+						$pass = $area->nurseries->where("status = 1")->where_related('provinces', 'area_id', $area->id)->get()->result_count();
+						$not = $area->nurseries->where("status = 0")->where_related('provinces', 'area_id', $area->id)->get()->result_count();
 					}
 				?>
 			<tr>
