@@ -422,5 +422,30 @@ WHERE 1=1 ".$condition;
 		}
 		$this->load->view('export_graphpage',$data);
 	}
+
+	function newreport (){
+		$data['text'] = "สรุปรายงานแบบคัดกรองโรค ";
+		
+		// หาจำนวนห้อง
+		$classroom = new Classroom();
+		$classroom->where('nursery_id = '.$_GET['nursery_id']);
+		$data['classrooms'] = $classroom->get();
+		
+		// หาปี
+		$disease = new Disease();
+		$sql = "SELECT DISTINCT year
+				FROM diseases
+				WHERE nursery_id = ".$_GET['nursery_id'];
+		$data['years'] = $disease->sql_page($sql);
+		
+		// หาเดือน
+		$disease = new Disease();
+		$sql = "SELECT DISTINCT month
+				FROM diseases
+				WHERE nursery_id = ".$_GET['nursery_id'];
+		$data['months'] = $disease->sql_page($sql);
+		
+		$this->template->build('newreport',$data);
+	}
 }
 ?>
