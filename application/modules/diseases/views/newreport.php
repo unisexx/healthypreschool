@@ -131,7 +131,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 <h1>รายงานแบบคัดกรองโรค</h1>
 
-<form method="get" action="diseases/report_guest">
+<form method="get" action="diseases/newreport">
 <div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
     <div>
 		<span>ช่วงอายุ</span> 
@@ -174,7 +174,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	<div>
 		<span>อำเภอ</span>
 		<?php
-			if(isset($_GET['province_id'])){
+			if(isset($_GET['province_id']) && ($_GET['province_id']!="")){
 				echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.@$_GET['province_id'].' order by amphur_name asc'),@$_GET['amphur_id'],'id="ampor"','--- เลือกอำเภอ ---');
 			}else{
 				echo form_dropdown('amphur_id',array(''=>'--- เลือกตำบล ---'),'','id="ampor"');
@@ -185,7 +185,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	<div>
 		<span>ตำบล</span>
 		<?php
-			if(isset($_GET['amphur_id'])){
+			if(isset($_GET['amphur_id']) && ($_GET['amphur_id']!="")){
 				echo form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.@$_GET['amphur_id'].' order by district_name asc'),@$_GET['district_id'],'id="tumbon"','--- เลือกตำบล ---');
 			}else{
 				echo form_dropdown('district_id',array(''=>'--- เลือกตำบล ---'),'','id="tumbon"');
@@ -196,7 +196,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	<div>
 		<span>ศูนย์เด็กเล็ก</span>
 		<?php
-			if(isset($_GET['district_id'])){
+			if(isset($_GET['district_id']) && ($_GET['district_id']!="")){
 				echo form_dropdown('nursery_id',get_option('id','name','nurseries','where district_id = '.@$_GET['district_id'].' order by name asc'),@$_GET['nursery_id'],'id="nursery"','--- เลือกศูนย์เด็กเล็ก ---');
 			}else{
 				echo form_dropdown('nursery_id',array(''=>'--- เลือกศูนย์เด็กเล็ก ---'),'','id="nursery" class="span4"');
