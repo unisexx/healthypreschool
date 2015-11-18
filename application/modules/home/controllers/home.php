@@ -72,15 +72,25 @@ class Home extends Public_Controller {
 	}
 	
 	function get_province(){
-		$rs = new Province();
-		$rs->where("area_id = ".$_GET['area_id'])->order_by('name','asc')->get();
-		
-		echo'[';
-		echo'[ "","--- เลือกจังหวัด ---" ]';
-		foreach($rs as $key=>$row){
-				echo',[ "'.$row->id.'","'.$row->name.'"]';
+		if(isset($_GET['area_id']) && ($_GET['area_id']!="")){
+			$rs = new Province();
+			$rs->where("area_id = ".$_GET['area_id'])->order_by('name','asc')->get();
+			echo'[';
+			echo'[ "","--- เลือกจังหวัด ---" ]';
+			foreach($rs as $key=>$row){
+					echo',[ "'.$row->id.'","'.$row->name.'"]';
+			}
+			echo']';
+		}else{
+			$rs = new Province();
+			$rs->order_by('name','asc')->get();
+			echo'[';
+			echo'[ "","--- เลือกจังหวัด ---" ]';
+			foreach($rs as $key=>$row){
+					echo',[ "'.$row->id.'","'.$row->name.'"]';
+			}
+			echo']';
 		}
-		echo']';
 	}
 	
 	function get_ampor(){
@@ -121,7 +131,7 @@ class Home extends Public_Controller {
 			$rs->where("district_id = ".$_GET['district_id'])->order_by('name','asc')->get();
 			
 			echo'[';
-			echo'[ "","--- เลือกตำบล ---" ]';
+			echo'[ "","--- เลือกศูนย์เด็กเล็ก ---" ]';
 			foreach($rs as $key=>$row){
 					echo',[ "'.$row->id.'","'.$row->name.'"]';
 			}

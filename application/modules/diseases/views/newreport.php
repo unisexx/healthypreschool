@@ -184,7 +184,13 @@ jQuery_1_4_2("input.datepicker").date_input();
 	
 	<div>
 		<span>จังหวัด</span>
-		<?=form_dropdown('province_id',get_option('id','name','provinces','order by name asc'),@$_GET['province_id'],'id="province"','--- เลือกจังหวัด ---') ?>
+		<?php
+			if(isset($_GET['area_id']) && ($_GET['area_id']!="")){
+				echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.@$_GET['area_id'].' order by name asc'),@$_GET['province_id'],'id="province"','--- เลือกจังหวัด ---');
+			}else{
+				echo form_dropdown('province_id',get_option('id','name','provinces','order by name asc'),@$_GET['province_id'],'id="province"','--- เลือกจังหวัด ---');
+			}
+		?>
 	</div>
 	
 	<div>
@@ -272,10 +278,28 @@ jQuery_1_4_2("input.datepicker").date_input();
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach($rs as $area):?>
+		<?php foreach($rs as $row):?>
 		<tr>
-			<th class="span2"><?=$area->area_name?></th>
-				<? foreach($diseasesArray as $key=>$row):?>
+			<th class="span2">
+				<?
+					//**********************************************
+					if(@$_GET['nursery_id']!=""){
+						echo $row->room_name; //ชื่อห้องเรียน
+					}elseif(@$_GET['district_id']!=""){
+						echo $row->name; //ชื่อศูนย์เด็กเล็ก
+					}elseif(@$_GET['amphur_id']!=""){
+						echo $row->district_name; //ชื่อตำบล
+					}elseif(@$_GET['province_id']!=""){
+						echo $row->amphur_name; //ชื่ออำเภอ
+					}elseif(@$_GET['area_id']!=""){
+						echo $row->name; //ชื่อจังหวัด
+					}else{
+						echo $row->area_name; // สคร.
+					}
+					//**********************************************
+				?>
+			</th>
+				<? foreach($diseasesArray as $key=>$disease):?>
 					<?
 						$condition = "";
 						// if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
@@ -284,10 +308,18 @@ jQuery_1_4_2("input.datepicker").date_input();
 						// if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 						
 						//**********************************************
-						if(isset($_GET['area_id']) && ($_GET['area_id']!="")){
-							@$condition.=" and n.province_id = ".$area->id;
+						if(@$_GET['nursery_id']!=""){
+							@$condition.=" and d.classroom_id = ".$row->id;
+						}elseif(@$_GET['district_id']!=""){
+							@$condition.=" and n.id = ".$row->id;
+						}elseif(@$_GET['amphur_id']!=""){
+							@$condition.=" and n.district_id = ".$row->id;
+						}elseif(@$_GET['province_id']!=""){
+							@$condition.=" and n.amphur_id = ".$row->id;
+						}elseif(@$_GET['area_id']!=""){
+							@$condition.=" and n.province_id = ".$row->id;
 						}else{
-							@$condition.=" and n.area_id = ".$area->id; 
+							@$condition.=" and n.area_id = ".$row->id; 
 						}
 						//**********************************************
 						
@@ -338,13 +370,13 @@ jQuery_1_4_2("input.datepicker").date_input();
 						diseases d
 						INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
 						INNER JOIN nurseries n ON d.nursery_id = n.id
-						WHERE 1=1 and d.c1 = '".$row."' ".@$condition."  and start_date IS NOT NULL";
-						$disease = new Disease();
-						$disease->query($sql);
+						WHERE 1=1 and d.c1 = '".$disease."' ".@$condition."  and start_date IS NOT NULL";
+						$rs = new Disease();
+						$rs->query($sql);
 						
-						echo $sql.'<br><br>';
+						// echo $sql.'<br><br>';
 					?>
-					<td class="span2"><?=$disease->total?></td>
+					<td class="span2"><?=$rs->total?></td>
 				<? endforeach;?>
 		</tr>
 		
