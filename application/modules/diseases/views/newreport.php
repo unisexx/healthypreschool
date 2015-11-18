@@ -80,15 +80,31 @@ $(function(){
                 }
             },
             yAxis: {
-            	allowDecimals: false,
                 title: {
-                    text: 'จำนวนครั้งที่ป่วย'
+                    text: 'จำนวนศูนย์เด็กเล็กปลอดโรค'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
                 }
             },
             tooltip: {
                 formatter: function() {
-                    return '<b>'+ this.series.name +'</b><br/>'+
-                        this.y +' '+ this.x.toLowerCase();
+                    return '<b>'+ this.x +'</b><br/>'+
+                        this.series.name +' : '+ this.y +'<br/>'+
+                        'เข้าร่วมทั้งหมด (แห่ง) : '+ this.point.stackTotal;
+                }
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
                 }
             },
             exporting: {
@@ -136,7 +152,7 @@ jQuery_1_4_2("input.datepicker").date_input();
     <div>
 		<span>ช่วงอายุ</span> 
 		<?=form_dropdown('lowage',array('0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7'),@$_GET['lowage'],'class="span1"');?>
-		<?=form_dropdown('agecondition',array('ถึง'=>'ถึง'),@$_GET['agecondition'],'class="span1"');?>
+		<?=form_dropdown('agecondition',array('between'=>'ถึง','or'=>'และ'),@$_GET['agecondition'],'class="span1"');?>
 		<?=form_dropdown('hiage',array('0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7'),@$_GET['hiage'],'class="span1"');?>
 	</div>
 	
@@ -148,17 +164,17 @@ jQuery_1_4_2("input.datepicker").date_input();
 	
 	<div>
 		<span>สถานะเด็กป่วย</span>
-		<?=form_dropdown('c3',array('/'=>'มาเรียน','x'=>'หยุดเรียน'),@$_GET['c3'],'class="span2"');?>
+		<?=form_dropdown('c3',array('/'=>'มาเรียน','x'=>'หยุดเรียน'),@$_GET['c3'],'class="span2"','--- เลือก ---');?>
 	</div>
 	
 	<div>
 		<span>การแยกเด็กป่วย</span>
-		<?=form_dropdown('c2',array('0'=>'ไม่มีการแยกนอนแยกเล่น','1'=>'แยกนอน','2'=>'แยกเล่น'),@$_GET['c2'],'class="span3"');?>
+		<?=form_dropdown('c2',array('0'=>'ไม่มีการแยกนอนแยกเล่น','1'=>'แยกนอน','2'=>'แยกเล่น'),@$_GET['c2'],'class="span3"','--- เลือก ---');?>
 	</div>
 	
 	<div>
 		<span>กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน</span>
-		<?=form_dropdown('c5',array('*'=>'มี'),@$_GET['c2'],'class="span2"','ไม่มี');?>
+		<?=form_dropdown('c5',array('*'=>'มี','no'=>'ไม่มี'),@$_GET['c5'],'class="span2"',"--- เลือก ---");?>
 	</div>
 	
 	<div>
@@ -177,7 +193,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 			if(isset($_GET['province_id']) && ($_GET['province_id']!="")){
 				echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.@$_GET['province_id'].' order by amphur_name asc'),@$_GET['amphur_id'],'id="ampor"','--- เลือกอำเภอ ---');
 			}else{
-				echo form_dropdown('amphur_id',array(''=>'--- เลือกตำบล ---'),'','id="ampor"');
+				echo form_dropdown('amphur_id',array(''=>'---'),'','id="ampor" disabled');
 			}
 		?>
 	</div>
@@ -188,7 +204,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 			if(isset($_GET['amphur_id']) && ($_GET['amphur_id']!="")){
 				echo form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.@$_GET['amphur_id'].' order by district_name asc'),@$_GET['district_id'],'id="tumbon"','--- เลือกตำบล ---');
 			}else{
-				echo form_dropdown('district_id',array(''=>'--- เลือกตำบล ---'),'','id="tumbon"');
+				echo form_dropdown('district_id',array(''=>'---'),'','id="tumbon" disabled');
 			}
 		?>
 	</div>
@@ -199,7 +215,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 			if(isset($_GET['district_id']) && ($_GET['district_id']!="")){
 				echo form_dropdown('nursery_id',get_option('id','name','nurseries','where district_id = '.@$_GET['district_id'].' order by name asc'),@$_GET['nursery_id'],'id="nursery"','--- เลือกศูนย์เด็กเล็ก ---');
 			}else{
-				echo form_dropdown('nursery_id',array(''=>'--- เลือกศูนย์เด็กเล็ก ---'),'','id="nursery" class="span4"');
+				echo form_dropdown('nursery_id',array(''=>'---'),'','id="nursery" class="span4" disabled');
 			}
 		?>
 	</div>
@@ -242,45 +258,111 @@ jQuery_1_4_2("input.datepicker").date_input();
 	'อื่นๆ' => 'O'
 );?>
 
-<table id="datatable" class="table">
+<table id="datatable" class="table table-bordered">
 	<thead>
 		<tr>
 			<th></th>
-			<th>ชาย</th>
-			<th>หญิง</th>
+			<?if(@$_GET['diseases']):?>
+				<th><?=array_search($_GET['diseases'], $diseasesArray);?></th>
+			<?else:?>
+				<? foreach($diseasesArray as $key=>$row):?>
+				<th><?=$key?></th>
+				<? endforeach;?>
+			<?endif;?>
 		</tr>
 	</thead>
 	<tbody>
-		<?foreach($diseasesArray as $key=>$row):?>
-			<?
-				if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
-				if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ @$condition.=" and cd.age between ".$_GET['lowage']." and ".$_GET['hiage']; }
-				if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
-				if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
-				
-				$sql = "
-				SELECT count(d.id) boy
-				FROM
-				diseases d
-				INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-				WHERE 1=1 and cd.title = 'ด.ช.' and d.c1 = '".$row."' ".@$condition;
-				$disease = new Disease();
-				$disease->query($sql);
-				
-				$sql = "
-				SELECT count(d.id) girl
-				FROM
-				diseases d
-				INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-				WHERE 1=1 and cd.title = 'ด.ญ.' and d.c1 = '".$row."' ".@$condition;
-				$disease2 = new Disease();
-				$disease2->query($sql);
-			?>
+		<?php foreach($rs as $area):?>
 		<tr>
-			<th><?=$key?></th>
-			<td><?=$disease->boy?></td>
-			<td><?=$disease2->girl?></td>
+			<th class="span2"><?=$area->area_name?></th>
+				<? foreach($diseasesArray as $key=>$row):?>
+					<?
+						$condition = "";
+						// if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
+						// if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
+						// if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
+						// if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
+						
+						//**********************************************
+						if(isset($_GET['area_id']) && ($_GET['area_id']!="")){
+							@$condition.=" and n.province_id = ".$area->id;
+						}else{
+							@$condition.=" and n.area_id = ".$area->id; 
+						}
+						//**********************************************
+						
+						
+						
+						// ช่วงอายุ
+						if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){
+							if(@$_GET['agecondition'] == 'between'){
+								@$condition.=" and (d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage'].")";
+							}elseif(@$_GET['agecondition'] == 'or'){
+								@$condition.=" and (d.child_age_year = ".$_GET['lowage']." or d.child_age_year = ".$_GET['hiage'].")";
+							}
+						}
+						
+						// สถานะเด็กป่วย
+						if(@$_GET['c3']){ @$condition.=" and d.c3 = '".$_GET['c3']."'";  }
+						
+						// การแยกเด็กป่วย
+						if(@$_GET['c2']){ @$condition.=" and d.c2 = '".$_GET['c2']."'";  }
+
+						// กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน
+						if(@$_GET['c5']){
+							if($_GET['c5'] == "no"){
+								@$condition.=" and d.c5 = ''"; 
+							}else{
+								@$condition.=" and d.c5 = '".$_GET['c5']."'"; 
+							}
+						 }
+
+						// วันที่เริ่ม - วันที่สิ้นสุด
+						if(@$_GET['start_date'] and @$_GET['end_date']){
+							$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+							$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+							$condition .= " and start_date between ".$start_date." and ".$end_date;
+						}
+						if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+							$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+							$condition .= " and start_date >= ".$start_date;
+						}
+						if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+							$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+							$condition .= " and start_date >= ".$end_date;
+						}
+				
+						$sql = "
+						SELECT count(d.id) total
+						FROM
+						diseases d
+						INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
+						INNER JOIN nurseries n ON d.nursery_id = n.id
+						WHERE 1=1 and d.c1 = '".$row."' ".@$condition."  and start_date IS NOT NULL";
+						$disease = new Disease();
+						$disease->query($sql);
+						
+						echo $sql.'<br><br>';
+					?>
+					<td class="span2"><?=$disease->total?></td>
+				<? endforeach;?>
 		</tr>
-		<?endforeach;?>
+		
+		<?php endforeach;?>
+		
+		<!-- <tr class="sum">
+			<th>รวมทั้งหมด</th>
+			<?if(@$_GET['diseases']):?>
+		        <td id='t1'>0</td>
+		    <?else:?>
+				<td id='t1'>0</td>
+		        <td id='t2'>0</td>
+		        <td id='t3'>0</td>
+		        <td id='t4'>0</td>
+		        <td id='t5'>0</td>
+		        <td id='t6'>0</td>
+			<?endif;?>
+		</tr> -->
+			
 	</tbody>
 </table>

@@ -424,7 +424,15 @@ WHERE 1=1 ".$condition;
 	}
 
 	function newreport (){
-		$data['text'] = "สรุปรายงานแบบคัดกรองโรค ";
+		$data['text'] = "สรุปผลรายงานแบบคัดกรองโรคทั้งหมด";
+		
+		if(isset($_GET['area_id']) && ($_GET['area_id']!="")){
+			$data['rs'] = new Province();
+			$data['rs']->where('area_id = '.$_GET['area_id'])->get();
+		}else{
+			$data['rs'] = new Area();
+			$data['rs']->order_by('id','asc')->get();
+		}
 		
 		// หาจำนวนห้อง
 		// $classroom = new Classroom();

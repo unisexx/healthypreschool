@@ -73,48 +73,63 @@ class Home extends Public_Controller {
 	
 	function get_province(){
 		$rs = new Province();
-		$rs->where("area_id = ".$_GET['area_id'])->get();
-		$province_array = array();
+		$rs->where("area_id = ".$_GET['area_id'])->order_by('name','asc')->get();
+		
+		echo'[';
+		echo'[ "","--- เลือกจังหวัด ---" ]';
 		foreach($rs as $key=>$row){
-			$province_array[$row->id] = $row->name;
+				echo',[ "'.$row->id.'","'.$row->name.'"]';
 		}
-		echo json_encode($province_array);
+		echo']';
 	}
 	
 	function get_ampor(){
-		$rs = new Amphur();
-		$rs->where("province_id = ".$_GET['province_id'])->get();
-		
-		$ampor_array = array();
-		foreach($rs as $key=>$row){
-			$ampor_array[$row->id] = $row->amphur_name;
+		if(isset($_GET['province_id']) && ($_GET['province_id']!="")){
+			$rs = new Amphur();
+			$rs->where("province_id = ".$_GET['province_id'])->order_by('amphur_name','asc')->get();
+			
+			echo'[';
+			echo'[ "","--- เลือกอำเภอ ---" ]';
+			foreach($rs as $key=>$row){
+					echo',[ "'.$row->id.'","'.$row->amphur_name.'"]';
+			}
+			echo']';
+		}else{
+			echo '[[ "","---" ]]';
 		}
-		
-		echo json_encode($ampor_array);
 	}
 	
 	function get_tumbon(){
-		$rs = new District();
-		$rs->where("amphur_id = ".$_GET['amphur_id'])->get();
-		
-		$tumbon_array = array();
-		foreach($rs as $key=>$row){
-			$tumbon_array[$row->id] = $row->district_name;
+		if(isset($_GET['amphur_id']) && ($_GET['amphur_id']!="")){
+			$rs = new District();
+			$rs->where("amphur_id = ".$_GET['amphur_id'])->order_by('district_name','asc')->get();
+			
+			echo'[';
+			echo'[ "","--- เลือกตำบล ---" ]';
+			foreach($rs as $key=>$row){
+					echo',[ "'.$row->id.'","'.$row->district_name.'"]';
+			}
+			echo']';
+		}else{
+			echo '[[ "","---" ]]';
 		}
-		
-		echo json_encode($tumbon_array);
 	}
 	
 	function get_nursery(){
-		$rs = new Nursery();
-		$rs->where("district_id = ".$_GET['district_id'])->get();
-		
-		$nursery_array = array();
-		foreach($rs as $key=>$row){
-			$nursery_array[$row->id] = $row->name;
+		if(isset($_GET['district_id']) && ($_GET['district_id']!="")){
+			$rs = new Nursery();
+			$rs->where("district_id = ".$_GET['district_id'])->order_by('name','asc')->get();
+			
+			echo'[';
+			echo'[ "","--- เลือกตำบล ---" ]';
+			foreach($rs as $key=>$row){
+					echo',[ "'.$row->id.'","'.$row->name.'"]';
+			}
+			echo']';
+			
+		}else{
+			echo '[[ "","---" ]]';
 		}
-		
-		echo json_encode($nursery_array);
 	}
 	
 	
