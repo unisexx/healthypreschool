@@ -142,6 +142,23 @@ class Home extends Public_Controller {
 		}
 	}
 	
+	function get_classroom(){
+		if(isset($_GET['nursery_id']) && ($_GET['nursery_id']!="")){
+			$rs = new Classroom();
+			$rs->where("nursery_id = ".$_GET['nursery_id'])->order_by('room_name','asc')->get();
+			
+			echo'[';
+			echo'[ "","--- เลือกศูนย์ห้องเรียน ---" ]';
+			foreach($rs as $key=>$row){
+					echo',[ "'.$row->id.'","'.$row->room_name.'"]';
+			}
+			echo']';
+			
+		}else{
+			echo '[[ "","---" ]]';
+		}
+	}
+	
 	
 }
 ?>

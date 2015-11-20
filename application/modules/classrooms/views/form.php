@@ -19,22 +19,7 @@
 		          <input class="input-xlarge" type="text" name="room_name" value="<?=$classroom->room_name?>" placeholder="ชื่อห้องเรียน">
 		        </div>
 		    </div>
-		    <?if(user_login()->user_type_id == 9 or user_login()->user_type_id == 1 or user_login()->user_type_id == 6 or user_login()->user_type_id == 7): //เจ้าหน้าที่ศูนย์และเจ้าหน้าที่ประจำเขต สามารถเลือกเจ้าหน้าที่ครูได้?>
-		    <div class="control-group">
-		        <label class="control-label">ครูประจำชั้น / ครูผู้ดูแลเด็ก <span class="TxtRed">*</span></label>
-		        <div class="controls">
-		          <?=form_dropdown('user_id',get_option('id','name','users where user_type_id = 10 and nursery_id = '.$_GET['nursery_id'].' and m_status = "active" order by name asc'),@$classroom->user_id,'class="input-xlarge"','--- เจ้าหน้าที่ครู ---');?>
-		        </div>
-		    </div>
-		    <?elseif(user_login()->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก เพิ่มของตัวเองได้อย่างเดียว?>
-		    <div class="control-group">
-		        <label class="control-label">ครูประจำชั้น / ครูผู้ดูแลเด็ก <span class="TxtRed">*</span></label>
-		        <div class="controls">
-		          <input class="input-xlarge" type="text" name="name" value="<?=$classroom->user_id == ''? user_login()->name : $classroom->user->name ;?>" placeholder="ชื่อ - นามสกุล" readonly>
-		          <input type="hidden" name="user_id" value="<?=$classroom->user_id == ''? user_login()->id : $classroom->user_id ;?>">
-		        </div>
-		    </div>
-		    <?endif;?>
+		    
 		    <div class="control-group">
                 <div class="controls">
                   <?php echo form_referer() ?>
@@ -45,45 +30,6 @@
                 </div>
             </div>
 		</form>
-		
-		<!-- <?if($classroom->id != ""):?>
-		<div style="float:right; padding:10px 0;"><a href="classrooms/childform/<?=$classroom->id?>"><div class="btn btn-small">เพิ่มรายชื่อเด็ก</div></a></div>
-		<table class="table table-striped">
-			<tr>
-				<th>ลำดับ</th>
-				<th>ชื่อ - สกุล เด็ก</th>
-				<th>อายุ (ปี)</th>
-				<th>น้ำหนัก (กก) / ส่วนสูง (ซม)</th>
-				<th>ดัชนีมวลกาย (BMI)</th>
-				<th>จัดการ</th>
-			</tr>
-			<?foreach($childs as $key=>$row):?>
-			<tr>
-				<td><?=$key+1?></td>
-				<td><?=$row->title?> <?=$row->child_name?></td>
-				<td><?=$row->age?></td>
-				<td><?=$row->weight?> / <?=$row->height?></td>
-				<td>
-					<?=number_format($row->weight/(($row->height/100)*($row->height/100)),2)?>
-				</td>
-				<td>
-					<a href="classrooms/childform/<?=$classroom->id?>/<?=$row->id?>" class='btn btn-mini btn-info'>แก้ไข</a>
-	        		<a href="classrooms/childdelete/<?=$classroom->id?>/<?=$row->id?>" class="btn btn-mini btn-danger" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>
-				</td>
-			</tr>
-			<?endforeach;?>
-		</table>
-		<?endif;?> -->
-		
-		<!-- <u>หมายเหตุ : การประเมินค่าดัชนีมวลกาย</u>
-		<ul>
-		  <li>40 หรือมากกว่านี้ : โรคอ้วนขั้นสูงสุด</li>
-		  <li>35.0 - 39.9: โรคอ้วนระดับ2</li>
-		  <li>28.5 - 34.9: โรคอ้วนระดับ1</li>
-		  <li>23.5 - 28.4: น้ำหนักเกิน</li>
-		  <li>18.5 - 23.4: น้ำหนักปกติ</li>
-		  <li>น้อยกว่า 18.5: น้ำหนักน้อยเกินไป</li>
-		</ul> -->
 		
 	</div>
 </div>

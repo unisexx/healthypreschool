@@ -424,9 +424,12 @@ WHERE 1=1 ".$condition;
 	}
 
 	function newreport (){
-		$data['text'] = "สรุปผลรายงานแบบคัดกรองโรคทั้งหมด";
+		$data['text'] = "สรุปผลรายงานแบบคัดกรองโรค";
 		
-		if(isset($_GET['nursery_id']) && ($_GET['nursery_id']!="")){
+		if(isset($_GET['classroom_id']) && ($_GET['classroom_id']!="")){
+			$data['rs'] = new Classroom();
+			$data['rs']->where('id = ',$_GET['classroom_id'])->order_by('room_name','asc')->get();
+		}elseif(isset($_GET['nursery_id']) && ($_GET['nursery_id']!="")){
 			$data['rs'] = new Classroom();
 			$data['rs']->where('nursery_id = ',$_GET['nursery_id'])->order_by('room_name','asc')->get();
 		}elseif(isset($_GET['district_id']) && ($_GET['district_id']!="")){

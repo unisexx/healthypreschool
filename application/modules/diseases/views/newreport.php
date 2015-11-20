@@ -20,6 +20,11 @@ $(document).ready(function() {
 	    parents : "#tumbon",
 	    url : "home/get_nursery"
 	});
+	
+	$("#classroom").remoteChained({
+	    parents : "#nursery",
+	    url : "home/get_classroom"
+	});
 });
 </script>
 
@@ -67,6 +72,7 @@ $(function(){
         var table = document.getElementById('datatable'),
         options = {
             chart: {
+            	// height: 500,
                 renderTo: 'container',
                 type: 'column'
             },
@@ -80,9 +86,15 @@ $(function(){
                 }
             },
             yAxis: {
+            	allowDecimals: false,
                 title: {
-                    text: 'จำนวนศูนย์เด็กเล็กปลอดโรค'
+                    text: 'จำนวนครั้งที่ป่วย'
                 },
+                labels: {
+	                formatter: function () {
+	                    return Highcharts.numberFormat(this.value,0);
+	                }
+	            },
                 stackLabels: {
                     enabled: true,
                     style: {
@@ -94,8 +106,8 @@ $(function(){
             tooltip: {
                 formatter: function() {
                     return '<b>'+ this.x +'</b><br/>'+
-                        this.series.name +' : '+ this.y +'<br/>'+
-                        'เข้าร่วมทั้งหมด (แห่ง) : '+ this.point.stackTotal;
+                        this.series.name +' : '+ this.y +' ครั้ง<br/>'+
+                        'จำนวนการป่วยทั้งหมด : '+ this.point.stackTotal +' ครั้ง';
                 }
             },
             plotOptions: {
@@ -142,7 +154,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active"><?//=get_nursery_name($_GET['nursery_id'])?> / รายงานแบบคัดกรองโรค</li>
+  <li class="active"><a href="diseases/newreport">รายงานแบบคัดกรองโรค</a></li>
 </ul>
 
 <h1>รายงานแบบคัดกรองโรค</h1>
@@ -153,7 +165,9 @@ jQuery_1_4_2("input.datepicker").date_input();
 		<span>ช่วงอายุ</span> 
 		<?=form_dropdown('lowage',array('0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7'),@$_GET['lowage'],'class="span1"');?>
 		<?=form_dropdown('agecondition',array('between'=>'ถึง','or'=>'และ'),@$_GET['agecondition'],'class="span1"');?>
-		<?=form_dropdown('hiage',array('0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7'),@$_GET['hiage'],'class="span1"');?>
+		
+		<?if(@!isset($_GET['hiage']) or @$_GET['hiage']==""){$_GET['hiage'] = 7;}?>
+		<?=form_dropdown('hiage',array('1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7'),@$_GET['hiage'],'class="span1"');?>
 	</div>
 	
 	<div>
@@ -226,6 +240,17 @@ jQuery_1_4_2("input.datepicker").date_input();
 		?>
 	</div>
 	
+	<div>
+		<span>ห้องเรียน</span>
+		<?php
+			if(isset($_GET['nursery_id']) && ($_GET['nursery_id']!="")){
+				echo form_dropdown('classroom_id',get_option('id','room_name','classrooms','where nursery_id = '.@$_GET['nursery_id'].' order by room_name asc'),@$_GET['classroom_id'],'id="classroom"','--- เลือกห้องเรียน ---');
+			}else{
+				echo form_dropdown('id',array(''=>'---'),'','id="classroom" class="span4" disabled');
+			}
+		?>
+	</div>
+	
 	<!-- <select name="classroom_id">
 	<option value="">-- ทุกห้องเรียน --</option>
 	<?foreach($classrooms as $row):?>
@@ -283,7 +308,9 @@ jQuery_1_4_2("input.datepicker").date_input();
 			<th class="span2">
 				<?
 					//**********************************************
-					if(@$_GET['nursery_id']!=""){
+					if(@$_GET['classroom_id']!=""){
+						echo $row->room_name; //ห้องเรียน
+					}elseif(@$_GET['nursery_id']!=""){
 						echo $row->room_name; //ชื่อห้องเรียน
 					}elseif(@$_GET['district_id']!=""){
 						echo $row->name; //ชื่อศูนย์เด็กเล็ก
@@ -308,7 +335,9 @@ jQuery_1_4_2("input.datepicker").date_input();
 						// if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
 						
 						//**********************************************
-						if(@$_GET['nursery_id']!=""){
+						if(@$_GET['classroom_id']!=""){
+							@$condition.=" and d.classroom_id = ".$row->id;
+						}elseif(@$_GET['nursery_id']!=""){
 							@$condition.=" and d.classroom_id = ".$row->id;
 						}elseif(@$_GET['district_id']!=""){
 							@$condition.=" and n.id = ".$row->id;
