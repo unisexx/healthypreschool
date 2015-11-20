@@ -69,5 +69,9 @@ class Classrooms extends Public_Controller{
 		$data['classes'] = $classroom->order_by('id','desc')->get_page();
     	$this->template->build('list_guest',$data);
 	}
+	
+	function view($id){
+		$data['classroom'] = new Classroom($id);
+	}
 }
 ?>
