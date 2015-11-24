@@ -1,102 +1,270 @@
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<!-- Css -->
+<style media="screen">
+      .tblForm tr th {
+            text-align:left;
+            padding-bottom:10px;
+      }
+      .tblForm tr td {
+            padding-left:20px;
+            padding-bottom:30px;
+      }
 
-<script type="text/javascript">
-      $(function(){
-            //Modal (Nurseries_list) 
-            $('#btnCallNurseriesList').on('click', function(){
-                  $.get('desease_watch/nurseries_list', function(data){
-                        $('#nurseries_list').find('div.modal-body').html(data);
-                  });
-            });
-            $('#btnNurserySubmitSearch').live('click', function(){
-                  name = $('#nurseries_list').find('div.modal-body').find('[name=name]').val();
-                  province_id = $('#nurseries_list').find('div.modal-body').find('[name=province_id] option:selected').val();
-                  amphur_id = $('#nurseries_list').find('div.modal-body').find('[name=amphur_id] option:selected').val();
-                  district_id = $('#nurseries_list').find('div.modal-body').find('[name=district_id] option:selected').val();
-                  //alert(province_id);
-                  
-                  $('#nurseries_list').find('div.modal-body').html("<div style='text-align:center; color:#aaa;'>Loading...</div>");
-                  
-                  $.get('desease_watch/nurseries_list', {
-                        name : name,
-                        province_id : province_id,
-                        amphur_id : amphur_id,
-                        district_id : district_id
-                  }, function(data){
-                        $('#nurseries_list').find('div.modal-body').html(data);
-                  });
-                  /**/
-            });
-            
-            $('#nurseries_list .btnSelectNursery').live('click', function(){
-                  id = $(this).attr('rel');
-                  code = $(this).attr('code');
-                  name = $(this).parent().parent().find('.listName').html();
-                  province = $(this).parent().parent().find('.listProvince').html();
-                  amphur = $(this).parent().parent().find('.listAmphur').html();
-                  district = $(this).parent().parent().find('.listDistrict').html();
-                  
-                  $('[name=nurseries_id]').val(id);
-                  $('#nurseryCode').val(code);
-                  $('#nurseryName').val(name);
-                  $('#nurseryProvince').val(province);
-                  $('#nurseryAmphur').val(amphur);
-                  $('#nurseryDistrict').val(district);
-                                    
-                  $('#nurseries_list').modal('hide')
-            });
-            
-            $('#btnCallNurseriesList').attr('disabled', false).attr('data-toggle', 'modal');
-            
-            
-            //datepiceker
-            $('.datepicker').css({ width:"80px" }).datepicker({  
-                    dateFormat: 'dd/mm/yy',  
-                    //showOn: 'button',  
-            //      buttonImage: 'http://jqueryui.com/demos/datepicker/images/calendar.gif',  
-                    buttonImageOnly: false,  
-                    dayNamesMin: ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'],   
-                    monthNamesShort: ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'],  
-                    changeMonth: true,  
-                    changeYear: true,  
-                    beforeShow:function(){    
-                        if($(this).val()!=""){  
-                            var arrayDate=$(this).val().split("-");       
-                            arrayDate[2]=parseInt(arrayDate[2])-543;  
-                            $(this).val(arrayDate[0]+"-"+arrayDate[1]+"-"+arrayDate[2]);  
-                        }  
-                        setTimeout(function(){  
-                            $.each($(".ui-datepicker-year option"),function(j,k){  
-                                var textYear=parseInt($(".ui-datepicker-year option").eq(j).val())+543;  
-                                $(".ui-datepicker-year option").eq(j).text(textYear);  
-                            });               
-                        },50);  
-                    },  
-                    onChangeMonthYear: function(){  
-                        setTimeout(function(){  
-                            $.each($(".ui-datepicker-year option"),function(j,k){  
-                                var textYear=parseInt($(".ui-datepicker-year option").eq(j).val())+543;  
-                                $(".ui-datepicker-year option").eq(j).text(textYear);  
-                            });               
-                        },50);        
-                    },  
-                    onClose:function(){  
-                        if($(this).val()!="" && $(this).val()==dateBefore){           
-                            var arrayDate=dateBefore.split("/");  
-                            arrayDate[2]=parseInt(arrayDate[2])+543;  
-                            $(this).val(arrayDate[0]+"/"+arrayDate[1]+"/"+arrayDate[2]);      
-                        }         
-                    },  
-                    onSelect: function(dateText, inst){   
-                        dateBefore=$(this).val();  
-                        var arrayDate=dateText.split("/");  
-                        arrayDate[2]=parseInt(arrayDate[2])+543;  
-                        $(this).val(arrayDate[0]+"/"+arrayDate[1]+"/"+arrayDate[2]);  
-                    }     
-              
-              });
-       });
-</script>
+      /*question css*/
+      .question {
+            display:none;
+      }
+      .question input[type=checkbox] {
+            disabled:disabled;
+      }
+      .questionChild {
+            display:none;
+            color:#f00;
+            padding-left:20px;
+      }
+
+      .questionParent {
+            border:solid 1px #0f0;
+      }
+</style>
+
+
+<!-- Header. -->
+<ul class="breadcrumb">
+      <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
+      <li><a href="desease_watch">การเฝ้าระวังโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล</a> <span class="divider">/</span></li>
+      <li class="active">แบบฟอร์มเพิ่มข้อมูล</li>
+</ul>
+
+
+
+<h4>ระบบรายงานการเฝ้าระวังโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล</h4>
+<div style="text-align:center;">
+      <div href="#nurseries_list" role='button' id='btnCallNurseriesList' class='btn btn-primary' disabled="disabled">ค้นหา</div>
+</div>
+
+<form action='desease_watch/save' method='post'>
+      <?php echo form_hidden('id', @$rs->id); ?>
+      <table class='tblForm'>
+            <tr><th> 1. รายชื่อศูนย์เด็กเล็กและโรงเรียนอนุบาล </th></tr>
+            <tr>
+                  <td>
+                        <input type="hidden" name="nurseries_id" value="<?php echo @$rs->nurseries_id; ?>">
+                        <div>
+                              <input type="text" id='nurseryCode' disabled="disabled" style='width:85px;' value="<?php echo @$rs->nursery->code; ?>" placeholder="หมายเลขศูนย์">
+                              <input type="text" id="nurseryName" disabled="disabled" value="<?php echo @$rs->nursery->name; ?>" placeholder="ชื่อศูนย์เด็กเล็ก">
+                        </div>
+
+                        <div style='margin-top:10px;'>
+                              <input type="text" id='nurseryProvince' disabled="disabled" style='width:150px;' value="<?php echo @$rs->nursery->province->name; ?>" placeholder="จังหวัด">
+                              <input type="text" id='nurseryAmphur' disabled="disabled" style='width:150px;' value="<?php echo @$rs->nursery->amphur->amphur_name; ?>" placeholder="อำเภอ">
+                              <input type="text" id='nurseryDistrict' disabled="disabled" style='width:150px;' value="<?php echo @$rs->nursery->district->district_name; ?>" placeholder="ตำบล">
+                        </div>
+                  </td>
+            </tr>
+
+
+            <tr><th> 2. วัน/เดือน/ปี ที่บันทึก </th></tr>
+            <tr>
+                  <td><?php echo mysql_to_th((empty($rs->id))?date('Y-m-d'):$rs->created_date); ?></td>
+            </tr>
+
+
+            <tr><th> 3. เด็กป่วยโรค </th></tr>
+            <tr>
+                  <td>
+                        <?php
+                              $qList = array(''=>'--กรุณาเลือกโรค--', 1 => 'โรค มือ เท้า ปาก', 2 => 'โรคอีสุกอีใส', 3 => 'โรคไข้หวัด/ไข้หวัดใหญ่', 4 => 'โรคอุจจาระร่วง');
+                              echo form_dropdown('disease', $qList, @$rs->disease);
+                        ?>
+
+                        <div class="question" style='line-height:25px;'>
+                              <div id="questionHeader" style='margin-top:10px; font-weight:bold;'></div>
+                              <div style='padding-left:20px;'>
+                                    <div>
+                                          <div><?php echo form_checkbox('qCbox_1', 1, @$q['qCbox_1'], 'class="questionParent"').' ไข้'; ?></div>
+                                          <div class="questionChild">
+                                                <div>ลักษณะที่พบ</div>
+                                                <?php echo form_radio('qRdo_1', 1, @$q['qRdo_1']); ?> ไข้ต่ำๆ (<u><</u> 38.5 องศาเซลเซียส)
+                                                <?php echo form_radio('qRdo_1', 2, @$q['qRdo_1']); ?> ไข้สูง (> 38.5 องศาเซลเซียส)
+                                          </div>
+                                    </div>
+
+                                    <div>
+                                          <div><?php echo form_checkbox('qCbox_2', 1, @$q['qCbox_2'], 'class="questionParent"').' ไอ'; ?></div>
+                                          <div class='questionChild'>
+                                                <div>ลักษณะที่พบ</div>
+                                                <?php echo form_radio('qRdo_2', 1, @$q['qRdo_2']); ?> ไอห่าง ๆ
+                                                <?php echo form_radio('qRdo_2', 2, @$q['qRdo_2']); ?> ไอติด ๆ - เป็นชุด ๆ
+                                                <?php echo form_radio('qRdo_2', 3, @$q['qRdo_2']); ?> เสียงก้อง
+                                          </div>
+                                    </div>
+
+                                    <div>
+                                          <?php echo form_checkbox('qCbox_3_1', 1, @$q['qCbox_3_1']).' จาม'; ?>
+                                          <?php echo form_checkbox('qCbox_3_2', 1, @$q['qCbox_3_2']).' คัดจมูก'; ?>
+                                          <?php echo form_checkbox('qCbox_3_3', 1, @$q['qCbox_3_3']).' น้ำมูกไหล'; ?>
+                                          <?php echo form_checkbox('qCbox_3_4', 1, @$q['qCbox_3_4']).' เจ็บคอ'; ?>
+                                          <?php echo form_checkbox('qCbox_3_5', 1, @$q['qCbox_3_5']).' เจ็บปาก'; ?>
+                                    </div>
+
+                                    <div>
+                                          <div><?php echo form_checkbox('qCbox_4', 1, @$q['qCbox_4'], 'class="questionParent"').' เสมหะขาว'; ?></div>
+                                          <div class='questionChild'>
+                                                <div>ลักษณะที่พบ</div>
+                                                <?php echo form_radio('qRdo_4', 1, @$q['qRdo_4']); ?> ขาวขุ่น
+                                                <?php echo form_radio('qRdo_4', 2, @$q['qRdo_4']); ?> เหลือง
+                                                <?php echo form_radio('qRdo_4', 3, @$q['qRdo_4']); ?> เลือดปน
+                                          </div>
+                                    </div>
+
+                                    <div>
+                                          <?php echo form_checkbox('qCbox_5_1', 1, @$q['qCbox_5_1']).' หายใจเร็ว'; ?>
+                                          <?php echo form_checkbox('qCbox_5_2', 1, @$q['qCbox_5_2']).' หายใจมีเสียงวี๊ด'; ?>
+                                          <?php echo form_checkbox('qCbox_5_3', 1, @$q['qCbox_5_3']).' หอบ'; ?>
+                                    </div>
+
+                                    <div>
+                                          <?php echo form_checkbox('qCbox_6_1', 1, @$q['qCbox_6_1']).' หายใจลำบาก'; ?>
+                                          <?php echo form_checkbox('qCbox_6_2', 1, @$q['qCbox_6_2']).' หายใจทางปาก'; ?>
+                                          <?php echo form_checkbox('qCbox_6_3', 1, @$q['qCbox_6_3']).' ซี่โครงบุ๋ม'; ?>
+                                          <?php echo form_checkbox('qCbox_6_4', 1, @$q['qCbox_6_4']).' ตัวเขียว'; ?>
+                                    </div>
+
+                                    <div>
+                                          <?php echo form_checkbox('qCbox_7_1', 1, @$q['qCbox_7_1']).' คลื่นไส้'; ?>
+                                          <?php echo form_checkbox('qCbox_7_2', 1, @$q['qCbox_7_2']).' อาเจียน'; ?>
+                                          <?php echo form_checkbox('qCbox_7_3', 1, @$q['qCbox_7_3']).' เบื่ออาหาร'; ?>
+                                          <?php echo form_checkbox('qCbox_7_4', 1, @$q['qCbox_7_4']).' ไม่ดูดนม/น้ำ'; ?>
+                                    </div>
+
+                                    <div>
+                                          <div><?php echo form_checkbox('qCbox_8', 1, @$q['qCbox_8'], 'class="questionParent"').' ท้องเสีย'; ?></div>
+                                          <div class='questionChild'>
+                                                <div>ลักษณะที่พบ</div>
+                                                <?php echo form_radio('qRdo_8', 1, @$q['qRdo_8']); ?> ถ่ายเหลว (> 3 ครั้ง/วัน)
+                                                <?php echo form_radio('qRdo_8', 2, @$q['qRdo_8']); ?> ถ่ายเป็นน้ำปริมาณมาก
+                                                <?php echo form_radio('qRdo_8', 3, @$q['qRdo_8']); ?> ถ่ายเป็นมูก/เลือด
+                                          </div>
+                                    </div>
+
+                                    <div>
+                                          <?php echo form_checkbox('qCbox_9_1', 1, @$q['qCbox_9_1']).' ปวดศรีษะ'; ?>
+                                          <?php echo form_checkbox('qCbox_9_2', 1, @$q['qCbox_9_2']).' ปวดกล้ามเนื้อ'; ?>
+                                          <?php echo form_checkbox('qCbox_9_3', 1, @$q['qCbox_9_3']).' ปวดตา'; ?>
+                                          <?php echo form_checkbox('qCbox_9_4', 1, @$q['qCbox_9_4']).' ปวดหน้าผาก/จมูก'; ?>
+                                          <?php echo form_checkbox('qCbox_9_5', 1, @$q['qCbox_9_5']).' ปวดหู'; ?>
+                                    </div>
+
+                                    <div>
+                                          <div><?php echo form_checkbox('qCbox_10_1', 1, @$q['qCbox_10_1'], 'class="questionParent"').' แผล หรือ '.form_checkbox('qCbox_10_2', 1, @$q['qCbox_10_2'], 'class="questionParent"').' ผื่น/ตุ่มแดง'; ?></div>
+                                          <div class='questionChild'>
+                                                <div>
+                                                      <div>ลักษณะที่พบ</div>
+                                                      <?php echo form_radio('qRdo_10_1', 1, @$q['qRdo_10_1']); ?> ตุ่มน้ำใส
+                                                      <?php echo form_radio('qRdo_10_1', 2, @$q['qRdo_10_1']); ?> ตุ่มน้ำขุ่น/เป็นหนอง
+                                                </div>
+                                                <div>
+                                                      <div>บริเวณที่พบ</div>
+                                                      <?php echo form_radio('qRdo_10_2', 1, @$q['qRdo_10_2']); ?> กระพุ้งแก้ม
+                                                      <?php echo form_radio('qRdo_10_2', 2, @$q['qRdo_10_2']); ?> เพดาน
+                                                      <?php echo form_radio('qRdo_10_2', 3, @$q['qRdo_10_2']); ?> เหงือก
+                                                      <?php echo form_radio('qRdo_10_2', 4, @$q['qRdo_10_2']); ?> ลิ้น
+                                                      <?php echo form_radio('qRdo_10_2', 5, @$q['qRdo_10_2']); ?> มุมปาก
+                                                      <?php echo form_radio('qRdo_10_2', 6, @$q['qRdo_10_2']); ?> ริมฝีปาก
+                                                      <?php echo form_radio('qRdo_10_2', 7, @$q['qRdo_10_2']); ?> ฝ่ามือ
+                                                      <?php echo form_radio('qRdo_10_2', 8, @$q['qRdo_10_2']); ?> ฝ่าเท้า
+                                                      <?php echo form_radio('qRdo_10_2', 9, @$q['qRdo_10_2']); ?> นิ้วมือ
+                                                      <?php echo form_radio('qRdo_10_2', 10, @$q['qRdo_10_2']); ?> หัวเข่า
+                                                      <?php echo form_radio('qRdo_10_2', 11, @$q['qRdo_10_2']); ?> ข้อศอก
+                                                      <?php echo form_radio('qRdo_10_2', 12, @$q['qRdo_10_2']); ?> ลำตัว
+                                                      <?php echo form_radio('qRdo_10_2', 13, @$q['qRdo_10_2']); ?> แขน
+                                                      <?php echo form_radio('qRdo_10_2', 14, @$q['qRdo_10_2']); ?> ขา
+                                                </div>
+                                          </div>
+                                    </div>
+
+                                    <div>
+                                          <?php echo form_checkbox('qCbox_11_1', 1, @$q['qCbox_11_1']).' ซึม'; ?>
+                                          <?php echo form_checkbox('qCbox_11_2', 2, @$q['qCbox_11_2']).' ตาเหม่อ/ลอย'; ?>
+                                          <?php echo form_checkbox('qCbox_11_3', 3, @$q['qCbox_11_3']).' กระสับกระส่าย'; ?>
+                                          <?php echo form_checkbox('qCbox_11_4', 4, @$q['qCbox_11_4']).' ชัก/เกร็ง'; ?>
+                                    </div>
+
+                                    <div>
+                                          <div><?php echo form_checkbox('qCbox_12', 1, @$q['qCbox_12'], 'class="questionParent"').' กล้ามเนื้ออ่อนแรง/อัมพาต'; ?></div>
+                                          <div class='questionChild'>
+                                                บริเวณที่พบ
+                                                <?php echo form_radio('qRdo_11', 1, @$q['qRdo_11']); ?> แขนและขาทั้ง 2 ข้าง
+                                                <?php echo form_radio('qRdo_11', 2, @$q['qRdo_11']); ?> แขนทั้ง 2 ข้าง
+                                                <?php echo form_radio('qRdo_11', 3, @$q['qRdo_11']); ?> ขาทั้ง 2 ข้าง
+                                                <?php echo form_radio('qRdo_11', 4, @$q['qRdo_11']); ?> แขนซ้าย
+                                                <?php echo form_radio('qRdo_11', 5, @$q['qRdo_11']); ?> แขนขวา
+                                                <?php echo form_radio('qRdo_11', 6, @$q['qRdo_11']); ?> ซีกซ้าย
+                                                <?php echo form_radio('qRdo_11', 7, @$q['qRdo_11']); ?> ซีกขวา
+                                          </div>
+                                    </div>
+                              </div>
+                        </div>
+
+                  </td>
+            </tr>
+
+
+            <tr><th> 4. วันที่เริ่มมีเด็กป่วย ระยะแรก </th> </tr>
+            <tr>
+                  <td>
+                        วันที่เริ่ม <input type="text" name="start_date" class='datepicker' value="<?php echo @DB2Date($rs->start_date, false); ?>">
+                        วันที่สิ้นสุด <input type="text" name="end_date" class='datepicker' value="<?php echo @DB2Date($rs->end_date, false); ?>">
+                  </td>
+            </tr>
+
+
+            <tr><th> 5. รวมจำนวนเด็กป่วย </th></tr>
+            <tr>
+                  <td>
+                        จำนวนเด็กป่วย <input type="text" style='width:40px;' name="total_amount" value="<?php echo @$rs->total_amount; ?>"> คน
+                        ชาย  <input type="text" style='width:40px;' name="boy_amount" value="<?php echo @$rs->boy_amount; ?>"> คน
+                        หญิง  <input type="text" style='width:40px;' name="girl_amount" value="<?php echo @$rs->girl_amount; ?>"> คน
+                  </td>
+            </tr>
+
+
+            <tr><th> 6. อายุระหว่าง </th></tr>
+            <tr>
+                  <td>
+                        <input type="text" style='width:35px;' name="age_duration_start" value='<?php echo @$rs->age_duration_start; ?>' maxlength="2"> ปี -
+                        <input type="text" style='width:35px;' name="age_duration_end" value='<?php echo @$rs->age_duration_end; ?>' maxlength="2"> ปี
+                  </td>
+            </tr>
+
+
+            <tr><th> 7. มาตรการที่ได้ดำเนินการป้องกันควบคุมโรคในศูนย์เด็กเล็กและโรงเรียนอนุบาล สามารถเลือกได้มากกว่า 1 ข้อ </th></tr>
+            <tr>
+                  <td>
+                        <div style='font-weight:bold;'>7.1 การคัดกรองเด็ก</div>
+                        <ul>
+                              <li><?php echo form_checkbox('measure_filter_1', 1, @$rs->measure_filter_1); ?> คัดกรองเด็กป่วยทุกวัน</li>
+                              <li><?php echo form_checkbox('measure_filter_2', 1, @$rs->measure_filter_2); ?> แยกเด็กป่วย (เน้นให้ผู้ปกครองนำเด็กกลับบ้าน)</li>
+                        </ul>
+
+                        <div style='font-weight:bold;'>7.2 การทำความสะอาด</div>
+                        <ul>
+                              <li><?php echo form_checkbox('measure_clean_1', 1, @$rs->measure_clean_1); ?> ห้องเรียน/ห้องกิจกรรมต่าง ๆ</li>
+                              <li><?php echo form_checkbox('measure_clean_2', 1, @$rs->measure_clean_2); ?> ของเล่น/สื่อการเรียนการสอนต่าง ๆ</li>
+                              <li><?php echo form_checkbox('measure_clean_3', 1, @$rs->measure_clean_3); ?> อุปกรณ์เครื่องใช้ (แก้วน้ำ/ผ้าเช็ดมือ/ผ้าเช็ดหน้า ฯลฯ)</li>
+                              <li><?php echo form_checkbox('measure_clean_4', 1, @$rs->measure_clean_4); ?> อุปกรณ์เครื่องนอน (หมอน/ผ้าหุ่ม/ที่นอน)</li>
+                              <li><?php echo form_checkbox('measure_clean_5', 1, @$rs->measure_clean_5); ?> ห้องครัว/ห้องรับประทานอาหาร</li>
+                              <li><?php echo form_checkbox('measure_clean_6', 1, @$rs->measure_clean_6); ?> ห้องน้ำ/ห้องส้วม</li>
+                        </ul>
+                  </td>
+            </tr>
+      </table>
+      <div style='text-align:center;'>
+            <button type="submit" class='btn btn-primary'>บันทึกข้อมูล</button>
+            <a href="desease_watch" class="btn btn-danger">ย้อนกลับ</a>
+      </div>
+</form>
+
 
 <!-- Modal -->
 <div id="nurseries_list" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
@@ -115,113 +283,157 @@
 
 
 
-<style media="screen">
-      .tblForm tr th {
-            text-align:left;
-            padding-bottom:10px;
-      }
-      .tblForm tr td {
-            padding-left:20px;
-            padding-bottom:30px;
-      }
-</style>
 
-<!-- Header. -->
-<ul class="breadcrumb">
-      <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-      <li><a href="desease_watch">การเฝ้าระวังโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล</a> <span class="divider">/</span></li>
-      <li class="active">แบบฟอร์มเพิ่มข้อมูล</li>
-</ul>
+<!-- Script -->
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript">
+      $(function(){
+            //Modal (Nurseries_list)
+            $('#btnCallNurseriesList').on('click', function(){
+                  $.get('desease_watch/nurseries_list', function(data){
+                        $('#nurseries_list').find('div.modal-body').html(data);
+                  });
+            });
+            $('#btnNurserySubmitSearch').live('click', function(){
+                  name = $('#nurseries_list').find('div.modal-body').find('[name=name]').val();
+                  province_id = $('#nurseries_list').find('div.modal-body').find('[name=province_id] option:selected').val();
+                  amphur_id = $('#nurseries_list').find('div.modal-body').find('[name=amphur_id] option:selected').val();
+                  district_id = $('#nurseries_list').find('div.modal-body').find('[name=district_id] option:selected').val();
+                  //alert(province_id);
+
+                  $('#nurseries_list').find('div.modal-body').html("<div style='text-align:center; color:#aaa;'>Loading...</div>");
+
+                  $.get('desease_watch/nurseries_list', {
+                        name : name,
+                        province_id : province_id,
+                        amphur_id : amphur_id,
+                        district_id : district_id
+                  }, function(data){
+                        $('#nurseries_list').find('div.modal-body').html(data);
+                  });
+                  /**/
+            });
+
+            $('#nurseries_list .btnSelectNursery').live('click', function(){
+                  id = $(this).attr('rel');
+                  code = $(this).attr('code');
+                  name = $(this).parent().parent().find('.listName').html();
+                  province = $(this).parent().parent().find('.listProvince').html();
+                  amphur = $(this).parent().parent().find('.listAmphur').html();
+                  district = $(this).parent().parent().find('.listDistrict').html();
+
+                  $('[name=nurseries_id]').val(id);
+                  $('#nurseryCode').val(code);
+                  $('#nurseryName').val(name);
+                  $('#nurseryProvince').val(province);
+                  $('#nurseryAmphur').val(amphur);
+                  $('#nurseryDistrict').val(district);
+
+                  $('#nurseries_list').modal('hide')
+            });
+
+            $('#btnCallNurseriesList').attr('disabled', false).attr('data-toggle', 'modal');
 
 
-<h4>ระบบรายงานการเฝ้าระวังโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล</h4>
-<div style="text-align:center;">
-      <div href="#nurseries_list" role='button' id='btnCallNurseriesList' class='btn btn-primary' disabled="disabled">ค้นหา</div>
-</div>
+            //datepiceker
+            $('.datepicker').css({ width:"80px" }).datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    //showOn: 'button',
+            //      buttonImage: 'http://jqueryui.com/demos/datepicker/images/calendar.gif',
+                    buttonImageOnly: false,
+                    dayNamesMin: ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'],
+                    monthNamesShort: ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'],
+                    changeMonth: true,
+                    changeYear: true,
+                    beforeShow:function(){
+                        if($(this).val()!=""){
+                            var arrayDate=$(this).val().split("-");
+                            arrayDate[2]=parseInt(arrayDate[2])-543;
+                            $(this).val(arrayDate[0]+"-"+arrayDate[1]+"-"+arrayDate[2]);
+                        }
+                        setTimeout(function(){
+                            $.each($(".ui-datepicker-year option"),function(j,k){
+                                var textYear=parseInt($(".ui-datepicker-year option").eq(j).val())+543;
+                                $(".ui-datepicker-year option").eq(j).text(textYear);
+                            });
+                        },50);
+                    },
+                    onChangeMonthYear: function(){
+                        setTimeout(function(){
+                            $.each($(".ui-datepicker-year option"),function(j,k){
+                                var textYear=parseInt($(".ui-datepicker-year option").eq(j).val())+543;
+                                $(".ui-datepicker-year option").eq(j).text(textYear);
+                            });
+                        },50);
+                    },
+                    onClose:function(){
+                        if($(this).val()!="" && $(this).val()==dateBefore){
+                            var arrayDate=dateBefore.split("/");
+                            arrayDate[2]=parseInt(arrayDate[2])+543;
+                            $(this).val(arrayDate[0]+"/"+arrayDate[1]+"/"+arrayDate[2]);
+                        }
+                    },
+                    onSelect: function(dateText, inst){
+                        dateBefore=$(this).val();
+                        var arrayDate=dateText.split("/");
+                        arrayDate[2]=parseInt(arrayDate[2])+543;
+                        $(this).val(arrayDate[0]+"/"+arrayDate[1]+"/"+arrayDate[2]);
+                    }
 
-<form action='desease_watch/save' method='post'>
-      <table class='tblForm'>
-            <tr><th> 1. รายชื่อศูนย์เด็กเล็กและโรงเรียนอนุบาล </th></tr>
-            <tr>
-                  <td>
-                        <input type="hidden" name="nurseries_id" value="">
-                        <div>
-                              <input type="text" id='nurseryCode' disabled="disabled" style='width:85px;' value="" placeholder="หมายเลขศูนย์">
-                              <input type="text" id="nurseryName" disabled="disabled" value="" placeholder="ชื่อศูนย์เด็กเล็ก">
-                        </div>
-                              
-                        <div style='margin-top:10px;'>
-                              <input type="text" id='nurseryProvince' disabled="disabled" style='width:150px;' value="" placeholder="จังหวัด">
-                              <input type="text" id='nurseryAmphur' disabled="disabled" style='width:150px;' value="" placeholder="อำเภอ">
-                              <input type="text" id='nurseryDistrict' disabled="disabled" style='width:150px;' value="" placeholder="ตำบล">
-                        </div>
-                  </td>
-            </tr>
-            
-            
-            <tr><th> 2. วัน/เดือน/ปี ที่บันทึก </th></tr>
-            <tr>
-                  <td><?php echo mysql_to_th(date('Y-m-d')); ?></td>
-            </tr>
-            
-            
-            <tr><th> 3. เด็กป่วยโรค </th></tr>
-            <tr>
-                  <td> <?php echo form_dropdown('disease', array(''=>'--กรุณาเลือกโรค--', 1 => 'โรค มือ เท้า ปาก', 2 => 'โรคอีสุกอีใส', 3 => 'โรคไข้หวัด/ไข้หวัดใหญ่', 4 => 'โรคอุจจาระร่วง')); ?> </td>
-            </tr>
-            
-            
-            <tr><th> 4. วันที่เริ่มมีเด็กป่วย ระยะแรก </th> </tr>
-            <tr>
-                  <td>
-                        วันที่เริ่ม <input type="text" name="start_date" class='datepicker' value="">
-                        วันที่สิ้นสุด <input type="text" name="end_date" class='datepicker' value="">
-                  </td>
-            </tr>
-            
-            
-            <tr><th> 5. รวมจำนวนเด็กป่วย </th></tr>
-            <tr>
-                  <td>
-                        จำนวนเด็กป่วย <input type="text" style='width:40px;' name="total_amount" value=""> คน 
-                        ชาย  <input type="text" style='width:40px;' name="boy_amount" value=""> คน 
-                        หญิง  <input type="text" style='width:40px;' name="girl_amount" value=""> คน 
-                  </td>
-            </tr>
-            
-            
-            <tr><th> 6. อายุระหว่าง </th></tr>
-            <tr>
-                  <td> 
-                        <input type="text" style='width:35px;' name="age_duration_start" maxlength="2"> ปี - 
-                        <input type="text" style='width:35px;' name="age_duration_end" maxlength="2"> ปี
-                  </td>
-            </tr>
-            
-            
-            <tr><th> 7. มาตรการที่ได้ดำเนินการป้องกันควบคุมโรคในศูนย์เด็กเล็กและโรงเรียนอนุบาล สามารถเลือกได้มากกว่า 1 ข้อ </th></tr>
-            <tr>
-                  <td>
-                        <div style='font-weight:bold;'>7.1 การคัดกรองเด็ก</div>
-                        <ul>
-                              <li><input type='checkbox' name='measure_filter_1'> คัดกรองเด็กป่วยทุกวัน</li>
-                              <li><input type='checkbox' name='measure_filter_2'> แยกเด็กป่วย (เน้นให้ผู้ปกครองนำเด็กกลับบ้าน)</li>
-                        </ul>
-                        
-                        <div style='font-weight:bold;'>7.2 การทำความสะอาด</div>
-                        <ul>
-                              <li><input type='checkbox' name='measure_clean_1'> ห้องเรียน/ห้องกิจกรรมต่าง ๆ</li>
-                              <li><input type='checkbox' name='measure_clean_2'> ของเล่น/สื่อการเรียนการสอนต่าง ๆ</li>
-                              <li><input type='checkbox' name='measure_clean_3'> อุปกรณ์เครื่องใช้ (แก้วน้ำ/ผ้าเช็ดมือ/ผ้าเช็ดหน้า ฯลฯ)</li>
-                              <li><input type='checkbox' name='measure_clean_4'> อุปกรณ์เครื่องนอน (หมอน/ผ้าหุ่ม/ที่นอน)</li>
-                              <li><input type='checkbox' name='measure_clean_5'> ห้องครัว/ห้องรับประทานอาหาร</li>
-                              <li><input type='checkbox' name='measure_clean_6'> ห้องน้ำ/ห้องส้วม</li>
-                        </ul>
-                  </td>
-            </tr>
-      </table>
-      <div style='text-align:center;'>
-            <button type="submit" class='btn btn-primary'>บันทึกข้อมูล</button> 
-            <a href="desease_watch" class="btn btn-danger">ย้อนกลับ</a>
-      </div>
-</form>
+              });
+
+            //question script..
+            question = {
+                  // Begin checking.
+                  begin:function(){
+                        this.checkDisplay();
+                        this.childDisplayBegin();
+                  },
+                  // Question
+                  checkDisplay:function(clearnType){
+                        // Clean checkbox, radio box
+                        if(clearnType) {
+                              $('.question input[type=checkbox], .question input[type=radio]').attr('checked', false);
+                              $('.question, .question .questionChild').hide();
+                        }
+
+                        $('#questionHeader').html($('[name=disease] option:selected').text());
+                        if($('[name=disease] option:selected').val() != '') {
+                              $('.question').show();
+                        } else {
+                              $('.question').hide();
+                        }
+                  },
+                  // Child question
+                  childDisplayBegin:function(){
+                        for(i=0; i<$('.questionParent').size(); i++) {
+                              if($('.questionParent').eq(i).prop('checked')) {
+                                    this.childCheckDisplay($('.questionParent').eq(i));
+                              }
+                        }
+                  },
+                        childCheckDisplay:function(obj){
+                              checked = obj.prop('checked');
+                              if(obj.attr('name') == 'qCbox_10_1' || obj.attr('name') == 'qCbox_10_2') {
+                                    if($('[name=qCbox_10_1]').attr('checked') == 'checked' || $('[name=qCbox_10_2]').attr('checked') == 'checked') {
+                                          checked = true;
+                                    }
+                              }
+
+                              if(checked) {
+                                    obj.parent().parent().find('.questionChild').show();
+                              } else {
+                                    obj.parent().parent().find('.questionChild').hide();
+                              }
+                        }
+            };
+
+            question.begin();
+            $('[name=disease]').on('change', function(){
+                  question.checkDisplay(true);
+            });
+            $('.questionParent').on('change', function(){
+                  question.childCheckDisplay($(this));
+            });
+      });//$(function(){
+</script>

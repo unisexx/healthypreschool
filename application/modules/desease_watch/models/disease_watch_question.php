@@ -1,10 +1,11 @@
 <?php
-class Disease_watch extends ORM
+class Disease_watch_question extends ORM
 {
-	public $table = 'disease_watch';
+	public $table = 'disease_watch_question';
 
 	#public $has_one = array('user');
-
+	public $has_one = array('disease_watch');
+/*
 	public $has_one = array(
 		'nursery' => array(
 			'class' => 'nursery',
@@ -12,9 +13,7 @@ class Disease_watch extends ORM
 			'join_other_as' => 'nurseries'
 		)
 	);
-
-	public $has_many = array('disease_watch_question');
-
+/**/
 	public function __construct($id = NULL)
 	{
 		parent::__construct($id);
