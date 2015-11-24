@@ -1,6 +1,20 @@
 <style type="text/css">
 .form-horizontal .control-label {width:170px !important;}
 </style>
+<script>
+$(document).ready(function(){
+	$("#regisform").validate({
+    rules: 
+    {
+    	name:{required: true},
+    },
+    messages:
+    {
+    	name:{required: "กรุณากรอกชื่อศูนย์เด็กเล็ก"},
+    }
+    });
+});
+</script>
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
@@ -52,10 +66,10 @@
 <style>
 	.modal.large {
 	    width: 80%; /* respsonsive width */
-	    height:700px;
+	    height:550px;
 	    margin-left:-40%; /* width/2) */ 
 	}
-	.modal-body {max-height:650px!important;}
+	.modal-body {max-height:500px!important;}
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
