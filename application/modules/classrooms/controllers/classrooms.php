@@ -71,7 +71,13 @@ class Classrooms extends Public_Controller{
 	}
 	
 	function view($id){
-		$data['classroom'] = new Classroom($id);
+		$data['rs'] = new Classroom($id);
+		$this->template->build('view',$data);
+	}
+	
+	function form_detail($classroom_id=false,$id=false){
+		$data['classroom'] = new Classroom($classroom_id);
+		$this->template->build('form_detail',$data);
 	}
 }
 ?>
