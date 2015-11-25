@@ -348,7 +348,7 @@ class Elearnings extends Public_Controller {
 			}
 			$ext_condition = $ext_category != '' ? " AND question_category_id IN (".$ext_category.") " :  "";
     	}
-        $ext_condition = " AND id NOT IN (SELECT questionaire_id FROM question_answers WHERE user_id = ".$user_id.")";
+        $ext_condition .= " AND id NOT IN (SELECT questionaire_id FROM question_answers WHERE user_id = ".$user_id.")";
         $sql = "SELECT * from question_titles WHERE topic_id = " . $topic_id .$ext_condition. " ORDER BY RAND() LIMIT 1 ";
         $data['question'] = $this -> db -> query($sql) -> row();
         $data['answers'] = $this -> db -> query("select * from question_choices WHERE questionaire_id = " . $data['question'] -> id . " ORDER BY RAND() ") -> result();

@@ -8,6 +8,16 @@
             padding-left:20px;
             padding-bottom:30px;
       }
+      
+      /*Modal*/
+      .modal {
+            width:80%;
+            margin-left:-40%;
+      }
+      .modal-body {
+            height:100vh;
+            overflow-y: auto;
+      }
 
       /*question css*/
       .question {
@@ -28,7 +38,8 @@
 </style>
 
 
-<!-- Header. -->
+
+<!-- Navigator. -->
 <ul class="breadcrumb">
       <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
       <li><a href="desease_watch">การเฝ้าระวังโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล</a> <span class="divider">/</span></li>
@@ -36,22 +47,21 @@
 </ul>
 
 
-
+<!-- Header -->
 <h4>ระบบรายงานการเฝ้าระวังโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล</h4>
-<div style="text-align:center;">
-      <div href="#nurseries_list" role='button' id='btnCallNurseriesList' class='btn btn-primary' disabled="disabled">ค้นหา</div>
-</div>
 
-<form action='desease_watch/save' method='post'>
+<!-- Content -->
+<form id="desease_watch" action='desease_watch/save' method='post'>
       <?php echo form_hidden('id', @$rs->id); ?>
       <table class='tblForm'>
             <tr><th> 1. รายชื่อศูนย์เด็กเล็กและโรงเรียนอนุบาล </th></tr>
             <tr>
                   <td>
-                        <input type="hidden" name="nurseries_id" value="<?php echo @$rs->nurseries_id; ?>">
+                        <input type="hidden" name="nurseries_id" value="<?php echo (empty($rs->nurseries_id))?null:$rs->nurseries_id; ?>">
                         <div>
                               <input type="text" id='nurseryCode' disabled="disabled" style='width:85px;' value="<?php echo @$rs->nursery->code; ?>" placeholder="หมายเลขศูนย์">
                               <input type="text" id="nurseryName" disabled="disabled" value="<?php echo @$rs->nursery->name; ?>" placeholder="ชื่อศูนย์เด็กเล็ก">
+                              <div href="#nurseries_list" role='button' id='btnCallNurseriesList' class='btn btn-primary' disabled="disabled">ค้นหา</div>
                         </div>
 
                         <div style='margin-top:10px;'>
@@ -59,14 +69,15 @@
                               <input type="text" id='nurseryAmphur' disabled="disabled" style='width:150px;' value="<?php echo @$rs->nursery->amphur->amphur_name; ?>" placeholder="อำเภอ">
                               <input type="text" id='nurseryDistrict' disabled="disabled" style='width:150px;' value="<?php echo @$rs->nursery->district->district_name; ?>" placeholder="ตำบล">
                         </div>
+                        
+                        
+                        <div class="errorPlace_nurseries_id"></div>
                   </td>
             </tr>
 
 
             <tr><th> 2. วัน/เดือน/ปี ที่บันทึก </th></tr>
-            <tr>
-                  <td><?php echo mysql_to_th((empty($rs->id))?date('Y-m-d'):$rs->created_date); ?></td>
-            </tr>
+            <tr> <td><?php echo mysql_to_th((empty($rs->id))?date('Y-m-d'):$rs->created_date); ?></td> </tr>
 
 
             <tr><th> 3. เด็กป่วยโรค </th></tr>
@@ -213,8 +224,9 @@
             <tr><th> 4. วันที่เริ่มมีเด็กป่วย ระยะแรก </th> </tr>
             <tr>
                   <td>
-                        วันที่เริ่ม <input type="text" name="start_date" class='datepicker' value="<?php echo @DB2Date($rs->start_date, false); ?>">
-                        วันที่สิ้นสุด <input type="text" name="end_date" class='datepicker' value="<?php echo @DB2Date($rs->end_date, false); ?>">
+                        วันที่เริ่ม <input type="text" name="start_date" class='datepicker' value="<?php echo (@!strtotime($rs->start_date))?null:DB2Date($rs->start_date, false); ?>">
+                        วันที่สิ้นสุด <input type="text" name="end_date" class='datepicker' value="<?php echo (@!strtotime($rs->end_date))?null:DB2Date($rs->end_date, false); ?>">
+                        <div class="errorPlace_duration_date"></div>
                   </td>
             </tr>
 
@@ -222,9 +234,10 @@
             <tr><th> 5. รวมจำนวนเด็กป่วย </th></tr>
             <tr>
                   <td>
-                        จำนวนเด็กป่วย <input type="text" style='width:40px;' name="total_amount" value="<?php echo @$rs->total_amount; ?>"> คน
-                        ชาย  <input type="text" style='width:40px;' name="boy_amount" value="<?php echo @$rs->boy_amount; ?>"> คน
-                        หญิง  <input type="text" style='width:40px;' name="girl_amount" value="<?php echo @$rs->girl_amount; ?>"> คน
+                        จำนวนเด็กป่วย <input type="text" style='width:40px;' name="total_amount" value="<?php echo (empty($rs->total_amount))?null:$rs->total_amount; ?>"> คน
+                        ชาย  <input type="text" style='width:40px;' name="boy_amount" value="<?php echo (empty($rs->boy_amount))?null:$rs->boy_amount; ?>"> คน
+                        หญิง  <input type="text" style='width:40px;' name="girl_amount" value="<?php echo (empty($rs->girl_amount))?null:$rs->girl_amount; ?>"> คน
+                        <div class="errorPlace_amount"></div>
                   </td>
             </tr>
 
@@ -232,8 +245,9 @@
             <tr><th> 6. อายุระหว่าง </th></tr>
             <tr>
                   <td>
-                        <input type="text" style='width:35px;' name="age_duration_start" value='<?php echo @$rs->age_duration_start; ?>' maxlength="2"> ปี -
-                        <input type="text" style='width:35px;' name="age_duration_end" value='<?php echo @$rs->age_duration_end; ?>' maxlength="2"> ปี
+                        <input type="text" style='width:35px;' name="age_duration_start" value='<?php echo (empty($rs->age_duration_start))?null:$rs->age_duration_start; ?>' maxlength="2"> ปี -
+                        <input type="text" style='width:35px;' name="age_duration_end" value='<?php echo (empty($rs->age_duration_end))?null:$rs->age_duration_end; ?>' maxlength="2"> ปี
+                        <div class="errorPlace_ageDuration"></div>
                   </td>
             </tr>
 
@@ -241,20 +255,20 @@
             <tr><th> 7. มาตรการที่ได้ดำเนินการป้องกันควบคุมโรคในศูนย์เด็กเล็กและโรงเรียนอนุบาล สามารถเลือกได้มากกว่า 1 ข้อ </th></tr>
             <tr>
                   <td>
-                        <div style='font-weight:bold;'>7.1 การคัดกรองเด็ก</div>
+                        <div style='font-weight:bold;'>7.1 การคัดกรองเด็ก <span class='errorPlace_measureFilter'></span></div>
                         <ul>
-                              <li><?php echo form_checkbox('measure_filter_1', 1, @$rs->measure_filter_1); ?> คัดกรองเด็กป่วยทุกวัน</li>
-                              <li><?php echo form_checkbox('measure_filter_2', 1, @$rs->measure_filter_2); ?> แยกเด็กป่วย (เน้นให้ผู้ปกครองนำเด็กกลับบ้าน)</li>
+                              <li><?php echo form_checkbox('measure_filter_1', 1, @$rs->measure_filter_1, 'class="measure_filter"'); ?> คัดกรองเด็กป่วยทุกวัน</li>
+                              <li><?php echo form_checkbox('measure_filter_2', 1, @$rs->measure_filter_2, 'class="measure_filter"'); ?> แยกเด็กป่วย (เน้นให้ผู้ปกครองนำเด็กกลับบ้าน)</li>
                         </ul>
 
-                        <div style='font-weight:bold;'>7.2 การทำความสะอาด</div>
+                        <div style='font-weight:bold;'>7.2 การทำความสะอาด <span class='errorPlace_measureClean'></span></div>
                         <ul>
-                              <li><?php echo form_checkbox('measure_clean_1', 1, @$rs->measure_clean_1); ?> ห้องเรียน/ห้องกิจกรรมต่าง ๆ</li>
-                              <li><?php echo form_checkbox('measure_clean_2', 1, @$rs->measure_clean_2); ?> ของเล่น/สื่อการเรียนการสอนต่าง ๆ</li>
-                              <li><?php echo form_checkbox('measure_clean_3', 1, @$rs->measure_clean_3); ?> อุปกรณ์เครื่องใช้ (แก้วน้ำ/ผ้าเช็ดมือ/ผ้าเช็ดหน้า ฯลฯ)</li>
-                              <li><?php echo form_checkbox('measure_clean_4', 1, @$rs->measure_clean_4); ?> อุปกรณ์เครื่องนอน (หมอน/ผ้าหุ่ม/ที่นอน)</li>
-                              <li><?php echo form_checkbox('measure_clean_5', 1, @$rs->measure_clean_5); ?> ห้องครัว/ห้องรับประทานอาหาร</li>
-                              <li><?php echo form_checkbox('measure_clean_6', 1, @$rs->measure_clean_6); ?> ห้องน้ำ/ห้องส้วม</li>
+                              <li><?php echo form_checkbox('measure_clean_1', 1, @$rs->measure_clean_1, 'class="measure_clean"'); ?> ห้องเรียน/ห้องกิจกรรมต่าง ๆ</li>
+                              <li><?php echo form_checkbox('measure_clean_2', 1, @$rs->measure_clean_2, 'class="measure_clean"'); ?> ของเล่น/สื่อการเรียนการสอนต่าง ๆ</li>
+                              <li><?php echo form_checkbox('measure_clean_3', 1, @$rs->measure_clean_3, 'class="measure_clean"'); ?> อุปกรณ์เครื่องใช้ (แก้วน้ำ/ผ้าเช็ดมือ/ผ้าเช็ดหน้า ฯลฯ)</li>
+                              <li><?php echo form_checkbox('measure_clean_4', 1, @$rs->measure_clean_4, 'class="measure_clean"'); ?> อุปกรณ์เครื่องนอน (หมอน/ผ้าหุ่ม/ที่นอน)</li>
+                              <li><?php echo form_checkbox('measure_clean_5', 1, @$rs->measure_clean_5, 'class="measure_clean"'); ?> ห้องครัว/ห้องรับประทานอาหาร</li>
+                              <li><?php echo form_checkbox('measure_clean_6', 1, @$rs->measure_clean_6, 'class="measure_clean"'); ?> ห้องน้ำ/ห้องส้วม</li>
                         </ul>
                   </td>
             </tr>
@@ -267,25 +281,28 @@
 
 
 <!-- Modal -->
-<div id="nurseries_list" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel">ค้นหารายชื่อศูนย์เด็กเล็กและโรงเรียนอนุบาล</h3>
+<div id="nurseries_list" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true" style='height:auto;'>
+      <div class="modal-dialog modal-lg">
+            <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  <h3 id="myModalLabel">ค้นหารายชื่อศูนย์เด็กเล็กและโรงเรียนอนุบาล</h3>
+            </div>
+            <div class="modal-body">
+                  <p>Loading....</p>
+            </div>
+            <div class="modal-footer">
+                  <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                  <!-- <button class="btn btn-primary">Save changes</button> -->
+            </div>
       </div>
-      <div class="modal-body">
-            <p>Loading....</p>
-      </div>
-      <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-            <!-- <button class="btn btn-primary">Save changes</button> -->
-      </div>
+            
 </div>
 
 
 
 
 <!-- Script -->
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="media/js/jquery-ui-1.7.3.custom.min.js"></script>
 <script type="text/javascript">
       $(function(){
             //Modal (Nurseries_list)
@@ -299,7 +316,6 @@
                   province_id = $('#nurseries_list').find('div.modal-body').find('[name=province_id] option:selected').val();
                   amphur_id = $('#nurseries_list').find('div.modal-body').find('[name=amphur_id] option:selected').val();
                   district_id = $('#nurseries_list').find('div.modal-body').find('[name=district_id] option:selected').val();
-                  //alert(province_id);
 
                   $('#nurseries_list').find('div.modal-body').html("<div style='text-align:center; color:#aaa;'>Loading...</div>");
 
@@ -311,7 +327,6 @@
                   }, function(data){
                         $('#nurseries_list').find('div.modal-body').html(data);
                   });
-                  /**/
             });
 
             $('#nurseries_list .btnSelectNursery').live('click', function(){
@@ -435,5 +450,77 @@
             $('.questionParent').on('change', function(){
                   question.childCheckDisplay($(this));
             });
+            
+            
+            //Validate 
+            $('#desease_watch').on('submit', function(){
+                  //measure_filter
+                  status = false;
+                  for(i=0; i<$('.measure_filter').size(); i++) {
+                        if($('.measure_filter').eq(i).prop('checked')) {
+                              status = true;
+                        }
+                  }
+                  if(status == 'false') {
+                        $('.errorPlace_measureFilter').html('<label for="disease" generated="true" class="error" style="display:inline-block;">กรุณาเลือกอย่างน้อยหนึ่งข้อ</label>');
+                  }
+                  
+                  //measure_clean
+                  for(i=0; i<$('.measure_clean').size(); i++) {
+                        if($('.measure_clean').eq(i).prop('checked')) {
+                              status = true;
+                        }
+                  }
+                  if(status == 'false') {
+                        $('.errorPlace_measureClean').html('<label for="disease" generated="true" class="error" style="display:inline-block;">กรุณาเลือกอย่างน้อยหนึ่งข้อ</label>');
+                  }
+                  
+                  
+                  //Check status
+                  if(status == 'false') {
+                        return false;
+                  }
+                  
+                  return false;
+            });
       });//$(function(){
+            
+            errorMsgRequired = "กรุณาระบุข้อมูลก่อนดำเนินการบันทึก";
+            $('#desease_watch').validate({
+                  rules: {
+                        nurseries_id: { required: true },
+                        disease: {required:true},
+                        start_date: {required:true},
+                        end_date: {required:true},
+                        total_amount:{required:true},
+                        boy_amount:{required:true},
+                        girl_amount:{required:true},
+                        age_duration_start:{required:true},
+                        age_duration_end:{required:true},
+                  },
+                  messages: {
+                        nurseries_id: { required: errorMsgRequired },
+                        disease: {required:errorMsgRequired},
+                        start_date: {required:errorMsgRequired},
+                        end_date: {required:errorMsgRequired},
+                        total_amount:{required:errorMsgRequired},
+                        boy_amount:{required:errorMsgRequired},
+                        girl_amount:{required:errorMsgRequired},
+                        age_duration_start:{required:errorMsgRequired},
+                        age_duration_end:{required:errorMsgRequired},
+                  },
+                  errorPlacement: function(error, element) {
+                        if (element.attr("name") == "nurseries_id" ) {
+                              error.insertAfter(".errorPlace_nurseries_id");
+                        } else if (element.attr("name") == "start_date" || element.attr("name") == "end_date" ) { 
+                              $('.errorPlace_duration_date').html('<label for="disease" generated="true" class="error" style="display: block;">'+errorMsgRequired+'</label>');
+                        } else if (element.attr("name") == "total_amount" || element.attr("name") == "boy_amount" || element.attr("name") == "girl_amount" ) { 
+                              $('.errorPlace_amount').html('<label for="disease" generated="true" class="error" style="display: block;">'+errorMsgRequired+'</label>');
+                        } else if (element.attr("name") == "age_duration_start" || element.attr("name") == "age_duration_end") { 
+                              $('.errorPlace_ageDuration').html('<label for="disease" generated="true" class="error" style="display: block;">'+errorMsgRequired+'</label>');
+                        } else {//
+                              error.insertAfter(element);
+                        }
+                  }
+            });
 </script>
