@@ -90,4 +90,65 @@ function permission($module, $action)
 		return FALSE;
 	}
 }
+
+function get_user_type_province($user_type_id=false,$user_id=false){
+	$CI =& get_instance();
+	$user = user_login($user_id);
+	$province = new Province();
+	$user_type_id = $user_type_id > 0 ? $user_type_id : $user->user_type_id;
+	switch($user_type_id)
+	{
+		case 1: //ผู้ดูแลระบบ
+			break;
+		case 6:
+				$province->where('area_id = '.$user->area_id);
+			break;
+		case 7:
+				$province->where('id = '.$user->province_id);
+			break;
+		case 8:
+				$province->where('id = '.$user->province_id);
+			break;
+		case 9:
+				$province->where('id = '.$user->province_id);
+			break;
+		case 10:
+				$province->where('id = '.$user->province_id);
+			break;
+		default:
+			break;
+	}
+	return $province;
+}
+
+function get_user_type_amphur($user_type_id = false,$user_id = false,$province_id){
+	$CI =& get_instance();
+	$user = user_login($user_id);
+	$amphur = new Amphur();
+	$user_type_id = $user_type_id > 0 ? $user_type_id : $user->user_type_id;
+	switch($user_type_id)
+	{
+		case 1: //ผู้ดูแลระบบ
+			$amphur->where('province_id = '.$province_id);
+			break;
+		case 6://เจ้าหน้าที่ประจำเขต
+			$amphur->where('province_id = '.$province_id);
+			break;
+		case 7://เจ้าหน้าที่ประจำจังหวัด
+			$amphur->where('province_id = '.$province_id);
+			break;
+		case 8://เจ้าหน้าที่ประจำอำเภอ
+			$amphur->where('id = '.$user->amphur_id);
+			break;
+		case 9://เจ้าหน้าที่ศูนย์
+			$amphur->where('id = '.$user->amphur_id);
+			break;
+		case 10://เจ้าหน้าที่ครู / ผู้ดูแลเด็ก
+			$amphur->where('id = '.$user->amphur_id);
+			break;
+		default:
+			break;
+	}
+	return $amphur;
+}
 ?>

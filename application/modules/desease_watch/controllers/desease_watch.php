@@ -7,6 +7,17 @@ class Desease_watch extends Public_Controller {
 
 	function index(){
 		//Model
+		$current_user = user_login();
+		$data['current_user'] = $current_user;
+		if($current_user->user_type_id == 7){
+			$_GET['province_id'] = $current_user->province_id;
+		}else if($current_user->user_type_id >= 8){
+			$_GET['province_id'] = $current_user->province_id;
+			$_GET['amphur_id'] = $current_user->amphur_id;
+			if($current_user->user_type_id > 8){
+				$_GET['district_id'] = $current_user->district_id;	
+			}
+		}
 		$data['list'] = new Disease_watch();
 		//--Search filter
 		if(!empty($_GET['name'])) {		$data['list']->like_related('nurseries', 'name', $_GET['name']);	}
