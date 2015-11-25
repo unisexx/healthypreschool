@@ -41,11 +41,15 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-
 $db['default']['hostname'] = 'mysql1.favouritehosting.com';
 $db['default']['username'] = 'c11preschool';
 $db['default']['database'] = 'c11preschool';
 $db['default']['password'] = 'hprs@20!3';
+
+// $db['default']['hostname'] = 'localhost';
+// $db['default']['username'] = 'root';
+// $db['default']['password'] = '1234';
+// $db['default']['database'] = 'healthypreschool';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;

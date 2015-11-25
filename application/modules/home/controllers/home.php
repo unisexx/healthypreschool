@@ -70,5 +70,125 @@ class Home extends Public_Controller {
 	function under_construction(){
 		$this->template->build('under_contruction');
 	}
+	
+	function get_province(){
+		if(isset($_GET['area_id']) && ($_GET['area_id']!="")){
+			$rs = new Province();
+			$rs->where("area_id = ".$_GET['area_id'])->order_by('name','asc')->get();
+			echo'[';
+			echo'[ "","--- เลือกจังหวัด ---" ]';
+			foreach($rs as $key=>$row){
+					echo',[ "'.$row->id.'","'.$row->name.'"]';
+			}
+			echo']';
+		}else{
+			$rs = new Province();
+			$rs->order_by('name','asc')->get();
+			echo'[';
+			echo'[ "","--- เลือกจังหวัด ---" ]';
+			foreach($rs as $key=>$row){
+					echo',[ "'.$row->id.'","'.$row->name.'"]';
+			}
+			echo']';
+		}
+	}
+	
+	function get_ampor(){
+		if(isset($_GET['province_id']) && ($_GET['province_id']!="")){
+			$rs = new Amphur();
+			$rs->where("province_id = ".$_GET['province_id'])->order_by('amphur_name','asc')->get();
+			
+			echo'[';
+			echo'[ "","--- เลือกอำเภอ ---" ]';
+			foreach($rs as $key=>$row){
+					echo',[ "'.$row->id.'","'.$row->amphur_name.'"]';
+			}
+			echo']';
+		}else{
+			echo '[[ "","---" ]]';
+		}
+	}
+	
+	function get_tumbon(){
+		if(isset($_GET['amphur_id']) && ($_GET['amphur_id']!="")){
+			$rs = new District();
+			$rs->where("amphur_id = ".$_GET['amphur_id'])->order_by('district_name','asc')->get();
+			
+			echo'[';
+			echo'[ "","--- เลือกตำบล ---" ]';
+			foreach($rs as $key=>$row){
+					echo',[ "'.$row->id.'","'.$row->district_name.'"]';
+			}
+			echo']';
+		}else{
+			echo '[[ "","---" ]]';
+		}
+	}
+	
+	function get_nursery(){
+		if(isset($_GET['district_id']) && ($_GET['district_id']!="")){
+			$rs = new Nursery();
+			$rs->where("district_id = ".$_GET['district_id'])->order_by('name','asc')->get();
+			
+			echo'[';
+			echo'[ "","--- เลือกศูนย์เด็กเล็ก ---" ]';
+			foreach($rs as $key=>$row){
+					echo',[ "'.$row->id.'","'.$row->name.'"]';
+			}
+			echo']';
+			
+		}else{
+			echo '[[ "","---" ]]';
+		}
+	}
+	
+	function get_classroom(){
+		if(isset($_GET['nursery_id']) && ($_GET['nursery_id']!="")){
+			$rs = new Classroom();
+			$rs->where("nursery_id = ".$_GET['nursery_id'])->order_by('room_name','asc')->get();
+			
+			echo'[';
+			echo'[ "","--- เลือกศูนย์ห้องเรียน ---" ]';
+			foreach($rs as $key=>$row){
+					echo',[ "'.$row->id.'","'.$row->room_name.'"]';
+			}
+			echo']';
+			
+		}else{
+			echo '[[ "","---" ]]';
+		}
+	}
+	
+	function ajax_get_teacher(){
+		if($_GET){
+			$rs = new User();
+			$rs->where("user_type_id = 10 and name like '%".$_GET['name']."%'")->order_by('name','asc')->get();
+			
+			echo '<table class="table table-striped table-bordered">
+				  		<th>ชื่อ</th>
+				  		<th class="span1"></th>';
+			foreach($rs as $row){
+				echo '<tr><td>'.$row->name.'</td><td><input type="hidden" name="teacherName" value="'.$row->name.'"><input type="hidden" name="teacherId" value="'.$row->id.'"><button class="btn btn-mini btn-info selectTeacher" data-dismiss="modal" aria-hidden="true">เลือก</button></td></tr>';
+			}
+			echo '</table>';
+		}
+	}
+
+	function ajax_get_children(){
+		if($_GET){
+			$rs = new Children();
+			$rs->where("name like '%".$_GET['name']."%'")->order_by('name','asc')->get();
+			
+			echo '<table class="table table-striped table-bordered">
+				  		<th>ชื่อ</th>
+				  		<th>วันเกิด</th>
+				  		<th class="span1"></th>';
+			foreach($rs as $row){
+				echo '<tr><td>'.$row->name.'</td><td>'.mysql_to_th($row->birth_date).'</td><td><input type="hidden" name="childrenName" value="'.$row->name.'"><input type="hidden" name="childrenBirth" value="'.mysql_to_th($row->birth_date).'"><input type="hidden" name="childrenId" value="'.$row->id.'"><button class="btn btn-mini btn-info selectChildren" data-dismiss="modal" aria-hidden="true">เลือก</button></td></tr>';
+			}
+			echo '</table>';
+		}
+	}
+	
 }
 ?>

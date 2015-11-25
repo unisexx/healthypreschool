@@ -57,7 +57,7 @@ class Searchs extends Public_Controller
 	
 	function get_district(){
 		if($_POST){
-			echo form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.$_POST['amphur_id'].' order by district_name asc'),'','','--- เลือกตำบล ---');
+			echo @form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.$_POST['amphur_id'].' order by district_name asc'),'','','--- เลือกตำบล ---');
 		}
 	}
 

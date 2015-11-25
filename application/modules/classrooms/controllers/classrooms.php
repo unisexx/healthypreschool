@@ -31,14 +31,9 @@ class Classrooms extends Public_Controller{
 			$classroom = new Classroom($id);
             $classroom->from_array($_POST);
             $classroom->save();
-			
-			$classroom = new Classroom();
-			$classroom->order_by('id','desc')->get(1);
-			
-			$id = $id != '' ? $id : $classroom->id ; // ถ้า ไม่ใช่ฟอร์มแก้ไข เวลาเซฟให้ดึงไอดีล่าสุดมาใช้
-            set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
+			set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
 		}
-		redirect($_POST['referer']);
+		redirect('classrooms?nursery_id='.$_POST['nursery_id']);
 	}
 	
 	function delete($id=false){
@@ -73,6 +68,16 @@ class Classrooms extends Public_Controller{
 		$classroom->where('nursery_id = '.$nursery_id);
 		$data['classes'] = $classroom->order_by('id','desc')->get_page();
     	$this->template->build('list_guest',$data);
+	}
+	
+	function view($id){
+		$data['rs'] = new Classroom($id);
+		$this->template->build('view',$data);
+	}
+	
+	function form_detail($classroom_id=false,$id=false){
+		$data['classroom'] = new Classroom($classroom_id);
+		$this->template->build('form_detail',$data);
 	}
 }
 ?>
