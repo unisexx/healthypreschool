@@ -327,7 +327,8 @@
                         name : name,
                         province_id : province_id,
                         amphur_id : amphur_id,
-                        district_id : district_id
+                        district_id : district_id,
+                        search : 'search',
                   }, function(data){
                         $('#nurseries_list').find('div.modal-body').html(data);
                   });

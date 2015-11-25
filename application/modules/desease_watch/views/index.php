@@ -64,7 +64,7 @@
 <?php echo $list->pagination(); ?>
 <table class="table">
       <thead>
-            <tr> <td colspan='6'> <?php echo anchor('desease_watch/form', 'เพิ่มข้อมูลการเฝ้าระวังโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล', 'class="btn btn-default pull-right"'); ?> </td> </tr>
+            <tr> <td colspan='6'> <?php echo anchor('desease_watch/form', 'เพิ่มข้อมูลการเฝ้าระวังโรคติดต่อ', 'class="btn btn-primary pull-right"'); ?> </td> </tr>
             <tr>
                   <th style='width:35px;'>ลำดับ</th>
                   <th style='width:90px;'>วันที่บันทึก</th>
@@ -84,7 +84,7 @@
                               <td><?php echo ++$no; ?></td>
                               <td><?php echo mysql_to_th($item->created_date); ?></td>
                               <td><?php echo (empty($item->nursery->province->name))?'-':$item->nursery->province->name; ?></td>
-                              <d><?php echo @$diseaseText[$item->disease]; ?></td>
+                              <td><?php echo @$diseaseText[$item->disease]; ?></td>
                               <td><?php echo (empty( $item->nursery->code))?'-': $item->nursery->code; ?></td>
                               <td><?php echo (empty($item->nursery->name))?'ไม่ระบุชื่อโรงเรียน':$item->nursery->name; ?></td>
                         </tr>
