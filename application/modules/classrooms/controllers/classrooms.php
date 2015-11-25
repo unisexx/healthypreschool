@@ -72,12 +72,68 @@ class Classrooms extends Public_Controller{
 	
 	function view($id){
 		$data['rs'] = new Classroom($id);
+		$data['years'] = $this->db->query("SELECT year FROM classroom_teacher_details
+UNION
+SELECT year FROM classroom_children_details
+ORDER BY year")->result();
 		$this->template->build('view',$data);
 	}
 	
-	function form_detail($classroom_id=false,$id=false){
+	function form_detail($classroom_id=false,$year=false){
 		$data['classroom'] = new Classroom($classroom_id);
+		
+		if($year!=""){
+			$data['teachers'] = new Classroom_teacher_detail();
+			$data['teachers']->where('classroom_id = '.$classroom_id.' and year = '.$year)->get();
+			
+			$data['childrens'] = new Classroom_children_detail();
+			$data['childrens']->where('classroom_id = '.$classroom_id.' and year = '.$year)->get();
+			
+			$data['year'] = $year;
+		}
+		
 		$this->template->build('form_detail',$data);
+	}
+	
+	function form_detail_save(){
+		if($_POST){
+			if(@$_POST['teacherID']){
+				foreach($_POST['teacherID'] as $key=>$value){
+					$teacher = new Classroom_teacher_detail($_POST['classroom_teacher_detail_id'][$key]);
+					$teacher->year = $_POST['year'];
+					$teacher->classroom_id = $_POST['classroom_id'];
+					$teacher->user_id = $value;
+					$teacher->save();
+				}
+			}
+			
+			if(@$_POST['childrenID']){
+				foreach($_POST['childrenID'] as $key=>$value){
+					$children = new Classroom_children_detail($_POST['classroom_children_detail_id'][$key]);
+					$children->year = $_POST['year'];
+					$children->classroom_id = $_POST['classroom_id'];
+					$children->children_id = $value;
+					$children->save();
+				}
+			}
+			
+			set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
+		}
+		redirect('classrooms/view/'.$_POST['classroom_id']);
+	}
+	
+	function ajax_delete_teacher(){
+		if($_POST){
+			$rs = new Classroom_teacher_detail($_POST['id']);
+			$rs->delete();
+		}
+	}
+
+	function ajax_delete_children(){
+		if($_POST){
+			$rs = new Classroom_children_detail($_POST['id']);
+			$rs->delete();
+		}
 	}
 }
 ?>
