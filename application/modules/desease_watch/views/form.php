@@ -43,7 +43,7 @@
 <ul class="breadcrumb">
       <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
       <li><a href="desease_watch">การเฝ้าระวังโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล</a> <span class="divider">/</span></li>
-      <li class="active">แบบฟอร์มเพิ่มข้อมูล</li>
+      <li class="active">แบบฟอร์ม<?php echo (empty($rs->id))?'เพิ่ม':'แก้ไข'; ?>ข้อมูล</li>
 </ul>
 
 

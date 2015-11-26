@@ -72,6 +72,7 @@
                   <th>โรค</th>
                   <th style='width:90px;'>หมายเลขศูนย์</th>
                   <th>ชื่อโรงเรียน</th>
+                  <th></th>
             </tr>
       </thead>
       <tbody>
@@ -87,6 +88,12 @@
                               <td><?php echo @$diseaseText[$item->disease]; ?></td>
                               <td><?php echo (empty( $item->nursery->code))?'-': $item->nursery->code; ?></td>
                               <td><?php echo (empty($item->nursery->name))?'ไม่ระบุชื่อโรงเรียน':$item->nursery->name; ?></td>
+                              <td>
+                                    <?php 
+                                          echo anchor('desease_watch/form/'.$item->id, 'แก้ไข', 'class="btn btn-sm btn-warning"').' ';
+                                          echo anchor('desease_watch/delete/'.$item->id, 'ลบ', 'class="btn btn-sm btn-danger" onclick="if(!confirm(\'กรุณายืนยันการลบข้อมูล\')) return false;"');
+                                    ?>
+                              </td>
                         </tr>
                   <?php endforeach;
             ?>
