@@ -43,7 +43,7 @@
 <ul class="breadcrumb">
       <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
       <li><a href="desease_watch">การเฝ้าระวังโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล</a> <span class="divider">/</span></li>
-      <li class="active">แบบฟอร์มเพิ่มข้อมูล</li>
+      <li class="active">แบบฟอร์ม<?php echo (empty($rs->id))?'เพิ่ม':'แก้ไข'; ?>ข้อมูล</li>
 </ul>
 
 
@@ -89,7 +89,11 @@
                         ?>
 
                         <div class="question" style='line-height:25px;'>
-                              <div id="questionHeader" style='margin-top:10px; font-weight:bold;'></div>
+                              
+                              <div class="">
+                                    <span id="questionHeader" style='margin-top:10px; font-weight:bold;'></span>
+                                    <span class='errorPlace_questionParent'></span>
+                              </div>
                               <div style='padding-left:20px;'>
                                     <div>
                                           <div><?php echo form_checkbox('qCbox_1', 1, @$q['qCbox_1'], 'class="questionParent"').' ไข้'; ?></div>
@@ -323,7 +327,8 @@
                         name : name,
                         province_id : province_id,
                         amphur_id : amphur_id,
-                        district_id : district_id
+                        district_id : district_id,
+                        search : 'search',
                   }, function(data){
                         $('#nurseries_list').find('div.modal-body').html(data);
                   });
@@ -454,8 +459,26 @@
             
             //Validate 
             $('#desease_watch').on('submit', function(){
-                  //measure_filter
                   status = false;
+                  
+                  //Question ( parent )
+                  for(i=0; i<$('.questionParent').size(); i++) {
+                        if($('.questionParent').eq(i).prop('checked')) {
+                              status = true;
+                        }
+                  }
+                  if(status == 'false') {
+                        $('.errorPlace_questionParent').html('<label for="disease" generated="true" class="error" style="display:inline-block;">กรุณาเลือกอย่างน้อยหนึ่งข้อ</label>');
+                  }
+                  
+                  if(status == 'false') {
+                        return false;
+                  }
+                  
+                  
+                  
+                  
+                  //measure_filter
                   for(i=0; i<$('.measure_filter').size(); i++) {
                         if($('.measure_filter').eq(i).prop('checked')) {
                               status = true;
@@ -480,8 +503,6 @@
                   if(status == 'false') {
                         return false;
                   }
-                  
-                  return false;
             });
       });//$(function(){
             

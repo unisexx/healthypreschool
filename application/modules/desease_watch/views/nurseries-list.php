@@ -12,32 +12,45 @@
                   <div style='margin:10px 0;'>
                         <span class="searchBox">
                               <div class='searchLabel'>จังหวัด</div>
-                              <?php echo form_dropdown('province_id',get_option('id','name','provinces','order by name asc'),@$_GET['province_id'],false,'--- เลือกจังหวัด ---') ?>
+                              <?php 
+			                  	if($current_user->user_type_id >= 7){
+			                  		$ext_condition = ' WHERE id = '.$current_user->province_id;
+								}
+			                  	echo form_dropdown('province_id',get_option('id','name','provinces',@$ext_condition.' order by name asc'),@$_GET['province_id'],' style="width:150px;"','--- เลือกจังหวัด ---') 
+			                  ?>
                         </span>
                         
                         <span class="searchBox">
                               <div class='searchLabel'>อำเภอ</div>
                               <div id="amphur">
-                                    <?php 
-                                          if(@$_GET['province_id']):
-                                                echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.$_GET['province_id'].' order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');
-                                          else :
-                                                echo form_dropdown('amphur_id', array(), false, 'disabled="disabled"', '---กรุณาเลือกข้อมูลจังหวัด---');
-                                          endif;
-                                    ?>
+                                    <?php if(@$_GET['province_id']):?>                        	
+			                        	<?php
+			                        	$ext_condition = 'where province_id = '.$_GET['province_id'];
+			                        	if($current_user->user_type_id >= 8){
+					                  		$ext_condition .= ' AND id = '.$current_user->amphur_id;
+										}
+			                        	?>
+			                              <?php echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures',$ext_condition.' order by amphur_name asc'),@$_GET['amphur_id'],'style="width:250px;"','--- เลือกอำเภอ ---') ?>
+			                        <?php endif;?>
                               </div>
                         </span>
                         
                         <span class="searchBox">
                               <div class='searchLabel'>ตำบล</div>
                               <div id="district">
-                                    <?php 
-                                          if(@$_GET['amphur_id']):
-                                                echo form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.$_GET['amphur_id'].' order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');
-                                          else :
-                                                echo form_dropdown('district_id', array(), false, 'disabled="disabled"', '---กรุณาเลือกข้อมูลอำเภอ---');
-                                          endif;
-                                    ?>
+                                    <?php if(@$_GET['amphur_id']){?> 
+				                        	<?php
+				                        	$ext_condition = 'where province_id = '.$_GET['province_id'].' and amphur_id = '.$_GET['amphur_id'];
+				                        	if($current_user->user_type_id > 8){
+						                  		$ext_condition .= ' AND id = '.$current_user->district_id;
+											}
+				                        	?>
+			                              <?php echo form_dropdown('district_id',get_option('id','district_name','districts',$ext_condition.' order by district_name asc'),@$_GET['district_id'],'style="width:250px;"','--- เลือกตำบล ---') ?>
+			                        <?php }else { ?> 
+			                        <select name="district_id" disabled="disabled">
+			                        	<option value="">แสดงทั้งหมด</option>
+			                        </select>
+			                        <?php } ?>
                               </div>
                         </span>
                   </div>
@@ -46,14 +59,13 @@
                         <div class="searchLabel">คำค้น</div>
                         <input name="name" type="text" value="<?php echo @$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:675px;"/>
                   </div>
-                  
                   <button type="button" class="btn btn-primary" id="btnNurserySubmitSearch">ค้นหา</button>
             </div>
       </form>
  </div>
 
 
-<?php if(!empty($_GET)) { ?>
+<?php if(!empty($_GET) && @$_GET['search']!='') { ?>
       <table class='table'>
             <thead>
                   <tr>
