@@ -203,3 +203,8 @@ border-bottom-left-radius: 1em;}
 .calendar_widget .highlight{background:#1AC6DD; border-radius:1em; color:#fff;}
 
 #___gcse_0{margin-top: 22px;width: 240px;margin-left: 112px;}
+
+th{
+    background-color: #0088CC !important;
+    color: white !important;
+}
