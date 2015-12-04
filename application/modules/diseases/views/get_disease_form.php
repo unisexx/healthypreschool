@@ -110,9 +110,9 @@ $th_date = sprintf("%02d", $_GET['day']).'/'.sprintf("%02d",$_GET['month']).'/'.
 				<input type="hidden" name="month" value="<?=$_GET['month']?>">
 				<input type="hidden" name="day" value="<?=$_GET['day']?>">
 				<input type="hidden" name="user_id" value="<?=$_GET['user_id']?>">
-				<input id="submitform" type="button" value="บันทึก" data-dismiss="modal" aria-hidden="true">
-				<input id="resetform" type="button" value="ลบ" data-dismiss="modal" aria-hidden="true">
-				<input id="close" type="button" value="ออก" data-dismiss="modal" aria-hidden="true">
+				<input id="submitform" class='btn btn-small btn-primary' type="button" value="บันทึก" data-dismiss="modal" aria-hidden="true">
+				<input id="resetform" class='btn btn-small btn-danger' type="button" value="ลบ" data-dismiss="modal" aria-hidden="true">
+				<input id="close" class='btn btn-small' type="button" value="ออก" data-dismiss="modal" aria-hidden="true">
 			</td>
 		</tr>
 	</table>

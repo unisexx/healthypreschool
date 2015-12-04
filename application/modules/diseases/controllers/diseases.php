@@ -485,16 +485,18 @@ WHERE 1=1 ".$condition;
 		$this->template->set_layout('disease');
 		
 		// หาจำนวนห้อง
-		$classroom = new Classroom();
-		if(user_login()->user_type_id == 9){ $classroom->where('nursery_id = '.user_login()->nursery_id); }
-		if(user_login()->user_type_id == 10){ $classroom->where('user_id = '.user_login()->id); }
-		$data['classrooms'] = $classroom->get();
+		$data['classroom'] = new Classroom(@$_GET['classroom_id']);
+		// if(user_login()->user_type_id == 9){ $classroom->where('nursery_id = '.user_login()->nursery_id); }
+		// if(user_login()->user_type_id == 10){ $classroom->where('user_id = '.user_login()->id); }
+		// $data['classrooms'] = $classroom->get();
 		
 		// หาจำนวนเด็กในห้องที่เลือก
-		if($_GET['classroom_id'] != ""){
-			$classroom_detail = new Classroom_detail();
-			$data['childs'] = $classroom_detail->where('classroom_id = '.$_GET['classroom_id'])->get();
-		}
+		// if($_GET['classroom_id'] != ""){
+			// $classroom_detail = new Classroom_detail();
+			// $data['childs'] = $classroom_detail->where('classroom_id = '.$_GET['classroom_id'])->get();
+		// }
+		$data['childrens'] = new Classroom_children_detail();
+		$data['childrens']->where('classroom_id = '.$_GET['classroom_id'].' and year = '.$_GET['school_year'])->order_by('id asc')->get();
 		
 		$this->template->build('form3',$data);
 	}

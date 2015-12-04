@@ -24,7 +24,7 @@
 	?>
 	<tr>
 		<td><?=$item->room_name?></td>
-		<td><a href="diseases/form3?nursery_id=<?=user_login()->nursery_id?>&classroom_id=<?=$item->classroom_id?>&school_year=<?=$row->year?>" class="btn btn-small">แบบคัดกรองโรค</a></td>
+		<td><a href="diseases/form3?nursery_id=<?=user_login()->nursery_id?>&classroom_id=<?=$item->classroom_id?>&school_year=<?=$row->year?>" class="btn btn-small" target="_blank">แบบคัดกรองโรค</a></td>
 	</tr>
 	<?endforeach;?>
 </table>
