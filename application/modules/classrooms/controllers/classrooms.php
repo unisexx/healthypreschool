@@ -72,10 +72,10 @@ class Classrooms extends Public_Controller{
 	
 	function view($id){
 		$data['rs'] = new Classroom($id);
-		$data['years'] = $this->db->query("SELECT year FROM classroom_teacher_details
+		$data['years'] = $this->db->query("SELECT year FROM classroom_teacher_details where classroom_id = ".$id." 
 UNION
-SELECT year FROM classroom_children_details
-ORDER BY year")->result();
+SELECT year FROM classroom_children_details where classroom_id = ".$id." 
+ORDER BY year desc")->result();
 		$this->template->build('view',$data);
 	}
 	

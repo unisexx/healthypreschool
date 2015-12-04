@@ -22,6 +22,16 @@ WHERE 1=1 ".$condition;
     	$this->template->build('index',$data);
     }
 	
+	function index2(){
+		$data['rs'] = new Classroom_children_detail();
+		$data['rs']->distinct();
+		$data['rs']->select('year');
+		$data['rs']->where_related('classrooms', 'nursery_id', user_login()->nursery_id)->get();
+		
+		$this->template->build('index2',$data);
+		// $data['rs']->check_last_query();
+	}
+	
 	function form($id=false){
 		$this->template->set_layout('disease');
 		
@@ -469,6 +479,24 @@ WHERE 1=1 ".$condition;
 		// $data['months'] = $disease->sql_page($sql);
 		
 		$this->template->build('newreport',$data);
+	}
+
+	function form3(){
+		$this->template->set_layout('disease');
+		
+		// หาจำนวนห้อง
+		$classroom = new Classroom();
+		if(user_login()->user_type_id == 9){ $classroom->where('nursery_id = '.user_login()->nursery_id); }
+		if(user_login()->user_type_id == 10){ $classroom->where('user_id = '.user_login()->id); }
+		$data['classrooms'] = $classroom->get();
+		
+		// หาจำนวนเด็กในห้องที่เลือก
+		if($_GET['classroom_id'] != ""){
+			$classroom_detail = new Classroom_detail();
+			$data['childs'] = $classroom_detail->where('classroom_id = '.$_GET['classroom_id'])->get();
+		}
+		
+		$this->template->build('form3',$data);
 	}
 }
 ?>

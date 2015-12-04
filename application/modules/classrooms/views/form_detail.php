@@ -1,9 +1,5 @@
 <style type="text/css">
 .form-horizontal .control-label {width:170px !important;}
-th{
-    background-color: #0088CC !important;
-    color: white !important;
-}
 </style>
 <script>
 $(document).ready(function(){
@@ -63,7 +59,7 @@ $(document).ready(function(){
 			<div class="control-group">
 		        <label class="control-label">ปีการศึกษา<span class="TxtRed">*</span></label>
 		        <div class="controls">
-		          <input class="input-xlarge" type="number" name="year" value="<?=$year?>" placeholder="">
+		          <input class="input-xlarge" type="number" name="year" value="<?=@$year?>" placeholder="">
 		        </div>
 		    </div>
 		    
@@ -73,6 +69,7 @@ $(document).ready(function(){
 			    	<th>ครูประจำชั้น</th>
 			    	<th class="span1">จัดการ</th>
 			    </tr>
+			    <?if(isset($teachers)):?>
 			    <?foreach($teachers as $row):?>
 			    <tr>
 			    	<td><?=$row->user->name?></td>
@@ -83,6 +80,7 @@ $(document).ready(function(){
 			    	</td>
 			    </tr>
 			    <?endforeach;?>
+			    <?endif;?>
 		    </table>
 		    
 		    <div style="float:right; padding:10px 0;"><a href="#childrenModal" role="button" data-toggle="modal"><div class="btn btn-info btn-small">เพิ่มเด็กนักเรียน</div></a></div>
@@ -92,6 +90,7 @@ $(document).ready(function(){
 			    	<th>วันเกิด</th>
 			    	<th class="span1">จัดการ</th>
 		    	</tr>
+		    	<?if(isset($childrens)):?>
 		    	<?foreach($childrens as $row):?>
 			    <tr>
 			    	<td><?=$row->children->name?></td>
@@ -103,6 +102,7 @@ $(document).ready(function(){
 			    	</td>
 			    </tr>
 			    <?endforeach;?>
+			    <?endif;?>
 		    </table>
 		    
 		    <div class="control-group">
