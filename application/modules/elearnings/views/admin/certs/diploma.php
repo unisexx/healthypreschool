@@ -29,12 +29,12 @@
 				&nbsp;
 			</div>
 			<div class="text1" style="font-size:44px;">
-				<div style="color:#009; font-size:50px; margin-top:15px;">
+				<div style=" font-size:50px; margin-top:15px;">
 					สำนักโรคติดต่อทั่วไป กรมควบคุมโรค
 				</div>
 				ขอมอบใบสำคัญนี้ให้ไว้เพื่อแสดงว่า
 				<br>
-				<span style="font-size:50px;padding-top:20px;padding-bottom:20px;display:block;">
+				<span style="color:#009;font-size:50px;padding-top:20px;padding-bottom:20px;display:block;">
 				<?=@$user -> name ?>
 				</span>
 				เป็นผู้ที่ผ่านการทดสอบความรู้ทางสื่อออนไลน์
@@ -55,3 +55,6 @@
 		</div>
 	</body>
 </html>
+<script>
+	window.print();
+</script>
