@@ -1,4 +1,9 @@
 <? $arrayTotalAll = array("720", "705", "1298", "2000", "1971", "3433", "2916", "835", "1189", "2776", "1069", "1230");?>
+<?php 
+function convert_2_percent($number,$total){
+	return @number_format(($number / $total) * 100,2);
+}
+?>
 
 <script type="text/javascript" src="media/js/highchart/highcharts.js"></script>
 <script type="text/javascript" src="media/js/highchart/modules/exporting.js"></script>
@@ -63,8 +68,7 @@ $(function(){
             },
             tooltip: {
                 formatter: function() {
-                    return '<b>'+ this.series.name +'</b><br/>'+
-                        this.y +' '+ this.x.toLowerCase();
+                    return '<b>'+ this.x.toLowerCase() +'</b><br/>'+ this.series.name +' '+ this.y +'%'
                 }
             },
             exporting: {
@@ -225,15 +229,15 @@ $(function(){
 			<tr>
 				<th></th>
 				<?if(@$_GET['status'] == 1):?>
-				<th>เข้าร่วม (แห่ง)</th>
+				<th>เข้าร่วม</th>
 				<?elseif(@$_GET['status'] == 2):?>
-				<th>ผ่านเกณฑ์ (แห่ง)</th>
+				<th>ผ่านเกณฑ์</th>
 				<?elseif(@$_GET['status'] == 3):?>
-				<th>รอการประเมิน (แห่ง)</th>
+				<th>รอการประเมิน</th>
 				<?else:?>
-				<th>เข้าร่วม (แห่ง)</th>
-				<th>ผ่านเกณฑ์ (แห่ง)</th>
-				<th>รอการประเมิน (แห่ง)</th>
+				<th>เข้าร่วม</th>
+				<th>ผ่านเกณฑ์</th>
+				<th>รอการประเมิน</th>
 				<?endif;?>
 			</tr>
 		</thead>
@@ -251,19 +255,17 @@ $(function(){
 					}
 				?>
 			<tr>
-				<th>
-					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=2&province_id=<?=$province->id?>&status=<?=@$_GET['status']?>"><?=$province->name?></a>
-				</th>
+				<th><?=$province->name?></th>
 				<?if(@$_GET['status'] == 1):?>
-				<td><?=$all?></td>
+				<td><?=convert_2_percent($all,$all)?></td>
 				<?elseif(@$_GET['status'] == 2):?>
-				<td><?=$pass?></td>
+				<td><?=convert_2_percent($pass,$all)?></td>
 				<?elseif(@$_GET['status'] == 3):?>
-				<td><?=$not?></td>
+				<td><?=convert_2_percent($not,$all)?></td>
 				<?else:?>
-				<td><?=$all?></td>
-				<td><?=$pass?></td>
-				<td><?=$not?></td>
+				<td><?=convert_2_percent($all,$all)?></td>
+				<td><?=convert_2_percent($pass,$all)?></td>
+				<td><?=convert_2_percent($not,$all)?></td>
 				<?endif;?>
 			</tr>
 			<?php endforeach;?>
@@ -275,15 +277,15 @@ $(function(){
 			<tr>
 				<th></th>
 				<?if(@$_GET['status'] == 1):?>
-				<th>เข้าร่วม (แห่ง)</th>
+				<th>เข้าร่วม</th>
 				<?elseif(@$_GET['status'] == 2):?>
-				<th>ผ่านเกณฑ์ (แห่ง)</th>
+				<th>ผ่านเกณฑ์</th>
 				<?elseif(@$_GET['status'] == 3):?>
-				<th>รอการประเมิน (แห่ง)</th>
+				<th>รอการประเมิน</th>
 				<?else:?>
-				<th>เข้าร่วม (แห่ง)</th>
-				<th>ผ่านเกณฑ์ (แห่ง)</th>
-				<th>รอการประเมิน (แห่ง)</th>
+				<th>เข้าร่วม</th>
+				<th>ผ่านเกณฑ์</th>
+				<th>รอการประเมิน</th>
 				<?endif;?>
 			</tr>
 		</thead>
@@ -301,19 +303,17 @@ $(function(){
 					}
 				?>
 			<tr>
-				<th>
-					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=3&amphur_id=<?=$amphur->id?>&status=<?=@$_GET['status']?>"><?=$amphur->amphur_name?></a>
-				</th>
+				<th><?=$amphur->amphur_name?></th>
 				<?if(@$_GET['status'] == 1):?>
-				<td><?=$all?></td>
+				<td><?=convert_2_percent($all,$all)?></td>
 				<?elseif(@$_GET['status'] == 2):?>
-				<td><?=$pass?></td>
+				<td><?=convert_2_percent($pass,$all)?></td>
 				<?elseif(@$_GET['status'] == 3):?>
-				<td><?=$not?></td>
+				<td><?=convert_2_percent($not,$all)?></td>
 				<?else:?>
-				<td><?=$all?></td>
-				<td><?=$pass?></td>
-				<td><?=$not?></td>
+				<td><?=convert_2_percent($all,$all)?></td>
+				<td><?=convert_2_percent($pass,$all)?></td>
+				<td><?=convert_2_percent($not,$all)?></td>
 				<?endif;?>
 			</tr>
 			<?php endforeach;?>
@@ -325,15 +325,15 @@ $(function(){
 			<tr>
 				<th></th>
 				<?if(@$_GET['status'] == 1):?>
-				<th>เข้าร่วม (แห่ง)</th>
+				<th>เข้าร่วม</th>
 				<?elseif(@$_GET['status'] == 2):?>
-				<th>ผ่านเกณฑ์ (แห่ง)</th>
+				<th>ผ่านเกณฑ์</th>
 				<?elseif(@$_GET['status'] == 3):?>
-				<th>รอการประเมิน (แห่ง)</th>
+				<th>รอการประเมิน</th>
 				<?else:?>
-				<th>เข้าร่วม (แห่ง)</th>
-				<th>ผ่านเกณฑ์ (แห่ง)</th>
-				<th>รอการประเมิน (แห่ง)</th>
+				<th>เข้าร่วม</th>
+				<th>ผ่านเกณฑ์</th>
+				<th>รอการประเมิน</th>
 				<?endif;?>
 			</tr>
 		</thead>
@@ -351,19 +351,17 @@ $(function(){
 					}
 				?>
 			<tr>
-				<th>
-					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=4&district_id=<?=$district->id?>&status=<?=@$_GET['status']?>"><?=$district->district_name?></a>
-				</th>
+				<th><?=$district->district_name?></th>
 				<?if(@$_GET['status'] == 1):?>
-				<td><?=$all?></td>
+				<td><?=convert_2_percent($all,$all)?></td>
 				<?elseif(@$_GET['status'] == 2):?>
-				<td><?=$pass?></td>
+				<td><?=convert_2_percent($pass,$all)?></td>
 				<?elseif(@$_GET['status'] == 3):?>
-				<td><?=$not?></td>
+				<td><?=convert_2_percent($not,$all)?></td>
 				<?else:?>
-				<td><?=$all?></td>
-				<td><?=$pass?></td>
-				<td><?=$not?></td>
+				<td><?=convert_2_percent($all,$all)?></td>
+				<td><?=convert_2_percent($pass,$all)?></td>
+				<td><?=convert_2_percent($not,$all)?></td>
 				<?endif;?>
 			</tr>
 			<?php endforeach;?>
@@ -409,16 +407,16 @@ $(function(){
 			<tr>
 				<th></th>
 				<?if(@$_GET['status'] == 1):?>
-				<th>เข้าร่วม (แห่ง)</th>
+				<th>เข้าร่วม</th>
 				<?elseif(@$_GET['status'] == 2):?>
-				<th>ผ่านเกณฑ์ (แห่ง)</th>
+				<th>ผ่านเกณฑ์</th>
 				<?elseif(@$_GET['status'] == 3):?>
-				<th>รอการประเมิน (แห่ง)</th>
+				<th>รอการประเมิน</th>
 				<?else:?>
-				<th>เข้าร่วม (แห่ง)</th>
-				<th>ผ่านเกณฑ์ (แห่ง)</th>
-				<th>รอการประเมิน (แห่ง)</th>
-				<th>จำนวนทั้งหมดในพื้นที่  (แห่ง)</th>
+				<th>เข้าร่วม</th>
+				<th>ผ่านเกณฑ์</th>
+				<th>รอการประเมิน</th>
+				<th>จำนวนทั้งหมดในพื้นที่</th>
 				<?endif;?>
 			</tr>
 		</thead>
@@ -436,18 +434,18 @@ $(function(){
 					}
 				?>
 			<tr>
-				<th><a href="nurseries/reports/index/basic_column?year=&type=1&area_id=<?=$area->id?>&status=<?=@$_GET['status']?>"><?=$area->area_name?></a></th>
+				<th><?=$area->area_name?></th>
 				<?if(@$_GET['status'] == 1):?>
-				<td><?=$all?></td>
+				<td><?=convert_2_percent($all,$arrayTotalAll[$key])?></td>
 				<?elseif(@$_GET['status'] == 2):?>
-				<td><?=$pass?></td>
+				<td><?=convert_2_percent($pass,$all)?></td>
 				<?elseif(@$_GET['status'] == 3):?>
-				<td><?=$not?></td>
+				<td><?=convert_2_percent($not,$all)?></td>
 				<?else:?>
-				<td><?=$all?></td>
-				<td><?=$pass?></td>
-				<td><?=$not?></td>
-				<td><?=$arrayTotalAll[$key]?></td>
+				<td><?=convert_2_percent($all,$arrayTotalAll[$key])?></td>
+				<td><?=convert_2_percent($pass,$all)?></td>
+				<td><?=convert_2_percent($not,$all)?></td>
+				<td><?=convert_2_percent($arrayTotalAll[$key],$arrayTotalAll[$key])?></td>
 				<?endif;?>
 			</tr>
 			<?php endforeach;?>
