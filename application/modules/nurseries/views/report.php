@@ -416,7 +416,7 @@ $(function(){
 				<th>เข้าร่วม</th>
 				<th>ผ่านเกณฑ์</th>
 				<th>รอการประเมิน</th>
-				<th>จำนวนทั้งหมดในพื้นที่</th>
+				<!-- <th>จำนวนทั้งหมดในพื้นที่</th> -->
 				<?endif;?>
 			</tr>
 		</thead>
@@ -445,7 +445,7 @@ $(function(){
 				<td><?=convert_2_percent($all,$arrayTotalAll[$key])?></td>
 				<td><?=convert_2_percent($pass,$all)?></td>
 				<td><?=convert_2_percent($not,$all)?></td>
-				<td><?=convert_2_percent($arrayTotalAll[$key],$arrayTotalAll[$key])?></td>
+				<!-- <td><?=convert_2_percent($arrayTotalAll[$key],$arrayTotalAll[$key])?></td> -->
 				<?endif;?>
 			</tr>
 			<?php endforeach;?>
