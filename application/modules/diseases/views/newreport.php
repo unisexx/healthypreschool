@@ -110,20 +110,26 @@ $(function(){
             // tooltip: {
                 // formatter: function() {
                     // return '<b>'+ this.x +'</b><br/>'+
-                        // this.series.name +' : '+ this.y +' ครั้ง<br/>'+
+                        // this.series.name +' : '+ this.y +' ครั้ง ('+ Highcharts.numberFormat(this.percentage, 2) +'%)<br/>'+
                         // 'จำนวนการป่วยทั้งหมด : '+ this.point.stackTotal + ' ครั้ง';
                 // }
             // },
             tooltip: {
-	            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.percentage:.1f}%</b><br/>',
-	            shared: true
+            	headerFormat: '<b>{point.key}</b><table style="font-weight:bold;">',
+	            pointFormat: '<tr><td style="color:{series.color};">{series.name}:</td><td style="text-align: right;">{point.percentage:.1f}%<td></tr>',
+	            footerFormat: '</table>',
+	            shared: true,
+	            useHTML: true
 	        },
             plotOptions: {
                 column: {
                     stacking: 'percent',
                     dataLabels: {
-                        enabled: true
-                        // color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                        enabled: true,
+                        formatter: function() {
+	                        return Math.round(this.percentage*100)/100 + ' %';
+	                    },
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black'
                     }
                 }
             },

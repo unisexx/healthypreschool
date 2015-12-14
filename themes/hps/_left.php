@@ -114,7 +114,7 @@
 	         <ul>
 	            <li><a href="pages/view/1">คำแนะนำ</a></li>
 	            <li><a href="elearnings/learns">บทเรียน</a></li>
-	            <li><a href="elearnings/testing_index">แบบทดสอบ</a> </li>
+	            <li><a href="elearnings/testing_index">แบบทดสอบ</a></li>
 	         </ul>
 	         </div>
 	         <hr style="margin-bottom:-1px;">
@@ -152,7 +152,7 @@
               <li><a href="http://thaigcd.ddc.moph.go.th/e-learning/wp-login.php?action=register" target="_blank"><img src="themes/hps/images/banner_e-learning.jpg" width="226" height="118" /></a></li>
               <li><img src="themes/hps/images/banner_evaluation.jpg" width="226" height="118" /></li> -->
               <li><a href="http://demo.favouritedesign.com/healthypreschool/nurseries/reports/index/basic_column" target="_blank"><?php echo thumb("uploads/hilight/54b5d9550d496.jpg",226,false,1)?></a></li>
-              <li><a href="http://demo.favouritedesign.com/healthypreschool/diseases/report_staff" target="_blank"><?php echo thumb("uploads/hilight/54b5d9ca1d50d.jpg",226,false,1)?></a></li>
+              <li><a href="http://demo.favouritedesign.com/healthypreschool/diseases/newreport" target="_blank"><?php echo thumb("uploads/hilight/54b5d9ca1d50d.jpg",226,false,1)?></a></li>
               <li><a href="http://demo.favouritedesign.com/healthypreschool/surveillances/index" target="_blank"><?php echo thumb("uploads/hilight/54fe9860bdc9e.jpg",226,false,1)?></a></li>
           </ul>
          </div>
