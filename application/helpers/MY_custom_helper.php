@@ -63,7 +63,7 @@ function get_area_dropdown($selected_value=''){
 	else{
 		$ext_condition = ' WHERE 1=1 ';
 	}
-  	echo form_dropdown('area_id',get_option('id','area_name','areas',@$ext_condition.' order by area_name asc'),@$selected_value,' style="width:150px;"','--- เลือกเขตสคร. ---');
+  	echo form_dropdown('area_id',get_option('id','area_name','areas',@$ext_condition.' order by id asc'),@$selected_value,' style="width:150px;"','--- เลือกเขตสคร. ---');
 }   
 
 function get_province_dropdown($area_id, $selected_value=''){
@@ -73,7 +73,7 @@ function get_province_dropdown($area_id, $selected_value=''){
   		$selected_value = $current_user->province_id;
 	}
 	else if(@$area_id>0){
-		$ext_condition = ' WHERE id in (SELECT province_id FROM area_provinces WHERE area_id='.$_GET['area_id'].')';
+		$ext_condition = ' WHERE id in (SELECT province_id FROM area_provinces WHERE area_id='.$area_id.')';
 	}
 	else{
 		$ext_condition = ' WHERE 1=1 ';
