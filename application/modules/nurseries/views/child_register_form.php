@@ -1,20 +1,27 @@
 <script type="text/javascript">
 $(document).ready(function(){
-	$("select[name=province_id]").live("change",function(){
-		$.post('nurseries/get_amphur',{
-				'province_id' : $(this).val()
-			},function(data){
-				$("#amphur").html(data);
-			});
-	});
-	
-	$("select[name=amphur_id]").live("change",function(){
-		$.post('nurseries/get_district',{
-				'amphur_id' : $(this).val()
-			},function(data){
-				$("#district").html(data);
-			});
-	});
+	$("select[name='area_id']").live("change",function(){
+  		$.post('ajax/get_province',{
+  				'area_id' : $(this).val()
+  			},function(data){
+  				$("#province").html(data);
+  			});
+  	});
+  	$("select[name='province_id']").live("change",function(){
+  		$.post('ajax/get_amphur',{
+  				'province_id' : $(this).val()
+  			},function(data){
+  				$("#amphur").html(data);
+  			});
+  	});
+
+  	$("select[name='amphur_id']").live("change",function(){
+  		$.post('ajax/get_district',{
+  				'amphur_id' : $(this).val()
+  			},function(data){
+  				$("#district").html(data);
+  			});
+  	});
 	
 	$("#frmnursery").validate({
 		onkeyup: false,
@@ -189,6 +196,8 @@ $(document).ready(function(){
         		<tr>
         			<th>สคร.<strong> <span class="TxtRed">*</span></strong></th>
         			<td>
+        				<?php get_area_dropdown($nursery->area_id);?>
+        				<!--
         				<?php if(user_login()->user_type_id == 1): // แอดมินเลือกได้ทั้งหมด?>
 				        	<?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),$nursery->area_id,'','--- เลือก ---');?>
 				        <?php elseif(user_login()->user_type_id == 6): // เจ้าหน้าที่เขต?>
@@ -201,6 +210,7 @@ $(document).ready(function(){
                             <input type="text" value="<?=user_login()->amphur->province->area_id?>" disabled>
                             <input type="hidden" name="area_id" value="<?=user_login()->amphur->province->area_id?>">
 				        <?php endif;?>
+				        -->
         			</td>
         		</tr>
 				<tr>
@@ -227,7 +237,9 @@ $(document).ready(function(){
                  </tr>
                  <tr>
                    <th>จังหวัด<strong> <span class="TxtRed">*</span></strong></th>
-                   <td>
+                   <td id="province">
+                   	<?php get_province_dropdown(@$nursery->area_id,@$nursery->province_id);?>
+                   	<!--
                    	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
                    		<?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),$nursery->province_id,'','--- เลือกจังหวัด ---') ?>
                    	<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร.?>
@@ -239,6 +251,7 @@ $(document).ready(function(){
                         <input type="text" value="<?=user_login()->amphur->province->name?>" disabled>
                         <input type="hidden" name="province_id" value="<?=user_login()->amphur->province->id?>">
                    	<?php endif;?>
+                   	-->
 					</td>
                  </tr>
                  <tr>

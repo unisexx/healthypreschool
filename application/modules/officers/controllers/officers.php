@@ -13,7 +13,7 @@ class Officers extends Public_Controller
     
     function index()
     {
-        $data['users'] = new User();
+        $data['users'] = new V_User();
 		if(@$_GET['search'])$data['users']->where("name like '%".$_GET['search']."%' or email like '%".$_GET['search']."%'");
 		if(@$_GET['user_type_id'])$data['users']->where("user_type_id = ".$_GET['user_type_id']);
 		if(@$_GET['area_id'])$data['users']->where("area_id = ".$_GET['area_id']);
@@ -33,7 +33,7 @@ class Officers extends Public_Controller
     }
     
     function form($id=false){
-        $data['user'] = new User($id);
+        $data['user'] = new V_User($id);
         $this->template->build('form',$data);
     }
     
@@ -106,7 +106,8 @@ class Officers extends Public_Controller
     }
 
 	function get_area(){
-		echo form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),@$_POST['area_id'],'class="input-medium"','--- เลือกสคร. ---');
+		get_area_dropdown(@$_POST['area_id']);
+		//echo form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),@$_POST['area_id'],'class="input-medium"','--- เลือกสคร. ---');
 	}
 	
 	function get_province(){

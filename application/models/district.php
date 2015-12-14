@@ -5,7 +5,7 @@ class District extends ORM {
 	
 	var $has_one = array("amphur",'province');
 	
-	var $has_many = array("register","nursery");
+	var $has_many = array("register","v_nursery","nursery");
 
     function __construct($id = NULL)
     {
