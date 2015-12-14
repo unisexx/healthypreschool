@@ -43,9 +43,12 @@
 
 <!-- list content. -->
 <?php echo $list->pagination(); ?>
+<div style="float:right;">
+<?php echo anchor('desease_watch/form', 'เพิ่มข้อมูลการเฝ้าระวังโรคติดต่อ', 'class="btn btn-primary pull-right"'); ?>
+</div>
 <table class="table">
       <thead>
-            <tr> <td colspan='6'> <?php echo anchor('desease_watch/form', 'เพิ่มข้อมูลการเฝ้าระวังโรคติดต่อ', 'class="btn btn-primary pull-right"'); ?> </td> </tr>
+            <tr> <td colspan='6'>  </td> </tr>
             <tr>
                   <th style='width:35px;'>ลำดับ</th>
                   <th style='width:90px;'>วันที่บันทึก</th>
