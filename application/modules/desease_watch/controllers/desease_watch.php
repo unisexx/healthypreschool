@@ -11,7 +11,8 @@ class Desease_watch extends Public_Controller {
 		
 		$current_user = user_login();
 		$data['current_user'] = $current_user;
-		if($current_user->user_type_id == 7){
+		if($current_user->user_type_id>=6)$_GET['area_id'] = $current_user->area_id;
+		if($current_user->user_type_id == 7){			
 			$_GET['province_id'] = $current_user->province_id;
 		}else if($current_user->user_type_id >= 8){
 			$_GET['province_id'] = $current_user->province_id;
@@ -23,6 +24,7 @@ class Desease_watch extends Public_Controller {
 		$data['list'] = new Disease_watch();
 		//--Search filter
 		if(!empty($_GET['name'])) {		$data['list']->like_related('nurseries', 'name', $_GET['name']);	}
+		if(!empty($_GET['area_id'])) {	$data['list']->where_related('nurseries', 'province_id IN ( SELECT province_id FROM area_provinces WHERE area_id = '.$_GET['area_id'].')');}
 		if(!empty($_GET['province_id'])) {	$data['list']->where_related('nurseries', 'province_id', $_GET['province_id']);	}
 		if(!empty($_GET['amphur_id'])) {	$data['list']->where_related('nurseries', 'amphur_id', $_GET['amphur_id']);	}
 		if(!empty($_GET['district_id'])) {	$data['list']->where_related('nurseries', 'district_id', $_GET['district_id']);	}
