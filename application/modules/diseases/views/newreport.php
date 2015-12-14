@@ -28,12 +28,15 @@ $(document).ready(function() {
 });
 </script>
 
-<script type="text/javascript" src="media/js/highchart/highcharts.js"></script>
-<script type="text/javascript" src="media/js/highchart/modules/exporting.js"></script>
+<!-- <script type="text/javascript" src="media/js/highchart/highcharts.js"></script>
+<script type="text/javascript" src="media/js/highchart/modules/exporting.js"></script> -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script type="text/javascript">
 $(function(){
 	// On document ready, call visualize on the datatable.
     $(document).ready(function() {
+    	
         /**
          * Visualize an HTML table using Highcharts. The top (horizontal) header
          * is used for series names, and the left (vertical) header is used
@@ -42,6 +45,7 @@ $(function(){
          * @param {Object} options Highcharts options
          */
         Highcharts.visualize = function(table, options) {
+        	
             // the categories
             options.xAxis.categories = [];
             $('tbody th', table).each( function(i) {
@@ -97,25 +101,29 @@ $(function(){
 	            },
                 stackLabels: {
                     enabled: true,
-                    style: {
-                        fontWeight: 'bold',
-                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                    }
+                    // style: {
+                        // fontWeight: 'bold',
+                        // color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    // }
                 }
             },
+            // tooltip: {
+                // formatter: function() {
+                    // return '<b>'+ this.x +'</b><br/>'+
+                        // this.series.name +' : '+ this.y +' ครั้ง<br/>'+
+                        // 'จำนวนการป่วยทั้งหมด : '+ this.point.stackTotal + ' ครั้ง';
+                // }
+            // },
             tooltip: {
-                formatter: function() {
-                    return '<b>'+ this.x +'</b><br/>'+
-                        this.series.name +' : '+ this.y +' ครั้ง<br/>'+
-                        'จำนวนการป่วยทั้งหมด : '+ this.point.stackTotal +' ครั้ง';
-                }
-            },
+	            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.percentage:.1f}%</b><br/>',
+	            shared: true
+	        },
             plotOptions: {
                 column: {
-                    stacking: 'normal',
+                    stacking: 'percent',
                     dataLabels: {
-                        enabled: true,
-                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                        enabled: true
+                        // color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
                     }
                 }
             },
