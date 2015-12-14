@@ -1,7 +1,5 @@
-<? $arrayTotalAll = array("720", "705", "1298", "2000", "1971", "3433", "2916", "835", "1189", "2776", "1069", "1230");?>
+<? $arrayTotalAll = array("720", "705", "1298", "2000", "1971", "3433", "2916", "835", "1189", "2776", "1069", "1230","0");?>
 
-<script type="text/javascript" src="media/js/highchart/highcharts.js"></script>
-<script type="text/javascript" src="media/js/highchart/modules/exporting.js"></script>
 <script type="text/javascript">
 $(function(){
 	// On document ready, call visualize on the datatable.
@@ -449,7 +447,6 @@ $(function(){
 <?php endif;?>
 </div>
 <!-- block เทเบิ้ลไว้เจนกราฟ -->
-
 
 
 
