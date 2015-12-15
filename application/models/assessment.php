@@ -3,7 +3,7 @@ class Assessment extends ORM
 {
 	public $table = "assessments";
 	
-	public $has_one = array("nursery","user");
+	public $has_one = array("v_nursery","nursery","user");
 	
 	// public $has_many = array("classroom_detail");
 	

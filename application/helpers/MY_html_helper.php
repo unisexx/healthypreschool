@@ -71,6 +71,7 @@ if(!function_exists('get_option'))
 	function get_option($value,$text,$table,$condition = NULL,$lang = NULL)
 	{
 		$CI =& get_instance();
+		//echo "select * from $table $condition";
 		$query = $CI->db->query("select * from $table $condition");
 		foreach($query->result() as $item) $option[$item->{$value}] = lang_decode($item->{$text},$lang);
 		return $option;
@@ -292,4 +293,8 @@ function thainumDigit($num){
     array( "o" , "๑" , "๒" , "๓" , "๔" , "๕" , "๖" , "๗" , "๘" , "๙" ),  
     $num);  
 };  
+
+function convert_2_percent($number,$total){
+	return @number_format(($number / $total) * 100,2);
+}
 ?>

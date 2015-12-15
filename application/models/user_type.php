@@ -5,7 +5,7 @@ class User_type extends ORM
 	
 	public $table = 'user_types';
 	
-	public $has_many = array('user','permission');
+	public $has_many = array('v_user','user','permission');
 	
 	public function __construct($id = NULL)
 	{

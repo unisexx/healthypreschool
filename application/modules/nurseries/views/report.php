@@ -1,12 +1,5 @@
-<? $arrayTotalAll = array("720", "705", "1298", "2000", "1971", "3433", "2916", "835", "1189", "2776", "1069", "1230");?>
-<?php 
-function convert_2_percent($number,$total){
-	return @number_format(($number / $total) * 100,2);
-}
-?>
+<? $arrayTotalAll = array("720", "705", "1298", "2000", "1971", "3433", "2916", "835", "1189", "2776", "1069", "1230","0");?>
 
-<script type="text/javascript" src="media/js/highchart/highcharts.js"></script>
-<script type="text/javascript" src="media/js/highchart/modules/exporting.js"></script>
 <script type="text/javascript">
 $(function(){
 	// On document ready, call visualize on the datatable.
@@ -416,7 +409,7 @@ $(function(){
 				<th>เข้าร่วม</th>
 				<th>ผ่านเกณฑ์</th>
 				<th>รอการประเมิน</th>
-				<th>จำนวนทั้งหมดในพื้นที่</th>
+				<!-- <th>จำนวนทั้งหมดในพื้นที่</th> -->
 				<?endif;?>
 			</tr>
 		</thead>
@@ -445,7 +438,7 @@ $(function(){
 				<td><?=convert_2_percent($all,$arrayTotalAll[$key])?></td>
 				<td><?=convert_2_percent($pass,$all)?></td>
 				<td><?=convert_2_percent($not,$all)?></td>
-				<td><?=convert_2_percent($arrayTotalAll[$key],$arrayTotalAll[$key])?></td>
+				<!-- <td><?=convert_2_percent($arrayTotalAll[$key],$arrayTotalAll[$key])?></td> -->
 				<?endif;?>
 			</tr>
 			<?php endforeach;?>
@@ -454,7 +447,6 @@ $(function(){
 <?php endif;?>
 </div>
 <!-- block เทเบิ้ลไว้เจนกราฟ -->
-
 
 
 

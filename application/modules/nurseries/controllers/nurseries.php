@@ -137,7 +137,7 @@ class Nurseries extends Public_Controller
 	
 	function register_form($id=false){
 		$this->template->set_layout('blank');
-		$data['nursery'] = new Nursery($id);
+		$data['nursery'] = new V_Nursery($id);
 		$this->template->build('child_register_form',$data);
 	}
 	
@@ -181,7 +181,7 @@ class Nurseries extends Public_Controller
 	function estimate(){
 		$this->template->set_layout('blank');
 		
-		$data['nurseries'] = new Nursery();
+		$data['nurseries'] = new V_Nursery();
 		
 		if(@$_GET['nursery_category_id'])$data['nurseries']->where("nursery_category_id = ".$_GET['nursery_category_id']);
 		if(@$_GET['name'])$data['nurseries']->where("name like '%".$_GET['name']."%'");

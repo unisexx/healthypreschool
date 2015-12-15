@@ -28,12 +28,11 @@ $(document).ready(function() {
 });
 </script>
 
-<script type="text/javascript" src="media/js/highchart/highcharts.js"></script>
-<script type="text/javascript" src="media/js/highchart/modules/exporting.js"></script>
 <script type="text/javascript">
 $(function(){
 	// On document ready, call visualize on the datatable.
     $(document).ready(function() {
+    	
         /**
          * Visualize an HTML table using Highcharts. The top (horizontal) header
          * is used for series names, and the left (vertical) header is used
@@ -42,6 +41,7 @@ $(function(){
          * @param {Object} options Highcharts options
          */
         Highcharts.visualize = function(table, options) {
+        	
             // the categories
             options.xAxis.categories = [];
             $('tbody th', table).each( function(i) {
@@ -97,25 +97,35 @@ $(function(){
 	            },
                 stackLabels: {
                     enabled: true,
-                    style: {
-                        fontWeight: 'bold',
-                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                    }
+                    // style: {
+                        // fontWeight: 'bold',
+                        // color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    // }
                 }
             },
+            // tooltip: {
+                // formatter: function() {
+                    // return '<b>'+ this.x +'</b><br/>'+
+                        // this.series.name +' : '+ this.y +' ครั้ง ('+ Highcharts.numberFormat(this.percentage, 2) +'%)<br/>'+
+                        // 'จำนวนการป่วยทั้งหมด : '+ this.point.stackTotal + ' ครั้ง';
+                // }
+            // },
             tooltip: {
-                formatter: function() {
-                    return '<b>'+ this.x +'</b><br/>'+
-                        this.series.name +' : '+ this.y +' ครั้ง<br/>'+
-                        'จำนวนการป่วยทั้งหมด : '+ this.point.stackTotal +' ครั้ง';
-                }
-            },
+            	headerFormat: '<b>{point.key}</b><table style="font-weight:bold;">',
+	            pointFormat: '<tr><td style="color:{series.color};">{series.name}:</td><td style="text-align: right;">{point.percentage:.1f}%<td></tr>',
+	            footerFormat: '</table>',
+	            shared: true,
+	            useHTML: true
+	        },
             plotOptions: {
                 column: {
-                    stacking: 'normal',
+                    stacking: 'percent',
                     dataLabels: {
                         enabled: true,
-                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                        formatter: function() {
+	                        return Math.round(this.percentage*100)/100 + ' %';
+	                    },
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black'
                     }
                 }
             },

@@ -17,21 +17,28 @@ $(document).ready(function(){
 	     }
 	});
 	
-	$("select[name=province_id]").live("change",function(){
-		$.post('nurseries/get_amphur',{
-				'province_id' : $(this).val()
-			},function(data){
-				$("#amphur").html(data);
-			});
-	});
-	
-	$("select[name=amphur_id]").live("change",function(){
-		$.post('nurseries/get_district',{
-				'amphur_id' : $(this).val()
-			},function(data){
-				$("#district").html(data);
-			});
-	});
+	$("select[name='area_id']").live("change",function(){
+  		$.post('ajax/get_province',{
+  				'area_id' : $(this).val()
+  			},function(data){
+  				$("#province").html(data);
+  			});
+  	});
+  	$("select[name='province_id']").live("change",function(){
+  		$.post('ajax/get_amphur',{
+  				'province_id' : $(this).val()
+  			},function(data){
+  				$("#amphur").html(data);
+  			});
+  	});
+
+  	$("select[name='amphur_id']").live("change",function(){
+  		$.post('ajax/get_district',{
+  				'amphur_id' : $(this).val()
+  			},function(data){
+  				$("#district").html(data);
+  			});
+  	});
 	
 	$(".btn-estimate").live("click",function(){
 		$('.loader').show();
@@ -65,13 +72,21 @@ $(document).ready(function(){
     	
     	<?=form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),@$_GET['nursery_category_id'],'','--- เลือกคำนำหน้า ---');?>	
     	<input name="name" type="text" value="<?=@$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:280px;" />
+    	<?php get_area_dropdown(@$_GET['area_id']);?>
+    	<span id="province">
+    		<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?> 
+    	</span>
+    	<!--
 		<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
        		<?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
        	<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร.?>
        		<?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
        	<?php endif;?>
+       -->
        	
     	  <span id="amphur">
+    	  	<?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
+    	  	<!--
     	  	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกอำเภอ?>
 				<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
 			<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร.?>
@@ -79,9 +94,12 @@ $(document).ready(function(){
 			<?php elseif(user_login()->user_type_id == 7): //เจ้าหน้าที่จังหวัด?>
                     <?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.user_login()->province_id.' order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
                 <?php endif;?>
+           -->
     	  </span>
     	  
     	  <span id="district">
+    	  	<?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
+    	  	<!--
     	  	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกตำบล?>
 				<?=form_dropdown('district_id',get_option('id','district_name','districts order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
 			<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร.?>
@@ -91,6 +109,7 @@ $(document).ready(function(){
                 <?php elseif(user_login()->user_type_id == 8): //เจ้าหน้าที่อำเภอ?>
                     <?=form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.user_login()->amphur_id.' order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
                 <?php endif;?>
+           -->
     	  </span>
     	  <?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558'),@$_GET['year'],'','--- เลือกปีที่เข้าร่วม ---');?>
     	  <?=form_dropdown('status',array('1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์','0'=>'รอการประเมิน'),@$_GET['status'],'','--- เลือกสถานะ ---');?>

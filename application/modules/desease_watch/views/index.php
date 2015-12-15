@@ -11,44 +11,25 @@
       <form method="get" action="">
             <div style="padding:10px; border:1px solid #ccc; margin-bottom:10px; line-height:50px;">
             	  <div style="width:150px;display:inline;float:left;">                  
+				  <label for="area_id">เขตสคร.</label>
+                  <?php get_area_dropdown(@$_GET['area_id']);?>
+                  </div>
+            	  <div style="width:150px;display:inline;float:left;">                  
 				  <label for="province_id">จังหวัด</label>
-                  <?php 
-                  	if($current_user->user_type_id >= 7){
-                  		$ext_condition = ' WHERE id = '.$current_user->province_id;
-					}
-                  	echo form_dropdown('province_id',get_option('id','name','provinces',@$ext_condition.' order by name asc'),@$_GET['province_id'],' style="width:150px;"','--- เลือกจังหวัด ---') 
-                  ?>
+				  <span id="province">
+                  <?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
+                  </span>
                   </div>
                   <div style="width:250px;display:inline;float:left;">
 				  <label for="amphur_id">อำเภอ</label>
                   <span id="amphur">
-                        <?php if(@$_GET['province_id']):?>                        	
-                        	<?php
-                        	$ext_condition = 'where province_id = '.$_GET['province_id'];
-                        	if($current_user->user_type_id >= 8){
-		                  		$ext_condition .= ' AND id = '.$current_user->amphur_id;
-							}
-                        	?>
-                              <?php echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures',$ext_condition.' order by amphur_name asc'),@$_GET['amphur_id'],'style="width:250px;"','--- เลือกอำเภอ ---') ?>
-                        <?php endif;?>
+                  <?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
                   </span>
 				  </div>
 				  <div style="width:150px;display:inline;">
 				  <label for="district_id">ตำบล</label>
                   <span id="district">
-                        <?php if(@$_GET['amphur_id']){?> 
-	                        	<?php
-	                        	$ext_condition = 'where province_id = '.$_GET['province_id'].' and amphur_id = '.$_GET['amphur_id'];
-	                        	if($current_user->user_type_id > 8){
-			                  		$ext_condition .= ' AND id = '.$current_user->district_id;
-								}
-	                        	?>
-                              <?php echo form_dropdown('district_id',get_option('id','district_name','districts',$ext_condition.' order by district_name asc'),@$_GET['district_id'],'style="width:250px;"','--- เลือกตำบล ---') ?>
-                        <?php }else { ?> 
-                        <select name="district_id" disabled="disabled">
-                        	<option value="">แสดงทั้งหมด</option>
-                        </select>
-                        <?php } ?>
+                  <?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
                   </span>
 				  </div>
 				  <div style="display:block;height:15px;">&nbsp;</div>
@@ -62,9 +43,12 @@
 
 <!-- list content. -->
 <?php echo $list->pagination(); ?>
+<div style="float:right;">
+<?php echo anchor('desease_watch/form', 'เพิ่มข้อมูลการเฝ้าระวังโรคติดต่อ', 'class="btn btn-primary pull-right"'); ?>
+</div>
 <table class="table">
       <thead>
-            <tr> <td colspan='6'> <?php echo anchor('desease_watch/form', 'เพิ่มข้อมูลการเฝ้าระวังโรคติดต่อ', 'class="btn btn-primary pull-right"'); ?> </td> </tr>
+            <tr> <td colspan='6'>  </td> </tr>
             <tr>
                   <th style='width:35px;'>ลำดับ</th>
                   <th style='width:90px;'>วันที่บันทึก</th>
@@ -104,9 +88,15 @@
 <!-- Script -->
 <script type="text/javascript">
       $(document).ready(function(){
+      	$("select[name='area_id']").live("change",function(){
+      		$.post('ajax/get_province',{
+      				'area_id' : $(this).val()
+      			},function(data){
+      				$("#province").html(data);
+      			});
+      	});
       	$("select[name='province_id']").live("change",function(){
-      		$("#district").html("");
-      		$.post('nurseries/searchs/get_amphur',{
+      		$.post('ajax/get_amphur',{
       				'province_id' : $(this).val()
       			},function(data){
       				$("#amphur").html(data);
@@ -114,7 +104,7 @@
       	});
 
       	$("select[name='amphur_id']").live("change",function(){
-      		$.post('nurseries/searchs/get_district',{
+      		$.post('ajax/get_district',{
       				'amphur_id' : $(this).val()
       			},function(data){
       				$("#district").html(data);
