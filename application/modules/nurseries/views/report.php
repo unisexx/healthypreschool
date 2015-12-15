@@ -187,7 +187,7 @@ $(function(){
 	</div>
 </form>
 
-<div class='pull-right' <?=(@$_GET['type'] == 4)?"style='display:none;'":"";?>>
+<div class='pull-right' <?=(@$_GET['type'] == 4)?"style='display:none;'":"";?> style="display:none;">
 	<a href="nurseries/reports/index/basic_column?<?=$_SERVER['QUERY_STRING']?>"><div class="btn btn-mini">Basic Column</div></a> <a href="nurseries/reports/index/stacked_column?<?=$_SERVER['QUERY_STRING']?>"><div class="btn btn-mini">Stacked Column</div></a>
 </div>
 
