@@ -63,7 +63,7 @@ $(document).ready(function(){
 		        </div>
 		    </div>
 		    
-		    <div style="float:right; padding:10px 0;"><a href="#teacherModal" role="button" data-toggle="modal"><div class="btn btn-info btn-small">เพิ่มครูประจำชั้น</div></a></div>
+		    <div style="float:right; padding:10px 0;"><a href="#teacherModal" role="button" data-toggle="modal"><div class="btn btn-info btn-small">เพิ่มครูประจำชั้นในห้องเรียน</div></a></div>
 		    <table id="teacherTable" class="table table-bordered table-striped">
 		    	<tr>
 			    	<th>ครูประจำชั้น</th>
@@ -83,7 +83,7 @@ $(document).ready(function(){
 			    <?endif;?>
 		    </table>
 		    
-		    <div style="float:right; padding:10px 0;"><a href="#childrenModal" role="button" data-toggle="modal"><div class="btn btn-info btn-small">เพิ่มเด็กนักเรียน</div></a></div>
+		    <div style="float:right; padding:10px 0;"><a href="#childrenModal" role="button" data-toggle="modal"><div class="btn btn-info btn-small">เพิ่มเด็กนักเรียนในห้องเรียน</div></a></div>
 		    <table id="childrenTable"  class="table table-bordered table-striped">
 		    	<tr>
 			    	<th>เด็กนักเรียน</th>
@@ -166,6 +166,7 @@ $(document).ready(function(){
   	<form class="form-search">
 	  <input type="text" class="input-medium search-query span4" name="search" placeholder="ค้นหาชื่อครู">
 	  <button type="button" class="btn btn-primary searchTeacher">ค้นหา</button>
+	  <button type="button" class="btn btn-primary addTeacherForm">เพิ่มรายชื่อครูในระบบ</button>
 	</form>
   	<div id="teacherData"></div>
   </div>
@@ -176,6 +177,7 @@ $(document).ready(function(){
   	<form class="form-search">
 	  <input type="text" class="input-medium search-query span4" name="search" placeholder="ค้นหาชื่อเด็ก">
 	  <button type="button" class="btn btn-primary searchChildren">ค้นหา</button>
+	  <button type="button" class="btn btn-primary addChildrenForm">เพิ่มรายชื่อเด็กในระบบ</button>
 	</form>
   	<div id="childrenData"></div>
   </div>

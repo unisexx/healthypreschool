@@ -1,7 +1,7 @@
 <?php
-class Classroom_teacher_detail extends ORM
+class Classroom_teacher extends ORM
 {
-	public $table = "classroom_teacher_details";
+	public $table = "classroom_teachers";
 	
 	public $has_one = array("classroom","user");
 	
