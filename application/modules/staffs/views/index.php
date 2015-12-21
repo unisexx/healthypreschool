@@ -78,6 +78,8 @@ $(document).ready(function(){
 	<?=form_dropdown('user_type_id',array('9'=>'เจ้าหน้าที่ศูนย์','10'=>'เจ้าหน้าที่ครู / ผู้ดูแลเด็ก'),@$_GET['user_type_id'],'','--- เลือกเจ้าหน้าที่ ---');?>
 	<input type="text" name="search" value="<?=@$_GET['search']?>" placeholder="ค้นหาชื่อ, อีเมล์">
 	<input type="text" name="nursery_name" value="<?=@$_GET['nursery_name']?>" placeholder="ค้นหาศูนย์เด็กเล็ก">
+	<?php get_province_dropdown('',@$_GET['province_id']);?>
+	<!--
 	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
 		<?php echo form_dropdown('province_id',get_option('id','name','provinces','order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
 	<?php endif;?>
@@ -89,22 +91,28 @@ $(document).ready(function(){
 	<?php if(user_login()->user_type_id == 7): //เจ้าหน้าที่จังหวัด?>
 		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.user_login()->province_id.' order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
 	<?php endif;?>
-	
+	-->
 	<span class="area"></span>
 	<span class="province"></span>
 	<span class="amphur">
+		<?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
+		<!--
 		<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
 			<?php if(@$_GET['province_id']):?>
 				<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures where province_id = '.@$_GET['province_id']),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
 			<?php endif;?>
 		<?php endif;?>
+		-->
 	</span>
 	<span class="district">
+		<?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
+		<!--
 		<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกตำบล?>
 			<?php if(@$_GET['amphur_id']):?>
 			<?=form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.@$_GET['amphur_id'].' order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
 			<?php endif;?>
 		<?php endif;?>
+		-->
 	</span>
 	
       <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
