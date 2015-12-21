@@ -72,9 +72,9 @@ class Classrooms extends Public_Controller{
 	
 	function view($id){
 		$data['rs'] = new Classroom($id);
-		$data['years'] = $this->db->query("SELECT year FROM classroom_teacher_details where classroom_id = ".$id." 
+		$data['years'] = $this->db->query("SELECT year FROM classroom_teachers where classroom_id = ".$id." 
 UNION
-SELECT year FROM classroom_children_details where classroom_id = ".$id." 
+SELECT year FROM classroom_childrens where classroom_id = ".$id." 
 ORDER BY year desc")->result();
 		$this->template->build('view',$data);
 	}
@@ -83,10 +83,10 @@ ORDER BY year desc")->result();
 		$data['classroom'] = new Classroom($classroom_id);
 		
 		if($year!=""){
-			$data['teachers'] = new Classroom_teacher_detail();
+			$data['teachers'] = new Classroom_teacher();
 			$data['teachers']->where('classroom_id = '.$classroom_id.' and year = '.$year)->get();
 			
-			$data['childrens'] = new Classroom_children_detail();
+			$data['childrens'] = new Classroom_children();
 			$data['childrens']->where('classroom_id = '.$classroom_id.' and year = '.$year)->get();
 			
 			$data['year'] = $year;
@@ -99,7 +99,7 @@ ORDER BY year desc")->result();
 		if($_POST){
 			if(@$_POST['teacherID']){
 				foreach($_POST['teacherID'] as $key=>$value){
-					$teacher = new Classroom_teacher_detail($_POST['classroom_teacher_detail_id'][$key]);
+					$teacher = new Classroom_teacher($_POST['classroom_teacher_detail_id'][$key]);
 					$teacher->year = $_POST['year'];
 					$teacher->classroom_id = $_POST['classroom_id'];
 					$teacher->user_id = $value;
@@ -109,7 +109,7 @@ ORDER BY year desc")->result();
 			
 			if(@$_POST['childrenID']){
 				foreach($_POST['childrenID'] as $key=>$value){
-					$children = new Classroom_children_detail($_POST['classroom_children_detail_id'][$key]);
+					$children = new Classroom_children($_POST['classroom_children_detail_id'][$key]);
 					$children->year = $_POST['year'];
 					$children->classroom_id = $_POST['classroom_id'];
 					$children->children_id = $value;
@@ -124,14 +124,14 @@ ORDER BY year desc")->result();
 	
 	function ajax_delete_teacher(){
 		if($_POST){
-			$rs = new Classroom_teacher_detail($_POST['id']);
+			$rs = new Classroom_teacher($_POST['id']);
 			$rs->delete();
 		}
 	}
 
 	function ajax_delete_children(){
 		if($_POST){
-			$rs = new Classroom_children_detail($_POST['id']);
+			$rs = new Classroom_children($_POST['id']);
 			$rs->delete();
 		}
 	}

@@ -413,7 +413,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 						$rs = new Disease();
 						$rs->query($sql);
 						
-						// echo $sql.'<br><br>';
+						echo $sql.'<br><br>';
 					?>
 					<td class="span2"><?=$rs->total?></td>
 				<? endforeach;?>

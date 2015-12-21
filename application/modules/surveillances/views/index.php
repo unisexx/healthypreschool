@@ -85,8 +85,8 @@ endfor;
 // echo '<pre>';
 // print_r(array_merge($base, $replacements));
 // echo '</pre>';
-// @$boys = array_replace($base, $replacements);
 
+// @$boys = array_replace($base, $replacements);
 // @$girls = array_replace($base, $replacements);
 
 foreach ($replacements_boy as $key => $value) {

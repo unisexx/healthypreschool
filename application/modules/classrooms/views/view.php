@@ -23,8 +23,8 @@
 			<?foreach($years as $row):?>
 			<tr>
 				<td><?=$row->year?></td>
-				<td><?=$this->db->query("SELECT id FROM classroom_teacher_details where classroom_id = ".$rs->id." and year = ".$row->year)->num_rows();?></td>
-				<td><?=$this->db->query("SELECT id FROM classroom_children_details where classroom_id = ".$rs->id." and year = ".$row->year)->num_rows();?></td>
+				<td><?=$this->db->query("SELECT id FROM classroom_teachers where classroom_id = ".$rs->id." and year = ".$row->year)->num_rows();?></td>
+				<td><?=$this->db->query("SELECT id FROM classroom_childrens where classroom_id = ".$rs->id." and year = ".$row->year)->num_rows();?></td>
 				<td>
 					<a href="classrooms/form_detail/<?=$rs->id?>/<?=$row->year?>" class='btn btn-mini btn-info'>แก้ไข</a>
 	        		<!-- <a href="classrooms/delete/<?=$class->id?>" class="btn btn-mini btn-danger" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a> -->

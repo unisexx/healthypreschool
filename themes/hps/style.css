@@ -204,7 +204,7 @@ border-bottom-left-radius: 1em;}
 
 #___gcse_0{margin-top: 22px;width: 240px;margin-left: 112px;}
 
-th{
+th,th a{
     background-color: #0088CC !important;
     color: white !important;
 }

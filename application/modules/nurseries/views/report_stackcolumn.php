@@ -1,5 +1,3 @@
-<script type="text/javascript" src="media/js/highchart/highcharts.js"></script>
-<script type="text/javascript" src="media/js/highchart/modules/exporting.js"></script>
 <script type="text/javascript">
 $(function(){
 	// On document ready, call visualize on the datatable.
@@ -66,19 +64,38 @@ $(function(){
                     }
                 }
             },
+            // tooltip: {
+                // formatter: function() {
+                    // return '<b>'+ this.x +'</b><br/>'+
+                        // this.series.name +' : '+ this.y +'<br/>'+
+                        // 'เข้าร่วมทั้งหมด (แห่ง) : '+ this.point.stackTotal;
+                // }
+            // },
             tooltip: {
-                formatter: function() {
-                    return '<b>'+ this.x +'</b><br/>'+
-                        this.series.name +' : '+ this.y +'<br/>'+
-                        'เข้าร่วมทั้งหมด (แห่ง) : '+ this.point.stackTotal;
-                }
-            },
+            	headerFormat: '<b>{point.key}</b><table style="font-weight:bold;">',
+	            pointFormat: '<tr><td style="color:{series.color};">{series.name}:</td><td style="text-align: right;">{point.percentage:.1f}%<td></tr>',
+	            footerFormat: '</table>',
+	            shared: true,
+	            useHTML: true
+	        },
+            // plotOptions: {
+                // column: {
+                    // stacking: 'percent',
+                    // dataLabels: {
+                        // enabled: true,
+                        // color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black'
+                    // }
+                // }
+            // },
             plotOptions: {
                 column: {
-                    stacking: 'normal',
+                    stacking: 'percent',
                     dataLabels: {
                         enabled: true,
-                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                        formatter: function() {
+	                        return Math.round(this.percentage*100)/100 + ' %';
+	                    },
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black'
                     }
                 }
             },
