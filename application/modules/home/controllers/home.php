@@ -162,13 +162,14 @@ class Home extends Public_Controller {
 	function ajax_get_teacher(){
 		if($_GET){
 			$rs = new User();
-			$rs->where("user_type_id = 10 and name like '%".$_GET['name']."%'")->order_by('name','asc')->get();
+			$rs->where("user_type_id = 10 and (name like '%".$_GET['name']."%' or email like '%".$_GET['name']."%')")->order_by('name','asc')->get();
 			
 			echo '<table class="table table-striped table-bordered">
 				  		<th>ชื่อ</th>
+				  		<th>อีเมล์</th>
 				  		<th class="span1"></th>';
 			foreach($rs as $row){
-				echo '<tr><td>'.$row->name.'</td><td><input type="hidden" name="teacherName" value="'.$row->name.'"><input type="hidden" name="teacherId" value="'.$row->id.'"><button class="btn btn-mini btn-info selectTeacher" data-dismiss="modal" aria-hidden="true">เลือก</button></td></tr>';
+				echo '<tr><td>'.$row->name.'</td><td>'.$row->email.'</td><td><input type="hidden" name="teacherName" value="'.$row->name.'"><input type="hidden" name="teacherId" value="'.$row->id.'"><button class="btn btn-mini btn-info selectTeacher" data-dismiss="modal" aria-hidden="true">เลือก</button></td></tr>';
 			}
 			echo '</table>';
 		}
