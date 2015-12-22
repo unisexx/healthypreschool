@@ -53,7 +53,7 @@
 <!-- Content -->
 <form id="desease_watch" action='desease_watch/save' method='post'>
       <?php echo form_hidden('id', @$rs->id); ?>
-      <table class='tblForm'>
+      <table class='tblForm table table-bordered'>
             <tr><th> 1. รายชื่อศูนย์เด็กเล็กและโรงเรียนอนุบาล </th></tr>
             <tr>
                   <td>
@@ -84,8 +84,9 @@
             <tr>
                   <td>
                         <?php
-                              $qList = array(''=>'--กรุณาเลือกโรค--', 1 => 'โรค มือ เท้า ปาก', 2 => 'โรคอีสุกอีใส', 3 => 'โรคไข้หวัด/ไข้หวัดใหญ่', 4 => 'โรคอุจจาระร่วง');
-                              echo form_dropdown('disease', $qList, @$rs->disease);
+                              //$qList = array(''=>'--กรุณาเลือกโรค--', 1 => 'โรค มือ เท้า ปาก', 2 => 'โรคอีสุกอีใส', 3 => 'โรคไข้หวัด/ไข้หวัดใหญ่', 4 => 'โรคอุจจาระร่วง');
+							  echo form_dropdown('disease',get_option('id','desease_name','desease_watch_names',' order by id '),@$rs->disease,'','--กรุณาเลือกโรค--');
+                              //echo form_dropdown('disease', $qList, @$rs->disease);
                         ?>
 
                         <div class="question" style='line-height:25px;'>
