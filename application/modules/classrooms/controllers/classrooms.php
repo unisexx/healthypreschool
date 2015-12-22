@@ -81,6 +81,9 @@ ORDER BY year desc")->result();
 	
 	function form_detail($classroom_id=false,$year=false){
 		$data['classroom'] = new Classroom($classroom_id);
+		if($classroom_id!=""){
+			$data['v_nursery'] = new V_nursery($data['classroom']->nursery_id);	
+		}
 		
 		if($year!=""){
 			$data['teachers'] = new Classroom_teacher();
@@ -97,6 +100,8 @@ ORDER BY year desc")->result();
 	
 	function form_detail_save(){
 		if($_POST){
+			
+			// บันทึกข้อมูลครูในห้องเรียน
 			if(@$_POST['teacherID']){
 				foreach($_POST['teacherID'] as $key=>$value){
 					$teacher = new Classroom_teacher($_POST['classroom_teacher_detail_id'][$key]);
@@ -107,6 +112,7 @@ ORDER BY year desc")->result();
 				}
 			}
 			
+			// บันทึกข้อมูลเด็กในห้องเรียน
 			if(@$_POST['childrenID']){
 				foreach($_POST['childrenID'] as $key=>$value){
 					$children = new Classroom_children($_POST['classroom_children_detail_id'][$key]);
@@ -114,6 +120,24 @@ ORDER BY year desc")->result();
 					$children->classroom_id = $_POST['classroom_id'];
 					$children->children_id = $value;
 					$children->save();
+				}
+			}
+			
+			// อัพเดทสถานะครูถ้าเป็นปีการศึกษาปัจจุบัน (max id ของ table classroom_teacher)
+			$max = new Classroom_teacher();
+			$max->select_max('year');
+			$max->where('classroom_id = '.$_POST['classroom_id']);
+			$max->get();
+			// $max->check_last_query();
+			
+			if($max->year == $_POST['year']){
+				foreach($_POST['teacherID'] as $key=>$value){
+					$user = new User($value);
+					$user->nursery_id = $_POST['nursery_id'];
+					$user->amphur_id = $_POST['amphur_id'];
+					$user->district_id = $_POST['district_id'];
+					$user->area_province_id = $_POST['area_province_id'];
+					$user->save();
 				}
 			}
 			
@@ -133,6 +157,23 @@ ORDER BY year desc")->result();
 		if($_POST){
 			$rs = new Classroom_children($_POST['id']);
 			$rs->delete();
+		}
+	}
+	
+	function ajax_teacher_save($id=false){
+		if($_POST){
+			$captcha = $this->session->userdata('captcha');
+			if(($_POST['captcha'] == $captcha) && !empty($captcha)){
+				$teacher = new User($id);
+	            $teacher->from_array($_POST);
+	            $teacher->save();
+	            set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
+				
+				echo $_POST['name'];
+				// echo "<tr><td>'+childrenName+'</td><td>".$_POST['name']."</td><td><input type='hidden' name='childrenID[]' value=".$teacher->id."><button class='btn btn-mini btn-danger delButton'>ลบ</button></td></tr>";
+			}else{
+				set_notify('error','กรอกรหัสไม่ถูกต้อง');
+			}
 		}
 	}
 }
