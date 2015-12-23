@@ -2,3 +2,4 @@ application/config/database.php
 media/timthumb
 media/timthumb
 media/timthumb/cache
+application/config/database.php

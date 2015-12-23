@@ -104,4 +104,17 @@ function get_district_dropdown($amphur_id, $selected_value=''){
         echo '<select name="district_id" id="district_id" disabled="disabled"><option value="">แสดงทั้งหมด</option></select>';
 	}
 }
+
+function get_nursery_dropdown($area_id='',$province_id='',$amphur_id='',$district_id='',$selected_value=''){
+		$condition = ' WHERE 1=1';
+		$condition .= $area_id > 0 ? ' AND area_id = '.$district_id : '';
+		$condition .= $province_id > 0 ? ' AND province_id = '.$province_id : '';
+		$condition .= $amphur_id > 0 ? ' AND amphur_id = '.$amphur_id : '';
+		$condition .= $district_id > 0 ? ' AND district_id = '.$district_id : '';
+		if($condition!='1=1'){
+			echo form_dropdown('nursery_id',get_option('id','nursery_name','v_nurseries',$ext_condition.' order by nursery_name asc'),@$_GET['nursery_id'],'style="width:250px;"','--- เลือกศูนย์เด็กเล็ก/โรงเรียนอนุบาล ---');
+		}else{
+			echo '<select name="nursery_id" id="nursery_id" disabled="disabled"><option value="">แสดงทั้งหมด</option></select>';
+		}
+}
 ?>

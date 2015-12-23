@@ -2,31 +2,18 @@
 Class Ajax extends Public_Controller
 {
 function get_province(){
-		if($_POST){
-			$condition = ' 
-				WHERE
-					id IN (
-					select 
-					province_id 
-					FROM 
-					area_provinces 
-					WHERE 
-					area_id = '.$_POST['area_id'].' and province_id > 0 )'; 
-			echo form_dropdown('province_id',get_option('id','name','provinces',$condition.' order by name asc'),'','','--- เลือกจังหวัด  ---');
-		}
+		$area_id = @$_POST['area_id']!=''? $_POST['area_id'] : @$_GET['area_id'];
+		get_province_dropdown($area_id,'');
 	}	
 	
 function get_amphur(){
-		if($_POST){
-			echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.$_POST['province_id'].' order by amphur_name asc'),'','','--- เลือกอำเภอ ---');
-		}
+		$province_id = @$_POST['province_id']!=''? $_POST['province_id'] : @$_GET['province_id'];		
+		get_amphur_dropdown(@$province_id,'');
 	}
 
 function get_district(){
-		if($_POST){
-			get_district_dropdown(@$_POST['amphur_id'],'');
-			//echo form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.$_POST['amphur_id'].' order by district_name asc'),'','','--- เลือกตำบล ---');
-		}
+		$amphur_id = @$_POST['amphur_id']!=''? $_POST['amphur_id'] : @$_GET['amphur_id'];
+		get_district_dropdown(@$amphur_id,'');			
 	}
 }
 ?>

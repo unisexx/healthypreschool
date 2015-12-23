@@ -36,5 +36,10 @@ class Reports extends Public_Controller {
 		
 		$this->template->build('children_weight',$data);
 	}
+
+	function desease_watch_number(){
+		$data = '';
+		$this->template->build('desease_watch_number',$data);
+	}
 }
 ?>
