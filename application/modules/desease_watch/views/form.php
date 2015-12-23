@@ -35,8 +35,22 @@
       .questionParent {
             border:solid 1px #0f0;
       }
+      .datepicker{
+          width:100px;
+      }
 </style>
+<!-- load jQuery 1.4.2 -->
+<script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
 
+<link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
+<script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
+<script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
+<script type="text/javascript">
+var jQuery_1_4_2 = $.noConflict(true);
+$(document).ready(function(){
+jQuery_1_4_2("input.datepicker").date_input(); 
+});
+</script>
 
 
 <!-- Navigator. -->
@@ -356,52 +370,7 @@
             $('#btnCallNurseriesList').attr('disabled', false).attr('data-toggle', 'modal');
 
 
-            //datepiceker
-            $('.datepicker').css({ width:"80px" }).datepicker({
-                    dateFormat: 'dd/mm/yy',
-                    //showOn: 'button',
-            //      buttonImage: 'http://jqueryui.com/demos/datepicker/images/calendar.gif',
-                    buttonImageOnly: false,
-                    dayNamesMin: ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'],
-                    monthNamesShort: ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'],
-                    changeMonth: true,
-                    changeYear: true,
-                    beforeShow:function(){
-                        if($(this).val()!=""){
-                            var arrayDate=$(this).val().split("-");
-                            arrayDate[2]=parseInt(arrayDate[2])-543;
-                            $(this).val(arrayDate[0]+"-"+arrayDate[1]+"-"+arrayDate[2]);
-                        }
-                        setTimeout(function(){
-                            $.each($(".ui-datepicker-year option"),function(j,k){
-                                var textYear=parseInt($(".ui-datepicker-year option").eq(j).val())+543;
-                                $(".ui-datepicker-year option").eq(j).text(textYear);
-                            });
-                        },50);
-                    },
-                    onChangeMonthYear: function(){
-                        setTimeout(function(){
-                            $.each($(".ui-datepicker-year option"),function(j,k){
-                                var textYear=parseInt($(".ui-datepicker-year option").eq(j).val())+543;
-                                $(".ui-datepicker-year option").eq(j).text(textYear);
-                            });
-                        },50);
-                    },
-                    onClose:function(){
-                        if($(this).val()!="" && $(this).val()==dateBefore){
-                            var arrayDate=dateBefore.split("/");
-                            arrayDate[2]=parseInt(arrayDate[2])+543;
-                            $(this).val(arrayDate[0]+"/"+arrayDate[1]+"/"+arrayDate[2]);
-                        }
-                    },
-                    onSelect: function(dateText, inst){
-                        dateBefore=$(this).val();
-                        var arrayDate=dateText.split("/");
-                        arrayDate[2]=parseInt(arrayDate[2])+543;
-                        $(this).val(arrayDate[0]+"/"+arrayDate[1]+"/"+arrayDate[2]);
-                    }
-
-              });
+            
 
             //question script..
             question = {

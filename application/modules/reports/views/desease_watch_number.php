@@ -4,11 +4,6 @@
 	padding-bottom:10px;
 }	
 
-#datatable .desease_age_range>td{
-	text-align:right;
-}
-</style>
-<style type="text/css">
 #datatable{
   table-layout: fixed; 
   *margin-left: -326px;/*ie7*/
@@ -22,7 +17,7 @@
   position:absolute;
   *position: relative; /*ie7*/
 	left: 0;
-	width: 326px;
+	width: 172px;
 	border-right: 1px solid #ccc;
 	margin-top: 0px;
 	font-weight: normal;
@@ -35,69 +30,57 @@
 	.inner {
 		overflow-x: scroll;
 		overflow-y: visible;
-		width: 598px;
-		margin-left: 346px;
+		width:752px;
+		margin-left: 192px;
 	}
 	.th_datatable {
 		background: #0088CC !important;
 		color: #FFFFFF;
 		text-align:center !important;
 	}
+#datatable>thead>tr>td{
+	width:348px !important;
+}
 #datatable td{
 	text-align:right;
 }
+tr.year_total>th{
+    background:#d9ffbf !important;
+    color:#000000 !important;
+}
+tr.year_total>td{
+    background:#d9ffbf !important;
+    color:#000000 !important;
+}
+tr.month_total>th{
+    background:#ffe2bf !important;
+    color:#000000 !important;
+}
+tr.month_total>td{
+    background:#ffe2bf !important;
+    color:#000000 !important;
+}
 tr.desease_total>th{
-	background:#f4f4f4 !important;
-	color:#000000 !important;
+    background:#ffffff !important;
+    color:#000000 !important;
+}
+tr.desease_total>td{
+    background:#ffffff !important;
+}
+#datatable .desease_age_range>th{
+    text-align:right;
+    background:#f4f4f4 !important;
+}
+#datatable .desease_age_range>td{
+    text-align:right;
+    background:#f4f4f4 !important;
 }
 tbody>tr>th{
 	background:#ffffff !important;
 	color:#000000 !important;
 }
-tr.desease_total>td{
-	background:#f4f4f4;
-}
+
 </style>
-<script type="text/javascript" src="media/js/jquery.chained.remote.min.js"></script>
-<script>
-$(document).ready(function() {
-	$("select[name='area_id']").live("change",function(){
-  		$.post('ajax/get_province',{
-  				'area_id' : $(this).val()
-  			},function(data){
-  				$("#province").html(data);
-  			});
-  		
-  		$.post('ajax/get_amphur',{
-  				'province_id' : ''
-  			},function(data){
-  				$("#amphur").html(data);
-  			});
-  		
-  		$.post('ajax/get_district',{
-  				'amphur_id' : ''
-  			},function(data){
-  				$("#district").html(data);
-  			});
-  	});
-  	$("select[name='province_id']").live("change",function(){
-  		$.post('ajax/get_amphur',{
-  				'province_id' : $(this).val()
-  			},function(data){
-  				$("#amphur").html(data);
-  			});
-  	});
-
-  	$("select[name='amphur_id']").live("change",function(){
-  		$.post('ajax/get_district',{
-  				'amphur_id' : $(this).val()
-  			},function(data){
-  				$("#district").html(data);
-  			});
-  	});
-});
-</script>
-
 <!-- load jQuery 1.4.2 -->
 <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
 
@@ -147,325 +130,189 @@ jQuery_1_4_2("input.datepicker").date_input();
 		<span id="district">
 		<?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
 		</span>
-	</div>	
+	</div>
+	<div>
+		<span>ช่วงเวลาการแสดงผล</span>
+		<span id="range_type">
+			<select name="range_type">
+				<option value="">--ไม่ระบุ--</option>
+				<option value="year" <?php echo $selected = @$_GET['range_type']=='year' ?  'selected="selected"':'';?>>ระหว่างปี</option>
+				<option value="month_year" <?php echo $selected = @$_GET['range_type']=='month_year' ?  'selected="selected"':'';?>>รายเดือนของปี</option>
+				<option value="time" <?php echo $selected = @$_GET['range_type']=='time' ?  'selected="selected"':'';?>>ช่วงวันที่</option>
+			</select>
+		</span>
+	</div>
+	<div id="year_range" style="<?php echo $display = @$_GET['range_type']!='year'? 'display:none;' : '';?>">
+		<span>ช่วงเวลาที่เกิดโรค ระหว่างปี</span>
+		ปีที่เริ่ม 
+		<select name="report_start_year">
+			<option value="">--ระบุปีที่เริ่ม--</option>
+			<?php
+				$sql_year = " SELECT
+								DISTINCT YEAR (start_date)report_year
+							FROM
+								disease_watch						 
+						 order by report_year desc
+						";
+				$report_year_list = $this->db->query($sql_year)->result();
+				foreach($report_year_list as $row):
+			?>
+			<option value="<?php echo $row->report_year;?>" <?php echo $selected = @$_GET['report_start_year']==$row->report_year ?  'selected="selected"':'';?>><?php echo $row->report_year + 543;?></option>
+			<?php endforeach;?>
+		</select>
+		ปีที่สิ้นสุด 
+		<select name="report_end_year">
+			<option value="">--ระบุปีที่สิ้นสุด--</option>
+			<?php
+				$report_year_list = $this->db->query($sql_year)->result();
+				foreach($report_year_list as $row):
+			?>
+			<option value="<?php echo $row->report_year;?>" <?php echo $selected = @$_GET['report_end_year']==$row->report_year ?  'selected="selected"':'';?>><?php echo $row->report_year + 543;?></option>
+			<?php endforeach;?>
+		</select>
+	</div>
+	<div id="month_year_range" style="<?php echo $display = @$_GET['range_type']!='month_year'? 'display:none;' : '';?>">
+		<span>ช่วงเวลาที่เกิดโรค รายเดือนของ</span>
+		<select name="report_month_year">
+			<option value="">แต่ล่ะเดือนของทุกปี</option>
+			<?php
+				$report_year_list = $this->db->query($sql_year)->result();
+				foreach($report_year_list as $row):
+			?>
+			<option value="<?php echo $row->report_year;?>" <?php echo $selected = @$_GET['report_month_year']==$row->report_year ?  'selected="selected"':'';?>><?php echo $row->report_year + 543;?></option>
+			<?php endforeach;?>
+		</select>
+	</div>
+	<div id="time_range" style="<?php echo $display = @$_GET['range_type']!='time'? 'display:none;' : '';?>">
+		<span>ช่วงเวลาที่เกิดโรค</span>
+		วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
+		วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
+	</div>
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 </div>
-<?php
-	$desease = New Desease_watch_name();	
-	$desease->get();
-	if(@$_GET['area_id']=='' && @$_GET['province_id']==''){
-		$area = new Area();
-		$area->get();
-	}else if(@$_GET['area_id']!='' && @$_GET['province_id']==''){
-		$province = new V_Province();
-		$province->where('area_id = '.$_GET['area_id'])->get();
-	}else if(@$_GET['province_id']!='' && @$_GET['amphur_id']==''){
-		$amphur = new Amphur();
-		$amphur->where('province_id = '.$_GET['province_id'])->get();
-	}else if(@$_GET['amphur_id']!='' && @$_GET['district_id']==''){
-		$district = new District();
-		$district->where('amphur_id = '.$_GET['amphur_id'])->get();
-	}else if(@$_GET['district_id']!=''){
-		$nursery = new V_Nursery();
-		$nursery->where('district_id = '.$_GET['district_id'])->get();
-	}
+<div id="report_header" style="text-align:center;padding:30px;">
+    <h4>รายงานสรุปจำนวนเหตุการณ์การเฝ้าระวังโรค</h4>
+    <?php
+    if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
+        echo '<h5>จำแนกตามพื้นที่ สคร. 13 เขต </h5>';
+    }else if(@$_GET['area_id']!=''&&@$_GET['province_id']==''){
+        $area_title = $this->db->query('select * from areas where id = '.$_GET['area_id'])->result();
+        echo '<h5>จำแนกตามจังหวัด ในเขตพื้นที่ '.$area_title[0]->area_name.'</h5>';
+    }else if(@$_GET['province_id']!=''&&@$_GET['amphur_id']==''){
+        $province_title = $this->db->query('select * from provinces where id = '.$_GET['province_id'])->result();
+        echo '<h5>จำแนกตามอำเภอ ในเขตพื้นที่จังหวัด  '.$province_title[0]->name.'</h5>';
+    }else if(@$_GET['amphur_id']!=''&&@$_GET['district_id']==''){
+        $province_title = $this->db->query('select * from provinces where id = '.$_GET['province_id'])->result();
+        $amphur_title = $this->db->query('select * from amphures where id = '.$_GET['amphur_id'])->result();
+        echo '<h5>จำแนกตามพื้นที่ตำบล ในเขตพื้นที่ เขต/อำเภอ '.$amphur_title[0]->amphur_name.' จังหวัด '.$province_title[0]->name.'</h5>';
+    }else if(@$_GET['district_id']!=''){
+        $province_title = $this->db->query('select * from provinces where id = '.$_GET['province_id'])->result();
+        $amphur_title = $this->db->query('select * from amphures where id = '.$_GET['amphur_id'])->result();
+        $district_title = $this->db->query('select * from districts where id = '.$_GET['district_id'])->result();
+        echo '<h5>จำแนกตามศูนย์เด็กเล็กและโรงเรียนอนุบาล ในเขตพื้นที่ แขวง/ตำบล '.$district_title[0]->district_name.' เขต/อำเภอ '.$amphur_title[0]->amphur_name.' จังหวัด '.$province_title[0]->name.'</h5>';
+    }
+
+    switch(@$_GET['range_type']){
+        case 'year':
+            $start_year = @$_GET['report_end_year']!='' ? @$_GET['report_end_year'] : date("Y");
+            $end_year =   @$_GET['report_start_year']!='' ? @$_GET['report_start_year'] : $start_year-5;
+            echo '<h5>ระหว่างปี '.($end_year+543).' ถึง ปี'.($start_year+543).'</h5>';
+        break;
+        case 'month_year':
+            if(@$_GET['report_month_year']!='')
+                echo '<h5>จำแนกตามเดือน  ของ ปี'.($_GET['report_month_year']+543).'</h5>';
+            else
+                echo '<h5>จำแนกตามเดือน  จากข้อมูลทั้งหมด</h5>'; 
+        break;
+        case 'time':
+            $start_date = @$_GET['start_date']!='' ? @$_GET['start_date'] : '';
+            $end_date = @$_GET['end_date']!='' ? @$_GET['end_date'] : '';
+            if($start_date!='' && $end_date != ''){
+                echo '<h5>ระหว่างวันที่ '.$start_date.' ถึง '.$end_date.'</h5>';
+            }else if($start_date!='' && $end_date==''){
+                echo '<h5>ตั้งแต่วันที่ '.$start_date.' ถึง ณ ปัจจุบัน </h5>';
+            }else if($start_date=='' && $end_date!=''){
+                echo '<h5>ข้อมูล ถึง ณ วันที่ '.$end_date.'</h5>';
+            }else{
+                
+            }
+        break;
+        default:
+        break;
+    }
+
+            
 ?>
-<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-<div class="outer"> 
-  <div class="inner">
-<table id="datatable" class="table table-bordered">
-	<thead>
-		<tr>
-			<th style="height:100px;background:#fff !important;border-left:none;">
-				
-			</th>
-			<td colspan="4" class="th_datatable" style="width:400px;">
-				รวม
-			</td>
-			
-			<?php
-			if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
-				foreach($area as $area_row):
-					echo '<td colspan="4"  class="th_datatable" style="width:400px;">'.$area_row->area_name.'</td>';
-				endforeach;
-			}else if(@$_GET['area_id']!=''&&@$_GET['province_id']==''){
-				foreach($province as $province_row):
-					echo '<td colspan="4"  class="th_datatable" style="width:400px;">'.$province_row->name.'</td>';
-				endforeach;
-			}else if(@$_GET['province_id']!=''&&@$_GET['amphur_id']==''){
-				foreach($amphur as $amphur_row):
-					echo '<td colspan="4"  class="th_datatable" style="width:400px;">'.$amphur_row->amphur_name.'</td>';
-				endforeach;
-			}else if(@$_GET['amphur_id']!=''&&@$_GET['district_id']==''){
-				foreach($district as $district_row):
-					echo '<td colspan="4"  class="th_datatable" style="width:400px;">'.$district_row->district_name.'</td>';
-				endforeach;
-			}else if(@$_GET['district_id']!=''){
-				foreach($nursery as $nursery_row):
-					echo '<td colspan="4"  class="th_datatable" style="width:400px;">'.$nursery_row->name.'</td>';
-				endforeach;
-			}
-			?>
-		</tr>
-		<tr>	
-			<th>
-				โรค
-			</th>
-			<td class="th_datatable" style="">
-				จำนวนอีเว้น
-			</td>
-			<td class="th_datatable" style="">
-				จำนวนผู้ป่วย
-			</td>
-			<td class="th_datatable" style="">
-				ชาย
-			</td>
-			<td class="th_datatable" style="">
-				หญิง
-			</td>	
-			<?php
-			if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
-				foreach($area as $area_row):
-					echo '<td class="th_datatable" style="">จำนวนอีเว้น</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
-				endforeach;
-			}else if(@$_GET['area_id']!=''&&@$_GET['province_id']==''){
-				foreach($province as $province_row):
-					echo '<td class="th_datatable" style="">จำนวนอีเว้น</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
-				endforeach;
-			}else if(@$_GET['province_id']!=''&&@$_GET['amphur_id']==''){
-				foreach($amphur as $amphur_row):
-					echo '<td class="th_datatable" style="">จำนวนอีเว้น</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
-				endforeach;
-			}else if(@$_GET['amphur_id']!=''&&@$_GET['district_id']==''){
-				foreach($district as $district_row):
-					echo '<td class="th_datatable" style="">จำนวนอีเว้น</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
-				endforeach;
-			}else if(@$_GET['district_id']!=''){
-				foreach($nursery as $nursery_row):
-					echo '<td class="th_datatable" style="">จำนวนอีเว้น</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
-				endforeach;
-			}
-			?>
-		</tr>	
-	</thead>
-	<tbody>
-		<?php
-			foreach($desease as $desease_row): 			
-			$condition = " AND disease = ".$desease_row->id;
-			$condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND v_nurseries.area_id = ".$_GET['area_id'] : '';
-			$condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND v_nurseries.province_id = ".@$_GET['province_id'] : '';
-			$condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND v_nurseries.amphur_id = ".@$_GET['amphur_id'] : '';
-			$condition.= @$_GET['district_id']!='' ? " AND v_nurseries.district_id = ".@$_GET['district_id'] : '';
-			$sql = " SELECT
-						disease,
-						age_duration_start age_start,
-						age_duration_end age_end,
-						CONCAT('อายุ ',age_duration_start, ' ถึง ', age_duration_end) age_range,
-						COUNT(disease_watch.id)n_event,
-					    SUM(total_amount)total_amount,
-						SUM(boy_amount)boy_amount,
-						SUM(girl_amount)girl_amount
-					FROM
-						disease_watch
-						LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
-					WHERE
-						1=1 ".$condition;					
-			$desease_age = $this->db->query($sql)->result();
-		?>
-		<tr class="desease_total">
-			<th>
-				<?php echo $desease_row->desease_name;?>
-			</th>
-			<?php
-			echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
-			echo $result = $desease_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
-			echo $result = $desease_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
-			echo $result = $desease_age[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';
-			?>		
-			<?php 
-				$sql = " SELECT
-								disease,
-								age_duration_start age_start,
-								age_duration_end age_end,
-								CONCAT('อายุ ',age_duration_start, ' ถึง ', age_duration_end) age_range,
-								COUNT(disease_watch.id)n_event,
-							    SUM(total_amount)total_amount,
-								SUM(boy_amount)boy_amount,
-								SUM(girl_amount)girl_amount
-							FROM
-								disease_watch
-								LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
-							WHERE
-								1=1 ";
-				$condition = " AND disease = ".$desease_row->id;								
-				if(@$_GET['area_id']=='' && @@$_GET['province_id']==''){
-					foreach($area as $area_row):				
-						$ex_condition = " AND area_id = ".$area_row->id;						
-						$desease_age = $this->db->query($sql.$condition.$ex_condition)->result();
-						echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';			
-					endforeach;
-				}else if(@$_GET['area_id']!='' && $_GET['province_id']==''){
-					foreach($province as $province_row):				
-						$ex_condition = " AND province_id = ".@$province_row->id;						
-						$desease_age = $this->db->query($sql.$condition.$ex_condition)->result();
-						echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';
-					endforeach;
-				}else if(@$_GET['province_id']!='' && $_GET['amphur_id']==''){
-					foreach($amphur as $amphur_row):				
-						$ex_condition = " AND amphur_id = ".@$amphur_row->id;						
-						$desease_age = $this->db->query($sql.$condition.$ex_condition)->result();
-						echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';
-					endforeach;
-				}else if(@$_GET['amphur_id']!='' && $_GET['district_id']==''){
-					foreach($district as $district_row):				
-						$ex_condition = " AND district_id = ".@$district_row->id;						
-						$desease_age = $this->db->query($sql.$condition.$ex_condition)->result();
-						echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';
-					endforeach;
-				}else if(@$_GET['district_id']!=''){
-					foreach($nursery as $nursery_row):				
-						$ex_condition = " AND nurseries_id = ".@$nursery_row->id;						
-						$desease_age = $this->db->query($sql.$condition.$ex_condition)->result();
-						echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
-						echo $result = $desease_age[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';
-					endforeach;
-				}
-			?>
-		</tr>
-			<?php
-				$condition = " AND disease = ".$desease_row->id;
-				$condition.= @$_GET['area_id'] != '' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
-				$condition.= @$_GET['province_id'] != '' && @$_GET['amphur_id'] == '' ? " AND province_id = ".$_GET['province_id'] : '';
-				$condition.= @$_GET['amphur_id'] != '' && @$_GET['district_id'] == '' ? " AND amphur_id = ".$_GET['amphur_id'] : '';
-				$condition.= @$_GET['district_id'] != '' ? " AND district_id = ".$_GET['district_id'] : '';
-				$sql = " SELECT
-							disease,
-							age_duration_start age_start,
-							age_duration_end age_end,
-							CONCAT('อายุ ',age_duration_start, ' ถึง ', age_duration_end) age_range							
-						FROM
-							disease_watch
-							LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
-						WHERE
-							1=1 ".$condition."
-						group by age_duration_start, age_duration_end
-						order by age_duration_start
-						";
-				$desease_age = $this->db->query($sql)->result();
-				foreach($desease_age as $age):
-					$condition = " AND disease = ".$desease_row->id." AND age_duration_start = ".$age->age_start." AND age_duration_end = ".$age->age_end;
-					$condition.= @$_GET['area_id'] != '' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
-					$condition.= @$_GET['province_id'] != '' && @$_GET['amphur_id'] == '' ? " AND province_id = ".$_GET['province_id'] : '';
-					$condition.= @$_GET['amphur_id'] != '' && @$_GET['district_id'] == '' ? " AND amphur_id = ".$_GET['amphur_id'] : '';
-					$condition.= @$_GET['district_id'] != '' ? " AND district_id = ".$_GET['district_id'] : ''; 
-					$sql = " SELECT
-								disease,
-								age_duration_start age_start,
-								age_duration_end age_end,
-								CONCAT('อายุ ',age_duration_start, ' ถึง ', age_duration_end) age_range,
-								COUNT(disease_watch.id)n_event,
-							    SUM(total_amount)total_amount,
-								SUM(boy_amount)boy_amount,
-								SUM(girl_amount)girl_amount							
-							FROM
-								disease_watch
-								LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
-							WHERE
-								1=1 ".$condition;
-					$value = $this->db->query($sql)->result();							
-			?>
-				<tr class="desease_age_range">
-					<th>
-						<?php echo $age->age_range;?>
-					</th>
-					<?php
-					echo $result = $value[0]->n_event > 0 ? '<td>&nbsp;'.number_format($value[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
-					echo $result = $value[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
-					echo $result = $value[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
-					echo $result = $value[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';
-					?>
-					<?php 
-					$condition = " AND disease = ".$desease_row->id." AND age_duration_start = ".$age->age_start." AND age_duration_end = ".$age->age_end;					
-					$sql = " SELECT
-								disease,
-								age_duration_start age_start,
-								age_duration_end age_end,
-								CONCAT('อายุ ',age_duration_start, ' ถึง ', age_duration_end) age_range,
-								COUNT(disease_watch.id)n_event,
-							    SUM(total_amount)total_amount,
-								SUM(boy_amount)boy_amount,
-								SUM(girl_amount)girl_amount							
-							FROM
-								disease_watch
-								LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
-							WHERE
-								1=1 ";
-					if(@$_GET['area_id']==''&&@ $_GET['province_id']==''){
-						foreach($area as $area_row):
-							$ex_condition = " AND area_id = ".$area_row->id;										
-							$value = $this->db->query($sql.$condition.$ex_condition)->result();
-							//if($area_row->id == 3) echo $sql.$condition.';';
-							echo $result = $value[0]->n_event > 0 ? '<td>&nbsp;'.number_format($value[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';
-						endforeach;
-					}else if(@$_GET['area_id']!='' && @$_GET['province_id']==''){
-						foreach($province as $province_row):
-							$ex_condition = " AND province_id = ".$province_row->id;			
-							$value = $this->db->query($sql.$condition.$ex_condition)->result();
-							echo $result = $value[0]->n_event > 0 ? '<td>&nbsp;'.number_format($value[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';
-						endforeach;
-					}else if(@$_GET['province_id']!='' && @$_GET['amphur_id']==''){
-						foreach($amphur as $amphur_row):
-							$ex_condition = " AND amphur_id = ".$amphur_row->id;			
-							$value = $this->db->query($sql.$condition.$ex_condition)->result();
-							echo $result = $value[0]->n_event > 0 ? '<td>&nbsp;'.number_format($value[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';
-						endforeach;
-					}else if(@$_GET['amphur_id']!='' && @$_GET['district_id']==''){
-						foreach($district as $district_row):
-							$ex_condition = " AND district_id = ".$district_row->id;			
-							$value = $this->db->query($sql.$condition.$ex_condition)->result();
-							echo $result = $value[0]->n_event > 0 ? '<td>&nbsp;'.number_format($value[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';
-						endforeach;
-					}else if(@$_GET['district_id']!=''){
-						foreach($nursery as $nursery_row):
-							$ex_condition = " AND nurseries_id = ".$nursery_row->id;			
-							$value = $this->db->query($sql.$condition.$ex_condition)->result();
-							echo $result = $value[0]->n_event > 0 ? '<td>&nbsp;'.number_format($value[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
-							echo $result = $value[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';
-						endforeach;
-					}
-					?>
-				</tr>
-			<?php endforeach; //end desease_age_row?>
-		<?php endforeach; //end desease?>
-	</tbody>
-</table>
 </div>
-</div>
+<?php
+    switch(@$_GET['range_type']){
+        case 'year':
+            echo Modules::run("reports/desease_watch_number_table_year");
+        break;
+        case 'month_year':
+            echo Modules::run("reports/desease_watch_number_table_month_year");
+        break;
+        case 'time':
+            echo Modules::run("reports/desease_watch_number_table_time");
+        break;
+        default:
+            echo Modules::run("reports/desease_watch_number_table_default");
+        break;
+    }
+?>
+<script>
+$(document).ready(function() {
+	$("select[name='area_id']").live("change",function(){
+  		$.post('ajax/get_province',{
+  				'area_id' : $(this).val()
+  			},function(data){
+  				$("#province").html(data);
+  			});
+  		
+  		$.post('ajax/get_amphur',{
+  				'province_id' : ''
+  			},function(data){
+  				$("#amphur").html(data);
+  			});
+  		
+  		$.post('ajax/get_district',{
+  				'amphur_id' : ''
+  			},function(data){
+  				$("#district").html(data);
+  			});
+  	});
+  	$("select[name='province_id']").live("change",function(){
+  		$.post('ajax/get_amphur',{
+  				'province_id' : $(this).val()
+  			},function(data){
+  				$("#amphur").html(data);
+  			});
+  	});
+
+  	$("select[name='amphur_id']").live("change",function(){
+  		$.post('ajax/get_district',{
+  				'amphur_id' : $(this).val()
+  			},function(data){
+  				$("#district").html(data);
+  			});
+  	});
+  	
+  	$("select[name=range_type]").live("change",function(){
+  		var range_type = $(this).val();
+  		$("#year_range").hide();
+  		$("#month_year_range").hide();
+  		$("#time_range").hide();
+  		switch(range_type){
+  		    case 'year':
+  		        $("#year_range").show();
+  		    break;
+  		    case 'month_year':
+                $("#month_year_range").show();
+            break;
+            case 'time':
+                $("#time_range").show();
+            break;
+  		}
+  	});
+});
+</script>

@@ -41,5 +41,21 @@ class Reports extends Public_Controller {
 		$data = '';
 		$this->template->build('desease_watch_number',$data);
 	}
+    function desease_watch_number_table_year(){
+        $data = '';
+        $this->load->view('desease_watch_number_table_year',$data);
+    }
+    function desease_watch_number_table_month_year(){
+        $data = '';
+        $this->load->view('desease_watch_number_table_month_year',$data);
+    }
+    function desease_watch_number_table_time(){
+        $data = '';
+        $this->load->view('desease_watch_number_table_time',$data);
+    }
+    function desease_watch_number_table_default(){
+        $data = '';
+        $this->load->view('desease_watch_number_table_default',$data);
+    }    
 }
 ?>
