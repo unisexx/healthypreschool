@@ -64,7 +64,7 @@ class Childrens extends Public_Controller{
 	}
 	
 	function profile($id){
-		$data['child'] = new Classroom_detail($id);
+		$data['child'] = new Children($id);
 		
 		$data['bmi'] = new Bmi(@$_GET['id']);
 		
@@ -93,7 +93,7 @@ class Childrens extends Public_Controller{
             
             set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
 		}
-		redirect('childrens/profile/'.$_POST['classroom_detail_id']);
+		redirect('childrens/profile/'.$_POST['nursery_id']);
 	}
 	
 	function delete_profile($id=false){

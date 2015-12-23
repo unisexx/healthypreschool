@@ -176,5 +176,17 @@ ORDER BY year desc")->result();
 			}
 		}
 	}
+	
+	function ajax_children_save($id=false){
+		if($_POST){
+			$children = new Children($id);
+			$_POST['birth_date'] = Date2DB($_POST['birth_date']);
+            $children->from_array($_POST);
+            $children->save();
+            set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
+			
+			echo $_POST['name'];
+		}
+	}
 }
 ?>

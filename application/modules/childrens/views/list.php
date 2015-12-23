@@ -45,29 +45,34 @@
 		<th>อายุ (ปี)</th>
 		<th>น้ำหนัก (กก) / ส่วนสูง (ซม)<br>(วันที่บันทึกล่าสุด)</th>
 		<!-- <th>ดัชนีมวลกาย (BMI)</th> -->
-		<th>เกณฑ์การเจริญเติบโต</th>
-		<th>ประวัติการป่วย</th>
-		<!-- <th>ห้องเรียน</th>
-		<th>ปีการศึกษา</th> -->
+		<!-- <th>เกณฑ์การเจริญเติบโต</th>
+		<th>ประวัติการป่วย</th> -->
+		<th>ห้องเรียน</th>
+		<!-- <th>ปีการศึกษา</th> -->
 		<!-- <th>จัดการ</th> -->
+		<th class="span1"></th>
 	</tr>
 	<?foreach($childs as $key=>$row):?>
 	<tr>
 		<td><?=$key+1?></td>
-		<td><a href="childrens/profile/<?=$row->id?>?nursery_id=<?=$_GET['nursery_id']?>"><?=$row->title?> <?=$row->children->name?></a></td>
+		<td><a href="childrens/profile/<?=$row->children_id?>?nursery_id=<?=$_GET['nursery_id']?>"><?=$row->title?> <?=$row->children->name?></a></td>
 		<td><?//=@calAge($row->birth_date)?><?=newDatediff(date("Y-m-d H:i:s"),$row->children->birth_date)?></td>
 		<td>
 			<?=$row->bmi->order_by('input_date','desc')->get(1)->weight?> / <?=$row->bmi->order_by('input_date','desc')->get(1)->height?> <br>(<?=mysql_to_th($row->bmi->input_date)?>)
 		</td>
 		<!-- <td><?=number_format($row->weight/(($row->height/100)*($row->height/100)),2)?></td> -->
-		<td><a href="childrens/growth/<?=$row->id?>?nursery_id=<?=$_GET['nursery_id']?>" target="_blank"><i class="fa fa-area-chart"></i></a></td>
-		<td><a href="childrens/sick_history/<?=$row->id?>?nursery_id=<?=$_GET['nursery_id']?>"><i class="fa fa-file-text-o"></i></a></td>
-		<!-- <td><?=$row->classroom->room_name?></td>
-		<td><?=$row->year?></td> -->
+		<!-- <td><a href="childrens/growth/<?=$row->id?>?nursery_id=<?=$_GET['nursery_id']?>" target="_blank"><i class="fa fa-area-chart"></i></a></td>
+		<td><a href="childrens/sick_history/<?=$row->id?>?nursery_id=<?=$_GET['nursery_id']?>"><i class="fa fa-file-text-o"></i></a></td> -->
+		<td><?=$row->classroom->room_name?></td>
+		<!-- <td><?=$row->year?></td> -->
 		<!-- <td>
 			<a href="childrens/form/<?=$row->id?>?nursery_id=<?=$_GET['nursery_id']?>" class='btn btn-mini btn-info'>แก้ไข</a>
     		<a href="childrens/delete/<?=$row->id?>" class="btn btn-mini btn-danger" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>
 		</td> -->
+		<td>
+			<a href="childrens/growth/<?=$row->id?>?nursery_id=<?=$_GET['nursery_id']?>" target="_blank" title="เกณฑ์การเจริญเติบโต"><i class="fa fa-area-chart"></i></a> | 
+			<a href="childrens/sick_history/<?=$row->id?>?nursery_id=<?=$_GET['nursery_id']?>" title="ประวัติการป่วย"><i class="fa fa-file-text-o"></i></a>
+		</td>
 	</tr>
 	<?endforeach;?>
 </table>

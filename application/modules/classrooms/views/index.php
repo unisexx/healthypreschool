@@ -3,7 +3,7 @@
   <li class="active">ห้องเรียน</li>
 </ul>
 
-<h1>ห้องเรียน</h1>
+<h1>ห้องเรียนทั้งหมด</h1>
 
 <div style="float:right; padding:10px 0;"><a href="classrooms/form?nursery_id=<?=$_GET['nursery_id']?>"><div class="btn btn-primary">เพิ่มห้องเรียน</div></a></div>
   

@@ -1,7 +1,8 @@
 <style type="text/css">
 .form-horizontal .control-label {width:170px !important;}
+/*.date_selector{top:150px !important;left:420px !important;}*/
 </style>
-<script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
+<!-- <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
 <link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
 <script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
 <script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
@@ -10,7 +11,7 @@ var jQuery_1_4_2 = $.noConflict(true);
 $(document).ready(function(){
 jQuery_1_4_2("input.datepicker").date_input(); 
 });
-</script>
+</script> -->
 
 
 <script>
@@ -185,6 +186,7 @@ $(document).ready(function(){
 	$('.addChildrenForm').click(function(){
 		var ChildrenForm = $("#childrenFormBlock").clone();
 		$("#childrenData").html(ChildrenForm);
+		// jQuery_1_4_2("input.datepicker").date_input();
 	});
 	
 	
@@ -197,6 +199,21 @@ $(document).ready(function(){
 					'name' : data
 				},function(data){
 					$('#teacherData').html(data);
+				});
+			}
+			return false;
+		});
+	});
+	
+	//------------------- Children Save Form ---------------------
+	$('.btnChildrenSubmitButton').live('click',function(){
+		$.post('classrooms/ajax_children_save',$("#childrenform").serialize(),function(data){
+			if(data != ""){
+				alert("บันทึกข้อมูลสำเร็จ");
+				$.get('home/ajax_get_children',{
+					'name' : data
+				},function(data){
+					$('#childrenData').html(data);
 				});
 			}
 			return false;
@@ -237,76 +254,26 @@ $(document).ready(function(){
 <script type="text/javascript">
 $(function(){
     $("#teacherform").validate({
-    rules: 
-    {
-    	name: 
-        { 
-            required: true
-        },
-    	sex: 
-        { 
-            required: true
-        },
-    	phone: 
-        { 
-            required: true
-        },
-        email: 
-        { 
-            required: true,
-            email: true,
-            remote: "users/check_email"
-        },
-        password: 
-        {
-            required: true,
-            minlength: 4
-        },
-        _password:
-        {
-            equalTo: "#inputPass"
-        },
-        captcha:
-        {
-            required: true,
-            remote: "users/check_captcha"
-        }
-    },
-    messages:
-    {
-    	name: 
-        { 
-            required: "กรุณากรอกชื่อ - นามสกุล"
-        },
-    	sex: 
-        { 
-            required: "กรุณาระบุเพศ"
-        },
-    	phone: 
-        { 
-            required: "กรุณากรอกเบอร์โทรศัพท์"
-        },
-        email: 
-        { 
-            required: "กรุณากรอกอีเมล์",
-            email: "กรุณากรอกอีเมล์ให้ถูกต้อง",
-            remote: "อีเมล์นี้มีอยู่ในระบบแล้ว"
-        },
-        password: 
-        {
-            required: "กรุณากรอกรหัสผ่าน",
-            minlength: "กรุณากรอกรหัสผ่านอย่างน้อย 4 ตัวอักษร"
-        },
-        _password:
-        {
-            equalTo: "กรุณากรอกรหัสผ่านให้ตรงกันทั้ง 2 ช่อง"
-        },
-        captcha:
-        {
-            required: "กรุณากรอกตัวอักษรตัวที่เห็นในภาพ",
-            remote: "กรุณากรอกตัวอักษรให้ตรงกับภาพ"
-        }
-    }
+	    rules: 
+	    {
+	    	name: { required: true},
+	    	sex: { required: true},
+	    	phone: { required: true},
+	        email: { required: true,email: true,remote: "users/check_email"},
+	        password: {required: true,minlength: 4},
+	        _password:{equalTo: "#inputPass"},
+	        captcha:{required: true,remote: "users/check_captcha"}
+	    },
+	    messages:
+	    {
+	    	name: { required: "กรุณากรอกชื่อ - นามสกุล"},
+	    	sex: { required: "กรุณาระบุเพศ"},
+	    	phone: { required: "กรุณากรอกเบอร์โทรศัพท์"},
+	        email: {  required: "กรุณากรอกอีเมล์",email: "กรุณากรอกอีเมล์ให้ถูกต้อง",remote: "อีเมล์นี้มีอยู่ในระบบแล้ว"},
+	        password: {required: "กรุณากรอกรหัสผ่าน",minlength: "กรุณากรอกรหัสผ่านอย่างน้อย 4 ตัวอักษร" },
+	        _password:{equalTo: "กรุณากรอกรหัสผ่านให้ตรงกันทั้ง 2 ช่อง" },
+	        captcha:{required: "กรุณากรอกตัวอักษรตัวที่เห็นในภาพ",remote: "กรุณากรอกตัวอักษรให้ตรงกับภาพ" }
+	    }
 	});
 });
 </script>
@@ -380,11 +347,33 @@ $(function(){
 
 
 <!-- Children Form -->
-<!-- load jQuery 1.4.2 -->
+<div style="display: none;">
 <div id="childrenFormBlock">
+<script type="text/javascript">
+$(function(){
+	 $.validator.addMethod("DateFormat", function(value,element) {
+    return value.match(/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/);
+        },
+            "กรุณาใส่วันที่ตามตัวอย่างที่กำหนด วว/ดด/ปปปป"
+        );
+        
+    $("#childrenform").validate({
+	    rules: 
+	    {
+	    	child_name: { required: true},
+	    	birth_date: { required: true , DateFormat: true}
+	    },
+	    messages:
+	    {
+	    	child_name: { required: "กรุณากรอกชื่อ - นามสกุล"},
+	    	birth_date: { required: "กรุณาระบุวันเกิด"}
+	    }
+	});
+});
+</script>
 <div class="row">
-	<div class="span12">
-		<form action="childrens/save" method="post" class="form-horizontal">
+	<div class="span12" style="height: 400px;">
+		<form id="childrenform" action="javascript:return(false);" method="post" class="form-horizontal">
 			<div class="control-group">
 		        <label class="control-label">คำนำหน้า<span class="TxtRed">*</span></label>
 		        <div class="controls">
@@ -397,21 +386,18 @@ $(function(){
 		    <div class="control-group">
 		        <label class="control-label">ชื่อ - นามสกุลเด็ก<span class="TxtRed">*</span></label>
 		        <div class="controls">
-		          <input class="input-xlarge" type="text" name="child_name" value="<?=@$child->child_name?>">
+		          <input class="input-xlarge" type="text" name="name" value="<?=@$child->child_name?>">
 		        </div>
 		    </div>
 		    <div class="control-group">
 			    <label class="control-label">วันเกิด<span class="TxtRed">*</span></label>
 			    <div class="controls">
-			      <input type="text" name="birth_date" value="<?php echo @DB2Date($child->birth_date)?>" class="datepicker" />
+			      <input type="text" name="birth_date" value="<?php echo @DB2Date($child->birth_date)?>" class="datepicker" placeholder="วว/ดด/ปปปป"/> (ตัวอย่าง : 01/09/2558)
 			    </div>
 			</div>
 		    <div class="control-group">
                 <div class="controls">
-                  <input type="hidden" name="id" value="<?=@$child->id?>">
-                  <input type="hidden" name="nursery_id" value="<?=@$_GET['nursery_id']?>">
-                  <input type="submit" class="btn btn-small btn-info" value="บันทึก">
-                  <input type="button" class="btn btn-small btn-danger" value="ย้อนกลับ" onclick="history.back(-1)">
+                  <input type="submit" class="btn btn-small btn-info btnChildrenSubmitButton" value="บันทึก">
                 </div>
             </div>
 		</form>
