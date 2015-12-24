@@ -41,16 +41,26 @@
 $active_group = 'local';
 $active_record = TRUE;
 
-//$db['default']['hostname'] = 'mysql1.favouritehosting.com';
-//$db['default']['username'] = 'c11preschool';
-//$db['default']['database'] = 'c11preschool';
-//$db['default']['password'] = 'hprs@20!3';
+$db['default']['hostname'] = 'mysql1.favouritehosting.com';
+$db['default']['username'] = 'c11preschool';
+$db['default']['password'] = 'hprs@20!3';
+$db['default']['database'] = 'c11preschool';
+$db['default']['dbdriver'] = 'mysql';
+$db['default']['dbprefix'] = '';
+$db['default']['pconnect'] = TRUE;
+$db['default']['db_debug'] = TRUE;
+$db['default']['cache_on'] = FALSE;
+$db['default']['cachedir'] = '';
+$db['default']['char_set'] = 'utf8';
+$db['default']['dbcollat'] = 'utf8_general_ci';
+$db['default']['swap_pre'] = '';
+$db['default']['autoinit'] = TRUE;
+$db['default']['stricton'] = FALSE;
 
- $db['local']['hostname'] = 'localhost';
- $db['local']['username'] = 'root';
- $db['local']['password'] = '';
- $db['local']['database'] = 'c11preschool';
-
+$db['local']['hostname'] = 'localhost';
+$db['local']['username'] = 'root';
+$db['local']['password'] = '1234';
+$db['local']['database'] = 'healthypreschool';
 $db['local']['dbdriver'] = 'mysql';
 $db['local']['dbprefix'] = '';
 $db['local']['pconnect'] = TRUE;
