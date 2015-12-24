@@ -4,7 +4,7 @@
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="classrooms">ห้องเรียน</a> <span class="divider">/</span></li>
+  <li><a href="classrooms?nursery_id=<?=$rs->nursery_id?>">ห้องเรียน</a> <span class="divider">/</span></li>
   <li class="active"><?=$rs->room_name?></li>
 </ul>
 

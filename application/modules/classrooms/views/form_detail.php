@@ -60,8 +60,9 @@ $(document).ready(function(){
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="classrooms">ห้องเรียน</a> <span class="divider">/</span></li>
-  <li class="active"><?=$classroom->room_name?></li>
+  <li><a href="classrooms?nursery_id=<?=$classroom->nursery_id?>">ห้องเรียน</a> <span class="divider">/</span></li>
+  <li><a href="classrooms/view/<?=$classroom->id?>"><?=$classroom->room_name?></a> <span class="divider">/</span></li>
+  <li class="active">ฟอร์ม</li>
 </ul>
 
 <h1>ห้องเรียน : <?=$classroom->room_name?></h1>

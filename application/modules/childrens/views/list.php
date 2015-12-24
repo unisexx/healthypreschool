@@ -55,7 +55,7 @@
 	<?foreach($childs as $key=>$row):?>
 	<tr>
 		<td><?=$key+1?></td>
-		<td><a href="childrens/profile/<?=$row->children_id?>?nursery_id=<?=$_GET['nursery_id']?>"><?=$row->title?> <?=$row->children->name?></a></td>
+		<td><a href="childrens/profile/<?=$row->children_id?>?nursery_id=<?=$_GET['nursery_id']?>"><?=$row->children->title?> <?=$row->children->name?></a></td>
 		<td><?//=@calAge($row->birth_date)?><?=newDatediff(date("Y-m-d H:i:s"),$row->children->birth_date)?></td>
 		<td>
 			<?=$row->bmi->order_by('input_date','desc')->get(1)->weight?> / <?=$row->bmi->order_by('input_date','desc')->get(1)->height?> <br>(<?=mysql_to_th($row->bmi->input_date)?>)
