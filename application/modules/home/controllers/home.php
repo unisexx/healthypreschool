@@ -185,7 +185,7 @@ class Home extends Public_Controller {
 				  		<th>วันเกิด</th>
 				  		<th class="span1"></th>';
 			foreach($rs as $row){
-				echo '<tr><td>'.$row->name.'</td><td>'.mysql_to_th($row->birth_date).'</td><td><input type="hidden" name="childrenName" value="'.$row->name.'"><input type="hidden" name="childrenBirth" value="'.mysql_to_th($row->birth_date).'"><input type="hidden" name="childrenId" value="'.$row->id.'"><button class="btn btn-mini btn-info selectChildren" data-dismiss="modal" aria-hidden="true">เลือก</button></td></tr>';
+				echo '<tr><td>'.$row->title.' '.$row->name.'</td><td>'.mysql_to_th($row->birth_date).'</td><td><input type="hidden" name="childrenName" value="'.$row->title.' '.$row->name.'"><input type="hidden" name="childrenBirth" value="'.mysql_to_th($row->birth_date).'"><input type="hidden" name="childrenId" value="'.$row->id.'"><button class="btn btn-mini btn-info selectChildren" data-dismiss="modal" aria-hidden="true">เลือก</button></td></tr>';
 			}
 			echo '</table>';
 		}

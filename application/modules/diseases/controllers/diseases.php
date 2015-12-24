@@ -39,12 +39,13 @@ WHERE 1=1 ".$condition;
 		$classroom = new Classroom();
 		if(user_login()->user_type_id == 9){ $classroom->where('nursery_id = '.user_login()->nursery_id); }
 		if(user_login()->user_type_id == 10){ $classroom->where('user_id = '.user_login()->id); }
-		$data['classrooms'] = $classroom->get();
+		$data['classrooms'] = $classroom->order_by('room_name','asc')->get();
 		
 		// หาจำนวนเด็กในห้องที่เลือก
 		if($_GET['classroom_id'] != ""){
-			$classroom_detail = new Classroom_detail();
-			$data['childs'] = $classroom_detail->where('classroom_id = '.$_GET['classroom_id'])->get();
+			$data['childs'] = new Classroom_children();
+			$data['childs']->where('year = '.$_GET['year']);
+			$data['childs']->where('classroom_id = '.$_GET['classroom_id'])->get();
 		}
 		
 		// $this->template->build('form',$data);

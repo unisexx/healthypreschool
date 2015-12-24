@@ -18,6 +18,19 @@ $(document).ready(function(){
 			$("#showage").html(data);
 		});
 	});
+	
+	$("#profileForm").validate({
+	    rules: {
+	    	weight:{required: true}, 
+	    	height:{required: true}, 
+	    	input_date:{required: true}
+	    },
+	    messages:{
+	    	weight:{required: "ฟิลด์นี้ห้ามเป็นค่าว่าง"},
+	    	height:{required: "ฟิลด์นี้ห้ามเป็นค่าว่าง"},
+	    	input_date:{required: "ฟิลด์นี้ห้ามเป็นค่าว่าง"}
+	    }
+    });
 });
 </script>
 
@@ -27,15 +40,9 @@ $(document).ready(function(){
   <li>ข้อมูลเด็ก</li>
 </ul>
 
-<h1><?=$child->title?> <?=$child->child_name?></h1>
+<h1><?=$child->title?> <?=$child->name?></h1>
 
-<form action="childrens/save_profile" method="post" class="form-horizontal">
-<!-- <div class="control-group">
-    <label class="control-label">อายุ (ปี)<span class="TxtRed">*</span></label>
-    <div class="controls">
-      <?=form_dropdown('age',array('2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7'),@$bmi->age,'','--- เลือกอายุ ---');?>
-    </div>
-</div> -->
+<form id="profileForm" action="childrens/save_profile" method="post" class="form-horizontal">
 <div class="control-group">
     <label class="control-label">วันเกิด<span class="TxtRed">*</span></label>
     <div class="controls">
@@ -46,8 +53,8 @@ $(document).ready(function(){
 <div class="control-group">
     <label class="control-label">น้ำหนัก (กก) / ส่วนสูง (ซม)<span class="TxtRed">*</span></label>
     <div class="controls">
-      <input class="span1" type="text" name="weight" value="<?=$bmi->weight?>"> / 
-      <input class="span1" type="text" name="height" value="<?=$bmi->height?>">
+      <input class="span1" type="text" name="weight" value="<?=$bmi->weight?>" placeholder="นน"> / 
+      <input class="span1" type="text" name="height" value="<?=$bmi->height?>" placeholder="สส">
     </div>
 </div>
 <div class="control-group">
@@ -59,7 +66,9 @@ $(document).ready(function(){
 </div>
 <div class="control-group">
     <div class="controls">
+      <input type="hidden" name="nursery_id" value="<?=$_GET['nursery_id']?>">
       <input type="hidden" name="classroom_detail_id" value="<?php echo $child->id ?>">
+      <input type="hidden" name="classroom_children_id" value="<?php echo $child->id ?>">
       <input type="hidden" name="birth_date" value="<?=@$child->birth_date?>">
       <input type="hidden" name="id" value="<?=@$bmi->id?>">
       <input type="submit" class="btn btn-small btn-info" value="บันทึก">
@@ -86,7 +95,7 @@ $(document).ready(function(){
 		<td><?=$row->weight?></td>
 		<td><?=$row->height?></td>
 		<td>
-			<a href="<?=current_url()?>?id=<?=$row->id?>" class='btn btn-mini'>แก้ไข</a>
+			<a href="<?=current_url()?>?id=<?=$row->id?>&nursery_id=<?=$_GET['nursery_id']?>" class='btn btn-mini'>แก้ไข</a>
 	        	<a href="childrens/delete_profile/<?=$row->id?>" class="btn btn-mini" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>
 		</td>
 	</tr>
