@@ -149,15 +149,25 @@
 					        		</a>
 					        	</li>
 					        	<li>
-					        		<a href="desease_watch/index">					        			
-					        			<div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
-					        			<img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
-						        			<div style="margin-top:-7px;">
-						        			ข้อมูลการเฝ้าระวัง<br>โรคติดต่อ
-						        			</div>
-					        			</div>
-					        		</a>
-					        	</li>
+                                    <a href="desease_watch/index">                                      
+                                        <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
+                                        <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
+                                            <div style="margin-top:-7px;">
+                                                                                                                                              ข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="reports/desease_watch_number">                                      
+                                        <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
+                                        <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
+                                            <div style="margin-top:-7px;">
+                                                                                                                                                รายงานข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
 				        	</ul>
 				        	<?elseif($current_user->user_type_id == 8): //เจ้าหน้าที่ประจำอำเภอ?>
 				        	<ul id="nav">
@@ -178,15 +188,25 @@
 					        		</a>
 					        	</li>
 					        	<li>
-					        		<a href="desease_watch/index">					        			
-					        			<div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
-					        			<img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
-						        			<div style="margin-top:-7px;">
-						        			ข้อมูลการเฝ้าระวัง<br>โรคติดต่อ
-						        			</div>
-					        			</div>
-					        		</a>
-					        	</li>
+                                    <a href="desease_watch/index">                                      
+                                        <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
+                                        <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
+                                            <div style="margin-top:-7px;">
+                                                                                                                                             ข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="reports/desease_watch_number">                                      
+                                        <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
+                                        <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
+                                            <div style="margin-top:-7px;">
+                                                                                                                                                รายงานข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
 				        	</ul>
 				        	<?elseif($current_user->user_type_id == 9): //เจ้าหน้าที่ศูนย์?>
 				        	<ul id="nav">
@@ -208,15 +228,25 @@
 					        		</a>
 					        	</li>
 					        	<li>
-					        		<a href="desease_watch/index">					        			
-					        			<div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
-					        			<img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
-						        			<div style="margin-top:-7px;">
-						        			ข้อมูลการเฝ้าระวัง<br>โรคติดต่อ
-						        			</div>
-					        			</div>
-					        		</a>
-					        	</li>
+                                    <a href="desease_watch/index">                                      
+                                        <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
+                                        <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
+                                            <div style="margin-top:-7px;">
+                                                                                                                                             ข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="reports/desease_watch_number">                                      
+                                        <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
+                                        <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
+                                            <div style="margin-top:-7px;">
+                                                                                                                                                รายงานข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
 				        	</ul>
 				        	<?elseif($current_user->user_type_id == 10): //เจ้าหน้าที่ครู / ผู้ดูแลเด็ก?>
 				        	<ul id="nav">
@@ -241,11 +271,21 @@
 					        			<div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
 					        			<img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
 						        			<div style="margin-top:-7px;">
-						        			ข้อมูลการเฝ้าระวัง<br>โรคติดต่อ
+						        			ข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
 						        			</div>
 					        			</div>
 					        		</a>
 					        	</li>
+					        	<li>
+                                    <a href="reports/desease_watch_number">                                      
+                                        <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
+                                        <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
+                                            <div style="margin-top:-7px;">
+                                                                                                                                                รายงานข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
 				        	</ul>
 				        	<?endif;?>
 				        	<!------- จบเมนู ------->

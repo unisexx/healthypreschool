@@ -117,6 +117,13 @@
 	            <li><a href="elearnings/testing_index">แบบทดสอบ</a></li>
 	         </ul>
 	         </div>
+	         <div class="elearning menuleft" style="background: #fff2bf;width: 89%;margin: 0 auto;margin-top: 10px;border: 2px dashed #000000;">
+	             <ul>
+	                 <li><b>ข้อมูลสถิติ E-Learning</b></li>
+	                 <li>จำนวนผู้ทำแบบทดสอบ : <?php echo number_format(get_elearning_count(),0);?> คน</li>
+	                 <li>จำนวนผู้ผ่านแบบทดสอบ : <?php echo number_format(get_elearning_pass_count(),0);?> คน</li>
+	             </ul>
+	         </div>
 	         <hr style="margin-bottom:-1px;">
         </td>
       </tr>
@@ -154,6 +161,7 @@
               <li><a href="http://demo.favouritedesign.com/healthypreschool/nurseries/reports/index/basic_column" target="_blank"><?php echo thumb("uploads/hilight/54b5d9550d496.jpg",226,false,1)?></a></li>
               <li><a href="http://demo.favouritedesign.com/healthypreschool/diseases/newreport" target="_blank"><?php echo thumb("uploads/hilight/54b5d9ca1d50d.jpg",226,false,1)?></a></li>
               <li><a href="http://demo.favouritedesign.com/healthypreschool/surveillances/index" target="_blank"><?php echo thumb("uploads/hilight/54fe9860bdc9e.jpg",226,false,1)?></a></li>
+              <li><a href="reports/desease_watch_number" target="_blank"><img src="themes/hps/images/btn_report_event.png"></a></li>
           </ul>
          </div>
         </td>

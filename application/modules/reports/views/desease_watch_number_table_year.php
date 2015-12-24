@@ -1,4 +1,7 @@
 <?php
+    $xAxis='';
+    $series = '';
+    $series_idx = 0;    
     $desease = New Desease_watch_name();    
     $desease->get();
     if(@$_GET['area_id']=='' && @$_GET['province_id']==''){
@@ -103,6 +106,7 @@
         ?>        
         <?php 
         for($i_year=$start_year;$i_year>=$end_year;$i_year--):
+            $xAxis .= $xAxis == '' ? "'".($i_year+543)."'" : ",'".($i_year+543)."'";
             $year_condition = " AND year(start_date) = ".$i_year;
             $condition = " AND year(start_date) = ".$i_year;
             $condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND v_nurseries.area_id = ".$_GET['area_id'] : '';
@@ -199,8 +203,9 @@
                 }
             ?>
         </tr>       
-        <?php
-            foreach($desease as $desease_row):          
+        <?php            
+            foreach($desease as $desease_row):
+            $series_idx++;                                  
             $condition = " AND disease = ".$desease_row->id;
             $condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND v_nurseries.area_id = ".$_GET['area_id'] : '';
             $condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND v_nurseries.province_id = ".@$_GET['province_id'] : '';
@@ -227,6 +232,9 @@
                 <?php echo $desease_row->desease_name;?>
             </th>
             <?php
+            $series[$desease_row->id]['name'] = $desease_row->desease_name;
+            @$series[$desease_row->id]['data'].= @$series[$desease_row->id]['data'] != '' ? ',' :'';
+            $series[$desease_row->id]['data'].= number_format($desease_age[0]->n_event,0);
             echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
             echo $result = $desease_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
             echo $result = $desease_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
@@ -420,3 +428,73 @@
 </table>
 </div>
 </div>
+<script>
+    $(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Stacked column chart'
+        },
+        xAxis: {
+            categories: [<?php echo $xAxis;?>]
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ''
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        legend: {
+            
+        },
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.x + '</b><br/>' +
+                    this.series.name + ': ' + this.y + '<br/>' +
+                    'Total: ' + this.point.stackTotal;
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent',
+                dataLabels: {
+                    enabled: true,
+                    formatter: function() {
+                        return Math.round(this.percentage*100)/100 + ' %';
+                    },
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black'
+                }
+            }
+        },
+        series: [
+            <?php 
+            $series_txt = '';
+            $i=0;
+            foreach($desease as $desease_row):
+                $series_txt.= $series_txt !='' ? ',' : '';
+                $series_txt.="{name: '".$series[$desease_row->id]['name']."', data: [".$series[$desease_row->id]['data']."]}";
+            endforeach;
+            echo $series_txt;
+            ?>
+        ]
+    });
+});
+</script>
+<?php
+/*
+$i=0;
+foreach($desease as $desease_row):
+            $series_txt.= $series_txt !='' ? ',' : '';
+            echo $series_txt="{name: '".$series[$desease_row->id]['name']."', data: [".$series[$desease_row->id]['data']."]}<br>";
+endforeach;
+ */
+?>

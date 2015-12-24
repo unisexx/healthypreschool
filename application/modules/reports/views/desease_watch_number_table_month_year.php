@@ -1,4 +1,7 @@
 <?php
+    $xAxis='';
+    $series = '';
+    $series_idx = 0; 
     $desease = New Desease_watch_name();    
     $desease->get();
     if(@$_GET['area_id']=='' && @$_GET['province_id']==''){
@@ -221,8 +224,9 @@
           <tr class="month_total">
             <th>
                 <?php echo $month_desc = month_th($i_month);?>
+                <?php $xAxis .= $xAxis == '' ? "'".$month_desc."'" : ",'".$month_desc."'";?>
             </th>
-            <?php
+            <?php            
             echo $result = $year_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($year_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
             echo $result = $year_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($year_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
             echo $result = $year_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($year_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
@@ -320,6 +324,9 @@
                 <?php echo $desease_row->desease_name;?>
             </th>
             <?php
+            $series[$desease_row->id]['name'] = $desease_row->desease_name;
+            @$series[$desease_row->id]['data'].= @$series[$desease_row->id]['data'] != '' ? ',' :'';
+            $series[$desease_row->id]['data'].= number_format($desease_age[0]->n_event,0);
             echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
             echo $result = $desease_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
             echo $result = $desease_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
@@ -513,3 +520,73 @@
 </table>
 </div>
 </div>
+<script>
+    $(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Stacked column chart'
+        },
+        xAxis: {
+            categories: [<?php echo $xAxis;?>]
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ''
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        legend: {
+            
+        },
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.x + '</b><br/>' +
+                    this.series.name + ': ' + this.y + '<br/>' +
+                    'Total: ' + this.point.stackTotal;
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent',
+                dataLabels: {
+                    enabled: true,
+                    formatter: function() {
+                        return Math.round(this.percentage*100)/100 + ' %';
+                    },
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black'
+                }
+            }
+        },
+        series: [
+            <?php 
+            $series_txt = '';
+            $i=0;
+            foreach($desease as $desease_row):
+                $series_txt.= $series_txt !='' ? ',' : '';
+                $series_txt.="{name: '".$series[$desease_row->id]['name']."', data: [".$series[$desease_row->id]['data']."]}";
+            endforeach;
+            echo $series_txt;
+            ?>
+        ]
+    });
+});
+</script>
+<?php
+/*
+$i=0;
+foreach($desease as $desease_row):
+            $series_txt.= $series_txt !='' ? ',' : '';
+            echo $series_txt="{name: '".$series[$desease_row->id]['name']."', data: [".$series[$desease_row->id]['data']."]}<br>";
+endforeach;
+ */
+?>

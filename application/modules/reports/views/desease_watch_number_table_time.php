@@ -1,4 +1,7 @@
 <?php
+    $xAxis='';
+    $series = '';
+    $series_idx = 0;
     $desease = New Desease_watch_name();    
     $desease->get();
     if(@$_GET['area_id']=='' && @$_GET['province_id']==''){
@@ -34,26 +37,32 @@
             <?php
             if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
                 foreach($area as $area_row):
+                    $xAxis .= $xAxis == '' ? "'".$area_row->area_name."'" : ",'".$area_row->area_name."'";
                     echo '<td colspan="4"  class="th_datatable" >'.$area_row->area_name.'</td>';
                 endforeach;
             }else if(@$_GET['area_id']!=''&&@$_GET['province_id']==''){
                 foreach($province as $province_row):
+                    $xAxis .= $xAxis == '' ? "'".$province_row->name."'" : ",'".$province_row->name."'";
                     echo '<td colspan="4"  class="th_datatable" >'.$province_row->name.'</td>';
                 endforeach;
             }else if(@$_GET['province_id']!=''&&@$_GET['amphur_id']==''){
                 foreach($amphur as $amphur_row):
+                    $xAxis .= $xAxis == '' ? "'".$amphur_row->amphur_name."'" : ",'".$amphur_row->amphur_name."'";
                     echo '<td colspan="4"  class="th_datatable" >'.$amphur_row->amphur_name.'</td>';
                 endforeach;
             }else if(@$_GET['amphur_id']!=''&&@$_GET['district_id']==''){
                 foreach($district as $district_row):
+                    $xAxis .= $xAxis == '' ? "'".$district_row->district_name."'" : ",'".$district_row->district_name."'";
                     echo '<td colspan="4"  class="th_datatable" >'.$district_row->district_name.'</td>';
                 endforeach;
             }else if(@$_GET['district_id']!=''){
                 foreach($nursery as $nursery_row):
+                    $xAxis .= $xAxis == '' ? "'".$nursery_row->name."'" : ",'".$nursery_row->name."'";
                     echo '<td colspan="4"  class="th_datatable" >'.$nursery_row->name.'</td>';
                 endforeach;
             }
             ?>
+            
         </tr>
         <tr>    
             <th>
@@ -110,6 +119,7 @@
                 $time_condition = '';
             }
             foreach($desease as $desease_row):          
+            $series_idx++;        
             $condition = " AND disease = ".$desease_row->id;
             $condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND v_nurseries.area_id = ".$_GET['area_id'] : '';
             $condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND v_nurseries.province_id = ".@$_GET['province_id'] : '';
@@ -134,6 +144,7 @@
         <tr class="desease_total">
             <th>
                 <?php echo $desease_row->desease_name;?>
+                <?php $series[$series_idx]['name'] = $desease_row->desease_name;?>
             </th>
             <?php
             echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
@@ -161,6 +172,8 @@
                     foreach($area as $area_row):                
                         $ex_condition = " AND area_id = ".$area_row->id;                        
                         $desease_age = $this->db->query($sql.$condition.$ex_condition)->result();
+                        @$series[$series_idx]['data'].= @$series[$series_idx]['data'] != '' ? ',' :'';
+                        $series[$series_idx]['data'].= number_format($desease_age[0]->n_event,0);
                         echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
                         echo $result = $desease_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
                         echo $result = $desease_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
@@ -170,6 +183,8 @@
                     foreach($province as $province_row):                
                         $ex_condition = " AND province_id = ".@$province_row->id;                       
                         $desease_age = $this->db->query($sql.$condition.$ex_condition)->result();
+                        @$series[$series_idx]['data'].= @$series[$series_idx]['data'] != '' ? ',' :'';
+                        $series[$series_idx]['data'].= number_format($desease_age[0]->n_event,0);
                         echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
                         echo $result = $desease_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
                         echo $result = $desease_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
@@ -179,6 +194,8 @@
                     foreach($amphur as $amphur_row):                
                         $ex_condition = " AND amphur_id = ".@$amphur_row->id;                       
                         $desease_age = $this->db->query($sql.$condition.$ex_condition)->result();
+                        @$series[$series_idx]['data'].= @$series[$series_idx]['data'] != '' ? ',' :'';
+                        $series[$series_idx]['data'].= number_format($desease_age[0]->n_event,0);
                         echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
                         echo $result = $desease_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
                         echo $result = $desease_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
@@ -188,6 +205,8 @@
                     foreach($district as $district_row):                
                         $ex_condition = " AND district_id = ".@$district_row->id;                       
                         $desease_age = $this->db->query($sql.$condition.$ex_condition)->result();
+                        @$series[$series_idx]['data'].= @$series[$series_idx]['data'] != '' ? ',' :'';
+                        $series[$series_idx]['data'].= number_format($desease_age[0]->n_event,0);
                         echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
                         echo $result = $desease_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
                         echo $result = $desease_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
@@ -197,6 +216,8 @@
                     foreach($nursery as $nursery_row):              
                         $ex_condition = " AND nurseries_id = ".@$nursery_row->id;                       
                         $desease_age = $this->db->query($sql.$condition.$ex_condition)->result();
+                        @$series[$series_idx]['data'].= @$series[$series_idx]['data'] != '' ? ',' :'';
+                        $series[$series_idx]['data'].= number_format($desease_age[0]->n_event,0);
                         echo $result = $desease_age[0]->n_event > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
                         echo $result = $desease_age[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
                         echo $result = $desease_age[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($desease_age[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
@@ -328,3 +349,66 @@
 </table>
 </div>
 </div>
+<script type="text/javascript">
+$(function(){
+    $(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: ''
+        },
+        xAxis: {
+            categories: [<?php echo $xAxis;?>]
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'สัดส่วนจำนวนของเหตุการณ์'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        legend: {
+            
+        },
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.x + '</b><br/>' +
+                    this.series.name + ': ' + this.y + ' เหตุการณ์ <br/>' +
+                    ' จากทั้งหมด: ' + this.point.stackTotal+ ' เหตุการณ์ ';
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent',
+                dataLabels: {
+                    enabled: true,
+                    formatter: function() {
+                        return Math.round(this.percentage*100)/100 + ' %';
+                    },
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black'
+                }
+            }
+        },
+        series: [
+            <?php 
+            $series_txt = '';
+            for($i=1;$i<=$series_idx;$i++):
+                $series_txt.= $series_txt !='' ? ',' : '';
+                $series_txt.="{name: '".$series[$i]['name']."', data: [".$series[$i]['data']."]}";
+            endfor;
+            echo $series_txt;
+            ?>
+        ]
+    });
+});
+    
+});
+</script>

@@ -117,4 +117,34 @@ function get_nursery_dropdown($area_id='',$province_id='',$amphur_id='',$distric
 			echo '<select name="nursery_id" id="nursery_id" disabled="disabled"><option value="">แสดงทั้งหมด</option></select>';
 		}
 }
+
+function get_elearning_count(){
+  $CI = &get_instance();
+  $sql = "SELECT
+                count(*)nresult
+            FROM
+                v_user_question_result
+            WHERE
+                set_final = 1
+                AND n_answer > 0;
+         ";
+    $result = $CI -> db -> query($sql)->result();
+    return @$result[0]->nresult;  
+} 
+
+function get_elearning_pass_count(){
+  $CI = &get_instance();
+  $sql = "SELECT
+                count(*)nresult
+            FROM
+                v_user_question_result
+            WHERE
+                set_final = 1
+                AND n_answer > 0
+                AND score>=pass
+         ";
+
+    $result = $CI -> db -> query($sql)->result();
+    return @$result[0]->nresult;  
+}   
 ?>
