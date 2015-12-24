@@ -153,7 +153,7 @@
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
                                         <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
-                                                                                                                                              ข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                                                                                                                              ข้อมูลเหตุการณ์<br>การเฝ้าระวังโรคติดต่อ
                                             </div>
                                         </div>
                                     </a>
@@ -161,9 +161,9 @@
                                 <li>
                                     <a href="reports/desease_watch_number">                                      
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
-                                        <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
+                                        <img src="themes/hps/images/desease_event_report.png" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
-                                                                                                                                                รายงานข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                                                                                                                                รายงานข้อมูลเหตุการณ์<br>การเฝ้าระวังโรคติดต่อ
                                             </div>
                                         </div>
                                     </a>
@@ -192,7 +192,7 @@
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
                                         <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
-                                                                                                                                             ข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                                                                                                                             ข้อมูลเหตุการณ์<br>การเฝ้าระวังโรคติดต่อ
                                             </div>
                                         </div>
                                     </a>
@@ -200,9 +200,9 @@
                                 <li>
                                     <a href="reports/desease_watch_number">                                      
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
-                                        <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
+                                        <img src="themes/hps/images/desease_event_report.png" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
-                                                                                                                                                รายงานข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                                                                                                                                รายงานข้อมูลเหตุการณ์<br>การเฝ้าระวังโรคติดต่อ
                                             </div>
                                         </div>
                                     </a>
@@ -232,7 +232,7 @@
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
                                         <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
-                                                                                                                                             ข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                                                                                                                             ข้อมูลเหตุการณ์<br>การเฝ้าระวังโรคติดต่อ
                                             </div>
                                         </div>
                                     </a>
@@ -240,9 +240,9 @@
                                 <li>
                                     <a href="reports/desease_watch_number">                                      
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
-                                        <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
+                                        <img src="themes/hps/images/desease_event_report.png" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
-                                                                                                                                                รายงานข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                                                                                                                                รายงานข้อมูลเหตุการณ์<br>การเฝ้าระวังโรคติดต่อ
                                             </div>
                                         </div>
                                     </a>
@@ -271,7 +271,7 @@
 					        			<div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
 					        			<img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
 						        			<div style="margin-top:-7px;">
-						        			ข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+						        			ข้อมูลเหตุการณ์<br>การเฝ้าระวังโรคติดต่อ
 						        			</div>
 					        			</div>
 					        		</a>
@@ -279,9 +279,9 @@
 					        	<li>
                                     <a href="reports/desease_watch_number">                                      
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
-                                        <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
+                                        <img src="themes/hps/images/desease_event_report.png" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
-                                                                                                                                                รายงานข้อมูลเหตุการณ์การเฝ้าระวัง<br>โรคติดต่อ
+                                                                                                                                                รายงานข้อมูลเหตุการณ์<br>การเฝ้าระวังโรคติดต่อ
                                             </div>
                                         </div>
                                     </a>

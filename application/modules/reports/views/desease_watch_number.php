@@ -98,11 +98,10 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active"><a href="report/desease_watch_menu">รายงานเหตุการณ์การเฝ้าระวังโรค</a></li>
- <li class="active"><a href="report/desease_watch_number">รายงานสรุปจำนวนเหตุการณ์การเฝ้าระวังโรค</a></li>  
+  <li class="active"><a href="#">รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</a></li>
 </ul>
 
-<h1>รายงานสรุปจำนวนเหตุการณ์การเฝ้าระวังโรค</h1>
+<h1>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h1>
 
 <form method="get" enctype="multipart/form-data">
 <div id="search_report" style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">   
@@ -191,7 +190,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 </div>
 <div id="report_header" style="text-align:center;padding:30px;">
-    <h4>รายงานสรุปจำนวนเหตุการณ์การเฝ้าระวังโรค</h4>
+    <h4>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>
     <?php
     if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
         echo '<h5>จำแนกตามพื้นที่ สคร. 13 เขต </h5>';
