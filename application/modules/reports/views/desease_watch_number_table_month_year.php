@@ -3,7 +3,7 @@
     $series = '';
     $series_idx = 0; 
     $desease = New Desease_watch_name();    
-    $desease->get();
+    if(@$_GET['disease']>0)$desease->where('id',@$_GET['disease'])->get(); else $desease->get();
     if(@$_GET['area_id']=='' && @$_GET['province_id']==''){
         $area = new Area();
         $area->get();
@@ -59,11 +59,11 @@
             ?>
         </tr>
         <tr>    
-            <th>
+            <th style="height: 40px;">
                 โรค
             </th>
             <td class="th_datatable" style="">
-                จำนวนอีเว้น
+                จำนวนเหตุการณ์
             </td>
             <td class="th_datatable" style="">
                 จำนวนผู้ป่วย
@@ -77,23 +77,23 @@
             <?php
             if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
                 foreach($area as $area_row):
-                    echo '<td class="th_datatable" style="">จำนวนอีเว้น</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
+                    echo '<td class="th_datatable" style="">จำนวนเหตุการณ์</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
                 endforeach;
             }else if(@$_GET['area_id']!=''&&@$_GET['province_id']==''){
                 foreach($province as $province_row):
-                    echo '<td class="th_datatable" style="">จำนวนอีเว้น</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
+                    echo '<td class="th_datatable" style="">จำนวนเหตุการณ์</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
                 endforeach;
             }else if(@$_GET['province_id']!=''&&@$_GET['amphur_id']==''){
                 foreach($amphur as $amphur_row):
-                    echo '<td class="th_datatable" style="">จำนวนอีเว้น</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
+                    echo '<td class="th_datatable" style="">จำนวนเหตุการณ์</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
                 endforeach;
             }else if(@$_GET['amphur_id']!=''&&@$_GET['district_id']==''){
                 foreach($district as $district_row):
-                    echo '<td class="th_datatable" style="">จำนวนอีเว้น</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
+                    echo '<td class="th_datatable" style="">จำนวนเหตุการณ์</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
                 endforeach;
             }else if(@$_GET['district_id']!=''){
                 foreach($nursery as $nursery_row):
-                    echo '<td class="th_datatable" style="">จำนวนอีเว้น</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
+                    echo '<td class="th_datatable" style="">จำนวนเหตุการณ์</td><td class="th_datatable" style="">จำนวนผู้ป่วย</td><td class="th_datatable" style="">ชาย</td><td class="th_datatable" style="">หญิง</td>';
                 endforeach;
             }
             ?>
@@ -108,6 +108,7 @@
             $condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND v_nurseries.province_id = ".@$_GET['province_id'] : '';
             $condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND v_nurseries.amphur_id = ".@$_GET['amphur_id'] : '';
             $condition.= @$_GET['district_id']!='' ? " AND v_nurseries.district_id = ".@$_GET['district_id'] : '';
+            $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
             $sql = " SELECT
                         disease,
                         age_duration_start age_start,
@@ -201,6 +202,7 @@
         <?php 
         for($i_month=1;$i_month<=12;$i_month++):            
             $condition = " AND month(start_date) = ".$i_month;
+            $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
             $condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND v_nurseries.area_id = ".$_GET['area_id'] : '';
             $condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND v_nurseries.province_id = ".@$_GET['province_id'] : '';
             $condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND v_nurseries.amphur_id = ".@$_GET['amphur_id'] : '';
@@ -247,7 +249,8 @@
                                 LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
                             WHERE
                                 1=1 ";
-                $condition = $year_condition." AND month(start_date) = ".$i_month;                                
+                $condition = $year_condition." AND month(start_date) = ".$i_month;
+                $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';                                
                 if(@$_GET['area_id']=='' && @@$_GET['province_id']==''){
                     foreach($area as $area_row):                
                         $ex_condition = " AND area_id = ".$area_row->id;                        
@@ -299,6 +302,7 @@
         <?php
             foreach($desease as $desease_row):          
             $condition = " AND disease = ".$desease_row->id." AND month(start_date) = ".$i_month;
+            $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
             $condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND v_nurseries.area_id = ".$_GET['area_id'] : '';
             $condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND v_nurseries.province_id = ".@$_GET['province_id'] : '';
             $condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND v_nurseries.amphur_id = ".@$_GET['amphur_id'] : '';
@@ -347,7 +351,8 @@
                                 LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
                             WHERE
                                 1=1 ".$year_condition;
-                $condition = " AND disease = ".$desease_row->id." AND month(start_date) = ".$i_month;                                
+                $condition = " AND disease = ".$desease_row->id." AND month(start_date) = ".$i_month;
+                $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';                                
                 if(@$_GET['area_id']=='' && @@$_GET['province_id']==''){
                     foreach($area as $area_row):                
                         $ex_condition = " AND area_id = ".$area_row->id;                        
@@ -398,6 +403,7 @@
         </tr>
             <?php
                 $condition = " AND disease = ".$desease_row->id." AND month(start_date) = ".$i_month;
+                $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
                 $condition.= @$_GET['area_id'] != '' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
                 $condition.= @$_GET['province_id'] != '' && @$_GET['amphur_id'] == '' ? " AND province_id = ".$_GET['province_id'] : '';
                 $condition.= @$_GET['amphur_id'] != '' && @$_GET['district_id'] == '' ? " AND amphur_id = ".$_GET['amphur_id'] : '';
@@ -418,6 +424,7 @@
                 $desease_age = $this->db->query($sql)->result();
                 foreach($desease_age as $age):
                     $condition = " AND disease = ".$desease_row->id." AND age_duration_start = ".$age->age_start." AND age_duration_end = ".$age->age_end;
+                    $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';                    
                     $condition.= @$_GET['area_id'] != '' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
                     $condition.= @$_GET['province_id'] != '' && @$_GET['amphur_id'] == '' ? " AND province_id = ".$_GET['province_id'] : '';
                     $condition.= @$_GET['amphur_id'] != '' && @$_GET['district_id'] == '' ? " AND amphur_id = ".$_GET['amphur_id'] : '';
@@ -449,7 +456,8 @@
                     echo $result = $value[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';
                     ?>
                     <?php 
-                    $condition = " AND month(start_date) = ".$i_month." AND disease = ".$desease_row->id." AND age_duration_start = ".$age->age_start." AND age_duration_end = ".$age->age_end;                  
+                    $condition = " AND month(start_date) = ".$i_month." AND disease = ".$desease_row->id." AND age_duration_start = ".$age->age_start." AND age_duration_end = ".$age->age_end;
+                    $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';                  
                     $sql = " SELECT
                                 disease,
                                 age_duration_start age_start,
@@ -527,7 +535,7 @@
             type: 'column'
         },
         title: {
-            text: 'Stacked column chart'
+            text: ''
         },
         xAxis: {
             categories: [<?php echo $xAxis;?>]

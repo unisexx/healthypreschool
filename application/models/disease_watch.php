@@ -10,7 +10,7 @@ class Disease_watch extends ORM
 			'class' => 'nursery',
 			'join_self_as' => 'disease_watch',
 			'join_other_as' => 'nurseries'
-		)
+		),'province','amphur','district'		
 	);
 
 	public $has_many = array('disease_watch_question');
