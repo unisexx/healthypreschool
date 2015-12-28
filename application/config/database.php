@@ -59,8 +59,8 @@ $db['default']['stricton'] = FALSE;
 
 $db['local']['hostname'] = 'localhost';
 $db['local']['username'] = 'root';
-$db['local']['password'] = '1234';
-$db['local']['database'] = 'healthypreschool';
+$db['local']['password'] = '';
+$db['local']['database'] = 'c11preschool';
 $db['local']['dbdriver'] = 'mysql';
 $db['local']['dbprefix'] = '';
 $db['local']['pconnect'] = TRUE;

@@ -61,11 +61,11 @@ tr.month_total>td{
     color:#000000 !important;
 }
 tr.desease_total>th{
-    background:#ffffff !important;
+    background:#fff2cc !important;
     color:#000000 !important;
 }
 tr.desease_total>td{
-    background:#ffffff !important;
+    background:#fff2cc !important;
 }
 #datatable .desease_age_range>th{
     text-align:right;
@@ -104,7 +104,22 @@ jQuery_1_4_2("input.datepicker").date_input();
 <h1>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h1>
 
 <form method="get" enctype="multipart/form-data">
-<div id="search_report" style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">   
+<div id="search_report" style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
+    <div>
+        <span>โรค</span>                         
+        <?php echo form_dropdown('disease', get_option('id', 'desease_name', 'desease_watch_names', ' order by id '), @$_GET['disease'], '', '--แสดงทั้งหมด--');?>
+        <span>พื้นที่ที่เกิดโรค</span>                         
+        <select name="place_type" class="form-control">
+                <option value="">-- ทั้งหมด --</option>
+                <option value="2" <?php echo $selected = @$_GET['place_type'] == 2 ? 'selected="selected"' : '';?>>พื้นที่ชุมชน</option>
+                <option value="1" <?php echo $selected = @$_GET['place_type'] == 1 ? 'selected="selected"' : '';?>>ศูนย์เด็กเล็ก/โรงเรียนอนุบาล</option>
+        </select>
+        <!--
+        <span>ช่วงอายุ</span>                         
+        <?php echo form_dropdown('age_range',get_option('age_range_param','age_range','v_disease_watch_age_range'),@$_GET['age_range'],'','--แสดงทั้งหมด--');?>
+        -->
+    </div>
+       
 	<div>
 		<span>สคร.</span>		
 		<?php echo form_dropdown('area_id',get_option('id','area_name','areas',' order by id '),@$_GET['area_id'],'id="area" class="span2"','--แสดงทั้งหมด--');?>
@@ -115,21 +130,16 @@ jQuery_1_4_2("input.datepicker").date_input();
 		<span id="province">
 		<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
 		</span>
-	</div>
-	
-	<div>
 		<span>อำเภอ</span>
-		<span id="amphur">
-		<?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
-		</span>
+        <span id="amphur">
+        <?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
+        </span>
+        <span>ตำบล</span>
+        <span id="district">
+        <?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
+        </span>
 	</div>
 	
-	<div>
-		<span>ตำบล</span>
-		<span id="district">
-		<?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
-		</span>
-	</div>
 	<div>
 		<span>ช่วงเวลาการแสดงผล</span>
 		<span id="range_type">

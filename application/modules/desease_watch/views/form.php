@@ -49,7 +49,7 @@
 	var jQuery_1_4_2 = $.noConflict(true);
 	$(document).ready(function() {
 		jQuery_1_4_2("input.datepicker").date_input();
-	}); 
+	});
 </script>
 
 
@@ -68,8 +68,61 @@
 <form id="desease_watch" action='desease_watch/save' method='post'>
       <?php echo form_hidden('id', @$rs -> id); ?>
       <table class='tblForm table table-bordered'>
-            <tr><th> 1. รายชื่อศูนย์เด็กเล็กและโรงเรียนอนุบาล </th></tr>
             <tr>
+               <td>
+                   <br>
+                   <h4>
+                <?php
+                    if(@$rs->id > 0 && @$rs->created_date > 0){ 
+                        echo "วันที่บันทึกรายการ ". mysql_to_th($rs -> created_date);
+                    } 
+                ?>
+                   </h4>
+               </td> 
+            </tr>
+            <tr><th> แหล่งที่เกิดโรค</th></tr>
+            <tr>
+                  <td>
+                        <select name="place_type" class="form-control">
+                            <option value="">-- ระบุแหล่งเกิดโรค --</option>
+                            <option value="2" <?php echo $selected = @$rs->place_type == 2 ? 'selected="selected"' : '';?>>พื้นที่ชุมชน</option>
+                            <option value="1" <?php echo $selected = @$rs->place_type == 1 ? 'selected="selected"' : '';?>>ศูนย์เด็กเล็ก/โรงเรียนอนุบาล</option>
+                        </select>
+                        <div class="errorPlace_place_type"></div>
+                  </td>
+            </tr>
+            <?php
+                $display = @$rs->place_type == 2 ? 'table-row;' : 'none;'; 
+            ?>
+            <tr class="tr_community" style="display:<?php echo $display;?>"><th> 1. พื้นที่ชุมชน</th></tr>
+            <tr class="tr_community" style="display:<?php echo $display;?>">
+                  <td>
+                         <div style="width:150px;display:inline;float:left;">                  
+                            <label for="province_id">จังหวัด</label>
+                            <span id="province">
+                                <?php get_province_dropdown('', @$rs ->province_id); ?>
+                            </span>
+                         </div>
+                         <div style="width:250px;display:inline;float:left;">
+                            <label for="amphur_id">อำเภอ</label>
+                            <span id="amphur">
+                                <?php get_amphur_dropdown(@$rs->province_id, @$rs ->amphur_id); ?>
+                            </span>
+                         </div>
+                         <div style="width:150px;display:inline;">
+                            <label for="district_id">ตำบล</label>
+                            <span id="district">
+                                <?php get_district_dropdown(@$rs ->amphur_id, @$rs ->district_id); ?>
+                            </span>
+                         </div>
+                        <div class="errorPlace_area_id"></div>
+                  </td>
+            </tr>          
+            <?php
+                $display = @$rs->place_type == 1 ? 'table-row;' : 'none;'; 
+            ?>           
+            <tr class="tr_school" style="display:<?php echo $display;?>"><th> 1. ศูนย์เด็กเล็กและโรงเรียนอนุบาล </th></tr>
+            <tr class="tr_school" style="display:<?php echo $display;?>">
                   <td>
                         <input type="hidden" name="nurseries_id" value="<?php echo(empty($rs -> nurseries_id)) ? null : $rs -> nurseries_id; ?>">
                         <div>
@@ -422,7 +475,7 @@
                               <li><?php echo form_checkbox('measure_person_3', 1, @$rs -> measure_person_3, 'class="measure_person"'); ?> ผู้ปกครอง</li>
                               <li>
                                   <?php echo form_checkbox('measure_person_4', 1, @$rs -> measure_person_4, 'class="measure_person"'); ?> อื่น ๆ
-                                  <input type="text" name="measure_person_4_desc" value="<?php echo @$rs->measure_person_4_desc;?>"> 
+                                  <input type="text" name="measure_person_4_desc" value="<?php echo @$rs -> measure_person_4_desc; ?>"> 
                               </li>
                         </ul>
                   </td>
@@ -522,7 +575,7 @@
 
 				$('#questionHeader').html($('[name=disease] option:selected').text());
 				if ($('[name=disease] option:selected').val() != '') {
-				   $('.question').show();					
+					$('.question').show();
 				} else {
 					$('.question').hide();
 				}
@@ -552,14 +605,14 @@
 		};
 
 		question.begin();
-		$('[name=disease]').on('change', function() {			
+		$('[name=disease]').on('change', function() {
 			var disease = $('[name=disease]').val();
-            $.get('desease_watch/get_question_detail', {
-                disease : disease,
-            }, function(data) {
-                $('#questionChoiceArea').html(data);
-                question.checkDisplay(true);                
-            });
+			$.get('desease_watch/get_question_detail', {
+				disease : disease,
+			}, function(data) {
+				$('#questionChoiceArea').html(data);
+				question.checkDisplay(true);
+			});
 		});
 		$('.questionParent').on('change', function() {
 			question.childCheckDisplay($(this));
@@ -599,13 +652,13 @@
 					status = true;
 				}
 			}
-			
+
 			//measure_person
-            for ( i = 0; i < $('.measure_person').size(); i++) {
-                if ($('.measure_person').eq(i).prop('checked')) {
-                    status = true;
-                }
-            }
+			for ( i = 0; i < $('.measure_person').size(); i++) {
+				if ($('.measure_person').eq(i).prop('checked')) {
+					status = true;
+				}
+			}
 			if (status == 'false') {
 				$('.errorPlace_measureClean').html('<label for="disease" generated="true" class="error" style="display:inline-block;">กรุณาเลือกอย่างน้อยหนึ่งข้อ</label>');
 			}
@@ -617,30 +670,30 @@
 		});
 	});
 	//$(function(){
-	    
-    $("input.number").keydown(function (e) {
-        // Allow: backspace, delete, tab, escape, enter and .
-        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
-             // Allow: Ctrl+A, Command+A
-            (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) || 
-             // Allow: home, end, left, right, down, up
-            (e.keyCode >= 35 && e.keyCode <= 40)) {
-                 // let it happen, don't do anything
-                 return;
-        }
-        // Ensure that it is a number and stop the keypress
-        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-            e.preventDefault();
-        }
-    });
-    
-    $("input[name=boy_amount],input[name=girl_amount]").keyup(function(){
-        var amount = 0;
-        var boy_amount = $("input[name=boy_amount]").val()=='' ? 0 : parseInt($("input[name=boy_amount]").val());
-        var girl_amount = $("input[name=girl_amount]").val()=='' ? 0 : parseInt($("input[name=girl_amount]").val());
-        amount = boy_amount + girl_amount;
-        $("input[name=total_amount]").val(amount);
-    });
+
+	$("input.number").keydown(function(e) {
+		// Allow: backspace, delete, tab, escape, enter and .
+		if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+		// Allow: Ctrl+A, Command+A
+		(e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true ) ) ||
+		// Allow: home, end, left, right, down, up
+		(e.keyCode >= 35 && e.keyCode <= 40)) {
+			// let it happen, don't do anything
+			return;
+		}
+		// Ensure that it is a number and stop the keypress
+		if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+			e.preventDefault();
+		}
+	});
+
+	$("input[name=boy_amount],input[name=girl_amount]").keyup(function() {
+		var amount = 0;
+		var boy_amount = $("input[name=boy_amount]").val() == '' ? 0 : parseInt($("input[name=boy_amount]").val());
+		var girl_amount = $("input[name=girl_amount]").val() == '' ? 0 : parseInt($("input[name=girl_amount]").val());
+		amount = boy_amount + girl_amount;
+		$("input[name=total_amount]").val(amount);
+	});
 
 	errorMsgRequired = "กรุณาระบุข้อมูลก่อนดำเนินการบันทึก";
 	$('#desease_watch').validate({
@@ -715,5 +768,42 @@
 				error.insertAfter(element);
 			}
 		}
-	}); 
+	});
+</script>
+<script type="text/javascript">
+      $(document).ready(function(){        
+        $("select[name='province_id']").live("change",function(){
+            $.post('ajax/get_amphur',{
+                    'province_id' : $(this).val()
+                },function(data){
+                    $("#amphur").html(data);
+                });
+        });
+
+        $("select[name='amphur_id']").live("change",function(){
+            $.post('ajax/get_district',{
+                    'amphur_id' : $(this).val()
+                },function(data){
+                    $("#district").html(data);
+                });
+        });
+        
+        $("select[name=place_type]").live("change",function(){
+            var place_type = $(this).val();   
+            switch(place_type){         
+                case '1':
+                    $('.tr_school').show();
+                    $('.tr_community').hide();
+                    break;
+                case '2':
+                    $('.tr_community').show();
+                    $('.tr_school').hide();
+                    break;
+                default:
+                    $('.tr_school').hide();
+                    $('.tr_community').hide();
+                    break;
+           }
+        })
+      });
 </script>

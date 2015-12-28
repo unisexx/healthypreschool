@@ -87,7 +87,7 @@ function get_amphur_dropdown($province_id='', $selected_value=''){
     	if(@$current_user->user_type_id >= 8){
       		$ext_condition .= ' AND id = '.$current_user->amphur_id;
 		}
-       echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures',$ext_condition.' order by amphur_name asc'),@$_GET['amphur_id'],'style="width:250px;"','--- เลือกอำเภอ ---');
+       echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures',$ext_condition.' order by amphur_name asc'),@$selected_value,'style="width:250px;"','--- เลือกอำเภอ ---');
 	}else{
 	   echo '<select name="amphur_id" id="amphur_id" disabled="disabled"><option value="">แสดงทั้งหมด</option></select>';
 	}
@@ -99,7 +99,7 @@ function get_district_dropdown($amphur_id, $selected_value=''){
     	if(@$current_user->user_type_id > 8){
       		$ext_condition .= ' AND id = '.$current_user->district_id;
 		}
-   		echo form_dropdown('district_id',get_option('id','district_name','districts',$ext_condition.' order by district_name asc'),@$_GET['district_id'],'style="width:250px;"','--- เลือกตำบล ---');
+   		echo form_dropdown('district_id',get_option('id','district_name','districts',$ext_condition.' order by district_name asc'),@$selected_value,'style="width:250px;"','--- เลือกตำบล ---');
 	}else{ 
         echo '<select name="district_id" id="district_id" disabled="disabled"><option value="">แสดงทั้งหมด</option></select>';
 	}
@@ -112,7 +112,7 @@ function get_nursery_dropdown($area_id='',$province_id='',$amphur_id='',$distric
 		$condition .= $amphur_id > 0 ? ' AND amphur_id = '.$amphur_id : '';
 		$condition .= $district_id > 0 ? ' AND district_id = '.$district_id : '';
 		if($condition!='1=1'){
-			echo form_dropdown('nursery_id',get_option('id','nursery_name','v_nurseries',$ext_condition.' order by nursery_name asc'),@$_GET['nursery_id'],'style="width:250px;"','--- เลือกศูนย์เด็กเล็ก/โรงเรียนอนุบาล ---');
+			echo form_dropdown('nursery_id',get_option('id','nursery_name','v_nurseries',$ext_condition.' order by nursery_name asc'),@$selected_value,'style="width:250px;"','--- เลือกศูนย์เด็กเล็ก/โรงเรียนอนุบาล ---');
 		}else{
 			echo '<select name="nursery_id" id="nursery_id" disabled="disabled"><option value="">แสดงทั้งหมด</option></select>';
 		}
