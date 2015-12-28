@@ -1,29 +1,3 @@
-<!-- <style type="text/css">
-table {
-  table-layout: fixed; 
-  *margin-left: -240px;/*ie7*/
-}
-td, th {
-  vertical-align: top;
-  /*border-top: 1px solid #ccc;*/
-  padding:10px;
-}
-th {
-  position:absolute;
-  *position: relative; /*ie7*/
-  left:0; 
-  width:220px;
-  border-top: 1px solid #ccc;
-  margin-top:-3px;
-}
-.outer {position:relative}
-.inner {
-  overflow-x:scroll;
-  overflow-y:visible;
-  width:80%; 
-  margin-left:240px;
-}
-</style> -->
 <style type="text/css">
 @media print
 {    
@@ -167,13 +141,13 @@ table{border-collapse: collapse;width:100%;}
 			  <?foreach($childs as $key=>$row):?>
 			  <tr>
 			  	<th valign="top" ><?=$key+1?></th>
-			    <th style="text-align: left; padding-left: 10px;"><?=$row->children->title?> <?=$row->children->name?> <!--(อายุ <?=newDatediff($date1,$row->birth_date)?>)--> (อายุ <?=newDatediff(date("Y-m-d H:i:s"),$row->children->birth_date)?>)</th>
+			    <th style="text-align: left; padding-left: 10px;"><?=$row->children->title?> <?=$row->children->name?> (อายุ <?=newDatediff(date("Y-m-d H:i:s"),$row->children->birth_date)?>)</th>
 			    <?for($i=1;$i<=$arrayMonthDay[$_GET['month']];$i++):?>
 			    <?php
 			    	$sql = "select * from diseases where 
 			    			nursery_id=".$_GET['nursery_id']."
 			    			and classroom_id=".$_GET['classroom_id']."
-			    			and classroom_detail_id=".$row->id."
+			    			and classroom_detail_id=".$row->children->id."
 			    			and day=".$i."
 			    			and month=".$_GET['month']."
 			    			and year=".$_GET['year']."
@@ -183,7 +157,7 @@ table{border-collapse: collapse;width:100%;}
 					// $disease->check_last_query();
 			    ?>
 			    <td class="openmodal" href="#myModal" role="button" data-toggle="modal" align="center" title="<?=$row->children->title?> <?=$row->children->name?> : วันที่ <?=$i?> <?=$arrayMonth[$_GET['month']]?> <?=$_GET['year']?>">
-			    	<span class="c<?=$row->id?>_d<?=$i?>">
+			    	<span class="c<?=$row->children->id?>_d<?=$i?>">
 			    		<?=$disease->c1?><?=$disease->c2?><?=$disease->c3?><?=$disease->c4?><?=$disease->c5?>
 			    	</span>
 			    	

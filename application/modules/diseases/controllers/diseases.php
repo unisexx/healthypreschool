@@ -45,7 +45,7 @@ WHERE 1=1 ".$condition;
 		if($_GET['classroom_id'] != ""){
 			$data['childs'] = new Classroom_children();
 			$data['childs']->where('year = '.$_GET['year']);
-			$data['childs']->where('classroom_id = '.$_GET['classroom_id'])->get();
+			$data['childs']->where('classroom_id = '.$_GET['classroom_id'])->order_by('id','asc')->get();
 		}
 		
 		// $this->template->build('form',$data);

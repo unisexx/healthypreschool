@@ -289,6 +289,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 </div>
 </form>
 
+
 <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 <?php $diseasesArray = array(
@@ -438,3 +439,44 @@ jQuery_1_4_2("input.datepicker").date_input();
 			
 	</tbody>
 </table>
+<br><BR><BR><BR>
+
+
+
+
+
+
+
+
+<h1>ตาราง จำนวนร้อยและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</h1>
+<table>
+	<tr></tr>
+	<tr></tr>
+	<tr></tr>
+</table>
+
+<?
+$sql = "SELECT
+	(
+		SELECT
+		Count(d.id) AS male
+		FROM
+		diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+		childrens.title = 'ด.ช.'
+	) male,
+	(
+		SELECT
+		Count(d.id) AS female
+		FROM
+		diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+		childrens.title = 'ด.ญ.'
+	) female";
+?>
