@@ -62,6 +62,7 @@ table{border-collapse: collapse;width:100%;}
 				'nursery_id' 			: $(this).find('.h_nursery_id').val(),
 				'classroom_id' 			: $(this).find('.h_classroom_id').val(),
 				'classroom_detail_id' 	: $(this).find('.h_classroom_detail_id').val(),
+				'classroom_children_id' 	: $(this).find('.h_classroom_children_id').val(),
 				'age'					: $(this).find('.h_age').val(),
 				'day' 					: $(this).find('.h_day').val(),
 				'month' 				: $(this).find('.h_month').val(),
@@ -96,7 +97,7 @@ table{border-collapse: collapse;width:100%;}
     	<select name="classroom_id" onchange="window.open(this.options[this.selectedIndex].value,'_self')">
     		<option value="">เลือกห้องเรียน / ชั้นเรียน</option>
     		<?php foreach($classrooms as $row):?>
-    			<option value="diseases/form2?nursery_id=<?=@$_GET['nursery_id']?>&classroom_id=<?=$row->id?>&month=<?=@$_GET['month']?>&year=<?=@$_GET['year']?>" <?=($_GET['classroom_id']==$row->id)?"selected":"";?>><?=$row->room_name?></option>
+    			<option value="diseases/form?nursery_id=<?=@$_GET['nursery_id']?>&classroom_id=<?=$row->id?>&month=<?=@$_GET['month']?>&year=<?=@$_GET['year']?>" <?=($_GET['classroom_id']==$row->id)?"selected":"";?>><?=$row->room_name?></option>
     		<?php endforeach;?>
     	</select>
     </td>
@@ -111,19 +112,22 @@ table{border-collapse: collapse;width:100%;}
     	<select name="room3" id="room3" style="margin-bottom:5px;" onchange="window.open(this.options[this.selectedIndex].value,'_self')">
         <option selected="selected">เลือกเดือน</option>
         <?for($i=1;$i<=12;$i++):?>
-        	<option value="diseases/form2?nursery_id=<?=@$_GET['nursery_id']?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=$i?>&year=<?=@$_GET['year']?>" <?=($_GET['month']==$i)?"selected":"";?>><?=$arrayMonth[$i]?></option>
+        	<option value="diseases/form?nursery_id=<?=@$_GET['nursery_id']?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=$i?>&year=<?=@$_GET['year']?>" <?=($_GET['month']==$i)?"selected":"";?>><?=$arrayMonth[$i]?></option>
         <?endfor;?>
         </select>
 		  
 		  พ.ศ. <select name="year" id="room2" style="margin-bottom:5px;" onchange="window.open(this.options[this.selectedIndex].value,'_self')">
 	            <option>เลือกปี</option>
 	            <?php
-	            	$firstYear = ((int)date('Y') + 543) - 8;
-					$lastYear = $firstYear + 8;
-					for($i=$firstYear;$i<=$lastYear;$i++):
+	            	$y = new Classroom_children();
+					$y->select('year');
+					$y->where('classroom_id = '.@$_GET['classroom_id']);
+					$y->distinct()->order_by('year','asc')->get();
+					
+					foreach($y as $item):
 				?>
-					<option value="diseases/form2?nursery_id=<?=@$_GET['nursery_id']?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=@$_GET['month']?>&year=<?=$i?>" <?=($_GET['year']==$i)?"selected":"";?>><?=$i?></option>
-				<?endfor;?>
+					<option value="diseases/form?nursery_id=<?=@$_GET['nursery_id']?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=@$_GET['month']?>&year=<?=$item->year?>" <?=($_GET['year']==$item->year)?"selected":"";?>><?=$item->year?></option>
+				<?endforeach;?>
 	            </select>
   	</td>
   </tr>
@@ -163,7 +167,7 @@ table{border-collapse: collapse;width:100%;}
 			  <?foreach($childs as $key=>$row):?>
 			  <tr>
 			  	<th valign="top" ><?=$key+1?></th>
-			    <th style="text-align: left; padding-left: 10px;"><?=$row->title?> <?=$row->child_name?> <!--(อายุ <?=newDatediff($date1,$row->birth_date)?>)--> (อายุ <?=newDatediff(date("Y-m-d H:i:s"),$row->birth_date)?>)</th>
+			    <th style="text-align: left; padding-left: 10px;"><?=$row->children->title?> <?=$row->children->name?> <!--(อายุ <?=newDatediff($date1,$row->birth_date)?>)--> (อายุ <?=newDatediff(date("Y-m-d H:i:s"),$row->children->birth_date)?>)</th>
 			    <?for($i=1;$i<=$arrayMonthDay[$_GET['month']];$i++):?>
 			    <?php
 			    	$sql = "select * from diseases where 
@@ -178,15 +182,16 @@ table{border-collapse: collapse;width:100%;}
 					$disease->query($sql);
 					// $disease->check_last_query();
 			    ?>
-			    <td class="openmodal" href="#myModal" role="button" data-toggle="modal" align="center" title="<?=$row->title?> <?=$row->child_name?> : วันที่ <?=$i?> <?=$arrayMonth[$_GET['month']]?> <?=$_GET['year']?>">
+			    <td class="openmodal" href="#myModal" role="button" data-toggle="modal" align="center" title="<?=$row->children->title?> <?=$row->children->name?> : วันที่ <?=$i?> <?=$arrayMonth[$_GET['month']]?> <?=$_GET['year']?>">
 			    	<span class="c<?=$row->id?>_d<?=$i?>">
 			    		<?=$disease->c1?><?=$disease->c2?><?=$disease->c3?><?=$disease->c4?><?=$disease->c5?>
 			    	</span>
 			    	
 			        <input class="h_nursery_id" type="hidden" name="nursery_id[]" value="<?=$_GET['nursery_id']?>">
 			        <input class="h_classroom_id" type="hidden" name="classroom_id[]" value="<?=$_GET['classroom_id']?>">
-			        <input class="h_classroom_detail_id" type="hidden" name="classroom_detail_id[]" value="<?=$row->id?>">
-			        <input class="h_age" type="hidden" name="age[]" value="<?=newDatediff(date("Y-m-d H:i:s"),$row->birth_date)?>">
+			        <input class="h_classroom_detail_id" type="hidden" name="classroom_detail_id[]" value="<?=$row->children->id?>">
+			        <input class="h_classroom_children_id" type="hidden" name="classroom_children_id[]" value="<?=$row->children->id?>">
+			        <input class="h_age" type="hidden" name="age[]" value="<?=newDatediff(date("Y-m-d H:i:s"),$row->children->birth_date)?>">
 			        <input class="h_day" type="hidden" name="day[]" value="<?=$i?>">
 			        <input class="h_month" type="hidden" name="month[]" value="<?=$_GET['month']?>">
 			        <input class="h_year" type="hidden" name="year[]" value="<?=$_GET['year']?>">

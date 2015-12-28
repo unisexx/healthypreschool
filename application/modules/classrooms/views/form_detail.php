@@ -107,7 +107,7 @@ $(document).ready(function(){
 		    	<?if(isset($childrens)):?>
 		    	<?foreach($childrens as $row):?>
 			    <tr>
-			    	<td><?=$row->children->name?></td>
+			    	<td><?=$row->children->title?> <?=$row->children->name?></td>
 			    	<td><?=mysql_to_th($row->children->birth_date)?></td>
 			    	<td>
 			    		<input class="children_detail_id"  type="hidden" name="classroom_children_detail_id[]" value="<?=$row->id?>">

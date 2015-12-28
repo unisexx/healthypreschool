@@ -8,14 +8,17 @@ class Childrens extends Public_Controller{
     
     function index(){
     	$child = new Classroom_children();
+		if(@$_GET['year']){ $child->where("year =".$_GET['year']); }
+		if(@$_GET['classroom_id']){ $child->where("classroom_id = ".$_GET['classroom_id']); }
 		if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){ $child->children->where("TIMESTAMPDIFF(YEAR, childrens.birth_date, CURDATE()) between ".$_GET['lowage']." and ".$_GET['hiage']); }
 		if(@$_GET['child_name']){ $child->where_related_children("name LIKE '%".$_GET['child_name']."%'"); }
-		if(@$_GET['classroom_id']){ $child->where_related("classroom","id",$_GET['classroom_id']); }
 		if(@$_GET['sex']){ $child->where_related_children("title = '".$_GET['sex']."'"); }
 		
 		$child->where_related('classroom','nursery_id',$_GET['nursery_id']);
 		if(user_login()->user_type_id == 10){ $child->where('classroom_id in (select id from classrooms where user_id = '.user_login()->id.')'); }
 		$data['childs'] = $child->order_by('id','desc')->get();
+		
+		// $data['childs']->check_last_query();
     	$this->template->build('list',$data);
     }
 	
@@ -77,7 +80,6 @@ class Childrens extends Public_Controller{
 	
 	function save_profile(){
 		if($_POST){
-			
 			$bmi = new Bmi(@$_GET['id']);
 			$_POST['input_date'] = Date2DB($_POST['input_date']);
 			
@@ -93,7 +95,8 @@ class Childrens extends Public_Controller{
             
             set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
 		}
-		redirect('childrens/profile/'.$_POST['nursery_id']);
+		redirect('childrens/profile/'.$_POST['classroom_children_id'].'?nursery_id='.$_POST['nursery_id']);
+		// redirect($_SERVER['HTTP_REFERER']);
 	}
 	
 	function delete_profile($id=false){

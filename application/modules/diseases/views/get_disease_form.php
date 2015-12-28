@@ -105,6 +105,7 @@ $th_date = sprintf("%02d", $_GET['day']).'/'.sprintf("%02d",$_GET['month']).'/'.
 				<input type="hidden" name="nursery_id" value="<?=$_GET['nursery_id']?>">
 				<input type="hidden" name="classroom_id" value="<?=$_GET['classroom_id']?>">
 				<input type="hidden" name="classroom_detail_id" value="<?=$_GET['classroom_detail_id']?>">
+				<input type="hidden" name="classroom_children_id" value="<?=$_GET['classroom_children_id']?>">
 				<input type="hidden" name="age" value="<?=$_GET['age']?>">
 				<input type="hidden" name="year" value="<?=$_GET['year']?>">
 				<input type="hidden" name="month" value="<?=$_GET['month']?>">
