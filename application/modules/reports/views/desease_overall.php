@@ -571,6 +571,173 @@ $sql = "SELECT
 
 $age = new Disease();
 $age->query($sql);
+
+//-------------------------------------------- โรค --------------------------------------------
+$sql = "SELECT
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.c1 = 'C'
+	) disease_1,
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.c1 = 'H'
+	) disease_2,
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.c1 = 'D'
+	) disease_3,
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.c1 = 'F'
+	) disease_4,
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.c1 = 'R'
+	) disease_5,
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.c1 = 'O'
+	) disease_6";
+
+	$disease = new Disease();
+	$disease->query($sql);
+
+//-------------------------------------------- สถานะเด็กป่วย --------------------------------------------
+$sql = "SELECT
+	(
+		SELECT
+		Count(d.id)
+		FROM
+		diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+		d.c3 = '/'
+	) sick_status_1,
+	(
+		SELECT
+		Count(d.id)
+		FROM
+		diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+		d.c3 = 'x'
+	) sick_status_2";
+
+$sick_status = new Disease();
+$sick_status->query($sql);
+
+//-------------------------------------------- การแยกเด็กป่วย --------------------------------------------
+$sql = "SELECT
+	(
+		SELECT
+		Count(d.id)
+		FROM
+		diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+		d.c2 = '0'
+	) separate_1,
+	(
+		SELECT
+		Count(d.id)
+		FROM
+		diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+		d.c2 = '1'
+	) separate_2,
+	(
+		SELECT
+		Count(d.id)
+		FROM
+		diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+		d.c2 = '2'
+	) separate_3";
+
+$separate = new Disease();
+$separate->query($sql);
+
+//-------------------------------------------- กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน --------------------------------------------
+$sql = "SELECT
+	(
+		SELECT
+		Count(d.id)
+		FROM
+		diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+		d.c5 = '*'
+	) same_1,
+	(
+		SELECT
+		Count(d.id)
+		FROM
+		diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+		d.c5 = ''
+	) same_2";
+
+$same = new Disease();
+$same->query($sql);
 ?>
 
 <h1>ตาราง จำนวนร้อยและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</h1>
@@ -641,32 +808,32 @@ $age->query($sql);
 	</tr>
 	<tr>
 		<td>- หวัด</td>
-		<td></td>
+		<td><?=$disease->disease_1?></td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>- มือ เท้า ปาก</td>
-		<td></td>
+		<td><?=$disease->disease_2?></td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>- อุจจาระร่วง</td>
-		<td></td>
+		<td><?=$disease->disease_3?></td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>- ไข้</td>
-		<td></td>
+		<td><?=$disease->disease_4?></td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>- ไข้ออกผื่น</td>
-		<td></td>
+		<td><?=$disease->disease_5?></td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>- อื่นๆ</td>
-		<td></td>
+		<td><?=$disease->disease_6?></td>
 		<td></td>
 	</tr>
 	<tr class="subheader">
@@ -674,12 +841,12 @@ $age->query($sql);
 	</tr>
 	<tr>
 		<td>- มาเรียน</td>
-		<td></td>
+		<td><?=$sick_status->sick_status_1?></td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>- หยุดเรียน</td>
-		<td></td>
+		<td><?=$sick_status->sick_status_2?></td>
 		<td></td>
 	</tr>
 	<tr class="subheader">
@@ -687,17 +854,17 @@ $age->query($sql);
 	</tr>
 	<tr>
 		<td>- ไม่มีการแยกนอนแยกเล่น</td>
-		<td></td>
+		<td><?=$separate->separate_1?></td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>- แยกนอน</td>
-		<td></td>
+		<td><?=$separate->separate_2?></td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>- แยกเล่น</td>
-		<td></td>
+		<td><?=$separate->separate_3?></td>
 		<td></td>
 	</tr>
 	<tr class="subheader">
@@ -705,12 +872,12 @@ $age->query($sql);
 	</tr>
 	<tr>
 		<td>- มี</td>
-		<td></td>
+		<td><?=$same->same_1?></td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>- ไม่มี</td>
-		<td></td>
+		<td><?=$same->same_2?></td>
 		<td></td>
 	</tr>
 </table>
