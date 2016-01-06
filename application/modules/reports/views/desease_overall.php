@@ -446,16 +446,11 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 
 
-
-
-<h1>ตาราง จำนวนร้อยและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</h1>
-<table>
-	<tr></tr>
-	<tr></tr>
-	<tr></tr>
-</table>
-
+<style>
+	tr.subheader{font-weight:bold;background:#f1f1f1;}
+</style>
 <?
+//-------------------------------------------- เพศ -------------------------------------------- 
 $sql = "SELECT
 	(
 		SELECT
@@ -479,4 +474,243 @@ $sql = "SELECT
 		WHERE
 		childrens.title = 'ด.ญ.'
 	) female";
+
+$sex = new Disease();
+$sex->query($sql);
+
+//-------------------------------------------- อายุ -------------------------------------------- 
+$sql = "SELECT
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.child_age_year = 0
+	) year_0,
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.child_age_year = 1
+	) year_1,
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.child_age_year = 2
+	) year_2,
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.child_age_year = 3
+	) year_3,
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.child_age_year = 4
+	) year_4,
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.child_age_year = 5
+	) year_5,
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.child_age_year = 6
+	) year_6,
+	(
+		SELECT
+			Count(d.id)
+		FROM
+			diseases AS d
+		INNER JOIN nurseries AS n ON d.nursery_id = n.id
+		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		WHERE
+			d.child_age_year = 7
+	) year_7";
+
+$age = new Disease();
+$age->query($sql);
 ?>
+
+<h1>ตาราง จำนวนร้อยและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</h1>
+<table class="table">
+	<tr>
+		<th>ข้อมูลรายงานแบบคัดกรองโรค</th>
+		<th>จำนวน</th>
+		<th>ร้อยละ</th>
+	</tr>
+	<tr class="subheader">
+		<td colspan="3">เพศ</td>
+	</tr>
+	<tr>
+		<td>- ชาย</td>
+		<td><?=$sex->male?></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- หญิง</td>
+		<td><?=$sex->female?></td>
+		<td></td>
+	</tr>
+	<tr class="subheader">
+		<td colspan="3">กลุ่มอายุ</td>
+	</tr>
+	<tr>
+		<td>- ต่ำกว่า 1 ปี</td>
+		<td><?=$age->year_0?></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- 1 ปี</td>
+		<td><?=$age->year_1?></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- 2 ปี</td>
+		<td><?=$age->year_2?></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- 3 ปี</td>
+		<td><?=$age->year_3?></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- 4 ปี</td>
+		<td><?=$age->year_4?></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- 5 ปี</td>
+		<td><?=$age->year_5?></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- 6 ปี</td>
+		<td><?=$age->year_6?></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- 7 ปี</td>
+		<td><?=$age->year_7?></td>
+		<td></td>
+	</tr>
+	<tr class="subheader">
+		<td colspan="3">แจกแจงตามโรค</td>
+	</tr>
+	<tr>
+		<td>- หวัด</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- มือ เท้า ปาก</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- อุจจาระร่วง</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- ไข้</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- ไข้ออกผื่น</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- อื่นๆ</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr class="subheader">
+		<td colspan="3">สถานะเด็กป่วย</td>
+	</tr>
+	<tr>
+		<td>- มาเรียน</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- หยุดเรียน</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr class="subheader">
+		<td colspan="3">การแยกเด็กป่วย</td>
+	</tr>
+	<tr>
+		<td>- ไม่มีการแยกนอนแยกเล่น</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- แยกนอน</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- แยกเล่น</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr class="subheader">
+		<td colspan="3">กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน</td>
+	</tr>
+	<tr>
+		<td>- มี</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>- ไม่มี</td>
+		<td></td>
+		<td></td>
+	</tr>
+</table>
