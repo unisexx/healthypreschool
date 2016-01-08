@@ -1,3 +1,15 @@
+<style media="screen">
+input[type="radio"], input[type="checkbox"]{margin:-1px 0 0 0;}
+.checkbox-inline, .radio-inline {
+	position: relative;
+	display: inline-block;
+	padding-left: 5px;
+	margin-bottom: 0;
+	font-weight: 400;
+	vertical-align: middle;
+	cursor: pointer;
+}
+</style>
 <script type="text/javascript" src="media/js/jquery.chained.remote.min.js"></script>
 <script>
 $(document).ready(function() {
@@ -27,125 +39,6 @@ $(document).ready(function() {
 	});
 });
 </script>
-
-<script type="text/javascript">
-$(function(){
-	// On document ready, call visualize on the datatable.
-    $(document).ready(function() {
-
-        /**
-         * Visualize an HTML table using Highcharts. The top (horizontal) header
-         * is used for series names, and the left (vertical) header is used
-         * for category names. This function is based on jQuery.
-         * @param {Object} table The reference to the HTML table to visualize
-         * @param {Object} options Highcharts options
-         */
-        Highcharts.visualize = function(table, options) {
-
-            // the categories
-            options.xAxis.categories = [];
-            $('tbody th', table).each( function(i) {
-                options.xAxis.categories.push(this.innerHTML.replace(/&amp;/g, '&'));
-            });
-
-            // the data series
-            options.series = [];
-            $('tr', table).each( function(i) {
-                var tr = this;
-                $('th, td', tr).each( function(j) {
-                    if (j > 0) { // skip first column
-                        if (i == 0) { // get the name and init the series
-                            options.series[j - 1] = {
-                                name: this.innerHTML,
-                                data: []
-                            };
-                        } else { // add values
-                            options.series[j - 1].data.push(parseFloat(this.innerHTML));
-                        }
-                    }
-                });
-            });
-
-            var chart = new Highcharts.Chart(options);
-        }
-
-        var table = document.getElementById('datatable'),
-        options = {
-            chart: {
-            	// height: 500,
-                renderTo: 'container',
-                type: 'column'
-            },
-            title: {
-                text: "<?=$text?>"
-            },
-            xAxis: {
-            	labels: {
-                    rotation: -45,
-                    align: 'right'
-                }
-            },
-            yAxis: {
-            	allowDecimals: false,
-                title: {
-                    text: 'จำนวนครั้งที่ป่วย'
-                },
-                labels: {
-	                formatter: function () {
-	                    return Highcharts.numberFormat(this.value,0);
-	                }
-	            },
-                stackLabels: {
-                    enabled: true,
-                    // style: {
-                        // fontWeight: 'bold',
-                        // color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                    // }
-                }
-            },
-            // tooltip: {
-                // formatter: function() {
-                    // return '<b>'+ this.x +'</b><br/>'+
-                        // this.series.name +' : '+ this.y +' ครั้ง ('+ Highcharts.numberFormat(this.percentage, 2) +'%)<br/>'+
-                        // 'จำนวนการป่วยทั้งหมด : '+ this.point.stackTotal + ' ครั้ง';
-                // }
-            // },
-            tooltip: {
-            	headerFormat: '<b>{point.key}</b><table style="font-weight:bold;">',
-	            pointFormat: '<tr><td style="color:{series.color};">{series.name}:</td><td style="text-align: right;">{point.percentage:.1f}%<td></tr>',
-	            footerFormat: '</table>',
-	            shared: true,
-	            useHTML: true
-	        },
-            plotOptions: {
-                column: {
-                    stacking: 'percent',
-                    dataLabels: {
-                        enabled: true,
-                        formatter: function() {
-	                        return Math.round(this.percentage*100)/100 + ' %';
-	                    },
-                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black'
-                    }
-                }
-            },
-            exporting: {
-			    buttons: {
-			        exportButton: {
-			            enabled: false
-			        },
-	                printButton: {
-	                    x: -10
-	                }
-			    }
-			}
-        };
-
-        Highcharts.visualize(table, options);
-    });
-});
-</script>
-
 
 <!-- load jQuery 1.4.2 -->
 <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
@@ -290,161 +183,6 @@ jQuery_1_4_2("input.datepicker").date_input();
 </form>
 
 
-<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-<?php $diseasesArray = array(
-	'หวัด' => 'C',
-	'มือ เท้า ปาก' => 'H',
-	'อุจจาระร่วง' => 'D',
-	'ไข้' => 'F',
-	'ไข้ออกผื่น' => 'R',
-	'อื่นๆ' => 'O'
-);?>
-
-<table id="datatable" class="table table-bordered">
-	<thead>
-		<tr>
-			<th></th>
-			<?if(@$_GET['diseases']):?>
-				<th><?=array_search($_GET['diseases'], $diseasesArray);?></th>
-			<?else:?>
-				<? foreach($diseasesArray as $key=>$row):?>
-				<th><?=$key?></th>
-				<? endforeach;?>
-			<?endif;?>
-		</tr>
-	</thead>
-	<tbody>
-		<?php foreach($rs as $row):?>
-		<tr>
-			<th class="span2">
-				<?
-					//**********************************************
-					if(@$_GET['classroom_id']!=""){
-						echo $row->room_name; //ห้องเรียน
-					}elseif(@$_GET['nursery_id']!=""){
-						echo $row->room_name; //ชื่อห้องเรียน
-					}elseif(@$_GET['district_id']!=""){
-						echo $row->name; //ชื่อศูนย์เด็กเล็ก
-					}elseif(@$_GET['amphur_id']!=""){
-						echo $row->district_name; //ชื่อตำบล
-					}elseif(@$_GET['province_id']!=""){
-						echo $row->amphur_name; //ชื่ออำเภอ
-					}elseif(@$_GET['area_id']!=""){
-						echo $row->name; //ชื่อจังหวัด
-					}else{
-						echo $row->area_name; // สคร.
-					}
-					//**********************************************
-				?>
-			</th>
-				<? foreach($diseasesArray as $key=>$disease):?>
-					<?
-						$condition = "";
-						// if(@$_GET['classroom_id']){ @$condition.=" and d.classroom_id = ".$_GET['classroom_id']; }
-						// if(@$_GET['year']){ @$condition.=" and d.year = ".$_GET['year'];  }
-						// if(@$_GET['month']){ @$condition.=" and d.month = ".$_GET['month'];  }
-						// if(@$_GET['sex']){ @$condition.=" and cd.title = '".$_GET['sex']."'"; }
-
-						//**********************************************
-						if(@$_GET['classroom_id']!=""){
-							@$condition.=" and d.classroom_id = ".$row->id;
-						}elseif(@$_GET['nursery_id']!=""){
-							@$condition.=" and d.classroom_id = ".$row->id;
-						}elseif(@$_GET['district_id']!=""){
-							@$condition.=" and n.id = ".$row->id;
-						}elseif(@$_GET['amphur_id']!=""){
-							@$condition.=" and n.district_id = ".$row->id;
-						}elseif(@$_GET['province_id']!=""){
-							@$condition.=" and n.amphur_id = ".$row->id;
-						}elseif(@$_GET['area_id']!=""){
-							@$condition.=" and n.province_id = ".$row->id;
-						}else{
-							@$condition.=" and n.area_id = ".$row->id;
-						}
-						//**********************************************
-
-
-
-						// ช่วงอายุ
-						if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){
-							if(@$_GET['agecondition'] == 'between'){
-								@$condition.=" and (d.child_age_year between ".$_GET['lowage']." and ".$_GET['hiage'].")";
-							}elseif(@$_GET['agecondition'] == 'or'){
-								@$condition.=" and (d.child_age_year = ".$_GET['lowage']." or d.child_age_year = ".$_GET['hiage'].")";
-							}
-						}
-
-						// สถานะเด็กป่วย
-						if(@$_GET['c3']){ @$condition.=" and d.c3 = '".$_GET['c3']."'";  }
-
-						// การแยกเด็กป่วย
-						if(@$_GET['c2']){ @$condition.=" and d.c2 = '".$_GET['c2']."'";  }
-
-						// กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน
-						if(@$_GET['c5']){
-							if($_GET['c5'] == "no"){
-								@$condition.=" and d.c5 = ''";
-							}else{
-								@$condition.=" and d.c5 = '".$_GET['c5']."'";
-							}
-						 }
-
-						// วันที่เริ่ม - วันที่สิ้นสุด
-						if(@$_GET['start_date'] and @$_GET['end_date']){
-							$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
-							$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
-							$condition .= " and start_date between ".$start_date." and ".$end_date;
-						}
-						if(@$_GET['start_date'] and @empty($_GET['end_date'])){
-							$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
-							$condition .= " and start_date >= ".$start_date;
-						}
-						if(@$_GET['end_date'] and @empty($_GET['start_date'])){
-							$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
-							$condition .= " and start_date >= ".$end_date;
-						}
-
-						$sql = "
-						SELECT count(d.id) total
-						FROM
-						diseases d
-						INNER JOIN classroom_details cd ON d.classroom_detail_id = cd.id
-						INNER JOIN nurseries n ON d.nursery_id = n.id
-						WHERE 1=1 and d.c1 = '".$disease."' ".@$condition."  and start_date IS NOT NULL";
-						$rs = new Disease();
-						$rs->query($sql);
-
-						// echo $sql.'<br><br>';
-					?>
-					<td class="span2"><?=$rs->total?></td>
-				<? endforeach;?>
-		</tr>
-
-		<?php endforeach;?>
-
-		<!-- <tr class="sum">
-			<th>รวมทั้งหมด</th>
-			<?if(@$_GET['diseases']):?>
-		        <td id='t1'>0</td>
-		    <?else:?>
-				<td id='t1'>0</td>
-		        <td id='t2'>0</td>
-		        <td id='t3'>0</td>
-		        <td id='t4'>0</td>
-		        <td id='t5'>0</td>
-		        <td id='t6'>0</td>
-			<?endif;?>
-		</tr> -->
-
-	</tbody>
-</table>
-<br><BR><BR><BR>
-
-
-
-
-
 
 <style>
 	tr.subheader{font-weight:bold;background:#f1f1f1;}
@@ -477,6 +215,7 @@ $sql = "SELECT
 
 $sex = new Disease();
 $sex->query($sql);
+$sex_total = $sex->male + $sex->female;
 
 //-------------------------------------------- อายุ --------------------------------------------
 $sql = "SELECT
@@ -571,6 +310,7 @@ $sql = "SELECT
 
 $age = new Disease();
 $age->query($sql);
+$age_total = $age->year_0 + $age->year_1 + $age->year_2 + $age->year_3 + $age->year_4 + $age->year_5 + $age->year_6 + $age->year_7;
 
 //-------------------------------------------- โรค --------------------------------------------
 $sql = "SELECT
@@ -643,6 +383,7 @@ $sql = "SELECT
 
 	$disease = new Disease();
 	$disease->query($sql);
+	$disease_total = $disease->disease_1 + $disease->disease_2 + $disease->disease_3 + $disease->disease_4 + $disease->disease_5 + $disease->disease_6;
 
 //-------------------------------------------- สถานะเด็กป่วย --------------------------------------------
 $sql = "SELECT
@@ -671,6 +412,7 @@ $sql = "SELECT
 
 $sick_status = new Disease();
 $sick_status->query($sql);
+$sick_status_total = $sick_status->sick_status_1 + $sick_status->sick_status_2;
 
 //-------------------------------------------- การแยกเด็กป่วย --------------------------------------------
 $sql = "SELECT
@@ -710,6 +452,7 @@ $sql = "SELECT
 
 $separate = new Disease();
 $separate->query($sql);
+$separate_total = $separate->separate_1 + $separate->separate_2 + $separate->separate_3;
 
 //-------------------------------------------- กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน --------------------------------------------
 $sql = "SELECT
@@ -738,7 +481,167 @@ $sql = "SELECT
 
 $same = new Disease();
 $same->query($sql);
+$same_total = $same->same_1 + $same->same_2;
 ?>
+
+<script type="text/javascript">
+$(function () {
+
+//--------------------------- Create the chart แจกแจงตามเพศ --------------------------
+var options = {
+    chart: {
+        plotBorderWidth: 0
+    },
+    title: {
+        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามเพศ',
+    },
+    //
+    // subtitle: {
+    //  text: 'Subtitle'
+    // },
+    //
+    xAxis: {
+			type: 'category',
+    },
+    //
+    yAxis: {
+        title: {
+            text: 'ร้อยละ'
+        },
+    },
+    //
+    legend: {
+        enabled: true,
+    },
+    //
+		tooltip: {
+			formatter: function() {
+			    // If you want to see what is available in the formatter, you can
+			    // examine the `this` variable.
+			    //     console.log(this);
+			    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
+			}
+		},
+    plotOptions: {
+        series: {
+            pointPadding: 0.2,
+            borderWidth: 0,
+            dataLabels: {
+                enabled: true,
+								format: '{point.name}: <b>{point.y}%</b>'
+            }
+        },
+        pie: {
+            plotBorderWidth: 0,
+            allowPointSelect: true,
+            cursor: 'pointer',
+            size: '100%',
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}: <b>{point.y}%</b>'
+            }
+        }
+    },
+     series: [{
+          name: 'เพศ',
+          colorByPoint: true,
+          data: [{
+              name: 'ชาย',
+              y: <?=convert_2_percent($sex->male,$sex_total)?>
+          }, {
+              name: 'หญิง',
+              y: <?=convert_2_percent($sex->female,$sex_total)?>
+          }]
+      }],
+};
+
+// Column chart
+// options.chart.renderTo = 'container';
+// options.chart.type = 'column';
+// var chart1 = new Highcharts.Chart(options);
+
+
+$('.renderChartArea').hide();
+
+chartfunc = function()
+{
+var column = document.getElementById('column');
+var bar = document.getElementById('bar');
+var pie = document.getElementById('pie');
+var line = document.getElementById('line');
+var close = document.getElementById('close');
+
+
+if(column.checked)
+    {
+				$('.renderChartArea').show();
+        options.chart.renderTo = 'container';
+        options.chart.type = 'column';
+        var chart1 = new Highcharts.Chart(options);
+    }
+else if(bar.checked)
+    {
+				$('.renderChartArea').show();
+        options.chart.renderTo = 'container';
+        options.chart.type = 'bar';
+        var chart1 = new Highcharts.Chart(options);
+    }
+else if(pie.checked)
+    {
+				$('.renderChartArea').show();
+        options.chart.renderTo = 'container';
+        options.chart.type = 'pie';
+        var chart1 = new Highcharts.Chart(options);
+    }
+else if(close.checked)
+    {
+				$('.renderChartArea').hide();
+    }
+else
+    {
+				$('.renderChartArea').show();
+        options.chart.renderTo = 'container';
+        options.chart.type = 'line';
+        var chart1 = new Highcharts.Chart(options);
+    }
+
+}
+
+
+var randomData = function() {
+        var len = 6;
+        var dataArray = [];
+        for(var i = 0; i < len; i++) {
+            // Push a random integer between 0 and 10 into the array
+            dataArray.push(Math.floor(Math.random() * (10 - 0 + 1)) + 0);
+        }
+        return dataArray;
+    };
+
+		$('.addSeries').click(function() {
+
+        var chart = $('#container').highcharts();
+        chart.addSeries({
+            type: 'column',
+            data: randomData()
+        });
+        $('.remove').removeAttr('disabled');
+    });
+
+	$('.remove').click(function() {
+		var chart = $('#container').highcharts();
+        var seriesLength = chart.series.length;
+        for(var i = seriesLength -1; i > -1; i--) {
+            chart.series[i].remove();
+        }
+		this.disabled = true;
+	});
+
+});
+</script>
+
+<button class="addSeries">Add Series</button>
+<button class="remove" disabled>Remove All Series</button>
 
 <h1>ตาราง จำนวนร้อยและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</h1>
 <table class="table">
@@ -748,17 +651,30 @@ $same->query($sql);
 		<th>ร้อยละ</th>
 	</tr>
 	<tr class="subheader">
-		<td colspan="3">เพศ</td>
+		<td colspan="3">เพศ
+			<div style="margin-left:10px; display:inline;">
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column" value="column" onclick= "chartfunc()">Column</label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar" value="bar" onclick= "chartfunc()">Bar</label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie" value="pie" onclick= "chartfunc()">Pie</label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line" value="line" onclick= "chartfunc()">Line</label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close" value="close" onclick= "chartfunc()" checked>Close</label>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3" class="renderChartArea">
+				<div id="container"></div>
+		</td>
 	</tr>
 	<tr>
 		<td>- ชาย</td>
 		<td><?=$sex->male?></td>
-		<td></td>
+		<td><?=convert_2_percent($sex->male,$sex_total)?></td>
 	</tr>
 	<tr>
 		<td>- หญิง</td>
 		<td><?=$sex->female?></td>
-		<td></td>
+		<td><?=convert_2_percent($sex->female,$sex_total)?></td>
 	</tr>
 	<tr class="subheader">
 		<td colspan="3">กลุ่มอายุ</td>
@@ -766,42 +682,42 @@ $same->query($sql);
 	<tr>
 		<td>- ต่ำกว่า 1 ปี</td>
 		<td><?=$age->year_0?></td>
-		<td></td>
+		<td><?=convert_2_percent($age->year_0,$age_total)?></td>
 	</tr>
 	<tr>
 		<td>- 1 ปี</td>
 		<td><?=$age->year_1?></td>
-		<td></td>
+		<td><?=convert_2_percent($age->year_1,$age_total)?></td>
 	</tr>
 	<tr>
 		<td>- 2 ปี</td>
 		<td><?=$age->year_2?></td>
-		<td></td>
+		<td><?=convert_2_percent($age->year_2,$age_total)?></td>
 	</tr>
 	<tr>
 		<td>- 3 ปี</td>
 		<td><?=$age->year_3?></td>
-		<td></td>
+		<td><?=convert_2_percent($age->year_3,$age_total)?></td>
 	</tr>
 	<tr>
 		<td>- 4 ปี</td>
 		<td><?=$age->year_4?></td>
-		<td></td>
+		<td><?=convert_2_percent($age->year_4,$age_total)?></td>
 	</tr>
 	<tr>
 		<td>- 5 ปี</td>
 		<td><?=$age->year_5?></td>
-		<td></td>
+		<td><?=convert_2_percent($age->year_5,$age_total)?></td>
 	</tr>
 	<tr>
 		<td>- 6 ปี</td>
 		<td><?=$age->year_6?></td>
-		<td></td>
+		<td><?=convert_2_percent($age->year_6,$age_total)?></td>
 	</tr>
 	<tr>
 		<td>- 7 ปี</td>
 		<td><?=$age->year_7?></td>
-		<td></td>
+		<td><?=convert_2_percent($age->year_7,$age_total)?></td>
 	</tr>
 	<tr class="subheader">
 		<td colspan="3">แจกแจงตามโรค</td>
@@ -809,32 +725,32 @@ $same->query($sql);
 	<tr>
 		<td>- หวัด</td>
 		<td><?=$disease->disease_1?></td>
-		<td></td>
+		<td><?=convert_2_percent($disease->disease_1,$disease_total)?></td>
 	</tr>
 	<tr>
 		<td>- มือ เท้า ปาก</td>
 		<td><?=$disease->disease_2?></td>
-		<td></td>
+		<td><?=convert_2_percent($disease->disease_2,$disease_total)?></td>
 	</tr>
 	<tr>
 		<td>- อุจจาระร่วง</td>
 		<td><?=$disease->disease_3?></td>
-		<td></td>
+		<td><?=convert_2_percent($disease->disease_3,$disease_total)?></td>
 	</tr>
 	<tr>
 		<td>- ไข้</td>
 		<td><?=$disease->disease_4?></td>
-		<td></td>
+		<td><?=convert_2_percent($disease->disease_4,$disease_total)?></td>
 	</tr>
 	<tr>
 		<td>- ไข้ออกผื่น</td>
 		<td><?=$disease->disease_5?></td>
-		<td></td>
+		<td><?=convert_2_percent($disease->disease_5,$disease_total)?></td>
 	</tr>
 	<tr>
 		<td>- อื่นๆ</td>
 		<td><?=$disease->disease_6?></td>
-		<td></td>
+		<td><?=convert_2_percent($disease->disease_6,$disease_total)?></td>
 	</tr>
 	<tr class="subheader">
 		<td colspan="3">สถานะเด็กป่วย</td>
@@ -842,12 +758,12 @@ $same->query($sql);
 	<tr>
 		<td>- มาเรียน</td>
 		<td><?=$sick_status->sick_status_1?></td>
-		<td></td>
+		<td><?=convert_2_percent($sick_status->sick_status_1,$sick_status_total)?></td>
 	</tr>
 	<tr>
 		<td>- หยุดเรียน</td>
 		<td><?=$sick_status->sick_status_2?></td>
-		<td></td>
+		<td><?=convert_2_percent($sick_status->sick_status_2,$sick_status_total)?></td>
 	</tr>
 	<tr class="subheader">
 		<td colspan="3">การแยกเด็กป่วย</td>
@@ -855,17 +771,17 @@ $same->query($sql);
 	<tr>
 		<td>- ไม่มีการแยกนอนแยกเล่น</td>
 		<td><?=$separate->separate_1?></td>
-		<td></td>
+		<td><?=convert_2_percent($separate->separate_1,$separate_total)?></td>
 	</tr>
 	<tr>
 		<td>- แยกนอน</td>
 		<td><?=$separate->separate_2?></td>
-		<td></td>
+		<td><?=convert_2_percent($separate->separate_2,$separate_total)?></td>
 	</tr>
 	<tr>
 		<td>- แยกเล่น</td>
 		<td><?=$separate->separate_3?></td>
-		<td></td>
+		<td><?=convert_2_percent($separate->separate_3,$separate_total)?></td>
 	</tr>
 	<tr class="subheader">
 		<td colspan="3">กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน</td>
@@ -873,11 +789,11 @@ $same->query($sql);
 	<tr>
 		<td>- มี</td>
 		<td><?=$same->same_1?></td>
-		<td></td>
+		<td><?=convert_2_percent($same->same_1,$same_total)?></td>
 	</tr>
 	<tr>
 		<td>- ไม่มี</td>
 		<td><?=$same->same_2?></td>
-		<td></td>
+		<td><?=convert_2_percent($same->same_2,$same_total)?></td>
 	</tr>
 </table>
