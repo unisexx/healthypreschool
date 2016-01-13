@@ -9,34 +9,81 @@ input[type="radio"], input[type="checkbox"]{margin:-1px 0 0 0;}
 	vertical-align: middle;
 	cursor: pointer;
 }
+#search_report>div {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
 </style>
-<script type="text/javascript" src="media/js/jquery.chained.remote.min.js"></script>
+
 <script>
 $(document).ready(function() {
-	$("#province").remoteChained({
-	    parents : "#area",
-	    url : "home/get_province"
-	});
+		$("select[name='area_id']").live("change",function(){
+  		$.post('ajax/get_province',{
+  				'area_id' : $(this).val()
+  			},function(data){
+  				$("#province").html(data);
+  			});
 
-	$("#ampor").remoteChained({
-	    parents : "#province",
-	    url : "home/get_ampor"
-	});
+  		$.post('ajax/get_amphur',{
+  				'province_id' : ''
+  			},function(data){
+  				$("#amphur").html(data);
+  			});
 
-	$("#tumbon").remoteChained({
-	    parents : "#ampor",
-	    url : "home/get_tumbon"
-	});
+  		$.post('ajax/get_district',{
+  				'amphur_id' : ''
+  			},function(data){
+  				$("#district").html(data);
+  			});
 
-	$("#nursery").remoteChained({
-	    parents : "#tumbon",
-	    url : "home/get_nursery"
-	});
+				// disabled low level
+				$('select[name=nursery_id] option:first-child,select[name=classroom_id] option:first-child').attr("selected", "selected");
+				$('select[name=nursery_id],select[name=classroom_id]').attr("disabled", "disabled");
+  	});
 
-	$("#classroom").remoteChained({
-	    parents : "#nursery",
-	    url : "home/get_classroom"
-	});
+  	$("select[name='province_id']").live("change",function(){
+  		$.post('ajax/get_amphur',{
+  				'province_id' : $(this).val()
+  			},function(data){
+  				$("#amphur").html(data);
+  			});
+
+				// disabled low level
+				$('select[name=district_id] option:first-child,select[name=nursery_id] option:first-child,select[name=classroom_id] option:first-child').attr("selected", "selected");
+				$('select[name=district_id],select[name=nursery_id],select[name=classroom_id]').attr("disabled", "disabled");
+  	});
+
+  	$("select[name='amphur_id']").live("change",function(){
+  		$.post('ajax/get_district',{
+  				'amphur_id' : $(this).val()
+  			},function(data){
+  				$("#district").html(data);
+  			});
+
+				// disabled low level
+				$('select[name=nursery_id] option:first-child,select[name=classroom_id] option:first-child').attr("selected", "selected");
+				$('select[name=nursery_id],select[name=classroom_id]').attr("disabled", "disabled");
+  	});
+
+		$("select[name='district_id']").live("change",function(){
+  		$.get('ajax/get_nursery',{
+  				'district_id' : $(this).val()
+  			},function(data){
+  				$("#nursery").html(data);
+  			});
+
+				// disabled low level
+				$('select[name=classroom_id] option:first-child').attr("selected", "selected");
+				$('select[name=classroom_id]').attr("disabled", "disabled");
+  	});
+
+		$("select[name='nursery_id']").live("change",function(){
+  		$.get('ajax/get_classroom',{
+  				'nursery_id' : $(this).val()
+  			},function(data){
+  				$("#classroom").html(data);
+  			});
+  	});
 });
 </script>
 
@@ -57,21 +104,12 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active"><a href="diseases/newreport">รายงานแบบคัดกรองโรค</a></li>
+  <li class="active"><a href="diseases/newreport">รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</a></li>
 </ul>
 
-<h1>รายงานแบบคัดกรองโรค</h1>
+<h1>รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</h1>
 
-<form method="get" action="diseases/newreport">
-<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-    <div>
-		<span>ช่วงอายุ</span>
-		<?=form_dropdown('lowage',array('0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7'),@$_GET['lowage'],'class="span1"');?>
-		<?=form_dropdown('agecondition',array('between'=>'ถึง','or'=>'และ'),@$_GET['agecondition'],'class="span1"');?>
-
-		<?if(@!isset($_GET['hiage']) or @$_GET['hiage']==""){$_GET['hiage'] = 7;}?>
-		<?=form_dropdown('hiage',array('1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7'),@$_GET['hiage'],'class="span1"');?>
-	</div>
+<form id="search_report" method="get" action="reports/desease_overall" style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
 
 	<div>
 		<span>ช่วงเวลาที่เกิดโรค</span>
@@ -80,106 +118,52 @@ jQuery_1_4_2("input.datepicker").date_input();
 	</div>
 
 	<div>
-		<span>สถานะเด็กป่วย</span>
-		<?=form_dropdown('c3',array('/'=>'มาเรียน','x'=>'หยุดเรียน'),@$_GET['c3'],'class="span2"','--- เลือก ---');?>
-	</div>
-
-	<div>
-		<span>การแยกเด็กป่วย</span>
-		<?=form_dropdown('c2',array('0'=>'ไม่มีการแยกนอนแยกเล่น','1'=>'แยกนอน','2'=>'แยกเล่น'),@$_GET['c2'],'class="span3"','--- เลือก ---');?>
-	</div>
-
-	<div>
-		<span>กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน</span>
-		<?=form_dropdown('c5',array('*'=>'มี','no'=>'ไม่มี'),@$_GET['c5'],'class="span2"',"--- เลือก ---");?>
-	</div>
-
-	<div>
 		<span>สคร.</span>
-		<?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),@$_GET['area_id'],'id="area" class="span2"','--- เลือกสคร. ---');?>
+		<?php echo form_dropdown('area_id',get_option('id','area_name','areas',' order by id '),@$_GET['area_id'],'id="area" class="span2"','--แสดงทั้งหมด--');?>
 	</div>
 
 	<div>
 		<span>จังหวัด</span>
-		<?php
-			if(isset($_GET['area_id']) && ($_GET['area_id']!="")){
-				echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.@$_GET['area_id'].' order by name asc'),@$_GET['province_id'],'id="province"','--- เลือกจังหวัด ---');
-			}else{
-				echo form_dropdown('province_id',get_option('id','name','provinces','order by name asc'),@$_GET['province_id'],'id="province"','--- เลือกจังหวัด ---');
-			}
-		?>
-	</div>
-
-	<div>
+		<span id="province">
+		<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
+		</span>
 		<span>อำเภอ</span>
-		<?php
-			if(isset($_GET['province_id']) && ($_GET['province_id']!="")){
-				echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.@$_GET['province_id'].' order by amphur_name asc'),@$_GET['amphur_id'],'id="ampor"','--- เลือกอำเภอ ---');
-			}else{
-				echo form_dropdown('amphur_id',array(''=>'---'),'','id="ampor" disabled');
-			}
-		?>
-	</div>
-
-	<div>
-		<span>ตำบล</span>
-		<?php
-			if(isset($_GET['amphur_id']) && ($_GET['amphur_id']!="")){
-				echo form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.@$_GET['amphur_id'].' order by district_name asc'),@$_GET['district_id'],'id="tumbon"','--- เลือกตำบล ---');
-			}else{
-				echo form_dropdown('district_id',array(''=>'---'),'','id="tumbon" disabled');
-			}
-		?>
+    <span id="amphur">
+    <?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
+    </span>
+    <span>ตำบล</span>
+    <span id="district">
+    <?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
+    </span>
 	</div>
 
 	<div>
 		<span>ศูนย์เด็กเล็ก</span>
+		<span id="nursery">
 		<?php
 			if(isset($_GET['district_id']) && ($_GET['district_id']!="")){
-				echo form_dropdown('nursery_id',get_option('id','name','nurseries','where district_id = '.@$_GET['district_id'].' order by name asc'),@$_GET['nursery_id'],'id="nursery"','--- เลือกศูนย์เด็กเล็ก ---');
+				echo @form_dropdown('nursery_id',get_option('id','name','nurseries','where district_id = '.@$_GET['district_id'].' order by name asc'),@$_GET['nursery_id'],'id="nursery"','--- เลือกศูนย์เด็กเล็ก ---');
 			}else{
-				echo form_dropdown('nursery_id',array(''=>'---'),'','id="nursery" class="span4" disabled');
+				echo form_dropdown('nursery_id',array(''=>'--- เลือกศูนย์เด็กเล็ก ---'),'','id="nursery" class="span4" disabled');
 			}
 		?>
+		</span>
 	</div>
 
 	<div>
 		<span>ห้องเรียน</span>
+		<span id="classroom">
 		<?php
 			if(isset($_GET['nursery_id']) && ($_GET['nursery_id']!="")){
-				echo form_dropdown('classroom_id',get_option('id','room_name','classrooms','where nursery_id = '.@$_GET['nursery_id'].' order by room_name asc'),@$_GET['classroom_id'],'id="classroom"','--- เลือกห้องเรียน ---');
+				echo @form_dropdown('classroom_id',get_option('id','room_name','classrooms','where nursery_id = '.@$_GET['nursery_id'].' order by room_name asc'),@$_GET['classroom_id'],'id="classroom"','--- เลือกห้องเรียน ---');
 			}else{
-				echo form_dropdown('id',array(''=>'---'),'','id="classroom" class="span4" disabled');
+				echo form_dropdown('id',array(''=>'--- เลือกห้องเรียน ---'),'','id="classroom" class="span4" disabled');
 			}
 		?>
+		</span>
 	</div>
 
-	<!-- <select name="classroom_id">
-	<option value="">-- ทุกห้องเรียน --</option>
-	<?foreach($classrooms as $row):?>
-		<option value="<?=$row->id?>" <?=$row->id == @$_GET['classroom_id'] ? 'selected' : '' ;?>><?=$row->room_name?></option>
-	<?endforeach;?>
-	</select>
-
-	ช่วงอายุ <input class="span1" type="text" name="lowage" value="<?=(@$_GET['lowage']) ? $_GET['lowage'] : '0' ;?>"> ถึง <input class="span1" type="text" name="hiage" value="<?=(@$_GET['hiage']) ? $_GET['hiage'] : 99 ;?>">
-
-	<select name="year">
-	<option value="">-- เลือกทุกปี --</option>
-	<?foreach($years as $row):?>
-		<option value="<?=$row->year?>" <?=($row->year == @$_GET['year'])? 'selected' : '' ;?>><?=$row->year?></option>
-	<?endforeach;?>
-	</select>
-
-	<select name="month">
-	<option value="">-- เลือกทุกเดือน --</option>
-	<?foreach($months as $row):?>
-		<option value="<?=$row->month?>" <?=($row->month == @$_GET['month'])? 'selected' : '' ;?>><?=$arrayMonth[$row->month]?></option>
-	<?endforeach;?>
-	</select> -->
-
-	<!-- <input type="hidden" name="nursery_id" value="<?=$_GET['nursery_id']?>"> -->
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
-</div>
 </form>
 
 
@@ -188,29 +172,58 @@ jQuery_1_4_2("input.datepicker").date_input();
 	tr.subheader{font-weight:bold;background:#f1f1f1;}
 </style>
 <?
+//-------------------------------------------- search condition --------------------------------
+$condition = "";
+if(@$_GET['classroom_id']!=""){
+	@$condition.=" and d.classroom_id = ".$_GET['classroom_id'];
+}elseif(@$_GET['nursery_id']!=""){
+	@$condition.=" and d.nursery_id = ".$_GET['nursery_id'];
+}elseif(@$_GET['district_id']!=""){
+	@$condition.=" and n.district_id = ".$_GET['district_id'];
+}elseif(@$_GET['amphur_id']!=""){
+	@$condition.=" and n.amphur_id = ".$_GET['amphur_id'];
+}elseif(@$_GET['province_id']!=""){
+	@$condition.=" and area_provinces.province_id = ".$_GET['province_id'];
+}elseif(@$_GET['area_id']!=""){
+	@$condition.=" and area_provinces.area_id = ".$_GET['area_id'];
+}
+
+// วันที่เริ่ม - วันที่สิ้นสุด
+if(@$_GET['start_date'] and @$_GET['end_date']){
+	$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+	$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+	$condition .= " and d.start_date between ".$start_date." and ".$end_date;
+}
+if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+	$start_date = str_replace("-", "", Date2DB($_GET['start_date']));
+	$condition .= " and d.start_date >= ".$start_date;
+}
+if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+	$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
+	$condition .= " and d.start_date >= ".$end_date;
+}
+
+//-------------------------------------------- sql select join template --------------------------------
+$sql_tempate = " SELECT
+								Count(d.id) AS male
+								FROM
+								diseases AS d
+								INNER JOIN nurseries AS n ON d.nursery_id = n.id
+								INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+								INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+								INNER JOIN area_provinces ON n.area_province_id = area_provinces.area_province_id";
+
 //-------------------------------------------- เพศ --------------------------------------------
 $sql = "SELECT
 	(
-		SELECT
-		Count(d.id) AS male
-		FROM
-		diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-		childrens.title = 'ด.ช.'
+		childrens.title = 'ด.ช.' ".@$condition."
 	) male,
 	(
-		SELECT
-		Count(d.id) AS female
-		FROM
-		diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-		childrens.title = 'ด.ญ.'
+		childrens.title = 'ด.ญ.' ".@$condition."
 	) female";
 
 $sex = new Disease();
@@ -220,92 +233,44 @@ $sex_total = $sex->male + $sex->female;
 //-------------------------------------------- อายุ --------------------------------------------
 $sql = "SELECT
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.child_age_year = 0
+			d.child_age_year = 0 ".@$condition."
 	) year_0,
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.child_age_year = 1
+			d.child_age_year = 1 ".@$condition."
 	) year_1,
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.child_age_year = 2
+			d.child_age_year = 2 ".@$condition."
 	) year_2,
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.child_age_year = 3
+			d.child_age_year = 3 ".@$condition."
 	) year_3,
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.child_age_year = 4
+			d.child_age_year = 4 ".@$condition."
 	) year_4,
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.child_age_year = 5
+			d.child_age_year = 5 ".@$condition."
 	) year_5,
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.child_age_year = 6
+			d.child_age_year = 6 ".@$condition."
 	) year_6,
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.child_age_year = 7
+			d.child_age_year = 7 ".@$condition."
 	) year_7";
 
 $age = new Disease();
@@ -315,70 +280,34 @@ $age_total = $age->year_0 + $age->year_1 + $age->year_2 + $age->year_3 + $age->y
 //-------------------------------------------- โรค --------------------------------------------
 $sql = "SELECT
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.c1 = 'C'
+			d.c1 = 'C' ".@$condition."
 	) disease_1,
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.c1 = 'H'
+			d.c1 = 'H' ".@$condition."
 	) disease_2,
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.c1 = 'D'
+			d.c1 = 'D' ".@$condition."
 	) disease_3,
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.c1 = 'F'
+			d.c1 = 'F' ".@$condition."
 	) disease_4,
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.c1 = 'R'
+			d.c1 = 'R' ".@$condition."
 	) disease_5,
 	(
-		SELECT
-			Count(d.id)
-		FROM
-			diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-			d.c1 = 'O'
+			d.c1 = 'O' ".@$condition."
 	) disease_6";
 
 	$disease = new Disease();
@@ -388,26 +317,14 @@ $sql = "SELECT
 //-------------------------------------------- สถานะเด็กป่วย --------------------------------------------
 $sql = "SELECT
 	(
-		SELECT
-		Count(d.id)
-		FROM
-		diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-		d.c3 = '/'
+		d.c3 = '/' ".@$condition."
 	) sick_status_1,
 	(
-		SELECT
-		Count(d.id)
-		FROM
-		diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-		d.c3 = 'x'
+		d.c3 = 'x' ".@$condition."
 	) sick_status_2";
 
 $sick_status = new Disease();
@@ -417,37 +334,19 @@ $sick_status_total = $sick_status->sick_status_1 + $sick_status->sick_status_2;
 //-------------------------------------------- การแยกเด็กป่วย --------------------------------------------
 $sql = "SELECT
 	(
-		SELECT
-		Count(d.id)
-		FROM
-		diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-		d.c2 = '0'
+		d.c2 = '0' ".@$condition."
 	) separate_1,
 	(
-		SELECT
-		Count(d.id)
-		FROM
-		diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-		d.c2 = '1'
+		d.c2 = '1' ".@$condition."
 	) separate_2,
 	(
-		SELECT
-		Count(d.id)
-		FROM
-		diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-		d.c2 = '2'
+		d.c2 = '2' ".@$condition."
 	) separate_3";
 
 $separate = new Disease();
@@ -457,26 +356,14 @@ $separate_total = $separate->separate_1 + $separate->separate_2 + $separate->sep
 //-------------------------------------------- กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน --------------------------------------------
 $sql = "SELECT
 	(
-		SELECT
-		Count(d.id)
-		FROM
-		diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-		d.c5 = '*'
+		d.c5 = '*' ".@$condition."
 	) same_1,
 	(
-		SELECT
-		Count(d.id)
-		FROM
-		diseases AS d
-		INNER JOIN nurseries AS n ON d.nursery_id = n.id
-		INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
-		INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+		".$sql_tempate."
 		WHERE
-		d.c5 = ''
+		d.c5 = '' ".@$condition."
 	) same_2";
 
 $same = new Disease();
@@ -484,166 +371,7 @@ $same->query($sql);
 $same_total = $same->same_1 + $same->same_2;
 ?>
 
-<script type="text/javascript">
-$(function () {
-
-//--------------------------- Create the chart แจกแจงตามเพศ --------------------------
-var options = {
-    chart: {
-        plotBorderWidth: 0
-    },
-    title: {
-        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามเพศ',
-    },
-    //
-    // subtitle: {
-    //  text: 'Subtitle'
-    // },
-    //
-    xAxis: {
-			type: 'category',
-    },
-    //
-    yAxis: {
-        title: {
-            text: 'ร้อยละ'
-        },
-    },
-    //
-    legend: {
-        enabled: true,
-    },
-    //
-		tooltip: {
-			formatter: function() {
-			    // If you want to see what is available in the formatter, you can
-			    // examine the `this` variable.
-			    //     console.log(this);
-			    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
-			}
-		},
-    plotOptions: {
-        series: {
-            pointPadding: 0.2,
-            borderWidth: 0,
-            dataLabels: {
-                enabled: true,
-								format: '{point.name}: <b>{point.y}%</b>'
-            }
-        },
-        pie: {
-            plotBorderWidth: 0,
-            allowPointSelect: true,
-            cursor: 'pointer',
-            size: '100%',
-            dataLabels: {
-                enabled: true,
-                format: '{point.name}: <b>{point.y}%</b>'
-            }
-        }
-    },
-     series: [{
-          name: 'เพศ',
-          colorByPoint: true,
-          data: [{
-              name: 'ชาย',
-              y: <?=convert_2_percent($sex->male,$sex_total)?>
-          }, {
-              name: 'หญิง',
-              y: <?=convert_2_percent($sex->female,$sex_total)?>
-          }]
-      }],
-};
-
-// Column chart
-// options.chart.renderTo = 'container';
-// options.chart.type = 'column';
-// var chart1 = new Highcharts.Chart(options);
-
-
-$('.renderChartArea').hide();
-
-chartfunc = function()
-{
-var column = document.getElementById('column');
-var bar = document.getElementById('bar');
-var pie = document.getElementById('pie');
-var line = document.getElementById('line');
-var close = document.getElementById('close');
-
-
-if(column.checked)
-    {
-				$('.renderChartArea').show();
-        options.chart.renderTo = 'container';
-        options.chart.type = 'column';
-        var chart1 = new Highcharts.Chart(options);
-    }
-else if(bar.checked)
-    {
-				$('.renderChartArea').show();
-        options.chart.renderTo = 'container';
-        options.chart.type = 'bar';
-        var chart1 = new Highcharts.Chart(options);
-    }
-else if(pie.checked)
-    {
-				$('.renderChartArea').show();
-        options.chart.renderTo = 'container';
-        options.chart.type = 'pie';
-        var chart1 = new Highcharts.Chart(options);
-    }
-else if(close.checked)
-    {
-				$('.renderChartArea').hide();
-    }
-else
-    {
-				$('.renderChartArea').show();
-        options.chart.renderTo = 'container';
-        options.chart.type = 'line';
-        var chart1 = new Highcharts.Chart(options);
-    }
-
-}
-
-
-var randomData = function() {
-        var len = 6;
-        var dataArray = [];
-        for(var i = 0; i < len; i++) {
-            // Push a random integer between 0 and 10 into the array
-            dataArray.push(Math.floor(Math.random() * (10 - 0 + 1)) + 0);
-        }
-        return dataArray;
-    };
-
-		$('.addSeries').click(function() {
-
-        var chart = $('#container').highcharts();
-        chart.addSeries({
-            type: 'column',
-            data: randomData()
-        });
-        $('.remove').removeAttr('disabled');
-    });
-
-	$('.remove').click(function() {
-		var chart = $('#container').highcharts();
-        var seriesLength = chart.series.length;
-        for(var i = seriesLength -1; i > -1; i--) {
-            chart.series[i].remove();
-        }
-		this.disabled = true;
-	});
-
-});
-</script>
-
-<button class="addSeries">Add Series</button>
-<button class="remove" disabled>Remove All Series</button>
-
-<h1>ตาราง จำนวนร้อยและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</h1>
+<br>
 <table class="table">
 	<tr>
 		<th>ข้อมูลรายงานแบบคัดกรองโรค</th>
@@ -652,16 +380,136 @@ var randomData = function() {
 	</tr>
 	<tr class="subheader">
 		<td colspan="3">เพศ
-			<div style="margin-left:10px; display:inline;">
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column" value="column" onclick= "chartfunc()">Column</label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar" value="bar" onclick= "chartfunc()">Bar</label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie" value="pie" onclick= "chartfunc()">Pie</label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line" value="line" onclick= "chartfunc()">Line</label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close" value="close" onclick= "chartfunc()" checked>Close</label>
+			<div style="float:right; display:inline;">
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column" value="column" onclick= "chartfunc()"><i class="fa fa-bar-chart"></i></label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar" value="bar" onclick= "chartfunc()"> <i class="fa fa-bar-chart fa-rotate-90"></i></label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie" value="pie" onclick= "chartfunc()"> <i class="fa fa-pie-chart"></i></label>
+			<!-- <label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line" value="line" onclick= "chartfunc()">Line</label> -->
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close" value="close" onclick= "chartfunc()"><i class="fa fa-times"></i></label>
 			</div>
 		</td>
 	</tr>
 	<tr>
+		<script type="text/javascript">
+		$(function () {
+		//--------------------------- Create the chart แจกแจงตามเพศ --------------------------
+		var options = {
+		    chart: {
+		        plotBorderWidth: 0
+		    },
+		    title: {
+		        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามเพศ',
+		    },
+		    //
+		    // subtitle: {
+		    //  text: 'Subtitle'
+		    // },
+		    //
+		    xAxis: {
+					type: 'category',
+		    },
+		    yAxis: {
+		        title: {
+		            text: 'ร้อยละ'
+		        },
+		    },
+		    legend: {
+		        enabled: true,
+		    },
+				tooltip: {
+					formatter: function() {
+					    // If you want to see what is available in the formatter, you can
+					    // examine the `this` variable.
+					    //     console.log(this);
+					    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
+					}
+				},
+		    plotOptions: {
+		        series: {
+		            pointPadding: 0.2,
+		            borderWidth: 0,
+		            dataLabels: {
+		                enabled: true,
+										format: '{point.name}: <b>{point.y}%</b>'
+		            }
+		        },
+		        pie: {
+		            plotBorderWidth: 0,
+		            allowPointSelect: true,
+		            cursor: 'pointer',
+		            size: '100%',
+		            dataLabels: {
+		                enabled: true,
+		                format: '{point.name}: <b>{point.y}%</b>'
+		            }
+		        }
+		    },
+		     series: [{
+		          name: 'เพศ',
+		          colorByPoint: true,
+		          data: [{
+		              name: 'ชาย',
+		              y: <?=convert_2_percent($sex->male,$sex_total)?>
+		          }, {
+		              name: 'หญิง',
+		              y: <?=convert_2_percent($sex->female,$sex_total)?>
+		          }]
+		      }],
+		};
+
+		// Column chart
+		// options.chart.renderTo = 'container';
+		// options.chart.type = 'column';
+		// var chart1 = new Highcharts.Chart(options);
+
+
+		$('.renderChartArea').hide();
+
+		chartfunc = function()
+		{
+		var column = document.getElementById('column');
+		var bar = document.getElementById('bar');
+		var pie = document.getElementById('pie');
+		var line = document.getElementById('line');
+		var close = document.getElementById('close');
+
+
+		if(column.checked)
+		    {
+						$('.renderChartArea').show();
+		        options.chart.renderTo = 'container';
+		        options.chart.type = 'column';
+		        var chart1 = new Highcharts.Chart(options);
+		    }
+		else if(bar.checked)
+		    {
+						$('.renderChartArea').show();
+		        options.chart.renderTo = 'container';
+		        options.chart.type = 'bar';
+		        var chart1 = new Highcharts.Chart(options);
+		    }
+		else if(pie.checked)
+		    {
+						$('.renderChartArea').show();
+		        options.chart.renderTo = 'container';
+		        options.chart.type = 'pie';
+		        var chart1 = new Highcharts.Chart(options);
+		    }
+		else if(close.checked)
+		    {
+						$('.renderChartArea').hide();
+		    }
+		else
+		    {
+						$('.renderChartArea').show();
+		        options.chart.renderTo = 'container';
+		        options.chart.type = 'line';
+		        var chart1 = new Highcharts.Chart(options);
+		    }
+
+		}
+		});
+		</script>
 		<td colspan="3" class="renderChartArea">
 				<div id="container"></div>
 		</td>
@@ -677,7 +525,158 @@ var randomData = function() {
 		<td><?=convert_2_percent($sex->female,$sex_total)?></td>
 	</tr>
 	<tr class="subheader">
-		<td colspan="3">กลุ่มอายุ</td>
+		<td colspan="3">กลุ่มอายุ
+			<div style="float:right; display:inline;">
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column2" value="column" onclick= "chartfunc2()"><i class="fa fa-bar-chart"></i></label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar2" value="bar" onclick= "chartfunc2()"><i class="fa fa-bar-chart fa-rotate-90"></i></label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie2" value="pie" onclick= "chartfunc2()"><i class="fa fa-pie-chart"></i></label>
+			<!-- <label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line2" value="line" onclick= "chartfunc2()">Line</label> -->
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close2" value="close" onclick= "chartfunc2()"><i class="fa fa-times"></i></label>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<script type="text/javascript">
+		$(function () {
+		//--------------------------- Create the chart แจกแจงตามกลุ่มอายุ --------------------------
+		var options2 = {
+		    chart: {
+		        plotBorderWidth: 0
+		    },
+		    title: {
+		        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามกลุ่มอายุ',
+		    },
+		    //
+		    // subtitle: {
+		    //  text: 'Subtitle'
+		    // },
+		    //
+		    xAxis: {
+					type: 'category',
+		    },
+		    yAxis: {
+		        title: {
+		            text: 'ร้อยละ'
+		        },
+		    },
+		    legend: {
+		        enabled: true,
+		    },
+				tooltip: {
+					formatter: function() {
+					    // If you want to see what is available in the formatter, you can
+					    // examine the `this` variable.
+					    //     console.log(this);
+					    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
+					}
+				},
+		    plotOptions: {
+		        series: {
+		            pointPadding: 0.2,
+		            borderWidth: 0,
+		            dataLabels: {
+		                enabled: true,
+										format: '{point.name}: <b>{point.y}%</b>'
+		            }
+		        },
+		        pie: {
+		            plotBorderWidth: 0,
+		            allowPointSelect: true,
+		            cursor: 'pointer',
+		            size: '100%',
+		            dataLabels: {
+		                enabled: true,
+		                format: '{point.name}: <b>{point.y}%</b>'
+		            }
+		        }
+		    },
+		     series: [{
+		          name: 'กลุ่มอายุ',
+		          colorByPoint: true,
+		          data: [{
+		              name: 'ต่ำกว่า 1 ปี',
+		              y: <?=convert_2_percent($age->year_0,$age_total)?>
+		          }, {
+		              name: '1 ปี',
+		              y: <?=convert_2_percent($age->year_1,$age_total)?>
+		          }, {
+		              name: '2 ปี',
+		              y: <?=convert_2_percent($age->year_2,$age_total)?>
+		          }, {
+		              name: '3 ปี',
+		              y: <?=convert_2_percent($age->year_3,$age_total)?>
+		          }, {
+		              name: '4 ปี',
+		              y: <?=convert_2_percent($age->year_4,$age_total)?>
+		          }, {
+		              name: '5 ปี',
+		              y: <?=convert_2_percent($age->year_5,$age_total)?>
+		          }, {
+		              name: '6 ปี',
+		              y: <?=convert_2_percent($age->year_6,$age_total)?>
+		          }, {
+		              name: '7 ปี',
+		              y: <?=convert_2_percent($age->year_7,$age_total)?>
+		          }]
+		      }],
+		};
+
+		// Column chart
+		// options.chart.renderTo = 'container';
+		// options.chart.type = 'column';
+		// var chart1 = new Highcharts.Chart(options);
+
+
+		$('.renderChartArea2').hide();
+
+		chartfunc2 = function()
+		{
+		var column = document.getElementById('column2');
+		var bar = document.getElementById('bar2');
+		var pie = document.getElementById('pie2');
+		var line = document.getElementById('line2');
+		var close = document.getElementById('close2');
+
+
+		if(column.checked)
+		    {
+						$('.renderChartArea2').show();
+		        options2.chart.renderTo = 'container2';
+		        options2.chart.type = 'column';
+		        var chart2 = new Highcharts.Chart(options2);
+		    }
+		else if(bar.checked)
+		    {
+						$('.renderChartArea2').show();
+		        options2.chart.renderTo = 'container2';
+		        options2.chart.type = 'bar';
+		        var chart2 = new Highcharts.Chart(options2);
+		    }
+		else if(pie.checked)
+		    {
+						$('.renderChartArea2').show();
+		        options2.chart.renderTo = 'container2';
+		        options2.chart.type = 'pie';
+		        var chart2 = new Highcharts.Chart(options2);
+		    }
+		else if(close.checked)
+		    {
+						$('.renderChartArea2').hide();
+		    }
+		else
+		    {
+						$('.renderChartArea2').show();
+		        options2.chart.renderTo = 'container2';
+		        options2.chart.type = 'line';
+		        var chart2 = new Highcharts.Chart(options2);
+		    }
+
+		}
+		});
+		</script>
+		<td colspan="3" class="renderChartArea2">
+				<div id="container2"></div>
+		</td>
 	</tr>
 	<tr>
 		<td>- ต่ำกว่า 1 ปี</td>
@@ -720,7 +719,152 @@ var randomData = function() {
 		<td><?=convert_2_percent($age->year_7,$age_total)?></td>
 	</tr>
 	<tr class="subheader">
-		<td colspan="3">แจกแจงตามโรค</td>
+		<td colspan="3">แจกแจงตามโรค
+			<div style="float:right; display:inline;">
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column3" value="column" onclick= "chartfunc3()"><i class="fa fa-bar-chart"></i></label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar3" value="bar" onclick= "chartfunc3()"><i class="fa fa-bar-chart fa-rotate-90"></i></label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie3" value="pie" onclick= "chartfunc3()"><i class="fa fa-pie-chart"></i></label>
+			<!-- <label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line3" value="line" onclick= "chartfunc3()">Line</label> -->
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close3" value="close" onclick= "chartfunc3()"><i class="fa fa-times"></i></label>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<script type="text/javascript">
+		$(function () {
+		//--------------------------- Create the chart แจกแจงตามโรค --------------------------
+		var options3 = {
+		    chart: {
+		        plotBorderWidth: 0
+		    },
+		    title: {
+		        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามโรค',
+		    },
+		    //
+		    // subtitle: {
+		    //  text: 'Subtitle'
+		    // },
+		    //
+		    xAxis: {
+					type: 'category',
+		    },
+		    yAxis: {
+		        title: {
+		            text: 'ร้อยละ'
+		        },
+		    },
+		    legend: {
+		        enabled: true,
+		    },
+				tooltip: {
+					formatter: function() {
+					    // If you want to see what is available in the formatter, you can
+					    // examine the `this` variable.
+					    //     console.log(this);
+					    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
+					}
+				},
+		    plotOptions: {
+		        series: {
+		            pointPadding: 0.2,
+		            borderWidth: 0,
+		            dataLabels: {
+		                enabled: true,
+										format: '{point.name}: <b>{point.y}%</b>'
+		            }
+		        },
+		        pie: {
+		            plotBorderWidth: 0,
+		            allowPointSelect: true,
+		            cursor: 'pointer',
+		            size: '100%',
+		            dataLabels: {
+		                enabled: true,
+		                format: '{point.name}: <b>{point.y}%</b>'
+		            }
+		        }
+		    },
+		     series: [{
+		          name: 'โรค',
+		          colorByPoint: true,
+		          data: [{
+		              name: 'หวัด',
+		              y: <?=convert_2_percent($disease->disease_1,$disease_total)?>
+		          }, {
+		              name: 'มือ เท้า ปาก',
+		              y: <?=convert_2_percent($disease->disease_2,$disease_total)?>
+		          }, {
+		              name: 'อุจจาระร่วง',
+		              y: <?=convert_2_percent($disease->disease_3,$disease_total)?>
+		          }, {
+		              name: 'ไข้',
+		              y: <?=convert_2_percent($disease->disease_4,$disease_total)?>
+		          }, {
+		              name: 'ไข้ออกผื่น',
+		              y: <?=convert_2_percent($disease->disease_5,$disease_total)?>
+		          }, {
+		              name: 'อื่นๆ',
+		              y: <?=convert_2_percent($disease->disease_6,$disease_total)?>
+		          }]
+		      }],
+		};
+
+		// Column chart
+		// options.chart.renderTo = 'container';
+		// options.chart.type = 'column';
+		// var chart1 = new Highcharts.Chart(options);
+
+
+		$('.renderChartArea3').hide();
+
+		chartfunc3 = function()
+		{
+		var column = document.getElementById('column3');
+		var bar = document.getElementById('bar3');
+		var pie = document.getElementById('pie3');
+		var line = document.getElementById('line3');
+		var close = document.getElementById('close3');
+
+
+		if(column.checked)
+		    {
+						$('.renderChartArea3').show();
+		        options3.chart.renderTo = 'container3';
+		        options3.chart.type = 'column';
+		        var chart3 = new Highcharts.Chart(options3);
+		    }
+		else if(bar.checked)
+		    {
+						$('.renderChartArea3').show();
+		        options3.chart.renderTo = 'container3';
+		        options3.chart.type = 'bar';
+		        var chart3 = new Highcharts.Chart(options3);
+		    }
+		else if(pie.checked)
+		    {
+						$('.renderChartArea3').show();
+		        options3.chart.renderTo = 'container3';
+		        options3.chart.type = 'pie';
+		        var chart3 = new Highcharts.Chart(options3);
+		    }
+		else if(close.checked)
+		    {
+						$('.renderChartArea3').hide();
+		    }
+		else
+		    {
+						$('.renderChartArea3').show();
+		        options3.chart.renderTo = 'container3';
+		        options3.chart.type = 'line';
+		        var chart3 = new Highcharts.Chart(options3);
+		    }
+
+		}
+		});
+		</script>
+		<td colspan="3" class="renderChartArea3">
+				<div id="container3"></div>
+		</td>
 	</tr>
 	<tr>
 		<td>- หวัด</td>
@@ -753,7 +897,140 @@ var randomData = function() {
 		<td><?=convert_2_percent($disease->disease_6,$disease_total)?></td>
 	</tr>
 	<tr class="subheader">
-		<td colspan="3">สถานะเด็กป่วย</td>
+		<td colspan="3">สถานะเด็กป่วย
+			<div style="float:right; display:inline;">
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column4" value="column" onclick= "chartfunc4()"><i class="fa fa-bar-chart"></i></label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar4" value="bar" onclick= "chartfunc4()"><i class="fa fa-bar-chart fa-rotate-90"></i></label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie4" value="pie" onclick= "chartfunc4()"><i class="fa fa-pie-chart"></i></label>
+			<!-- <label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line4" value="line" onclick= "chartfunc4()">Line</label> -->
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close4" value="close" onclick= "chartfunc4()"><i class="fa fa-times"></i></label>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<script type="text/javascript">
+		$(function () {
+		//--------------------------- Create the chart แจกแจงตามสถานะเด็กป่วย --------------------------
+		var options4 = {
+		    chart: {
+		        plotBorderWidth: 0
+		    },
+		    title: {
+		        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามสถานะเด็กป่วย',
+		    },
+		    //
+		    // subtitle: {
+		    //  text: 'Subtitle'
+		    // },
+		    //
+		    xAxis: {
+					type: 'category',
+		    },
+		    yAxis: {
+		        title: {
+		            text: 'ร้อยละ'
+		        },
+		    },
+		    legend: {
+		        enabled: true,
+		    },
+				tooltip: {
+					formatter: function() {
+					    // If you want to see what is available in the formatter, you can
+					    // examine the `this` variable.
+					    //     console.log(this);
+					    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
+					}
+				},
+		    plotOptions: {
+		        series: {
+		            pointPadding: 0.2,
+		            borderWidth: 0,
+		            dataLabels: {
+		                enabled: true,
+										format: '{point.name}: <b>{point.y}%</b>'
+		            }
+		        },
+		        pie: {
+		            plotBorderWidth: 0,
+		            allowPointSelect: true,
+		            cursor: 'pointer',
+		            size: '100%',
+		            dataLabels: {
+		                enabled: true,
+		                format: '{point.name}: <b>{point.y}%</b>'
+		            }
+		        }
+		    },
+		     series: [{
+		          name: 'สถานะเด็กป่วย',
+		          colorByPoint: true,
+		          data: [{
+		              name: 'มาเรียน',
+		              y: <?=convert_2_percent($sick_status->sick_status_1,$sick_status_total)?>
+		          }, {
+		              name: 'หยุดเรียน',
+		              y: <?=convert_2_percent($sick_status->sick_status_2,$sick_status_total)?>
+		          }]
+		      }],
+		};
+
+		// Column chart
+		// options.chart.renderTo = 'container';
+		// options.chart.type = 'column';
+		// var chart1 = new Highcharts.Chart(options);
+
+
+		$('.renderChartArea4').hide();
+
+		chartfunc4 = function()
+		{
+		var column = document.getElementById('column4');
+		var bar = document.getElementById('bar4');
+		var pie = document.getElementById('pie4');
+		var line = document.getElementById('line4');
+		var close = document.getElementById('close4');
+
+
+		if(column.checked)
+		    {
+						$('.renderChartArea4').show();
+		        options4.chart.renderTo = 'container4';
+		        options4.chart.type = 'column';
+		        var chart4 = new Highcharts.Chart(options4);
+		    }
+		else if(bar.checked)
+		    {
+						$('.renderChartArea4').show();
+		        options4.chart.renderTo = 'container4';
+		        options4.chart.type = 'bar';
+		        var chart4 = new Highcharts.Chart(options4);
+		    }
+		else if(pie.checked)
+		    {
+						$('.renderChartArea4').show();
+		        options4.chart.renderTo = 'container4';
+		        options4.chart.type = 'pie';
+		        var chart4 = new Highcharts.Chart(options4);
+		    }
+		else if(close.checked)
+		    {
+						$('.renderChartArea4').hide();
+		    }
+		else
+		    {
+						$('.renderChartArea4').show();
+		        options4.chart.renderTo = 'container4';
+		        options4.chart.type = 'line';
+		        var chart4 = new Highcharts.Chart(options4);
+		    }
+
+		}
+		});
+		</script>
+		<td colspan="3" class="renderChartArea4">
+				<div id="container4"></div>
+		</td>
 	</tr>
 	<tr>
 		<td>- มาเรียน</td>
@@ -766,7 +1043,143 @@ var randomData = function() {
 		<td><?=convert_2_percent($sick_status->sick_status_2,$sick_status_total)?></td>
 	</tr>
 	<tr class="subheader">
-		<td colspan="3">การแยกเด็กป่วย</td>
+		<td colspan="3">การแยกเด็กป่วย
+			<div style="float:right; display:inline;">
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column5" value="column" onclick= "chartfunc5()"><i class="fa fa-bar-chart"></i></label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar5" value="bar" onclick= "chartfunc5()"><i class="fa fa-bar-chart fa-rotate-90"></i></label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie5" value="pie" onclick= "chartfunc5()"><i class="fa fa-pie-chart"></i></label>
+			<!-- <label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line5" value="line" onclick= "chartfunc5()">Line</label> -->
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close5" value="close" onclick= "chartfunc5()"><i class="fa fa-times"></i></label>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<script type="text/javascript">
+		$(function () {
+		//--------------------------- Create the chart แจกแจงตามการแยกเด็กป่วย --------------------------
+		var options5 = {
+		    chart: {
+		        plotBorderWidth: 0
+		    },
+		    title: {
+		        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามการแยกเด็กป่วย',
+		    },
+		    //
+		    // subtitle: {
+		    //  text: 'Subtitle'
+		    // },
+		    //
+		    xAxis: {
+					type: 'category',
+		    },
+		    yAxis: {
+		        title: {
+		            text: 'ร้อยละ'
+		        },
+		    },
+		    legend: {
+		        enabled: true,
+		    },
+				tooltip: {
+					formatter: function() {
+					    // If you want to see what is available in the formatter, you can
+					    // examine the `this` variable.
+					    //     console.log(this);
+					    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
+					}
+				},
+		    plotOptions: {
+		        series: {
+		            pointPadding: 0.2,
+		            borderWidth: 0,
+		            dataLabels: {
+		                enabled: true,
+										format: '{point.name}: <b>{point.y}%</b>'
+		            }
+		        },
+		        pie: {
+		            plotBorderWidth: 0,
+		            allowPointSelect: true,
+		            cursor: 'pointer',
+		            size: '100%',
+		            dataLabels: {
+		                enabled: true,
+		                format: '{point.name}: <b>{point.y}%</b>'
+		            }
+		        }
+		    },
+		     series: [{
+		          name: 'สถานะเด็กป่วย',
+		          colorByPoint: true,
+		          data: [{
+		              name: 'ไม่มีการแยกนอนแยกเล่น',
+		              y: <?=convert_2_percent($separate->separate_1,$separate_total)?>
+		          }, {
+		              name: 'แยกนอน',
+		              y: <?=convert_2_percent($separate->separate_2,$separate_total)?>
+		          }, {
+		              name: 'แยกเล่น',
+		              y: <?=convert_2_percent($separate->separate_3,$separate_total)?>
+		          }]
+		      }],
+		};
+
+		// Column chart
+		// options.chart.renderTo = 'container';
+		// options.chart.type = 'column';
+		// var chart1 = new Highcharts.Chart(options);
+
+
+		$('.renderChartArea5').hide();
+
+		chartfunc5 = function()
+		{
+		var column = document.getElementById('column5');
+		var bar = document.getElementById('bar5');
+		var pie = document.getElementById('pie5');
+		var line = document.getElementById('line5');
+		var close = document.getElementById('close5');
+
+
+		if(column.checked)
+		    {
+						$('.renderChartArea5').show();
+		        options5.chart.renderTo = 'container5';
+		        options5.chart.type = 'column';
+		        var chart5 = new Highcharts.Chart(options5);
+		    }
+		else if(bar.checked)
+		    {
+						$('.renderChartArea5').show();
+		        options5.chart.renderTo = 'container5';
+		        options5.chart.type = 'bar';
+		        var chart5 = new Highcharts.Chart(options5);
+		    }
+		else if(pie.checked)
+		    {
+						$('.renderChartArea5').show();
+		        options5.chart.renderTo = 'container5';
+		        options5.chart.type = 'pie';
+		        var chart5 = new Highcharts.Chart(options5);
+		    }
+		else if(close.checked)
+		    {
+						$('.renderChartArea5').hide();
+		    }
+		else
+		    {
+						$('.renderChartArea5').show();
+		        options5.chart.renderTo = 'container5';
+		        options5.chart.type = 'line';
+		        var chart5 = new Highcharts.Chart(options5);
+		    }
+
+		}
+		});
+		</script>
+		<td colspan="3" class="renderChartArea5">
+				<div id="container5"></div>
+		</td>
 	</tr>
 	<tr>
 		<td>- ไม่มีการแยกนอนแยกเล่น</td>
@@ -784,7 +1197,139 @@ var randomData = function() {
 		<td><?=convert_2_percent($separate->separate_3,$separate_total)?></td>
 	</tr>
 	<tr class="subheader">
-		<td colspan="3">กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน</td>
+		<td colspan="3">กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน
+			<div style="float:right; display:inline;">
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column6" value="column" onclick= "chartfunc6()"><i class="fa fa-bar-chart"></i></label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar6" value="bar" onclick= "chartfunc6()"><i class="fa fa-bar-chart fa-rotate-90"></i></label>
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie6" value="pie" onclick= "chartfunc6()"><i class="fa fa-pie-chart"></i></label>
+			<!-- <label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line6" value="line" onclick= "chartfunc6()">Line</label> -->
+			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close6" value="close" onclick= "chartfunc6()"><i class="fa fa-times"></i></label>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<script type="text/javascript">
+		$(function () {
+		//--------------------------- Create the chart แจกแจงตามกรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน --------------------------
+		var options6 = {
+		    chart: {
+		        plotBorderWidth: 0
+		    },
+		    title: {
+		        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามกรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน',
+		    },
+		    //
+		    // subtitle: {
+		    //  text: 'Subtitle'
+		    // },
+		    //
+		    xAxis: {
+					type: 'category',
+		    },
+		    yAxis: {
+		        title: {
+		            text: 'ร้อยละ'
+		        },
+		    },
+		    legend: {
+		        enabled: true,
+		    },
+				tooltip: {
+					formatter: function() {
+					    // If you want to see what is available in the formatter, you can
+					    // examine the `this` variable.
+					    //     console.log(this);
+					    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
+					}
+				},
+		    plotOptions: {
+		        series: {
+		            pointPadding: 0.2,
+		            borderWidth: 0,
+		            dataLabels: {
+		                enabled: true,
+										format: '{point.name}: <b>{point.y}%</b>'
+		            }
+		        },
+		        pie: {
+		            plotBorderWidth: 0,
+		            allowPointSelect: true,
+		            cursor: 'pointer',
+		            size: '100%',
+		            dataLabels: {
+		                enabled: true,
+		                format: '{point.name}: <b>{point.y}%</b>'
+		            }
+		        }
+		    },
+		     series: [{
+		          name: 'กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน',
+		          colorByPoint: true,
+		          data: [{
+		              name: 'มี',
+		              y: <?=convert_2_percent($same->same_1,$same_total)?>
+		          }, {
+		              name: 'ไม่มี',
+		              y: <?=convert_2_percent($same->same_2,$same_total)?>
+		          }]
+		      }],
+		};
+
+		// Column chart
+		// options.chart.renderTo = 'container';
+		// options.chart.type = 'column';
+		// var chart1 = new Highcharts.Chart(options);
+
+
+		$('.renderChartArea6').hide();
+
+		chartfunc6 = function()
+		{
+		var column = document.getElementById('column6');
+		var bar = document.getElementById('bar6');
+		var pie = document.getElementById('pie6');
+		var line = document.getElementById('line6');
+		var close = document.getElementById('close6');
+
+
+		if(column.checked)
+		    {
+						$('.renderChartArea6').show();
+		        options6.chart.renderTo = 'container6';
+		        options6.chart.type = 'column';
+		        var chart6 = new Highcharts.Chart(options6);
+		    }
+		else if(bar.checked)
+		    {
+						$('.renderChartArea6').show();
+		        options6.chart.renderTo = 'container6';
+		        options6.chart.type = 'bar';
+		        var chart6 = new Highcharts.Chart(options6);
+		    }
+		else if(pie.checked)
+		    {
+						$('.renderChartArea6').show();
+		        options6.chart.renderTo = 'container6';
+		        options6.chart.type = 'pie';
+		        var chart6 = new Highcharts.Chart(options6);
+		    }
+		else if(close.checked)
+		    {
+						$('.renderChartArea6').hide();
+		    }
+		else
+		    {
+						$('.renderChartArea6').show();
+		        options6.chart.renderTo = 'container6';
+		        options6.chart.type = 'line';
+		        var chart5 = new Highcharts.Chart(options6);
+		    }
+		}
+		});
+		</script>
+		<td colspan="3" class="renderChartArea6">
+				<div id="container6"></div>
+		</td>
 	</tr>
 	<tr>
 		<td>- มี</td>
