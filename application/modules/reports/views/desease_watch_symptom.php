@@ -1,8 +1,8 @@
 <style type="text/css">
 #search_report>div{
-	padding-top:10px;
-	padding-bottom:10px;
-}	
+    padding-top:10px;
+    padding-bottom:10px;
+}   
 
 #datatable{
   /*table-layout: fixed;*/ 
@@ -16,33 +16,33 @@
 #datatable th {
   position:absolute;
   *position: relative; /*ie7*/
-	left: 0;
-	width: 172px;
-	border-right: 1px solid #ccc;
-	margin-top: 0px;
-	font-weight: normal;
-	padding: 10px;
-	font-weight:normal;
-	}
-	.outer {
-		position: relative
-	}
-	.inner {
-		overflow-x: scroll;
-		overflow-y: visible;
-		width:752px;
-		margin-left: 192px;
-	}
-	.th_datatable {
-		background: #0088CC !important;
-		color: #FFFFFF;
-		text-align:center !important;
-	}
+    left: 0;
+    width: 172px;
+    border-right: 1px solid #ccc;
+    margin-top: 0px;
+    font-weight: normal;
+    padding: 10px;
+    font-weight:normal;
+    }
+    .outer {
+        position: relative
+    }
+    .inner {
+        overflow-x: scroll;
+        overflow-y: visible;
+        width:752px;
+        margin-left: 192px;
+    }
+    .th_datatable {
+        background: #0088CC !important;
+        color: #FFFFFF;
+        text-align:center !important;
+    }
 #datatable>thead>tr>td{
-	/*width:650px !important;*/
+    /*width:650px !important;*/
 }
 #datatable td{
-	text-align:right;
+    text-align:right;
 }
 tr.year_total>th{
     background:#d9ffbf !important;
@@ -76,8 +76,8 @@ tr.desease_total>td{
     background:#f4f4f4 !important;
 }
 tbody>tr>th{
-	background:#ffffff !important;
-	color:#000000 !important;
+    background:#ffffff !important;
+    color:#000000 !important;
 }
 
 </style>
@@ -120,17 +120,17 @@ jQuery_1_4_2("input.datepicker").date_input();
         -->
     </div>
        
-	<div>
-		<span>สคร.</span>		
-		<?php echo form_dropdown('area_id',get_option('id','area_name','areas',' order by id '),@$_GET['area_id'],'id="area" class="span2"','--แสดงทั้งหมด--');?>
-	</div>
-	
-	<div>
-		<span>จังหวัด</span>
-		<span id="province">
-		<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
-		</span>
-		<span>อำเภอ</span>
+    <div>
+        <span>สคร.</span>       
+        <?php echo form_dropdown('area_id',get_option('id','area_name','areas',' order by id '),@$_GET['area_id'],'id="area" class="span2"','--แสดงทั้งหมด--');?>
+    </div>
+    
+    <div>
+        <span>จังหวัด</span>
+        <span id="province">
+        <?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
+        </span>
+        <span>อำเภอ</span>
         <span id="amphur">
         <?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
         </span>
@@ -138,66 +138,66 @@ jQuery_1_4_2("input.datepicker").date_input();
         <span id="district">
         <?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
         </span>
-	</div>
-	
-	<div>
-		<span>ช่วงเวลาการแสดงผล</span>
-		<span id="range_type">
-			<select name="range_type">
-				<option value="">--ไม่ระบุ--</option>
-				<option value="year" <?php echo $selected = @$_GET['range_type']=='year' ?  'selected="selected"':'';?>>ระหว่างปี</option>
-				<option value="month_year" <?php echo $selected = @$_GET['range_type']=='month_year' ?  'selected="selected"':'';?>>รายเดือนของปี</option>
-				<option value="time" <?php echo $selected = @$_GET['range_type']=='time' ?  'selected="selected"':'';?>>ช่วงวันที่</option>
-			</select>
-		</span>
-	</div>
-	<div id="year_range" style="<?php echo $display = @$_GET['range_type']!='year'? 'display:none;' : '';?>">
-		<span>ช่วงเวลาที่เกิดโรค ระหว่างปี</span>
-		ปีที่เริ่ม 
-		<select name="report_start_year">
-			<option value="">--ระบุปีที่เริ่ม--</option>
-			<?php
-				$sql_year = " SELECT
-								DISTINCT YEAR (start_date)report_year
-							FROM
-								disease_watch						 
-						 order by report_year desc
-						";
-				$report_year_list = $this->db->query($sql_year)->result();
-				foreach($report_year_list as $row):
-			?>
-			<option value="<?php echo $row->report_year;?>" <?php echo $selected = @$_GET['report_start_year']==$row->report_year ?  'selected="selected"':'';?>><?php echo $row->report_year + 543;?></option>
-			<?php endforeach;?>
-		</select>
-		ปีที่สิ้นสุด 
-		<select name="report_end_year">
-			<option value="">--ระบุปีที่สิ้นสุด--</option>
-			<?php
-				$report_year_list = $this->db->query($sql_year)->result();
-				foreach($report_year_list as $row):
-			?>
-			<option value="<?php echo $row->report_year;?>" <?php echo $selected = @$_GET['report_end_year']==$row->report_year ?  'selected="selected"':'';?>><?php echo $row->report_year + 543;?></option>
-			<?php endforeach;?>
-		</select>
-	</div>
-	<div id="month_year_range" style="<?php echo $display = @$_GET['range_type']!='month_year'? 'display:none;' : '';?>">
-		<span>ช่วงเวลาที่เกิดโรค รายเดือนของ</span>
-		<select name="report_month_year">
-			<option value="">แต่ล่ะเดือนของทุกปี</option>
-			<?php
-				$report_year_list = $this->db->query($sql_year)->result();
-				foreach($report_year_list as $row):
-			?>
-			<option value="<?php echo $row->report_year;?>" <?php echo $selected = @$_GET['report_month_year']==$row->report_year ?  'selected="selected"':'';?>><?php echo $row->report_year + 543;?></option>
-			<?php endforeach;?>
-		</select>
-	</div>
-	<div id="time_range" style="<?php echo $display = @$_GET['range_type']!='time'? 'display:none;' : '';?>">
-		<span>ช่วงเวลาที่เกิดโรค</span>
-		วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
-		วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
-	</div>
-	<input class="btn btn-primary" type="submit" value=" แสดง " style="margin-bottom: 10px;">
+    </div>
+    
+    <div>
+        <span>ช่วงเวลาการแสดงผล</span>
+        <span id="range_type">
+            <select name="range_type">
+                <option value="">--ไม่ระบุ--</option>
+                <option value="year" <?php echo $selected = @$_GET['range_type']=='year' ?  'selected="selected"':'';?>>ระหว่างปี</option>
+                <option value="month_year" <?php echo $selected = @$_GET['range_type']=='month_year' ?  'selected="selected"':'';?>>รายเดือนของปี</option>
+                <option value="time" <?php echo $selected = @$_GET['range_type']=='time' ?  'selected="selected"':'';?>>ช่วงวันที่</option>
+            </select>
+        </span>
+    </div>
+    <div id="year_range" style="<?php echo $display = @$_GET['range_type']!='year'? 'display:none;' : '';?>">
+        <span>ช่วงเวลาที่เกิดโรค ระหว่างปี</span>
+        ปีที่เริ่ม 
+        <select name="report_start_year">
+            <option value="">--ระบุปีที่เริ่ม--</option>
+            <?php
+                $sql_year = " SELECT
+                                DISTINCT YEAR (start_date)report_year
+                            FROM
+                                disease_watch                        
+                         order by report_year desc
+                        ";
+                $report_year_list = $this->db->query($sql_year)->result();
+                foreach($report_year_list as $row):
+            ?>
+            <option value="<?php echo $row->report_year;?>" <?php echo $selected = @$_GET['report_start_year']==$row->report_year ?  'selected="selected"':'';?>><?php echo $row->report_year + 543;?></option>
+            <?php endforeach;?>
+        </select>
+        ปีที่สิ้นสุด 
+        <select name="report_end_year">
+            <option value="">--ระบุปีที่สิ้นสุด--</option>
+            <?php
+                $report_year_list = $this->db->query($sql_year)->result();
+                foreach($report_year_list as $row):
+            ?>
+            <option value="<?php echo $row->report_year;?>" <?php echo $selected = @$_GET['report_end_year']==$row->report_year ?  'selected="selected"':'';?>><?php echo $row->report_year + 543;?></option>
+            <?php endforeach;?>
+        </select>
+    </div>
+    <div id="month_year_range" style="<?php echo $display = @$_GET['range_type']!='month_year'? 'display:none;' : '';?>">
+        <span>ช่วงเวลาที่เกิดโรค รายเดือนของ</span>
+        <select name="report_month_year">
+            <option value="">แต่ล่ะเดือนของทุกปี</option>
+            <?php
+                $report_year_list = $this->db->query($sql_year)->result();
+                foreach($report_year_list as $row):
+            ?>
+            <option value="<?php echo $row->report_year;?>" <?php echo $selected = @$_GET['report_month_year']==$row->report_year ?  'selected="selected"':'';?>><?php echo $row->report_year + 543;?></option>
+            <?php endforeach;?>
+        </select>
+    </div>
+    <div id="time_range" style="<?php echo $display = @$_GET['range_type']!='time'? 'display:none;' : '';?>">
+        <span>ช่วงเวลาที่เกิดโรค</span>
+        วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
+        วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
+    </div>
+    <input class="btn btn-primary" type="submit" value=" แสดง " style="margin-bottom: 10px;">
 </div>
 <div id="report_header" style="text-align:center;padding:30px;">
     <h4>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>
@@ -256,73 +256,72 @@ jQuery_1_4_2("input.datepicker").date_input();
 <?php
     switch(@$_GET['range_type']){
         case 'year':
-            echo Modules::run("reports/desease_watch_number_table_year");
+            echo Modules::run("reports/desease_watch_symptom_table_year");
         break;
         case 'month_year':
-            echo Modules::run("reports/desease_watch_number_table_month_year");
+            echo Modules::run("reports/desease_watch_symptom_table_month_year");
         break;
         case 'time':
-            echo Modules::run("reports/desease_watch_number_table_time");
+            echo Modules::run("reports/desease_watch_symptom_table_time");
         break;
         default:
-            echo Modules::run("reports/desease_watch_number_table_default");
+            echo Modules::run("reports/desease_watch_symptom_table_default");
         break;
-    }
-    echo Modules::run("reports/desease_watch_number_symptom");
+    }    
 ?>
 <script>
 $(document).ready(function() {
-	$("select[name='area_id']").live("change",function(){
-  		$.post('ajax/get_province',{
-  				'area_id' : $(this).val()
-  			},function(data){
-  				$("#province").html(data);
-  			});
-  		
-  		$.post('ajax/get_amphur',{
-  				'province_id' : ''
-  			},function(data){
-  				$("#amphur").html(data);
-  			});
-  		
-  		$.post('ajax/get_district',{
-  				'amphur_id' : ''
-  			},function(data){
-  				$("#district").html(data);
-  			});
-  	});
-  	$("select[name='province_id']").live("change",function(){
-  		$.post('ajax/get_amphur',{
-  				'province_id' : $(this).val()
-  			},function(data){
-  				$("#amphur").html(data);
-  			});
-  	});
+    $("select[name='area_id']").live("change",function(){
+        $.post('ajax/get_province',{
+                'area_id' : $(this).val()
+            },function(data){
+                $("#province").html(data);
+            });
+        
+        $.post('ajax/get_amphur',{
+                'province_id' : ''
+            },function(data){
+                $("#amphur").html(data);
+            });
+        
+        $.post('ajax/get_district',{
+                'amphur_id' : ''
+            },function(data){
+                $("#district").html(data);
+            });
+    });
+    $("select[name='province_id']").live("change",function(){
+        $.post('ajax/get_amphur',{
+                'province_id' : $(this).val()
+            },function(data){
+                $("#amphur").html(data);
+            });
+    });
 
-  	$("select[name='amphur_id']").live("change",function(){
-  		$.post('ajax/get_district',{
-  				'amphur_id' : $(this).val()
-  			},function(data){
-  				$("#district").html(data);
-  			});
-  	});
-  	
-  	$("select[name=range_type]").live("change",function(){
-  		var range_type = $(this).val();
-  		$("#year_range").hide();
-  		$("#month_year_range").hide();
-  		$("#time_range").hide();
-  		switch(range_type){
-  		    case 'year':
-  		        $("#year_range").show();
-  		    break;
-  		    case 'month_year':
+    $("select[name='amphur_id']").live("change",function(){
+        $.post('ajax/get_district',{
+                'amphur_id' : $(this).val()
+            },function(data){
+                $("#district").html(data);
+            });
+    });
+    
+    $("select[name=range_type]").live("change",function(){
+        var range_type = $(this).val();
+        $("#year_range").hide();
+        $("#month_year_range").hide();
+        $("#time_range").hide();
+        switch(range_type){
+            case 'year':
+                $("#year_range").show();
+            break;
+            case 'month_year':
                 $("#month_year_range").show();
             break;
             case 'time':
                 $("#time_range").show();
             break;
-  		}
-  	});
+        }
+    });
 });
 </script>

@@ -147,4 +147,92 @@ function get_elearning_pass_count(){
     $result = $CI -> db -> query($sql)->result();
     return @$result[0]->nresult;  
 }   
+
+function report_desease_watch_report_column($value){
+    echo $result = @$value[0]->n_event > 0 ? '<td>&nbsp;'.number_format($value[0]->n_event,0).'</td>' : '<td>&nbsp;</td>';
+    echo $result = @$value[0]->n_event_school > 0 ? '<td>&nbsp;'.number_format($value[0]->n_event_school,0).'</td>' : '<td>&nbsp;</td>';
+    echo $result = @$value[0]->n_event_community > 0 ? '<td>&nbsp;'.number_format($value[0]->n_event_community,0).'</td>' : '<td>&nbsp;</td>';
+    echo $result = @$value[0]->total_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->total_amount,0).'</td>' : '<td>&nbsp;</td>';
+    echo $result = @$value[0]->total_amount_school > 0 ? '<td>&nbsp;'.number_format($value[0]->total_amount_school,0).'</td>' : '<td>&nbsp;</td>';
+    echo $result = @$value[0]->total_amount_community > 0 ? '<td>&nbsp;'.number_format($value[0]->total_amount_community,0).'</td>' : '<td>&nbsp;</td>';
+    echo $result = @$value[0]->boy_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->boy_amount,0).'</td>' : '<td>&nbsp;</td>';
+    echo $result = @$value[0]->boy_amount_school > 0 ? '<td>&nbsp;'.number_format($value[0]->boy_amount_school,0).'</td>' : '<td>&nbsp;</td>';
+    echo $result = @$value[0]->boy_amount_community > 0 ? '<td>&nbsp;'.number_format($value[0]->boy_amount_community,0).'</td>' : '<td>&nbsp;</td>';
+    echo $result = @$value[0]->girl_amount > 0 ? '<td>&nbsp;'.number_format($value[0]->girl_amount,0).'</td>' : '<td>&nbsp;</td>';
+    echo $result = @$value[0]->girl_amount_school > 0 ? '<td>&nbsp;'.number_format($value[0]->girl_amount_school,0).'</td>' : '<td>&nbsp;</td>';
+    echo $result = @$value[0]->girl_amount_community > 0 ? '<td>&nbsp;'.number_format($value[0]->girl_amount_community,0).'</td>' : '<td>&nbsp;</td>';
+}
+
+function get_desease_watch_sql($condition){
+                        $sql = " SELECT
+                        disease,                        
+                        COUNT(disease_watch.id)n_event,
+                        (
+                            SELECT count(*) FROM
+                                disease_watch
+                            LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
+                            WHERE 1=1 AND place_type = 1 ".$condition."
+                        )n_event_school,
+                        (
+                            SELECT count(*) FROM
+                                disease_watch
+                            LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
+                            WHERE 1=1 AND place_type = 2 ".$condition."
+                        )n_event_community,
+                        SUM(total_amount)total_amount,
+                        (
+                            SELECT SUM(total_amount) FROM
+                                disease_watch
+                            LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
+                            WHERE 1=1 AND place_type = 1 ".$condition."
+                        )total_amount_school,
+                        (
+                            SELECT SUM(total_amount) FROM
+                                disease_watch
+                            LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
+                            WHERE 1=1 AND place_type = 2 ".$condition."
+                        )total_amount_community,
+                        SUM(boy_amount)boy_amount,
+                        (
+                            SELECT SUM(boy_amount) FROM
+                                disease_watch
+                            LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
+                            WHERE 1=1 AND place_type = 1 ".$condition."
+                        )boy_amount_school,
+                        (
+                            SELECT SUM(boy_amount) FROM
+                                disease_watch
+                            LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
+                            WHERE 1=1 AND place_type = 2 ".$condition."
+                        )boy_amount_community,
+                        SUM(girl_amount)girl_amount,
+                        (
+                            SELECT SUM(girl_amount) FROM
+                                disease_watch
+                            LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
+                            WHERE 1=1 AND place_type = 1 ".$condition."
+                        )girl_amount_school,
+                        (
+                            SELECT SUM(girl_amount) FROM
+                                disease_watch
+                            LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
+                            WHERE 1=1 AND place_type = 2 ".$condition."
+                        )girl_amount_community
+                    FROM
+                        disease_watch
+                        LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
+                    WHERE
+                        1=1 ".$condition;     
+                    return $sql;
+}
+
+function report_desease_watch_symptom_report_column($sql){
+        $CI = &get_instance();
+        $all = $CI->db->query($sql.' and place_type = 1 ')->result();
+        $school = $CI->db->query($sql.' and place_type = 1 ')->result();
+        $community = $CI->db->query($sql.' and place_type = 2 ')->result();
+        echo $column =$all[0]->n_symptom > 0 ?'<td style="width:100px;">'.$all[0]->n_symptom.'</td>' : '<td style="width:100px;">&nbsp;</td>';
+        echo $column =$school[0]->n_symptom > 0 ?'<td style="width:100px;">'.$school[0]->n_symptom.'</td>' : '<td style="width:100px;">&nbsp;</td>';
+        echo $column =$community[0]->n_symptom > 0 ?'<td style="width:100px;">'.$community[0]->n_symptom.'</td>' : '<td style="width:100px;">&nbsp;</td>';
+}
 ?>

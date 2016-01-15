@@ -57,5 +57,15 @@ class Reports extends Public_Controller {
         $data = '';
         $this->load->view('desease_watch_number_table_default',$data);
     }    
+    
+    function desease_watch_symptom(){
+        $data = '';
+        $this->template->build('desease_watch_symptom',$data);
+    }
+    
+    function desease_watch_symptom_table_default(){
+        $data = '';
+        $this->load->view('desease_watch_symptom_table_default',$data);
+    }   
 }
 ?>
