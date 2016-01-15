@@ -141,7 +141,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 <script type="text/javascript">
 $(document).ready(function(){
 $('#submitform').click(function(){
-	var children_id = $('input[name=classroom_detail_id]').val();
+	var children_id = $('input[name=classroom_children_id]').val();
 	var day = $('input[name=day]').val();
 	
 	$.get('diseases/save_disease?'+$('#diseaseform').serialize(),function(data){

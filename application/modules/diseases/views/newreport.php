@@ -287,6 +287,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	<!-- <input type="hidden" name="nursery_id" value="<?=$_GET['nursery_id']?>"> -->
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 </div>
+</form>
 
 <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
