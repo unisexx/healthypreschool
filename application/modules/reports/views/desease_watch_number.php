@@ -108,12 +108,14 @@ jQuery_1_4_2("input.datepicker").date_input();
     <div>
         <span>โรค</span>                         
         <?php echo form_dropdown('disease', get_option('id', 'desease_name', 'desease_watch_names', ' order by id '), @$_GET['disease'], '', '--แสดงทั้งหมด--');?>
+        <!--
         <span>พื้นที่ที่เกิดโรค</span>                         
         <select name="place_type" class="form-control">
                 <option value="">-- ทั้งหมด --</option>
                 <option value="2" <?php echo $selected = @$_GET['place_type'] == 2 ? 'selected="selected"' : '';?>>พื้นที่ชุมชน</option>
                 <option value="1" <?php echo $selected = @$_GET['place_type'] == 1 ? 'selected="selected"' : '';?>>ศูนย์เด็กเล็ก/โรงเรียนอนุบาล</option>
         </select>
+        -->
         <!--
         <span>ช่วงอายุ</span>                         
         <?php echo form_dropdown('age_range',get_option('age_range_param','age_range','v_disease_watch_age_range'),@$_GET['age_range'],'','--แสดงทั้งหมด--');?>
