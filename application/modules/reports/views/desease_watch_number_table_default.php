@@ -56,6 +56,7 @@
                     echo '<td colspan="12"  class="th_datatable" >'.$district_row->district_name.'</td>';
                 endforeach;
             }else if(@$_GET['district_id']!=''){
+                $xAxis .= $xAxis == '' ? "'พื้นที่ชุมชุน'" : ",'พื้นที่ชุมชุน'";
                 foreach($nursery as $nursery_row):
                     $xAxis .= $xAxis == '' ? "'".$nursery_row->name."'" : ",'".$nursery_row->name."'";
                     echo '<td colspan="12"  class="th_datatable" >'.$nursery_row->name.'</td>';
@@ -148,10 +149,10 @@
             foreach($desease as $desease_row): 
             $series_idx++;                    
             $condition = " AND disease = ".$desease_row->id;
-            $condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND v_nurseries.area_id = ".$_GET['area_id'] : '';
-            $condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND v_nurseries.province_id = ".@$_GET['province_id'] : '';
-            $condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND v_nurseries.amphur_id = ".@$_GET['amphur_id'] : '';
-            $condition.= @$_GET['district_id']!='' ? " AND v_nurseries.district_id = ".@$_GET['district_id'] : '';
+            $condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
+            $condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND province_id = ".@$_GET['province_id'] : '';
+            $condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND amphur_id = ".@$_GET['amphur_id'] : '';
+            $condition.= @$_GET['district_id']!='' ? " AND district_id = ".@$_GET['district_id'] : '';
             //$condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
             $sql = get_desease_watch_sql($condition);                
             $desease_age = $this->db->query($sql)->result();            
@@ -205,6 +206,13 @@
                         report_desease_watch_report_column($desease_age);
                     endforeach;
                 }else if(@$_GET['district_id']!=''){
+                    
+                    $ex_condition = " AND district_id = ".@$_GET['district_id'];                       
+                    $sql = get_desease_watch_sql($condition.$ex_condition);                     
+                    $desease_age = $this->db->query($sql)->result();
+                    $series[$series_idx]['data'].= @$series[$series_idx]['data'] != '' ? ',' :'';
+                    $series[$series_idx]['data'].= number_format($desease_age[0]->n_event_community,0);
+                    
                     foreach($nursery as $nursery_row):              
                         $ex_condition = " AND nurseries_id = ".@$nursery_row->id;                       
                         $sql = get_desease_watch_sql($condition.$ex_condition);                     
@@ -218,7 +226,6 @@
         </tr>
             <?php
                 $condition = " AND disease = ".$desease_row->id;
-                $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
                 $condition.= @$_GET['area_id'] != '' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
                 $condition.= @$_GET['province_id'] != '' && @$_GET['amphur_id'] == '' ? " AND province_id = ".$_GET['province_id'] : '';
                 $condition.= @$_GET['amphur_id'] != '' && @$_GET['district_id'] == '' ? " AND amphur_id = ".$_GET['amphur_id'] : '';
@@ -229,8 +236,7 @@
                             age_duration_end age_end,
                             CONCAT('อายุ ',age_duration_start, ' ถึง ', age_duration_end) age_range                         
                         FROM
-                            disease_watch
-                            LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
+                            v_disease_watch                            
                         WHERE
                             1=1 ".$condition."
                         group by age_duration_start, age_duration_end
@@ -238,26 +244,12 @@
                         ";
                 $desease_age = $this->db->query($sql)->result();
                 foreach($desease_age as $age):
-                    $condition = " AND disease = ".$desease_row->id." AND age_duration_start = ".$age->age_start." AND age_duration_end = ".$age->age_end;
-                    $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
+                    $condition = " AND disease = ".$desease_row->id." AND age_duration_start = ".$age->age_start." AND age_duration_end = ".$age->age_end;                    
                     $condition.= @$_GET['area_id'] != '' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
                     $condition.= @$_GET['province_id'] != '' && @$_GET['amphur_id'] == '' ? " AND province_id = ".$_GET['province_id'] : '';
                     $condition.= @$_GET['amphur_id'] != '' && @$_GET['district_id'] == '' ? " AND amphur_id = ".$_GET['amphur_id'] : '';
                     $condition.= @$_GET['district_id'] != '' ? " AND district_id = ".$_GET['district_id'] : ''; 
-                    $sql = " SELECT
-                                disease,
-                                age_duration_start age_start,
-                                age_duration_end age_end,
-                                CONCAT('อายุ ',age_duration_start, ' ถึง ', age_duration_end) age_range,
-                                COUNT(disease_watch.id)n_event,
-                                SUM(total_amount)total_amount,
-                                SUM(boy_amount)boy_amount,
-                                SUM(girl_amount)girl_amount                         
-                            FROM
-                                disease_watch
-                                LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
-                            WHERE
-                                1=1 ".$condition;
+                    $sql = get_desease_watch_sql($condition);
                     $value = $this->db->query($sql)->result();                          
             ?>
                 <tr class="desease_age_range">
@@ -330,9 +322,16 @@ $(function(){
         },
         yAxis: {
             min: 0,
-            title: {
+            allowDecimals: false,
+            <?php if(@$_GET['disease']==''){?>
+                title: {
                 text: 'สัดส่วนจำนวนของเหตุการณ์'
             },
+            <?php }else{ ?>
+            title: {
+                text: 'จำนวนของเหตุการณ์'
+            },
+            <?php } ?>
             stackLabels: {
                 enabled: true,
                 style: {
@@ -346,13 +345,19 @@ $(function(){
         },
         tooltip: {
             formatter: function () {
+                <?php if(@$_GET['disease']==''){?>
                 return '<b>' + this.x + '</b><br/>' +
-                    this.series.name + ': ' + this.y + ' เหตุการณ์ <br/>' +
-                    ' จากทั้งหมด: ' + this.point.stackTotal+ ' เหตุการณ์ ';
+                    this.series.name + ': ' + this.y + '<br/>' +
+                    'Total: ' + this.point.stackTotal;
+                <?php }else{ ?>
+                return '<b>' + this.x + '</b><br/>' +
+                    this.series.name + ': ' + this.y;
+                <?php } ?>
             }
         },
         plotOptions: {
             column: {
+                <?php if(@$_GET['disease']==''){?>
                 stacking: 'percent',
                 dataLabels: {
                     enabled: true,
@@ -361,6 +366,7 @@ $(function(){
                     },
                     color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black'
                 }
+                <?php } ?>
             }
         },
         series: [
