@@ -24,7 +24,7 @@
 				      <tr>
 				        <td background="themes/hps/images/table_content_left.png">&nbsp;</td>
 				        <td bgcolor="#FFFFFF" class="main_content_blk">
-				        	
+
 				        	<?php if(is_login()):?>
 				        	<?php $current_user = user_login();?>
 				        	<style type="text/css">
@@ -33,9 +33,9 @@
 				        		.minispace{margin-left:10px;}
 				        	</style>
 				        	<div id="memberstatus">
-				        		<b>สวัสดี</b> : <?php echo $current_user->name ?> 
-				        		<b class="tabspace">ประเภท</b> : <?php echo $current_user->user_type->name?> 
-				        		<?php 
+				        		<b>สวัสดี</b> : <?php echo $current_user->name ?>
+				        		<b class="tabspace">ประเภท</b> : <?php echo $current_user->user_type->name?>
+				        		<?php
 				                    if($current_user->user_type_id == 6){ // เจ้าหน้าที่ประจำเขต
 				                        echo $current_user->area->area_name;
 										echo ' (';
@@ -50,10 +50,10 @@
 				                    }elseif($current_user->user_type_id == 8){
 				                        echo $current_user->amphur->amphur_name;
 				                    }elseif($current_user->user_type_id == 9 or $current_user->user_type_id == 10){
-										
+
 				                    	echo '('.$current_user->nursery->name.')';
 										echo '<br><b>สถานะศูนย์เด็กเล็ก : </b>';
-										
+
 										echo '<a href="assessments/preview/'.$current_user->nursery_id.'">';
 										if($current_user->nursery->status == 0){
 							        		if($current_user->nursery->assessment->total != 0){
@@ -71,10 +71,10 @@
 							        		echo '</span>';
 								        }
 										echo '</a>';
-									   
+
 				                    }
 				                ?>
-				                
+
 				            <?php if($current_user->m_status == 'active'):?>
 		                		<?php if($current_user->user_type_id == 1 || $current_user->user_type_id == 6 || $current_user->user_type_id == 7 || $current_user->user_type_id == 8):?>
 		                			<b class="tabspace"><a href="nurseries/register">เมนูหลัก</a></b>
@@ -84,15 +84,15 @@
 			                <?php else:?>
 			                	สถานะ : <span style="color:orangered;">รอการตรวจสอบ</span>
 			                <?php endif;?>
-		                
+
 				                <div style="float: right;">
-				                <a href="users/edit_profile">แก้ไขข้อมูล</a> | 
+				                <a href="users/edit_profile">แก้ไขข้อมูล</a> |
 								<a href="users/logout">logout</a>
 								</div>
 				        	</div>
-				        	
+
 				        	<!------- เมนู ------->
-				        	<style type="text/css">
+				        	<!-- /*<style type="text/css">
 				        	#nav
 							{
 							    list-style: none;
@@ -103,7 +103,7 @@
 							    padding: 4px 4px 4px 4px;
 							    margin-left:0px;
 							}
-							
+
 							#nav li
 							{
 							    float: left;
@@ -120,7 +120,7 @@
 							    border-bottom: #0079C2 2px solid;
 							}
 				        	</style>
-				        	
+
 				        	<?if($current_user->user_type_id == 1 or $current_user->user_type_id == 6 or $current_user->user_type_id == 7): //เจ้าหน้าที่ประจำเขต?>
 				        	<ul id="nav">
 				        		<li><a href="nurseries/register"><img src="themes/hps/images/banner_menu_1.png" alt="ตรวจสอบรายชื่อศูนย์เด็กเล็กปลอดโรค"></a></li>
@@ -135,11 +135,11 @@
 					        	<?elseif($current_user->user_type_id == 7): //ถ้าเป็นเจ้าหน้าที่ประจำจังหวัด ?>
 					        		<li><a href="nurseries/reports/index/basic_column?year=&type=2&area_id=&province_id=<?=$current_user->province_id?>&amphur_id=&district_id="><img src="themes/hps/images/banner_menu_6.png" alt="รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
 					        	<?endif;?>
-					        	
+
 					        	<li><a href="diseases/report_staff"><img src="themes/hps/images/banner_menu_11.png" alt="รายงานแบบคัดกรองโรค"></a></li>
 					        	<li><a href="surveillances/index"><img src="themes/hps/images/report_banner.png" alt="รายงานติดตามการเฝ้าระวังโรค"></a></li>
 					        	<li>
-					        		<a href="pages/view/1">					        			
+					        		<a href="pages/view/1">
 					        			<div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
 					        			<img src="themes/hps/images/elearning.jpg" border="0" style="height:52px;border:0px;"><br>
 						        			<div style="margin-top:-7px;">
@@ -149,7 +149,7 @@
 					        		</a>
 					        	</li>
 					        	<li>
-                                    <a href="desease_watch/index">                                      
+                                    <a href="desease_watch/index">
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
                                         <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
@@ -159,7 +159,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="reports/desease_watch_number">                                      
+                                    <a href="reports/desease_watch_number">
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
                                         <img src="themes/hps/images/desease_event_report.png" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
@@ -178,7 +178,7 @@
 				        		<li><a href="nurseries/reports/index/basic_column?year=&type=3&area_id=&province_id=&amphur_id=<?=$current_user->amphur_id?>&district_id="><img src="themes/hps/images/banner_menu_6.png" alt="รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค"></a></li>
 				        		<li><a href="surveillances/index"><img src="themes/hps/images/report_banner.png" alt="รายงานติดตามการเฝ้าระวังโรค"></a></li>
 				        		<li>
-					        		<a href="pages/view/1">					        			
+					        		<a href="pages/view/1">
 					        			<div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
 					        			<img src="themes/hps/images/elearning.jpg" border="0" style="height:52px;border:0px;"><br>
 						        			<div style="margin-top:-7px;">
@@ -188,7 +188,7 @@
 					        		</a>
 					        	</li>
 					        	<li>
-                                    <a href="desease_watch/index">                                      
+                                    <a href="desease_watch/index">
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
                                         <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
@@ -198,7 +198,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="reports/desease_watch_number">                                      
+                                    <a href="reports/desease_watch_number">
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
                                         <img src="themes/hps/images/desease_event_report.png" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
@@ -218,7 +218,7 @@
 				        		<li><a href="assessments/preview/<?=$current_user->nursery_id?>"><img src="themes/hps/images/banner_menu_12.png" alt="รายงานแบบประเมินเข้าร่วมโครงการ"></a></li>
 				        		<li><a href="surveillances/index"><img src="themes/hps/images/report_banner.png" alt="รายงานติดตามการเฝ้าระวังโรค"></a></li>
 				        		<li>
-					        		<a href="pages/view/1">					        			
+					        		<a href="pages/view/1">
 					        			<div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
 					        			<img src="themes/hps/images/elearning.jpg" border="0" style="height:52px;border:0px;"><br>
 						        			<div style="margin-top:-7px;">
@@ -228,7 +228,7 @@
 					        		</a>
 					        	</li>
 					        	<li>
-                                    <a href="desease_watch/index">                                      
+                                    <a href="desease_watch/index">
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
                                         <img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
@@ -238,7 +238,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="reports/desease_watch_number">                                      
+                                    <a href="reports/desease_watch_number">
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
                                         <img src="themes/hps/images/desease_event_report.png" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
@@ -257,7 +257,7 @@
 				        		<li><a href="assessments/preview/<?=$current_user->nursery_id?>"><img src="themes/hps/images/banner_menu_12.png" alt="รายงานแบบประเมินเข้าร่วมโครงการ"></a></li>
 				        		<li><a href="surveillances/index"><img src="themes/hps/images/report_banner.png" alt="รายงานติดตามการเฝ้าระวังโรค"></a></li>
 				        		<li>
-					        		<a href="pages/view/1">					        			
+					        		<a href="pages/view/1">
 					        			<div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
 					        			<img src="themes/hps/images/elearning.jpg" border="0" style="height:52px;border:0px;"><br>
 						        			<div style="margin-top:-7px;">
@@ -267,7 +267,7 @@
 					        		</a>
 					        	</li>
 					        	<li>
-					        		<a href="desease_watch/index">					        			
+					        		<a href="desease_watch/index">
 					        			<div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
 					        			<img src="themes/hps/images/desease.jpg" border="0" style="height:52px;border:0px;"><br>
 						        			<div style="margin-top:-7px;">
@@ -277,7 +277,7 @@
 					        		</a>
 					        	</li>
 					        	<li>
-                                    <a href="reports/desease_watch_number">                                      
+                                    <a href="reports/desease_watch_number">
                                         <div style="font-size: 15px;font-weight: bold;margin:0 auto;margin-left:30px;text-align:center;">
                                         <img src="themes/hps/images/desease_event_report.png" border="0" style="height:52px;border:0px;"><br>
                                             <div style="margin-top:-7px;">
@@ -287,158 +287,204 @@
                                     </a>
                                 </li>
 				        	</ul>
-				        	<?endif;?>
+				        	<?endif;?>*/ -->
 				        	<!------- จบเมนู ------->
-				        	
-				        	<?endif; //is_login()?>
-				        	<br clear="all">
-				        	
-				        	<!-- test dropdown menu -->
+
+
+				        	<!-- new dropdown menu -->
 				        	<style>
-				        		nav {    
-							    display: block;
-							    text-align: center;
-							  }
-							  nav ul {
-							    margin: 0;
-							    padding:0;
-							    list-style: none;
-							  }
-							  .nav a {
-							    display:block; 
-							    background: #111; 
-							    color:#fff; 
-							    text-decoration: none;
-							    padding: .8em 1.8em;
-							    text-transform: uppercase;
-							    font-size: 80%;letter-spacing: 2px;
-							    text-shadow: 0 -1px 0 #000;
-							    position: relative;
-							  }
-							  .nav{  
-							    vertical-align: top; 
-							    display: inline-block;
-							    box-shadow: 1px -1px -1px 1px #000, -1px 1px -1px 1px #fff, 0 0 6px 3px #fff;
-							    border-radius:6px;
-							  }
-							  .nav li{position: relative;}
-							  .nav > li { 
-							    float:left; 
-							    border-bottom: 4px #aaa solid; 
-							    margin-right: 1px; 
-							  } 
-							  .nav > li > a { 
-							    margin-bottom:1px;
-							    box-shadow:inset 0 2em .33em -.5em #555; 
-							  }
-							  .nav > li:hover , .nav > li:hover >a{  border-bottom-color:orange;}
-							  .nav li:hover > a { color:orange; }
-							  .nav > li:first-child  { border-radius: 4px 0 0 4px;} 
-							  .nav > li:first-child>a{border-radius: 4px 0 0 0;}
-							  .nav > li:last-child  { 
-							  	border-radius: 0 0 4px 0; 
-							  	margin-right: 0;
-							  } 
-							  .nav > li:last-child >a{border-radius: 0 4px 0 0; }
-							  .nav li li a { margin-top:1px}
-							  
-							  
-							  
-							    .nav li a:first-child:nth-last-child(2):before { 
-							     content:""; 
-							     position: absolute; 
-							     height:0; 
-							     width: 0; 
-							     border: 5px solid transparent; 
-							     top: 50% ;
-							     right:5px;  
-							   }
-							   
-							   
-							   
-							   
-							   
-							   /* submenu positioning*/
-							.nav ul {
-							  position: absolute;
-							  white-space: nowrap;
-							  border-bottom: 5px solid  orange;
-							  z-index: 1;
-							  left: -99999em;
-							}
-							.nav > li:hover > ul {
-							  left: auto;
-							  padding-top: 5px  ;
-							  min-width: 100%;
-							}
-							.nav > li li ul {  border-left:1px solid #fff;}
-							
-							
-							.nav > li li:hover > ul { 
-							 /* margin-left: 1px */
-							  left: 100%;
-							  top: -1px;
-							}
-							/* arrow hover styling */
-							.nav > li > a:first-child:nth-last-child(2):before { 
-							  border-top-color: #aaa; 
-							}
-							.nav > li:hover > a:first-child:nth-last-child(2):before {
-							  border: 5px solid transparent; 
-							  border-bottom-color: orange; 
-							  margin-top:-5px
-							}
-							.nav li li > a:first-child:nth-last-child(2):before {  
-							  border-left-color: #aaa; 
-							  margin-top: -5px
-							}
-							.nav li li:hover > a:first-child:nth-last-child(2):before {
-							  border: 5px solid transparent; 
-							  border-right-color: orange;
-							  right: 10px; 
-							}
+									#menubar{margin:15px 0;}
+				        		#menubar nav {
+									    display: block;
+									    text-align: center;
+									  }
+									  #menubar nav ul {
+									    margin: 0;
+									    padding:0;
+									    list-style: none;
+									  }
+									  #menubar .nav a {
+									    display:block;
+									    background: #007DCC;
+									    color:#fff;
+									    text-decoration: none;
+									    padding: .8em 1.8em;
+									    /*text-transform: uppercase;*/
+									    /*font-size: 80%;*/
+											/*letter-spacing: 2px;*/
+									    /*text-shadow: 0 -1px 0 #000;*/
+									    position: relative;
+									  }
+									  #menubar .nav{
+									    vertical-align: top;
+									    display: inline-block;
+									    box-shadow: 1px -1px -1px 1px #000, -1px 1px -1px 1px #fff, 0 0 6px 3px #fff;
+									    border-radius:6px;
+									  }
+									  #menubar .nav li{position: relative;}
+									  #menubar .nav > li {
+									    float:left;
+									    border-bottom: 4px #aaa solid;
+									    margin-right: 1px;
+									  }
+									  #menubar .nav > li > a {
+									    margin-bottom:1px;
+									    /*box-shadow:inset 0 2em .33em -.5em #555;*/
+									  }
+									  #menubar .nav > li:hover , #menubar.nav > li:hover >a{  border-bottom-color:orange; background-color: #004566!important;}
+									  #menubar .nav li:hover > a { color:orange; background-color: #004566!important;}
+									  #menubar .nav > li:first-child  { border-radius: 4px 0 0 4px;}
+									  #menubar .nav > li:first-child>a{border-radius: 4px 0 0 0;}
+									  #menubar .nav > li:last-child  {
+									  	border-radius: 0 0 4px 0;
+									  	margin-right: 0;
+									  }
+									  #menubar .nav > li:last-child >a{border-radius: 0 4px 0 0; }
+									  #menubar .nav li li a { margin-top:1px}
+
+
+
+									    #menubar .nav li a:first-child:nth-last-child(2):before {
+									     content:"";
+									     position: absolute;
+									     height:0;
+									     width: 0;
+									     border: 5px solid transparent;
+									     top: 50% ;
+									     right:5px;
+									   }
+
+									   /* submenu positioning*/
+									#menubar .nav ul {
+									  position: absolute;
+									  white-space: nowrap;
+									  border-bottom: 5px solid  orange;
+									  z-index: 1;
+									  left: -99999em;
+									}
+									#menubar ul.nav li {padding:0 0 2px !important;}
+									#menubar .nav > li:hover > ul {
+									  left: auto;
+									  padding-top: 5px  ;
+									  min-width: 100%;
+									}
+									#menubar .nav > li li ul {  border-left:1px solid #fff;}
+
+
+									#menubar .nav > li li:hover > ul {
+									 /* margin-left: 1px */
+									  left: 100%;
+									  top: -1px;
+									}
+									/* arrow hover styling */
+									#menubar .nav > li > a:first-child:nth-last-child(2):before {
+									  border-top-color: #aaa;
+									}
+									#menubar .nav > li:hover > a:first-child:nth-last-child(2):before {
+									  border: 5px solid transparent;
+									  border-bottom-color: orange;
+									  margin-top:-5px
+									}
+									#menubar .nav li li > a:first-child:nth-last-child(2):before {
+									  border-left-color: #aaa;
+									  margin-top: -5px
+									}
+									#menubar .nav li li:hover > a:first-child:nth-last-child(2):before {
+									  border: 5px solid transparent;
+									  border-right-color: orange;
+									  right: 10px;
+									}
+									#menubar .nav>li>a:hover{background-color: #004566!important;}
 
 				        	</style>
-				        	<nav>
-							  <ul class="nav">
-							    <li><a href="#">About</a></li>
-							    <li><a href="#">Portfolio</a>
-							      <ul>
-							        <li><a href="#">item</a></li>
-							        <li><a href="#">item</a></li>
-							        <li><a href="#">item</a></li>
-							        <li><a href="#">item</a></li>
-							      </ul>
-							    </li>
-							    <li><a href="#">Resume</a>
-							      <ul>
-							        <li><a href="#">item a lonng submenu</a></li>
-							        <li><a href="#">item</a>
-							          <ul>
-							            <li><a href="#">Ray</a></li>
-							            <li><a href="#">Veronica</a></li>
-							            <li><a href="#">Bushy</a></li>
-							            <li><a href="#">Havoc</a></li>
-							          </ul>
-							        </li>
-							        <li><a href="#">item</a></li>
-							        <li><a href="#">item</a></li>
-							      </ul>
-							    </li>
-							    <li><a href="#">Download</a></li>
-							    <li><a href="#">Rants</a>
-							      <ul>
-							        <li><a href="#">item</a></li>
-							        <li><a href="#">item</a></li>
-							        <li><a href="#">item</a></li>
-							        <li><a href="#">item</a></li>
-							      </ul>
-							    </li>
-							    <li><a href="#">Contact</a></li>
-							  </ul>
-							</nav>
-				        	<!-- test dropdown menu -->
-				        	
+									<!------------------------------------------------------
+											$current_user->user_type_id == 1	ผู้ดูแลระบบ
+											$current_user->user_type_id == 6	เจ้าหน้าที่ประจำเขต
+											$current_user->user_type_id == 7	เจ้าหน้าที่ประจำจังหวัด
+											$current_user->user_type_id == 8	เจ้าหน้าที่ประจำอำเภอ
+											$current_user->user_type_id == 9	เจ้าหน้าที่ศูนย์
+											$current_user->user_type_id == 10	เจ้าหน้าที่ครู/ผู้ดูแลเด็ก
+									-------------------------------------------------------->
+								<div id="menubar">
+									<nav>
+								  <ul class="nav">
+										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
+								    <li><a href="#">บริหารจัดการศูนย์เด็กเล็ก</a>
+											<ul>
+												<?if (in_array($current_user->user_type_id, array(1,6,7,8))):?>
+												<li><a href="nurseries/register">ตรวจสอบรายชื่อศูนย์เด็กเล็ก</a></li>
+												<li><a href="nurseries/register_form">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
+												<li><a href="nurseries/estimate?status=0">ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
+												<?endif;?>
+												<?if (in_array($current_user->user_type_id, array(9))):?>
+												<li><a href="teachers?nursery_id=<?=$current_user->nursery_id?>">ตรวจสอบรายชื่อครู / เจ้าหน้าที่</a></li>
+												<?endif;?>
+												<?if (in_array($current_user->user_type_id, array(9,10))):?>
+												<li><a href="classrooms?nursery_id=<?=$current_user->nursery_id?>">ตรวจสอบรายชื่อห้องเรียยน</a></li>
+												<li><a href="childrens?nursery_id=<?=$current_user->nursery_id?>">ตรวจสอบรายชื่อเด็ก / นักเรียน</a></li>
+												<?endif;?>
+											</ul>
+										</li>
+										<?endif;?>
+										<?if (in_array($current_user->user_type_id, array(1,6,7,8))):?>
+										<li><a href="#">เจ้าหน้าที่</a>
+											<ul>
+												<?if (in_array($current_user->user_type_id, array(1,6,7))):?>
+												<li><a href="officers">ตรวจสอบรายชื่อเจ้าหน้าที่สาธารณสุข</a></li>
+												<?endif;?>
+												<?if (in_array($current_user->user_type_id, array(1,6,7,8))):?>
+												<li><a href="staffs">ตรวจสอบรายชื่อเจ้าหน้าที่ศูนย์เด็กเล็กปลอดโรค</a></li>
+												<?endif;?>
+											</ul>
+										</li>
+										<?endif;?>
+										<?if (in_array($current_user->user_type_id, array(9,10))):?>
+								    <li><a href="#">แบบคัดกรองโรค</a>
+								      <ul>
+								        <li><a href="diseases">ตรวจสอบรายการแบบคัดกรองโรค</a></li>
+								      </ul>
+								    </li>
+										<?endif;?>
+										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
+								    <li><a href="#">E-learning</a>
+								      <ul>
+								        <li><a href="pages/view/1">คำแนะนำ</a></li>
+								        <li><a href="elearnings/learns">บทเรียน</a></li>
+								        <li><a href="elearnings/testing_index">แบบทดสอบ</a></li>
+								      </ul>
+								    </li>
+										<?endif;?>
+										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
+								    <li><a href="#">เหตุการณ์การเฝ้าระวังโรคติดต่อ</a>
+											<ul>
+												<li><a href="desease_watch/index">ข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</a></li>
+											</ul>
+										</li>
+										<?endif;?>
+										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
+										<li><a href="#">รายงาน</a>
+											<ul>
+												<?if (in_array($current_user->user_type_id, array(1,6,7,8))):?>
+												<li><a href="nurseries/reports/index/basic_column">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
+												<?endif;?>
+												<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
+												<li><a href="diseases/newreport">รายงานแบบคัดกรองโรค</a></li>
+												<li><a href="surveillances/index">รายงานการเฝ้าระวังโรค</a></li>
+												<li><a href="reports/desease_watch_number">รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรค</a></li>
+												<?endif;?>
+												<?if (in_array($current_user->user_type_id, array(9,10))):?>
+												<li><a href="assessments/preview/<?=$current_user->nursery_id?>">รายงานแบบประเมินเข้าร่วมโครงการ</a></li>
+												<?endif;?>
+											</ul>
+										</li>
+										<?endif;?>
+								  </ul>
+									</nav>
+									<!-- test dropdown menu -->
+								</div>
+								<?endif; //is_login()?>
+
+
 				        	<?php echo $template['body'] ?>
 				        </td>
 				        <td background="themes/hps/images/table_content_right.png">&nbsp;</td>
