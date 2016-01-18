@@ -205,7 +205,7 @@ if(@$_GET['end_date'] and @empty($_GET['start_date'])){
 
 //-------------------------------------------- sql select join template --------------------------------
 $sql_tempate = " SELECT
-								Count(d.id) AS male
+								Count(d.id)
 								FROM
 								diseases AS d
 								INNER JOIN nurseries AS n ON d.nursery_id = n.id
