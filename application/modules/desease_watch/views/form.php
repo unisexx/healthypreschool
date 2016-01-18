@@ -115,6 +115,7 @@
                                 <?php get_district_dropdown(@$rs ->amphur_id, @$rs ->district_id); ?>
                             </span>
                          </div>
+												 <div class="errorPlace_province_id"></div>
                         <div class="errorPlace_area_id"></div>
                   </td>
             </tr>
@@ -696,8 +697,12 @@
 	});
 
 	errorMsgRequired = "กรุณาระบุข้อมูลก่อนดำเนินการบันทึก";
+	/*
 	$('#desease_watch').validate({
 		rules : {
+			place_type : {
+				required : true
+			},
 			nurseries_id : {
 				required : true
 			},
@@ -727,6 +732,9 @@
 			},
 		},
 		messages : {
+			place_type : {
+				required : errorMsgRequired
+			},
 			nurseries_id : {
 				required : errorMsgRequired
 			},
@@ -769,6 +777,190 @@
 			}
 		}
 	});
+	*/
+	<?php if(@$rs->place_type == '2'){
+		echo 'validate_with_community();';
+	}else{
+		echo 'validate_with_school();';
+	}
+	?>
+	$("select[name=place_type]").change(function(){
+		var place_type = $(this).val();
+		if(place_type=='2'){
+			validate_with_community();
+		}else{
+			validate_with_school();
+		}
+	})
+
+	function validate_with_community(){
+		errorMsgRequired = "กรุณาระบุข้อมูลก่อนดำเนินการบันทึก";
+		$('#desease_watch').validate({
+			rules : {
+				place_type : {
+					required : true
+				},
+				province_id : {
+					required : true
+				},
+				disease : {
+					required : true
+				},
+				start_date : {
+					required : true
+				},
+				end_date : {
+					required : true
+				},
+				total_amount : {
+					required : true
+				},
+				boy_amount : {
+					required : true
+				},
+				girl_amount : {
+					required : true
+				},
+				age_duration_start : {
+					required : true
+				},
+				age_duration_end : {
+					required : true
+				},
+			},
+			messages : {
+				place_type : {
+					required : errorMsgRequired
+				},
+				province_id : {
+					required : errorMsgRequired
+				},
+				disease : {
+					required : errorMsgRequired
+				},
+				start_date : {
+					required : errorMsgRequired
+				},
+				end_date : {
+					required : errorMsgRequired
+				},
+				total_amount : {
+					required : errorMsgRequired
+				},
+				boy_amount : {
+					required : errorMsgRequired
+				},
+				girl_amount : {
+					required : errorMsgRequired
+				},
+				age_duration_start : {
+					required : errorMsgRequired
+				},
+				age_duration_end : {
+					required : errorMsgRequired
+				},
+			},
+			errorPlacement : function(error, element) {
+				if (element.attr("name") == "province_id") {
+					error.insertAfter(".errorPlace_province_id");
+				} else if (element.attr("name") == "start_date" || element.attr("name") == "end_date") {
+					$('.errorPlace_duration_date').html('<label for="disease" generated="true" class="error" style="display: block;">' + errorMsgRequired + '</label>');
+				} else if (element.attr("name") == "total_amount" || element.attr("name") == "boy_amount" || element.attr("name") == "girl_amount") {
+					$('.errorPlace_amount').html('<label for="disease" generated="true" class="error" style="display: block;">' + errorMsgRequired + '</label>');
+				} else if (element.attr("name") == "age_duration_start" || element.attr("name") == "age_duration_end") {
+					$('.errorPlace_ageDuration').html('<label for="disease" generated="true" class="error" style="display: block;">' + errorMsgRequired + '</label>');
+				} else {//
+					error.insertAfter(element);
+				}
+			}
+		});
+	}
+
+	function validate_with_school(){
+		errorMsgRequired = "กรุณาระบุข้อมูลก่อนดำเนินการบันทึก";
+		$('#desease_watch').validate({
+			rules : {
+				place_type : {
+					required : true
+				},
+				nurseries_id : {
+					required : true
+				},
+				disease : {
+					required : true
+				},
+				start_date : {
+					required : true
+				},
+				end_date : {
+					required : true
+				},
+				total_amount : {
+					required : true
+				},
+				boy_amount : {
+					required : true
+				},
+				girl_amount : {
+					required : true
+				},
+				age_duration_start : {
+					required : true
+				},
+				age_duration_end : {
+					required : true
+				},
+			},
+			messages : {
+				place_type : {
+					required : errorMsgRequired
+				},
+				province_id : {
+					required : errorMsgRequired
+				},
+				nurseries_id : {
+					required : errorMsgRequired
+				},
+				disease : {
+					required : errorMsgRequired
+				},
+				start_date : {
+					required : errorMsgRequired
+				},
+				end_date : {
+					required : errorMsgRequired
+				},
+				total_amount : {
+					required : errorMsgRequired
+				},
+				boy_amount : {
+					required : errorMsgRequired
+				},
+				girl_amount : {
+					required : errorMsgRequired
+				},
+				age_duration_start : {
+					required : errorMsgRequired
+				},
+				age_duration_end : {
+					required : errorMsgRequired
+				},
+			},
+			errorPlacement : function(error, element) {
+				if (element.attr("name") == "nurseries_id") {
+					error.insertAfter(".errorPlace_nurseries_id");
+				} else if (element.attr("name") == "start_date" || element.attr("name") == "end_date") {
+					$('.errorPlace_duration_date').html('<label for="disease" generated="true" class="error" style="display: block;">' + errorMsgRequired + '</label>');
+				} else if (element.attr("name") == "total_amount" || element.attr("name") == "boy_amount" || element.attr("name") == "girl_amount") {
+					$('.errorPlace_amount').html('<label for="disease" generated="true" class="error" style="display: block;">' + errorMsgRequired + '</label>');
+				} else if (element.attr("name") == "age_duration_start" || element.attr("name") == "age_duration_end") {
+					$('.errorPlace_ageDuration').html('<label for="disease" generated="true" class="error" style="display: block;">' + errorMsgRequired + '</label>');
+				} else {//
+					error.insertAfter(element);
+				}
+			}
+		});
+	}
 </script>
 <script type="text/javascript">
       $(document).ready(function(){
