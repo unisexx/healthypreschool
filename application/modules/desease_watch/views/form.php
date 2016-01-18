@@ -56,30 +56,30 @@
 <!-- Navigator. -->
 <ul class="breadcrumb">
       <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-      <li><a href="desease_watch">การเฝ้าระวังโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล</a> <span class="divider">/</span></li>
+      <li><a href="desease_watch">ข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</a> <span class="divider">/</span></li>
       <li class="active">แบบฟอร์ม<?php echo(empty($rs -> id)) ? 'เพิ่ม' : 'แก้ไข'; ?>ข้อมูล</li>
 </ul>
 
 
 <!-- Header -->
-<h4>ระบบรายงานการเฝ้าระวังโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล</h4>
+<h4>ข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ (เพิ่ม/แก้ไข)</h4>
 
 <!-- Content -->
 <form id="desease_watch" action='desease_watch/save' method='post'>
       <?php echo form_hidden('id', @$rs -> id); ?>
       <table class='tblForm table table-bordered'>
+				<?php
+						if(@$rs->id > 0 && @$rs->created_date > 0){
+				?>
             <tr>
                <td>
                    <br>
                    <h4>
-                <?php
-                    if(@$rs->id > 0 && @$rs->created_date > 0){ 
-                        echo "วันที่บันทึกรายการ ". mysql_to_th($rs -> created_date);
-                    } 
-                ?>
+                      <?php  echo "วันที่บันทึกรายการ ". mysql_to_th($rs -> created_date);?>
                    </h4>
-               </td> 
+               </td>
             </tr>
+				<?php } ?>
             <tr><th> แหล่งที่เกิดโรค</th></tr>
             <tr>
                   <td>
@@ -92,12 +92,12 @@
                   </td>
             </tr>
             <?php
-                $display = @$rs->place_type == 2 ? 'table-row;' : 'none;'; 
+                $display = @$rs->place_type == 2 ? 'table-row;' : 'none;';
             ?>
             <tr class="tr_community" style="display:<?php echo $display;?>"><th> 1. พื้นที่ชุมชน</th></tr>
             <tr class="tr_community" style="display:<?php echo $display;?>">
                   <td>
-                         <div style="width:150px;display:inline;float:left;">                  
+                         <div style="width:150px;display:inline;float:left;">
                             <label for="province_id">จังหวัด</label>
                             <span id="province">
                                 <?php get_province_dropdown('', @$rs ->province_id); ?>
@@ -117,10 +117,10 @@
                          </div>
                         <div class="errorPlace_area_id"></div>
                   </td>
-            </tr>          
+            </tr>
             <?php
-                $display = @$rs->place_type == 1 ? 'table-row;' : 'none;'; 
-            ?>           
+                $display = @$rs->place_type == 1 ? 'table-row;' : 'none;';
+            ?>
             <tr class="tr_school" style="display:<?php echo $display;?>"><th> 1. ศูนย์เด็กเล็กและโรงเรียนอนุบาล </th></tr>
             <tr class="tr_school" style="display:<?php echo $display;?>">
                   <td>
@@ -136,8 +136,8 @@
                               <input type="text" id='nurseryAmphur' disabled="disabled" style='width:150px;' value="<?php echo @$rs -> nursery -> amphur -> amphur_name; ?>" placeholder="อำเภอ">
                               <input type="text" id='nurseryDistrict' disabled="disabled" style='width:150px;' value="<?php echo @$rs -> nursery -> district -> district_name; ?>" placeholder="ตำบล">
                         </div>
-                        
-                        
+
+
                         <div class="errorPlace_nurseries_id"></div>
                   </td>
             </tr>
@@ -157,13 +157,13 @@
                         ?>
 
                         <div class="question" style='line-height:25px;'>
-                              
+
                               <div class="">
                                     <span id="questionHeader" style='margin-top:10px; font-weight:bold;'></span>
                                     <span class='errorPlace_questionParent'></span>
                               </div>
                               <div id="questionChoiceArea">
-                                    <?php 
+                                    <?php
                                     if(@$rs->disease!=4 && @$rs->id>0){
                                     ?>
                                     <div style='padding-left:20px;'>
@@ -302,36 +302,36 @@
                     <?php echo form_radio('qRdo_8', 1, @$q['qRdo_8']); ?> ถ่ายเหลว (> 3 ครั้ง/วัน)
                     <?php echo form_radio('qRdo_8', 2, @$q['qRdo_8']); ?> ถ่ายเป็นน้ำปริมาณมาก
                     <?php echo form_radio('qRdo_8', 3, @$q['qRdo_8']); ?> ถ่ายเป็นมูก/เลือด
-                    
+
                     <div>ลักษณะอุจจาระ</div>
                     <?php echo form_radio('qRdo_8_1', 1, @$q['qRdo_8_1']); ?> มีสีเหลือง
                     <?php echo form_radio('qRdo_8_1', 2, @$q['qRdo_8_1']); ?> ขาว
                     <?php echo form_radio('qRdo_8_1', 3, @$q['qRdo_8_1']); ?> มูกเลือด
                     <?php echo form_radio('qRdo_8_1', 3, @$q['qRdo_8_1']); ?> ดำ
-                    
+
                     <div>ลักษณะกลิ่นอุจจาระ</div>
                     <?php echo form_radio('qRdo_8_2', 1, @$q['qRdo_8_2']); ?> ไม่มีกลิ่นเหม็น
                     <?php echo form_radio('qRdo_8_2', 2, @$q['qRdo_8_2']); ?> เหม็นเปรี้ยว
                     <?php echo form_radio('qRdo_8_2', 3, @$q['qRdo_8_2']); ?> เหม็นคาว
                     <?php echo form_radio('qRdo_8_2', 3, @$q['qRdo_8_2']); ?> เหม็นเน่า
               </div>
-        </div>        
+        </div>
 
         <div>
               <?php echo form_checkbox('qCbox_7_1', 1, @$q['qCbox_7_1']) . ' คลื่นไส้'; ?>
               <?php echo form_checkbox('qCbox_7_2', 1, @$q['qCbox_7_2']) . ' อาเจียน'; ?>
               <?php echo form_checkbox('qCbox_7_3', 1, @$q['qCbox_7_3']) . ' เบื่ออาหาร'; ?>
               <?php echo form_checkbox('qCbox_7_4', 1, @$q['qCbox_7_4']) . ' ไม่ดูดนม/น้ำ'; ?>
-        </div>   
-        
+        </div>
+
         <div>
               <?php echo form_checkbox('qCbox_7_5', 1, @$q['qCbox_7_5']) . ' กระหายน้ำ'; ?>
               <?php echo form_checkbox('qCbox_7_6', 1, @$q['qCbox_7_6']) . ' ปากแห้ง'; ?>
               <?php echo form_checkbox('qCbox_7_7', 1, @$q['qCbox_7_7']) . ' ผิวหนังเหี่ยว/ย่น'; ?>
               <?php echo form_checkbox('qCbox_7_8', 1, @$q['qCbox_7_8']) . ' ตาโหล่'; ?>
               <?php echo form_checkbox('qCbox_7_9', 1, @$q['qCbox_7_9']) . ' กระหม่อมบุ๋ม'; ?>
-        </div>  
-        
+        </div>
+
         <div>
               <?php echo form_checkbox('qCbox_9_6', 1, @$q['qCbox_9_6']) . ' ปวดท้อง'; ?>
               <?php echo form_checkbox('qCbox_9_1', 1, @$q['qCbox_9_1']) . ' ปวดศรีษะ'; ?>
@@ -340,14 +340,14 @@
               <?php echo form_checkbox('qCbox_9_4', 1, @$q['qCbox_9_4']) . ' ปวดหน้าผาก/จมูก'; ?>
               <?php echo form_checkbox('qCbox_9_5', 1, @$q['qCbox_9_5']) . ' ปวดหู'; ?>
         </div>
-        
+
         <div>
               <?php echo form_checkbox('qCbox_11_1', 1, @$q['qCbox_11_1']) . ' ซึม'; ?>
               <?php echo form_checkbox('qCbox_11_2', 2, @$q['qCbox_11_2']) . ' ตาเหม่อ/ลอย'; ?>
               <?php echo form_checkbox('qCbox_11_3', 3, @$q['qCbox_11_3']) . ' กระสับกระส่าย'; ?>
               <?php echo form_checkbox('qCbox_11_4', 4, @$q['qCbox_11_4']) . ' ชัก/เกร็ง'; ?>
         </div>
-    
+
         <div>
               <div><?php echo form_checkbox('qCbox_1', 1, @$q['qCbox_1'], 'class="questionParent"') . ' ไข้'; ?></div>
               <div class="questionChild">
@@ -398,13 +398,13 @@
               <?php echo form_checkbox('qCbox_6_3', 1, @$q['qCbox_6_3']) . ' ซี่โครงบุ๋ม'; ?>
               <?php echo form_checkbox('qCbox_6_4', 1, @$q['qCbox_6_4']) . ' ตัวเขียว'; ?>
         </div>
-       
-</div>                                    
+
+</div>
                                     <?
                                     }
                                     ?>
                               </div>
-                              
+
                         </div>
 
                   </td>
@@ -424,10 +424,10 @@
             <tr><th> 5. รวมจำนวนเด็กป่วย </th></tr>
             <tr>
                   <td>
-                                                                        จำนวนเด็กป่วย 
+                                                                        จำนวนเด็กป่วย
                                                                         ชาย  <input type="text" class="number" style="width:40px;text-align:right;" name="boy_amount" value="<?php echo(empty($rs -> boy_amount)) ? null : $rs -> boy_amount; ?>"> คน
                                                                         หญิง  <input type="text" class="number" style='width:40px;text-align:right;' name="girl_amount" value="<?php echo(empty($rs -> girl_amount)) ? null : $rs -> girl_amount; ?>"> คน
-                                                                        รวม <input type="text" readonly="readonly" style='width:40px;text-align:right;' name="total_amount" value="<?php echo(empty($rs -> total_amount)) ? null : $rs -> total_amount; ?>"> คน                        
+                                                                        รวม <input type="text" readonly="readonly" style='width:40px;text-align:right;' name="total_amount" value="<?php echo(empty($rs -> total_amount)) ? null : $rs -> total_amount; ?>"> คน
                         <div class="errorPlace_amount"></div>
                   </td>
             </tr>
@@ -436,15 +436,15 @@
             <tr><th> 6. อายุระหว่าง </th></tr>
             <tr>
                   <td>
-                        <input type="text" class="number" style="text-align:center;width:25px;" name="age_duration_start" value='<?php echo(empty($rs -> age_duration_start)) ? null : $rs -> age_duration_start; ?>'  maxlength="2"> 
+                        <input type="text" class="number" style="text-align:center;width:25px;" name="age_duration_start" value='<?php echo(empty($rs -> age_duration_start)) ? null : $rs -> age_duration_start; ?>'  maxlength="2">
                                                                         ปี
-                        <input type="text" class="number" style="text-align:center;width:25px;" name="age_month_duration_start" value='<?php echo(empty($rs -> age_month_duration_start)) ? null : $rs -> age_month_duration_start; ?>'  maxlength="2"> 
+                        <input type="text" class="number" style="text-align:center;width:25px;" name="age_month_duration_start" value='<?php echo(empty($rs -> age_month_duration_start)) ? null : $rs -> age_month_duration_start; ?>'  maxlength="2">
                                                                         เดือน
                                                                           ถึง
-                        <input type="text" class="number" style="text-align:center;width:25px;" name="age_duration_end" value='<?php echo(empty($rs -> age_duration_end)) ? null : $rs -> age_duration_end; ?>' maxlength="2"> 
+                        <input type="text" class="number" style="text-align:center;width:25px;" name="age_duration_end" value='<?php echo(empty($rs -> age_duration_end)) ? null : $rs -> age_duration_end; ?>' maxlength="2">
                                                                         ปี
-                        <input type="text" class="number" style="text-align:center;width:25px;" name="age_month_duration_start" value='<?php echo(empty($rs -> age_month_duration_end)) ? null : $rs -> age_month_duration_end; ?>'  maxlength="2"> 
-                                                                        เดือน                                                                        
+                        <input type="text" class="number" style="text-align:center;width:25px;" name="age_month_duration_start" value='<?php echo(empty($rs -> age_month_duration_end)) ? null : $rs -> age_month_duration_end; ?>'  maxlength="2">
+                                                                        เดือน
                         <div class="errorPlace_ageDuration"></div>
                   </td>
             </tr>
@@ -475,11 +475,11 @@
                               <li><?php echo form_checkbox('measure_person_3', 1, @$rs -> measure_person_3, 'class="measure_person"'); ?> ผู้ปกครอง</li>
                               <li>
                                   <?php echo form_checkbox('measure_person_4', 1, @$rs -> measure_person_4, 'class="measure_person"'); ?> อื่น ๆ
-                                  <input type="text" name="measure_person_4_desc" value="<?php echo @$rs -> measure_person_4_desc; ?>"> 
+                                  <input type="text" name="measure_person_4_desc" value="<?php echo @$rs -> measure_person_4_desc; ?>">
                               </li>
                         </ul>
                   </td>
-            </tr>            
+            </tr>
       </table>
       <div style='text-align:center;'>
             <button type="submit" class='btn btn-primary'>บันทึกข้อมูล</button>
@@ -503,7 +503,7 @@
                   <!-- <button class="btn btn-primary">Save changes</button> -->
             </div>
       </div>
-            
+
 </div>
 
 
@@ -771,7 +771,7 @@
 	});
 </script>
 <script type="text/javascript">
-      $(document).ready(function(){        
+      $(document).ready(function(){
         $("select[name='province_id']").live("change",function(){
             $.post('ajax/get_amphur',{
                     'province_id' : $(this).val()
@@ -787,10 +787,10 @@
                     $("#district").html(data);
                 });
         });
-        
+
         $("select[name=place_type]").live("change",function(){
-            var place_type = $(this).val();   
-            switch(place_type){         
+            var place_type = $(this).val();
+            switch(place_type){
                 case '1':
                     $('.tr_school').show();
                     $('.tr_community').hide();
