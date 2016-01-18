@@ -202,7 +202,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	<input class="btn btn-primary" type="submit" value=" แสดง " style="margin-bottom: 10px;">
 </div>
 <div id="report_header" style="text-align:center;padding:30px;">
-    <h4>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>
+    <h4>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>ทดสอบ
     <?php
     if(@$_GET['area_id']=='' && @$_GET['province_id']==''){
         echo '<h5>จำแนกตามพื้นที่ สคร. 13 เขต </h5>';
