@@ -372,7 +372,6 @@ $sql = "SELECT
 
 $age = new Children();
 $age->query($sql);
-// $age_total = $age->male_year_0 + $age->male_year_1 + $age->male_year_2 + $age->male_year_3 + $age->male_year_4 + $age->male_year_5 + $age->male_year_6 + $age->male_year_7 + $age->female_year_0 + $age->female_year_1 + $age->female_year_2 + $age->female_year_3 + $age->female_year_4 + $age->female_year_5 + $age->female_year_6 + $age->female_year_7
 
 //------------------------------------ [หลัก : อายุ] [รอง : โรคที่พบบ่อย] -----------------------------------------ุ
 $sql = "SELECT
@@ -667,7 +666,6 @@ $sql = "SELECT
 
 $ageDisease = new Disease();
 $ageDisease->query($sql);
-// $age_total = $age->year_0 + $age->year_1 + $age->year_2 + $age->year_3 + $age->year_4 + $age->year_5 + $age->year_6 + $age->year_7;
 
 //------------------------------------ [หลัก : อายุ] [รอง : สถานะเด็กป่วย] -----------------------------------------ุ
 $sql = "SELECT
@@ -681,6 +679,12 @@ $sql = "SELECT
 		".$sql_tempate."
 		WHERE
 		d.c3 = '/' AND
+		d.child_age_year = 1 ".@$condition."
+	) status_come_1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = '/' AND
 		d.child_age_year = 2 ".@$condition."
 	) status_come_2,
 	(
@@ -689,12 +693,6 @@ $sql = "SELECT
 		d.c3 = '/' AND
 		d.child_age_year = 3 ".@$condition."
 	) status_come_3,
-	(
-		".$sql_tempate."
-		WHERE
-		d.c3 = '/' AND
-		d.child_age_year = 4 ".@$condition."
-	) status_come_4,
 	(
 		".$sql_tempate."
 		WHERE
@@ -718,8 +716,141 @@ $sql = "SELECT
 		WHERE
 		d.c3 = '/' AND
 		d.child_age_year = 7 ".@$condition."
-	) status_come_7";
+	) status_come_7,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 0 ".@$condition."
+	) status_absent_0,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 1 ".@$condition."
+	) status_absent_1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 2 ".@$condition."
+	) status_absent_2,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 3 ".@$condition."
+	) status_absent_3,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 4 ".@$condition."
+	) status_absent_4,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 5 ".@$condition."
+	) status_absent_5,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 6 ".@$condition."
+	) status_absent_6,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 7 ".@$condition."
+	) status_absent_7";
+
+	$ageStatus = new Disease();
+	$ageStatus->query($sql);
+
+	//------------------------------------ [หลัก : โรคที่พบบ่อย] [รอง : เพศ] -----------------------------------------
+	$sql = "SELECT
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'C' AND
+		childrens.title = 'ด.ช.' ".@$condition."
+	) disease_c_male,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'C' AND
+		childrens.title = 'ด.ญ.' ".@$condition."
+	) disease_c_female,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		childrens.title = 'ด.ช.' ".@$condition."
+	) disease_h_male,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		childrens.title = 'ด.ญ.' ".@$condition."
+	) disease_h_female,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		childrens.title = 'ด.ช.' ".@$condition."
+	) disease_d_male,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		childrens.title = 'ด.ญ.' ".@$condition."
+	) disease_d_female,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		childrens.title = 'ด.ช.' ".@$condition."
+	) disease_f_male,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		childrens.title = 'ด.ญ.' ".@$condition."
+	) disease_f_female,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		childrens.title = 'ด.ช.' ".@$condition."
+	) disease_r_male,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		childrens.title = 'ด.ญ.' ".@$condition."
+	) disease_r_female,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		childrens.title = 'ด.ช.' ".@$condition."
+	) disease_o_male,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		childrens.title = 'ด.ญ.' ".@$condition."
+	) disease_o_female
+	";
+
+	$diseaseSex = new Disease();
+	$diseaseSex->query($sql);
 ?>
+
+
+
 <style media="screen">
 	table > tbody > tr:nth-child(1) > th:nth-child(1),table > tbody > tr:nth-child(1) > th:nth-child(2){text-align: center;}
 </style>
@@ -1116,6 +1247,296 @@ $sql = "SELECT
 		</th>
 		<th>
 			หยุดเรียน
+		</th>
+		<th>
+			รวม
+		</th>
+	</tr>
+	<tr>
+		<td>
+			- ต่ำกว่า 1 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_0?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_0?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_0+$ageStatus->status_absent_0?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 1 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_1?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_1?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_1+$ageStatus->status_absent_1?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 2 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_2?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_2?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_2+$ageStatus->status_absent_2?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 3 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_3?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_3?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_3+$ageStatus->status_absent_3?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 4 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_4?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_4?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_4+$ageStatus->status_absent_4?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 5 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_5?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_5?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_5+$ageStatus->status_absent_5?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 6 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_6?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_6?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_6+$ageStatus->status_absent_6?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 7 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_7?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_7?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_7+$ageStatus->status_absent_7?>
+		</td>
+	</tr>
+</table>
+
+
+<table class="table table-bordered">
+	<tr>
+		<th rowspan="2">
+			โรคที่พบบ่อย
+		</th>
+		<th colspan="3">
+			เพศ
+		</th>
+	</tr>
+	<tr>
+		<th>
+			ชาย
+		</th>
+		<th>
+			หญิง
+		</th>
+		<th>
+			รวม
+		</th>
+	</tr>
+	<tr>
+		<td>
+			- หวัด
+		</td>
+		<td>
+			<?=$diseaseSex->disease_c_male?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_c_female?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_c_male+$diseaseSex->disease_c_female?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- มือ เท้า ปาก
+		</td>
+		<td>
+			<?=$diseaseSex->disease_h_male?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_h_female?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_h_male+$diseaseSex->disease_h_female?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- อุจจาระร่วง
+		</td>
+		<td>
+			<?=$diseaseSex->disease_d_male?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_d_female?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_d_male+$diseaseSex->disease_d_female?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- ไข้
+		</td>
+		<td>
+			<?=$diseaseSex->disease_f_male?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_f_female?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_f_male+$diseaseSex->disease_f_female?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- ไข้ออกผื่น
+		</td>
+		<td>
+			<?=$diseaseSex->disease_r_male?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_r_female?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_r_male+$diseaseSex->disease_r_female?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- อื่นๆ
+		</td>
+		<td>
+			<?=$diseaseSex->disease_o_male?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_o_female?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_o_male+$diseaseSex->disease_o_female?>
+		</td>
+	</tr>
+</table>
+
+
+<table class="table table-bordered">
+	<tr>
+		<th rowspan="2">
+			โรคที่พบบ่อย
+		</th>
+		<th colspan="3">
+			สถานะเด็กป่วย
+		</th>
+	</tr>
+	<tr>
+		<th>
+			มาเรียน
+		</th>
+		<th>
+			หยุดเรียน
+		</th>
+		<th>
+			รวม
+		</th>
+	</tr>
+</table>
+
+
+<table class="table table-bordered">
+	<tr>
+		<th rowspan="2">
+			โรคที่พบบ่อย
+		</th>
+		<th colspan="4">
+			การแยกเด็กป่วย
+		</th>
+	</tr>
+	<tr>
+		<th>
+			ไม่มีการแยกนอนแยกเล่น
+		</th>
+		<th>
+			แยกนอน
+		</th>
+		<th>
+			แยกเล่น
+		</th>
+		<th>
+			รวม
+		</th>
+	</tr>
+</table>
+
+<table class="table table-bordered">
+	<tr>
+		<th rowspan="2">
+			โรคที่พบบ่อย
+		</th>
+		<th colspan="3">
+			กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน
+		</th>
+	</tr>
+	<tr>
+		<th>
+			มี
+		</th>
+		<th>
+			ไม่มี
 		</th>
 		<th>
 			รวม
