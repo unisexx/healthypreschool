@@ -104,7 +104,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active"><a href="diseases/newreport">รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</a></li>
+  <li class="active"><a href="reports/desease_overall">รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</a></li>
 </ul>
 
 <h1>รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</h1>
@@ -205,7 +205,7 @@ if(@$_GET['end_date'] and @empty($_GET['start_date'])){
 
 //-------------------------------------------- sql select join template --------------------------------
 $sql_tempate = " SELECT
-								Count(d.id) AS male
+								Count(d.id)
 								FROM
 								diseases AS d
 								INNER JOIN nurseries AS n ON d.nursery_id = n.id

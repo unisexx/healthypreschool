@@ -104,12 +104,12 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active"><a href="diseases/newreport">รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</a></li>
+  <li class="active"><a href="reports/desease_factor">รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</a></li>
 </ul>
 
 <h1>รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</h1>
 
-<form id="search_report" method="get" action="reports/desease_overall" style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
+<form id="search_report" method="get" action="reports/desease_factor" style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
 
 	<div>
 		<span>ช่วงเวลาที่เกิดโรค</span>
@@ -163,6 +163,47 @@ jQuery_1_4_2("input.datepicker").date_input();
 		</span>
 	</div>
 
+	<hr>
+
+	<div>
+		<span>ปัจจัยหลัก</span>
+		<?
+			$main_factor_array = Array('age'=>'อายุในศูนย์เด็กเล็ก','disease'=>'โรคที่พบบ่อย');
+			echo form_dropdown('main_factor',$main_factor_array,@$_GET['main_factor'],'id="main_factor" class="span3"');
+		?>
+
+		<span>ปัจจัยรอง</span>
+		<?php
+			$second_factor_array_1 = Array('sex'=>'เพศ','c1'=>'โรคที่พบบ่อย','c3'=>'สถานะเด็กป่วย');
+			$second_factor_array_2 = Array('sex'=>'เพศ','c3'=>'สถานะเด็กป่วย','c2'=>'การแยกเด็กป่วย','c5'=>'กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน');
+			echo form_dropdown('second_factor',$second_factor_array_1,@$_GET['second_factor'],'id="second_factor_1" class="span3"');
+			echo form_dropdown('second_factor',$second_factor_array_2,@$_GET['second_factor'],'id="second_factor_2" class="span3"');
+		?>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				if($('select[name=main_factor]').val() == 'age'){
+					$('#second_factor_1').show().removeAttr("disabled", 'disabled');
+					$('#second_factor_2').hide().attr("disabled", 'disabled');
+				}else if($('select[name=main_factor]').val() == 'disease'){
+					$('#second_factor_1').hide().attr("disabled", 'disabled');
+					$('#second_factor_2').show().removeAttr("disabled", 'disabled');
+				}
+
+				$('#main_factor').on('change', function() {
+				  // alert( this.value );
+					if( this.value == 'age'){
+						$('#second_factor_1').show().removeAttr("disabled", 'disabled');
+						$('#second_factor_2').hide().attr("disabled", 'disabled');
+					}else if ( this.value == 'disease' ) {
+						$('#second_factor_1').hide().attr("disabled", 'disabled');
+						$('#second_factor_2').show().removeAttr("disabled", 'disabled');
+					}
+				});
+			});
+		</script>
+	</div>
+
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 </form>
 
@@ -213,1132 +254,2174 @@ $sql_tempate = " SELECT
 								INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
 								INNER JOIN area_provinces ON n.area_province_id = area_provinces.area_province_id";
 
-//-------------------------------------------- เพศ --------------------------------------------
+
+//------------------------------------ [หลัก : อายุ] [รอง : เพศ] -----------------------------------------ุ
 $sql = "SELECT
-	(
-		".$sql_tempate."
-		WHERE
-		childrens.title = 'ด.ช.' ".@$condition."
-	) male,
-	(
-		".$sql_tempate."
-		WHERE
-		childrens.title = 'ด.ญ.' ".@$condition."
-	) female";
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ช.' and
+					d.child_age_year = 0 ".@$condition."
+				) male_year_0,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ช.' and
+					d.child_age_year = 1 ".@$condition."
+				) male_year_1,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ช.' and
+					d.child_age_year = 2 ".@$condition."
+				) male_year_2,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ช.' and
+					d.child_age_year = 3 ".@$condition."
+				) male_year_3,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ช.' and
+					d.child_age_year = 4 ".@$condition."
+				) male_year_4,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ช.' and
+					d.child_age_year = 5 ".@$condition."
+				) male_year_5,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ช.' and
+					d.child_age_year = 6 ".@$condition."
+				) male_year_6,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ช.' and
+					d.child_age_year = 7 ".@$condition."
+				) male_year_7,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ญ.' and
+					d.child_age_year = 0 ".@$condition."
+				) female_year_0,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ญ.' and
+					d.child_age_year = 1 ".@$condition."
+				) female_year_1,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ญ.' and
+					d.child_age_year = 2 ".@$condition."
+				) female_year_2,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ญ.' and
+					d.child_age_year = 3 ".@$condition."
+				) female_year_3,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ญ.' and
+					d.child_age_year = 4 ".@$condition."
+				) female_year_4,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ญ.' and
+					d.child_age_year = 5 ".@$condition."
+				) female_year_5,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ญ.' and
+					d.child_age_year = 6 ".@$condition."
+				) female_year_6,
+				(
+					".$sql_tempate."
+					WHERE
+					childrens.title = 'ด.ญ.' and
+					d.child_age_year = 7 ".@$condition."
+				) female_year_7";
 
-$sex = new Disease();
-$sex->query($sql);
-$sex_total = $sex->male + $sex->female;
-
-//-------------------------------------------- อายุ --------------------------------------------
-$sql = "SELECT
-	(
-		".$sql_tempate."
-		WHERE
-			d.child_age_year = 0 ".@$condition."
-	) year_0,
-	(
-		".$sql_tempate."
-		WHERE
-			d.child_age_year = 1 ".@$condition."
-	) year_1,
-	(
-		".$sql_tempate."
-		WHERE
-			d.child_age_year = 2 ".@$condition."
-	) year_2,
-	(
-		".$sql_tempate."
-		WHERE
-			d.child_age_year = 3 ".@$condition."
-	) year_3,
-	(
-		".$sql_tempate."
-		WHERE
-			d.child_age_year = 4 ".@$condition."
-	) year_4,
-	(
-		".$sql_tempate."
-		WHERE
-			d.child_age_year = 5 ".@$condition."
-	) year_5,
-	(
-		".$sql_tempate."
-		WHERE
-			d.child_age_year = 6 ".@$condition."
-	) year_6,
-	(
-		".$sql_tempate."
-		WHERE
-			d.child_age_year = 7 ".@$condition."
-	) year_7";
-
-$age = new Disease();
+$age = new Children();
 $age->query($sql);
-$age_total = $age->year_0 + $age->year_1 + $age->year_2 + $age->year_3 + $age->year_4 + $age->year_5 + $age->year_6 + $age->year_7;
 
-//-------------------------------------------- โรค --------------------------------------------
+//------------------------------------ [หลัก : อายุ] [รอง : โรคที่พบบ่อย] -----------------------------------------ุ
 $sql = "SELECT
 	(
 		".$sql_tempate."
 		WHERE
-			d.c1 = 'C' ".@$condition."
-	) disease_1,
+		d.c1 = 'C' AND
+		d.child_age_year = 0 ".@$condition."
+	) year_0_c,
 	(
 		".$sql_tempate."
 		WHERE
-			d.c1 = 'H' ".@$condition."
-	) disease_2,
+		d.c1 = 'C' AND
+		d.child_age_year = 1 ".@$condition."
+	) year_1_c,
 	(
 		".$sql_tempate."
 		WHERE
-			d.c1 = 'D' ".@$condition."
-	) disease_3,
+		d.c1 = 'C' AND
+		d.child_age_year = 2 ".@$condition."
+	) year_2_c,
 	(
 		".$sql_tempate."
 		WHERE
-			d.c1 = 'F' ".@$condition."
-	) disease_4,
+		d.c1 = 'C' AND
+		d.child_age_year = 3 ".@$condition."
+	) year_3_c,
 	(
 		".$sql_tempate."
 		WHERE
-			d.c1 = 'R' ".@$condition."
-	) disease_5,
+		d.c1 = 'C' AND
+		d.child_age_year = 4 ".@$condition."
+	) year_4_c,
 	(
 		".$sql_tempate."
 		WHERE
-			d.c1 = 'O' ".@$condition."
-	) disease_6";
+		d.c1 = 'C' AND
+		d.child_age_year = 5 ".@$condition."
+	) year_5_c,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'C' AND
+		d.child_age_year = 6 ".@$condition."
+	) year_6_c,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'C' AND
+		d.child_age_year = 7 ".@$condition."
+	) year_7_c,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		d.child_age_year = 0 ".@$condition."
+	) year_0_h,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		d.child_age_year = 1 ".@$condition."
+	) year_1_h,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		d.child_age_year = 2 ".@$condition."
+	) year_2_h,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		d.child_age_year = 3 ".@$condition."
+	) year_3_h,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		d.child_age_year = 4 ".@$condition."
+	) year_4_h,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		d.child_age_year = 5 ".@$condition."
+	) year_5_h,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		d.child_age_year = 6 ".@$condition."
+	) year_6_h,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		d.child_age_year = 7 ".@$condition."
+	) year_7_h,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.child_age_year = 0 ".@$condition."
+	) year_0_d,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.child_age_year = 1 ".@$condition."
+	) year_1_d,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.child_age_year = 2 ".@$condition."
+	) year_2_d,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.child_age_year = 3 ".@$condition."
+	) year_3_d,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.child_age_year = 4 ".@$condition."
+	) year_4_d,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.child_age_year = 5 ".@$condition."
+	) year_5_d,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.child_age_year = 6 ".@$condition."
+	) year_6_d,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.child_age_year = 7 ".@$condition."
+	) year_7_d,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.child_age_year = 0 ".@$condition."
+	) year_0_f,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.child_age_year = 1 ".@$condition."
+	) year_1_f,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.child_age_year = 2 ".@$condition."
+	) year_2_f,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.child_age_year = 3 ".@$condition."
+	) year_3_f,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.child_age_year = 4 ".@$condition."
+	) year_4_f,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.child_age_year = 5 ".@$condition."
+	) year_5_f,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.child_age_year = 6 ".@$condition."
+	) year_6_f,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.child_age_year = 7 ".@$condition."
+	) year_7_f,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.child_age_year = 0 ".@$condition."
+	) year_0_r,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.child_age_year = 1 ".@$condition."
+	) year_1_r,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.child_age_year = 2 ".@$condition."
+	) year_2_r,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.child_age_year = 3 ".@$condition."
+	) year_3_r,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.child_age_year = 4 ".@$condition."
+	) year_4_r,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.child_age_year = 5 ".@$condition."
+	) year_5_r,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.child_age_year = 6 ".@$condition."
+	) year_6_r,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.child_age_year = 7 ".@$condition."
+	) year_7_r,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.child_age_year = 0 ".@$condition."
+	) year_0_o,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.child_age_year = 1 ".@$condition."
+	) year_1_o,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.child_age_year = 2 ".@$condition."
+	) year_2_o,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.child_age_year = 3 ".@$condition."
+	) year_3_o,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.child_age_year = 4 ".@$condition."
+	) year_4_o,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.child_age_year = 5 ".@$condition."
+	) year_5_o,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.child_age_year = 6 ".@$condition."
+	) year_6_o,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.child_age_year = 7 ".@$condition."
+	) year_7_o";
 
-	$disease = new Disease();
-	$disease->query($sql);
-	$disease_total = $disease->disease_1 + $disease->disease_2 + $disease->disease_3 + $disease->disease_4 + $disease->disease_5 + $disease->disease_6;
+$ageDisease = new Disease();
+$ageDisease->query($sql);
 
-//-------------------------------------------- สถานะเด็กป่วย --------------------------------------------
+//------------------------------------ [หลัก : อายุ] [รอง : สถานะเด็กป่วย] -----------------------------------------ุ
 $sql = "SELECT
 	(
 		".$sql_tempate."
 		WHERE
+		d.c3 = '/' AND
+		d.child_age_year = 0 ".@$condition."
+	) status_come_0,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = '/' AND
+		d.child_age_year = 1 ".@$condition."
+	) status_come_1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = '/' AND
+		d.child_age_year = 2 ".@$condition."
+	) status_come_2,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = '/' AND
+		d.child_age_year = 3 ".@$condition."
+	) status_come_3,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = '/' AND
+		d.child_age_year = 4 ".@$condition."
+	) status_come_4,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = '/' AND
+		d.child_age_year = 5 ".@$condition."
+	) status_come_5,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = '/' AND
+		d.child_age_year = 6 ".@$condition."
+	) status_come_6,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = '/' AND
+		d.child_age_year = 7 ".@$condition."
+	) status_come_7,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 0 ".@$condition."
+	) status_absent_0,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 1 ".@$condition."
+	) status_absent_1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 2 ".@$condition."
+	) status_absent_2,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 3 ".@$condition."
+	) status_absent_3,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 4 ".@$condition."
+	) status_absent_4,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 5 ".@$condition."
+	) status_absent_5,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 6 ".@$condition."
+	) status_absent_6,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c3 = 'x' AND
+		d.child_age_year = 7 ".@$condition."
+	) status_absent_7";
+
+	$ageStatus = new Disease();
+	$ageStatus->query($sql);
+
+	//------------------------------------ [หลัก : โรคที่พบบ่อย] [รอง : เพศ] -----------------------------------------
+	$sql = "SELECT
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'C' AND
+		childrens.title = 'ด.ช.' ".@$condition."
+	) disease_c_male,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'C' AND
+		childrens.title = 'ด.ญ.' ".@$condition."
+	) disease_c_female,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		childrens.title = 'ด.ช.' ".@$condition."
+	) disease_h_male,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		childrens.title = 'ด.ญ.' ".@$condition."
+	) disease_h_female,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		childrens.title = 'ด.ช.' ".@$condition."
+	) disease_d_male,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		childrens.title = 'ด.ญ.' ".@$condition."
+	) disease_d_female,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		childrens.title = 'ด.ช.' ".@$condition."
+	) disease_f_male,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		childrens.title = 'ด.ญ.' ".@$condition."
+	) disease_f_female,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		childrens.title = 'ด.ช.' ".@$condition."
+	) disease_r_male,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		childrens.title = 'ด.ญ.' ".@$condition."
+	) disease_r_female,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		childrens.title = 'ด.ช.' ".@$condition."
+	) disease_o_male,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		childrens.title = 'ด.ญ.' ".@$condition."
+	) disease_o_female
+	";
+
+	$diseaseSex = new Disease();
+	$diseaseSex->query($sql);
+	
+	//------------------------------------ [หลัก : โรคที่พบบ่อย] [รอง : สถานะเด็กป่วย] -----------------------------------------
+	$sql = "SELECT
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'C' AND
 		d.c3 = '/' ".@$condition."
-	) sick_status_1,
+	) disease_c_come,
 	(
 		".$sql_tempate."
 		WHERE
+		d.c1 = 'C' AND
 		d.c3 = 'x' ".@$condition."
-	) sick_status_2";
-
-$sick_status = new Disease();
-$sick_status->query($sql);
-$sick_status_total = $sick_status->sick_status_1 + $sick_status->sick_status_2;
-
-//-------------------------------------------- การแยกเด็กป่วย --------------------------------------------
-$sql = "SELECT
+	) disease_c_absent,
 	(
 		".$sql_tempate."
 		WHERE
+		d.c1 = 'H' AND
+		d.c3 = '/' ".@$condition."
+	) disease_h_come,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		d.c3 = 'x' ".@$condition."
+	) disease_h_absent,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.c3 = '/' ".@$condition."
+	) disease_d_come,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.c3 = 'x' ".@$condition."
+	) disease_d_absent,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.c3 = '/' ".@$condition."
+	) disease_f_come,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.c3 = 'x' ".@$condition."
+	) disease_f_absent,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.c3 = '/' ".@$condition."
+	) disease_r_come,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.c3 = 'x' ".@$condition."
+	) disease_r_absent,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.c3 = '/' ".@$condition."
+	) disease_o_come,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.c3 = 'x' ".@$condition."
+	) disease_o_absent
+	";
+
+	$diseaseStatus = new Disease();
+	$diseaseStatus->query($sql);
+	
+	//------------------------------------ [หลัก : โรคที่พบบ่อย] [รอง : การแยกเด็กป่วย] -----------------------------------------
+	$sql = "SELECT
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'C' AND
 		d.c2 = '0' ".@$condition."
-	) separate_1,
+	) disease_c_0,
 	(
 		".$sql_tempate."
 		WHERE
+		d.c1 = 'C' AND
 		d.c2 = '1' ".@$condition."
-	) separate_2,
+	) disease_c_1,
 	(
 		".$sql_tempate."
 		WHERE
+		d.c1 = 'C' AND
 		d.c2 = '2' ".@$condition."
-	) separate_3";
-
-$separate = new Disease();
-$separate->query($sql);
-$separate_total = $separate->separate_1 + $separate->separate_2 + $separate->separate_3;
-
-//-------------------------------------------- กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน --------------------------------------------
-$sql = "SELECT
+	) disease_c_2,
 	(
 		".$sql_tempate."
 		WHERE
+		d.c1 = 'H' AND
+		d.c2 = '0' ".@$condition."
+	) disease_h_0,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		d.c2 = '1' ".@$condition."
+	) disease_h_1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		d.c2 = '2' ".@$condition."
+	) disease_h_2,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.c2 = '0' ".@$condition."
+	) disease_d_0,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.c2 = '1' ".@$condition."
+	) disease_d_1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.c2 = '2' ".@$condition."
+	) disease_d_2,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.c2 = '0' ".@$condition."
+	) disease_f_0,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.c2 = '1' ".@$condition."
+	) disease_f_1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.c2 = '2' ".@$condition."
+	) disease_f_2,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.c2 = '0' ".@$condition."
+	) disease_r_0,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.c2 = '1' ".@$condition."
+	) disease_r_1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.c2 = '2' ".@$condition."
+	) disease_r_2,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.c2 = '0' ".@$condition."
+	) disease_o_0,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.c2 = '1' ".@$condition."
+	) disease_o_1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.c2 = '2' ".@$condition."
+	) disease_o_2
+	";
+	
+	$diseaseSep = new Disease();
+	$diseaseSep->query($sql);
+	
+	//------------------------------------ [หลัก : โรคที่พบบ่อย] [รอง : กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน] -----------------------------------------
+	$sql = "SELECT
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'C' AND
 		d.c5 = '*' ".@$condition."
-	) same_1,
+	) disease_c_s1,
 	(
 		".$sql_tempate."
 		WHERE
+		d.c1 = 'C' AND
 		d.c5 = '' ".@$condition."
-	) same_2";
-
-$same = new Disease();
-$same->query($sql);
-$same_total = $same->same_1 + $same->same_2;
+	) disease_c_s2,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		d.c5 = '*' ".@$condition."
+	) disease_h_s1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'H' AND
+		d.c5 = '' ".@$condition."
+	) disease_h_s2,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.c5 = '*' ".@$condition."
+	) disease_d_s1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'D' AND
+		d.c5 = '' ".@$condition."
+	) disease_d_s2,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.c5 = '*' ".@$condition."
+	) disease_f_s1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'F' AND
+		d.c5 = '' ".@$condition."
+	) disease_f_s2,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.c5 = '*' ".@$condition."
+	) disease_r_s1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'R' AND
+		d.c5 = '' ".@$condition."
+	) disease_r_s2,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.c5 = '*' ".@$condition."
+	) disease_o_s1,
+	(
+		".$sql_tempate."
+		WHERE
+		d.c1 = 'O' AND
+		d.c5 = '' ".@$condition."
+	) disease_o_s2
+	";
+	
+	$diseaseSame = new Disease();
+	$diseaseSame->query($sql);
 ?>
 
-<br>
-<table class="table">
+
+
+<style media="screen">
+	table > tbody > tr:nth-child(1) > th:nth-child(1),table > tbody > tr:nth-child(1) > th:nth-child(2){text-align: center;}
+</style>
+
+<?if(@$_GET['main_factor'] == 'age' && @$_GET['second_factor'] == 'sex'):?>
+<script>
+$(function () {
+    $('#container1').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามอายุ และเพศ'
+        },
+        xAxis: {
+            categories: ['ต่ำกว่า 1 ปี', '1 ปี', '2 ปี', '3 ปี', '4 ปี','5 ปี', '6 ปี', '7 ปี']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'เพศ'
+            }
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.2f}%)<br/>',
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent'
+            },
+            series: {
+	            dataLabels: {
+	                enabled: true,
+									format: '{point.percentage:.2f}%'
+	            }
+	        }
+        },
+        series: [{
+            name: 'ชาย',
+            data: [<?=$age->male_year_0?>, <?=$age->male_year_1?>, <?=$age->male_year_2?>, <?=$age->male_year_3?>, <?=$age->male_year_4?>, <?=$age->male_year_5?>, <?=$age->male_year_6?>, <?=$age->male_year_7?>]
+        }, {
+            name: 'หญิง',
+            data: [<?=$age->female_year_0?>, <?=$age->female_year_1?>, <?=$age->female_year_2?>, <?=$age->female_year_3?>, <?=$age->female_year_4?>, <?=$age->female_year_5?>, <?=$age->female_year_6?>, <?=$age->female_year_7?>]
+        }]
+    });
+});
+</script>
+
+<div id="container1"></div>
+<table class="table table-bordered">
 	<tr>
-		<th>ข้อมูลรายงานแบบคัดกรองโรค</th>
-		<th>จำนวน</th>
-		<th>ร้อยละ</th>
+		<th rowspan="2">
+			อายุเด็ก
+		</th>
+		<th colspan="3">
+			เพศ
+		</th>
 	</tr>
-	<tr class="subheader">
-		<td colspan="3">เพศ
-			<div style="float:right; display:inline;">
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column" value="column" onclick= "chartfunc()"><i class="fa fa-bar-chart"></i></label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar" value="bar" onclick= "chartfunc()"> <i class="fa fa-bar-chart fa-rotate-90"></i></label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie" value="pie" onclick= "chartfunc()"> <i class="fa fa-pie-chart"></i></label>
-			<!-- <label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line" value="line" onclick= "chartfunc()">Line</label> -->
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close" value="close" onclick= "chartfunc()"><i class="fa fa-times"></i></label>
-			</div>
+	<tr>
+		<th>
+			ชาย
+		</th>
+		<th>
+			หญิง
+		</th>
+		<th>
+			รวม
+		</th>
+	</tr>
+	<tr>
+		<td>
+			- ต่ำกว่า 1 ปี
+		</td>
+		<td>
+			<?=$age->male_year_0?>
+		</td>
+		<td>
+			<?=$age->female_year_0?>
+		</td>
+		<td>
+			<?=$age->male_year_0 + $age->female_year_0?>
 		</td>
 	</tr>
 	<tr>
-		<script type="text/javascript">
-		$(function () {
-		//--------------------------- Create the chart แจกแจงตามเพศ --------------------------
-		var options = {
-		    chart: {
-		        plotBorderWidth: 0
-		    },
-		    title: {
-		        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามเพศ',
-		    },
-		    //
-		    // subtitle: {
-		    //  text: 'Subtitle'
-		    // },
-		    //
-		    xAxis: {
-					type: 'category',
-		    },
-		    yAxis: {
-		        title: {
-		            text: 'ร้อยละ'
-		        },
-		    },
-		    legend: {
-		        enabled: true,
-		    },
-				tooltip: {
-					formatter: function() {
-					    // If you want to see what is available in the formatter, you can
-					    // examine the `this` variable.
-					    //     console.log(this);
-					    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
-					}
-				},
-		    plotOptions: {
-		        series: {
-		            pointPadding: 0.2,
-		            borderWidth: 0,
-		            dataLabels: {
-		                enabled: true,
-										format: '{point.name}: <b>{point.y}%</b>'
-		            }
-		        },
-		        pie: {
-		            plotBorderWidth: 0,
-		            allowPointSelect: true,
-		            cursor: 'pointer',
-		            size: '100%',
-		            dataLabels: {
-		                enabled: true,
-		                format: '{point.name}: <b>{point.y}%</b>'
-		            }
-		        }
-		    },
-		     series: [{
-		          name: 'เพศ',
-		          colorByPoint: true,
-		          data: [{
-		              name: 'ชาย',
-		              y: <?=convert_2_percent($sex->male,$sex_total)?>
-		          }, {
-		              name: 'หญิง',
-		              y: <?=convert_2_percent($sex->female,$sex_total)?>
-		          }]
-		      }],
-		};
-
-		// Column chart
-		// options.chart.renderTo = 'container';
-		// options.chart.type = 'column';
-		// var chart1 = new Highcharts.Chart(options);
-
-
-		$('.renderChartArea').hide();
-
-		chartfunc = function()
-		{
-		var column = document.getElementById('column');
-		var bar = document.getElementById('bar');
-		var pie = document.getElementById('pie');
-		var line = document.getElementById('line');
-		var close = document.getElementById('close');
-
-
-		if(column.checked)
-		    {
-						$('.renderChartArea').show();
-		        options.chart.renderTo = 'container';
-		        options.chart.type = 'column';
-		        var chart1 = new Highcharts.Chart(options);
-		    }
-		else if(bar.checked)
-		    {
-						$('.renderChartArea').show();
-		        options.chart.renderTo = 'container';
-		        options.chart.type = 'bar';
-		        var chart1 = new Highcharts.Chart(options);
-		    }
-		else if(pie.checked)
-		    {
-						$('.renderChartArea').show();
-		        options.chart.renderTo = 'container';
-		        options.chart.type = 'pie';
-		        var chart1 = new Highcharts.Chart(options);
-		    }
-		else if(close.checked)
-		    {
-						$('.renderChartArea').hide();
-		    }
-		else
-		    {
-						$('.renderChartArea').show();
-		        options.chart.renderTo = 'container';
-		        options.chart.type = 'line';
-		        var chart1 = new Highcharts.Chart(options);
-		    }
-
-		}
-		});
-		</script>
-		<td colspan="3" class="renderChartArea">
-				<div id="container"></div>
+		<td>
+			- 1 ปี
+		</td>
+		<td>
+			<?=$age->male_year_1?>
+		</td>
+		<td>
+			<?=$age->female_year_1?>
+		</td>
+		<td>
+			<?=$age->male_year_1 + $age->female_year_1?>
 		</td>
 	</tr>
 	<tr>
-		<td>- ชาย</td>
-		<td><?=$sex->male?></td>
-		<td><?=convert_2_percent($sex->male,$sex_total)?></td>
-	</tr>
-	<tr>
-		<td>- หญิง</td>
-		<td><?=$sex->female?></td>
-		<td><?=convert_2_percent($sex->female,$sex_total)?></td>
-	</tr>
-	<tr class="subheader">
-		<td colspan="3">กลุ่มอายุ
-			<div style="float:right; display:inline;">
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column2" value="column" onclick= "chartfunc2()"><i class="fa fa-bar-chart"></i></label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar2" value="bar" onclick= "chartfunc2()"><i class="fa fa-bar-chart fa-rotate-90"></i></label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie2" value="pie" onclick= "chartfunc2()"><i class="fa fa-pie-chart"></i></label>
-			<!-- <label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line2" value="line" onclick= "chartfunc2()">Line</label> -->
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close2" value="close" onclick= "chartfunc2()"><i class="fa fa-times"></i></label>
-			</div>
+		<td>
+			- 2 ปี
+		</td>
+		<td>
+			<?=$age->male_year_2?>
+		</td>
+		<td>
+			<?=$age->female_year_2?>
+		</td>
+		<td>
+			<?=$age->male_year_2 + $age->female_year_2?>
 		</td>
 	</tr>
 	<tr>
-		<script type="text/javascript">
-		$(function () {
-		//--------------------------- Create the chart แจกแจงตามกลุ่มอายุ --------------------------
-		var options2 = {
-		    chart: {
-		        plotBorderWidth: 0
-		    },
-		    title: {
-		        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามกลุ่มอายุ',
-		    },
-		    //
-		    // subtitle: {
-		    //  text: 'Subtitle'
-		    // },
-		    //
-		    xAxis: {
-					type: 'category',
-		    },
-		    yAxis: {
-		        title: {
-		            text: 'ร้อยละ'
-		        },
-		    },
-		    legend: {
-		        enabled: true,
-		    },
-				tooltip: {
-					formatter: function() {
-					    // If you want to see what is available in the formatter, you can
-					    // examine the `this` variable.
-					    //     console.log(this);
-					    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
-					}
-				},
-		    plotOptions: {
-		        series: {
-		            pointPadding: 0.2,
-		            borderWidth: 0,
-		            dataLabels: {
-		                enabled: true,
-										format: '{point.name}: <b>{point.y}%</b>'
-		            }
-		        },
-		        pie: {
-		            plotBorderWidth: 0,
-		            allowPointSelect: true,
-		            cursor: 'pointer',
-		            size: '100%',
-		            dataLabels: {
-		                enabled: true,
-		                format: '{point.name}: <b>{point.y}%</b>'
-		            }
-		        }
-		    },
-		     series: [{
-		          name: 'กลุ่มอายุ',
-		          colorByPoint: true,
-		          data: [{
-		              name: 'ต่ำกว่า 1 ปี',
-		              y: <?=convert_2_percent($age->year_0,$age_total)?>
-		          }, {
-		              name: '1 ปี',
-		              y: <?=convert_2_percent($age->year_1,$age_total)?>
-		          }, {
-		              name: '2 ปี',
-		              y: <?=convert_2_percent($age->year_2,$age_total)?>
-		          }, {
-		              name: '3 ปี',
-		              y: <?=convert_2_percent($age->year_3,$age_total)?>
-		          }, {
-		              name: '4 ปี',
-		              y: <?=convert_2_percent($age->year_4,$age_total)?>
-		          }, {
-		              name: '5 ปี',
-		              y: <?=convert_2_percent($age->year_5,$age_total)?>
-		          }, {
-		              name: '6 ปี',
-		              y: <?=convert_2_percent($age->year_6,$age_total)?>
-		          }, {
-		              name: '7 ปี',
-		              y: <?=convert_2_percent($age->year_7,$age_total)?>
-		          }]
-		      }],
-		};
-
-		// Column chart
-		// options.chart.renderTo = 'container';
-		// options.chart.type = 'column';
-		// var chart1 = new Highcharts.Chart(options);
-
-
-		$('.renderChartArea2').hide();
-
-		chartfunc2 = function()
-		{
-		var column = document.getElementById('column2');
-		var bar = document.getElementById('bar2');
-		var pie = document.getElementById('pie2');
-		var line = document.getElementById('line2');
-		var close = document.getElementById('close2');
-
-
-		if(column.checked)
-		    {
-						$('.renderChartArea2').show();
-		        options2.chart.renderTo = 'container2';
-		        options2.chart.type = 'column';
-		        var chart2 = new Highcharts.Chart(options2);
-		    }
-		else if(bar.checked)
-		    {
-						$('.renderChartArea2').show();
-		        options2.chart.renderTo = 'container2';
-		        options2.chart.type = 'bar';
-		        var chart2 = new Highcharts.Chart(options2);
-		    }
-		else if(pie.checked)
-		    {
-						$('.renderChartArea2').show();
-		        options2.chart.renderTo = 'container2';
-		        options2.chart.type = 'pie';
-		        var chart2 = new Highcharts.Chart(options2);
-		    }
-		else if(close.checked)
-		    {
-						$('.renderChartArea2').hide();
-		    }
-		else
-		    {
-						$('.renderChartArea2').show();
-		        options2.chart.renderTo = 'container2';
-		        options2.chart.type = 'line';
-		        var chart2 = new Highcharts.Chart(options2);
-		    }
-
-		}
-		});
-		</script>
-		<td colspan="3" class="renderChartArea2">
-				<div id="container2"></div>
+		<td>
+			- 3 ปี
+		</td>
+		<td>
+			<?=$age->male_year_3?>
+		</td>
+		<td>
+			<?=$age->female_year_3?>
+		</td>
+		<td>
+			<?=$age->male_year_3 + $age->female_year_3?>
 		</td>
 	</tr>
 	<tr>
-		<td>- ต่ำกว่า 1 ปี</td>
-		<td><?=$age->year_0?></td>
-		<td><?=convert_2_percent($age->year_0,$age_total)?></td>
-	</tr>
-	<tr>
-		<td>- 1 ปี</td>
-		<td><?=$age->year_1?></td>
-		<td><?=convert_2_percent($age->year_1,$age_total)?></td>
-	</tr>
-	<tr>
-		<td>- 2 ปี</td>
-		<td><?=$age->year_2?></td>
-		<td><?=convert_2_percent($age->year_2,$age_total)?></td>
-	</tr>
-	<tr>
-		<td>- 3 ปี</td>
-		<td><?=$age->year_3?></td>
-		<td><?=convert_2_percent($age->year_3,$age_total)?></td>
-	</tr>
-	<tr>
-		<td>- 4 ปี</td>
-		<td><?=$age->year_4?></td>
-		<td><?=convert_2_percent($age->year_4,$age_total)?></td>
-	</tr>
-	<tr>
-		<td>- 5 ปี</td>
-		<td><?=$age->year_5?></td>
-		<td><?=convert_2_percent($age->year_5,$age_total)?></td>
-	</tr>
-	<tr>
-		<td>- 6 ปี</td>
-		<td><?=$age->year_6?></td>
-		<td><?=convert_2_percent($age->year_6,$age_total)?></td>
-	</tr>
-	<tr>
-		<td>- 7 ปี</td>
-		<td><?=$age->year_7?></td>
-		<td><?=convert_2_percent($age->year_7,$age_total)?></td>
-	</tr>
-	<tr class="subheader">
-		<td colspan="3">แจกแจงตามโรค
-			<div style="float:right; display:inline;">
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column3" value="column" onclick= "chartfunc3()"><i class="fa fa-bar-chart"></i></label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar3" value="bar" onclick= "chartfunc3()"><i class="fa fa-bar-chart fa-rotate-90"></i></label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie3" value="pie" onclick= "chartfunc3()"><i class="fa fa-pie-chart"></i></label>
-			<!-- <label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line3" value="line" onclick= "chartfunc3()">Line</label> -->
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close3" value="close" onclick= "chartfunc3()"><i class="fa fa-times"></i></label>
-			</div>
+		<td>
+			- 4 ปี
+		</td>
+		<td>
+			<?=$age->male_year_4?>
+		</td>
+		<td>
+			<?=$age->female_year_4?>
+		</td>
+		<td>
+			<?=$age->male_year_4 + $age->female_year_4?>
 		</td>
 	</tr>
 	<tr>
-		<script type="text/javascript">
-		$(function () {
-		//--------------------------- Create the chart แจกแจงตามโรค --------------------------
-		var options3 = {
-		    chart: {
-		        plotBorderWidth: 0
-		    },
-		    title: {
-		        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามโรค',
-		    },
-		    //
-		    // subtitle: {
-		    //  text: 'Subtitle'
-		    // },
-		    //
-		    xAxis: {
-					type: 'category',
-		    },
-		    yAxis: {
-		        title: {
-		            text: 'ร้อยละ'
-		        },
-		    },
-		    legend: {
-		        enabled: true,
-		    },
-				tooltip: {
-					formatter: function() {
-					    // If you want to see what is available in the formatter, you can
-					    // examine the `this` variable.
-					    //     console.log(this);
-					    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
-					}
-				},
-		    plotOptions: {
-		        series: {
-		            pointPadding: 0.2,
-		            borderWidth: 0,
-		            dataLabels: {
-		                enabled: true,
-										format: '{point.name}: <b>{point.y}%</b>'
-		            }
-		        },
-		        pie: {
-		            plotBorderWidth: 0,
-		            allowPointSelect: true,
-		            cursor: 'pointer',
-		            size: '100%',
-		            dataLabels: {
-		                enabled: true,
-		                format: '{point.name}: <b>{point.y}%</b>'
-		            }
-		        }
-		    },
-		     series: [{
-		          name: 'โรค',
-		          colorByPoint: true,
-		          data: [{
-		              name: 'หวัด',
-		              y: <?=convert_2_percent($disease->disease_1,$disease_total)?>
-		          }, {
-		              name: 'มือ เท้า ปาก',
-		              y: <?=convert_2_percent($disease->disease_2,$disease_total)?>
-		          }, {
-		              name: 'อุจจาระร่วง',
-		              y: <?=convert_2_percent($disease->disease_3,$disease_total)?>
-		          }, {
-		              name: 'ไข้',
-		              y: <?=convert_2_percent($disease->disease_4,$disease_total)?>
-		          }, {
-		              name: 'ไข้ออกผื่น',
-		              y: <?=convert_2_percent($disease->disease_5,$disease_total)?>
-		          }, {
-		              name: 'อื่นๆ',
-		              y: <?=convert_2_percent($disease->disease_6,$disease_total)?>
-		          }]
-		      }],
-		};
-
-		// Column chart
-		// options.chart.renderTo = 'container';
-		// options.chart.type = 'column';
-		// var chart1 = new Highcharts.Chart(options);
-
-
-		$('.renderChartArea3').hide();
-
-		chartfunc3 = function()
-		{
-		var column = document.getElementById('column3');
-		var bar = document.getElementById('bar3');
-		var pie = document.getElementById('pie3');
-		var line = document.getElementById('line3');
-		var close = document.getElementById('close3');
-
-
-		if(column.checked)
-		    {
-						$('.renderChartArea3').show();
-		        options3.chart.renderTo = 'container3';
-		        options3.chart.type = 'column';
-		        var chart3 = new Highcharts.Chart(options3);
-		    }
-		else if(bar.checked)
-		    {
-						$('.renderChartArea3').show();
-		        options3.chart.renderTo = 'container3';
-		        options3.chart.type = 'bar';
-		        var chart3 = new Highcharts.Chart(options3);
-		    }
-		else if(pie.checked)
-		    {
-						$('.renderChartArea3').show();
-		        options3.chart.renderTo = 'container3';
-		        options3.chart.type = 'pie';
-		        var chart3 = new Highcharts.Chart(options3);
-		    }
-		else if(close.checked)
-		    {
-						$('.renderChartArea3').hide();
-		    }
-		else
-		    {
-						$('.renderChartArea3').show();
-		        options3.chart.renderTo = 'container3';
-		        options3.chart.type = 'line';
-		        var chart3 = new Highcharts.Chart(options3);
-		    }
-
-		}
-		});
-		</script>
-		<td colspan="3" class="renderChartArea3">
-				<div id="container3"></div>
+		<td>
+			- 5 ปี
+		</td>
+		<td>
+			<?=$age->male_year_5?>
+		</td>
+		<td>
+			<?=$age->female_year_5?>
+		</td>
+		<td>
+			<?=$age->male_year_5 + $age->female_year_5?>
 		</td>
 	</tr>
 	<tr>
-		<td>- หวัด</td>
-		<td><?=$disease->disease_1?></td>
-		<td><?=convert_2_percent($disease->disease_1,$disease_total)?></td>
-	</tr>
-	<tr>
-		<td>- มือ เท้า ปาก</td>
-		<td><?=$disease->disease_2?></td>
-		<td><?=convert_2_percent($disease->disease_2,$disease_total)?></td>
-	</tr>
-	<tr>
-		<td>- อุจจาระร่วง</td>
-		<td><?=$disease->disease_3?></td>
-		<td><?=convert_2_percent($disease->disease_3,$disease_total)?></td>
-	</tr>
-	<tr>
-		<td>- ไข้</td>
-		<td><?=$disease->disease_4?></td>
-		<td><?=convert_2_percent($disease->disease_4,$disease_total)?></td>
-	</tr>
-	<tr>
-		<td>- ไข้ออกผื่น</td>
-		<td><?=$disease->disease_5?></td>
-		<td><?=convert_2_percent($disease->disease_5,$disease_total)?></td>
-	</tr>
-	<tr>
-		<td>- อื่นๆ</td>
-		<td><?=$disease->disease_6?></td>
-		<td><?=convert_2_percent($disease->disease_6,$disease_total)?></td>
-	</tr>
-	<tr class="subheader">
-		<td colspan="3">สถานะเด็กป่วย
-			<div style="float:right; display:inline;">
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column4" value="column" onclick= "chartfunc4()"><i class="fa fa-bar-chart"></i></label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar4" value="bar" onclick= "chartfunc4()"><i class="fa fa-bar-chart fa-rotate-90"></i></label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie4" value="pie" onclick= "chartfunc4()"><i class="fa fa-pie-chart"></i></label>
-			<!-- <label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line4" value="line" onclick= "chartfunc4()">Line</label> -->
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close4" value="close" onclick= "chartfunc4()"><i class="fa fa-times"></i></label>
-			</div>
+		<td>
+			- 6 ปี
+		</td>
+		<td>
+			<?=$age->male_year_6?>
+		</td>
+		<td>
+			<?=$age->female_year_6?>
+		</td>
+		<td>
+			<?=$age->male_year_6 + $age->female_year_6?>
 		</td>
 	</tr>
 	<tr>
-		<script type="text/javascript">
-		$(function () {
-		//--------------------------- Create the chart แจกแจงตามสถานะเด็กป่วย --------------------------
-		var options4 = {
-		    chart: {
-		        plotBorderWidth: 0
-		    },
-		    title: {
-		        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามสถานะเด็กป่วย',
-		    },
-		    //
-		    // subtitle: {
-		    //  text: 'Subtitle'
-		    // },
-		    //
-		    xAxis: {
-					type: 'category',
-		    },
-		    yAxis: {
-		        title: {
-		            text: 'ร้อยละ'
-		        },
-		    },
-		    legend: {
-		        enabled: true,
-		    },
-				tooltip: {
-					formatter: function() {
-					    // If you want to see what is available in the formatter, you can
-					    // examine the `this` variable.
-					    //     console.log(this);
-					    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
-					}
-				},
-		    plotOptions: {
-		        series: {
-		            pointPadding: 0.2,
-		            borderWidth: 0,
-		            dataLabels: {
-		                enabled: true,
-										format: '{point.name}: <b>{point.y}%</b>'
-		            }
-		        },
-		        pie: {
-		            plotBorderWidth: 0,
-		            allowPointSelect: true,
-		            cursor: 'pointer',
-		            size: '100%',
-		            dataLabels: {
-		                enabled: true,
-		                format: '{point.name}: <b>{point.y}%</b>'
-		            }
-		        }
-		    },
-		     series: [{
-		          name: 'สถานะเด็กป่วย',
-		          colorByPoint: true,
-		          data: [{
-		              name: 'มาเรียน',
-		              y: <?=convert_2_percent($sick_status->sick_status_1,$sick_status_total)?>
-		          }, {
-		              name: 'หยุดเรียน',
-		              y: <?=convert_2_percent($sick_status->sick_status_2,$sick_status_total)?>
-		          }]
-		      }],
-		};
-
-		// Column chart
-		// options.chart.renderTo = 'container';
-		// options.chart.type = 'column';
-		// var chart1 = new Highcharts.Chart(options);
-
-
-		$('.renderChartArea4').hide();
-
-		chartfunc4 = function()
-		{
-		var column = document.getElementById('column4');
-		var bar = document.getElementById('bar4');
-		var pie = document.getElementById('pie4');
-		var line = document.getElementById('line4');
-		var close = document.getElementById('close4');
-
-
-		if(column.checked)
-		    {
-						$('.renderChartArea4').show();
-		        options4.chart.renderTo = 'container4';
-		        options4.chart.type = 'column';
-		        var chart4 = new Highcharts.Chart(options4);
-		    }
-		else if(bar.checked)
-		    {
-						$('.renderChartArea4').show();
-		        options4.chart.renderTo = 'container4';
-		        options4.chart.type = 'bar';
-		        var chart4 = new Highcharts.Chart(options4);
-		    }
-		else if(pie.checked)
-		    {
-						$('.renderChartArea4').show();
-		        options4.chart.renderTo = 'container4';
-		        options4.chart.type = 'pie';
-		        var chart4 = new Highcharts.Chart(options4);
-		    }
-		else if(close.checked)
-		    {
-						$('.renderChartArea4').hide();
-		    }
-		else
-		    {
-						$('.renderChartArea4').show();
-		        options4.chart.renderTo = 'container4';
-		        options4.chart.type = 'line';
-		        var chart4 = new Highcharts.Chart(options4);
-		    }
-
-		}
-		});
-		</script>
-		<td colspan="3" class="renderChartArea4">
-				<div id="container4"></div>
+		<td>
+			- 7 ปี
 		</td>
-	</tr>
-	<tr>
-		<td>- มาเรียน</td>
-		<td><?=$sick_status->sick_status_1?></td>
-		<td><?=convert_2_percent($sick_status->sick_status_1,$sick_status_total)?></td>
-	</tr>
-	<tr>
-		<td>- หยุดเรียน</td>
-		<td><?=$sick_status->sick_status_2?></td>
-		<td><?=convert_2_percent($sick_status->sick_status_2,$sick_status_total)?></td>
-	</tr>
-	<tr class="subheader">
-		<td colspan="3">การแยกเด็กป่วย
-			<div style="float:right; display:inline;">
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column5" value="column" onclick= "chartfunc5()"><i class="fa fa-bar-chart"></i></label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar5" value="bar" onclick= "chartfunc5()"><i class="fa fa-bar-chart fa-rotate-90"></i></label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie5" value="pie" onclick= "chartfunc5()"><i class="fa fa-pie-chart"></i></label>
-			<!-- <label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line5" value="line" onclick= "chartfunc5()">Line</label> -->
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close5" value="close" onclick= "chartfunc5()"><i class="fa fa-times"></i></label>
-			</div>
+		<td>
+			<?=$age->male_year_7?>
 		</td>
-	</tr>
-	<tr>
-		<script type="text/javascript">
-		$(function () {
-		//--------------------------- Create the chart แจกแจงตามการแยกเด็กป่วย --------------------------
-		var options5 = {
-		    chart: {
-		        plotBorderWidth: 0
-		    },
-		    title: {
-		        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามการแยกเด็กป่วย',
-		    },
-		    //
-		    // subtitle: {
-		    //  text: 'Subtitle'
-		    // },
-		    //
-		    xAxis: {
-					type: 'category',
-		    },
-		    yAxis: {
-		        title: {
-		            text: 'ร้อยละ'
-		        },
-		    },
-		    legend: {
-		        enabled: true,
-		    },
-				tooltip: {
-					formatter: function() {
-					    // If you want to see what is available in the formatter, you can
-					    // examine the `this` variable.
-					    //     console.log(this);
-					    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
-					}
-				},
-		    plotOptions: {
-		        series: {
-		            pointPadding: 0.2,
-		            borderWidth: 0,
-		            dataLabels: {
-		                enabled: true,
-										format: '{point.name}: <b>{point.y}%</b>'
-		            }
-		        },
-		        pie: {
-		            plotBorderWidth: 0,
-		            allowPointSelect: true,
-		            cursor: 'pointer',
-		            size: '100%',
-		            dataLabels: {
-		                enabled: true,
-		                format: '{point.name}: <b>{point.y}%</b>'
-		            }
-		        }
-		    },
-		     series: [{
-		          name: 'สถานะเด็กป่วย',
-		          colorByPoint: true,
-		          data: [{
-		              name: 'ไม่มีการแยกนอนแยกเล่น',
-		              y: <?=convert_2_percent($separate->separate_1,$separate_total)?>
-		          }, {
-		              name: 'แยกนอน',
-		              y: <?=convert_2_percent($separate->separate_2,$separate_total)?>
-		          }, {
-		              name: 'แยกเล่น',
-		              y: <?=convert_2_percent($separate->separate_3,$separate_total)?>
-		          }]
-		      }],
-		};
-
-		// Column chart
-		// options.chart.renderTo = 'container';
-		// options.chart.type = 'column';
-		// var chart1 = new Highcharts.Chart(options);
-
-
-		$('.renderChartArea5').hide();
-
-		chartfunc5 = function()
-		{
-		var column = document.getElementById('column5');
-		var bar = document.getElementById('bar5');
-		var pie = document.getElementById('pie5');
-		var line = document.getElementById('line5');
-		var close = document.getElementById('close5');
-
-
-		if(column.checked)
-		    {
-						$('.renderChartArea5').show();
-		        options5.chart.renderTo = 'container5';
-		        options5.chart.type = 'column';
-		        var chart5 = new Highcharts.Chart(options5);
-		    }
-		else if(bar.checked)
-		    {
-						$('.renderChartArea5').show();
-		        options5.chart.renderTo = 'container5';
-		        options5.chart.type = 'bar';
-		        var chart5 = new Highcharts.Chart(options5);
-		    }
-		else if(pie.checked)
-		    {
-						$('.renderChartArea5').show();
-		        options5.chart.renderTo = 'container5';
-		        options5.chart.type = 'pie';
-		        var chart5 = new Highcharts.Chart(options5);
-		    }
-		else if(close.checked)
-		    {
-						$('.renderChartArea5').hide();
-		    }
-		else
-		    {
-						$('.renderChartArea5').show();
-		        options5.chart.renderTo = 'container5';
-		        options5.chart.type = 'line';
-		        var chart5 = new Highcharts.Chart(options5);
-		    }
-
-		}
-		});
-		</script>
-		<td colspan="3" class="renderChartArea5">
-				<div id="container5"></div>
+		<td>
+			<?=$age->female_year_7?>
 		</td>
-	</tr>
-	<tr>
-		<td>- ไม่มีการแยกนอนแยกเล่น</td>
-		<td><?=$separate->separate_1?></td>
-		<td><?=convert_2_percent($separate->separate_1,$separate_total)?></td>
-	</tr>
-	<tr>
-		<td>- แยกนอน</td>
-		<td><?=$separate->separate_2?></td>
-		<td><?=convert_2_percent($separate->separate_2,$separate_total)?></td>
-	</tr>
-	<tr>
-		<td>- แยกเล่น</td>
-		<td><?=$separate->separate_3?></td>
-		<td><?=convert_2_percent($separate->separate_3,$separate_total)?></td>
-	</tr>
-	<tr class="subheader">
-		<td colspan="3">กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน
-			<div style="float:right; display:inline;">
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "column6" value="column" onclick= "chartfunc6()"><i class="fa fa-bar-chart"></i></label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "bar6" value="bar" onclick= "chartfunc6()"><i class="fa fa-bar-chart fa-rotate-90"></i></label>
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "pie6" value="pie" onclick= "chartfunc6()"><i class="fa fa-pie-chart"></i></label>
-			<!-- <label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "line6" value="line" onclick= "chartfunc6()">Line</label> -->
-			<label class="radio-inline"><input type="radio" name="mychart" class="mychart" id= "close6" value="close" onclick= "chartfunc6()"><i class="fa fa-times"></i></label>
-			</div>
+		<td>
+			<?=$age->male_year_7 + $age->female_year_7?>
 		</td>
-	</tr>
-	<tr>
-		<script type="text/javascript">
-		$(function () {
-		//--------------------------- Create the chart แจกแจงตามกรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน --------------------------
-		var options6 = {
-		    chart: {
-		        plotBorderWidth: 0
-		    },
-		    title: {
-		        text: 'รอยละจำนวนเด็กของศูนย์เด็กเล็ก แจกแจงตามกรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน',
-		    },
-		    //
-		    // subtitle: {
-		    //  text: 'Subtitle'
-		    // },
-		    //
-		    xAxis: {
-					type: 'category',
-		    },
-		    yAxis: {
-		        title: {
-		            text: 'ร้อยละ'
-		        },
-		    },
-		    legend: {
-		        enabled: true,
-		    },
-				tooltip: {
-					formatter: function() {
-					    // If you want to see what is available in the formatter, you can
-					    // examine the `this` variable.
-					    //     console.log(this);
-					    return '<b>' + this.point.name + ': ' + this.y +'%</b>';
-					}
-				},
-		    plotOptions: {
-		        series: {
-		            pointPadding: 0.2,
-		            borderWidth: 0,
-		            dataLabels: {
-		                enabled: true,
-										format: '{point.name}: <b>{point.y}%</b>'
-		            }
-		        },
-		        pie: {
-		            plotBorderWidth: 0,
-		            allowPointSelect: true,
-		            cursor: 'pointer',
-		            size: '100%',
-		            dataLabels: {
-		                enabled: true,
-		                format: '{point.name}: <b>{point.y}%</b>'
-		            }
-		        }
-		    },
-		     series: [{
-		          name: 'กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน',
-		          colorByPoint: true,
-		          data: [{
-		              name: 'มี',
-		              y: <?=convert_2_percent($same->same_1,$same_total)?>
-		          }, {
-		              name: 'ไม่มี',
-		              y: <?=convert_2_percent($same->same_2,$same_total)?>
-		          }]
-		      }],
-		};
-
-		// Column chart
-		// options.chart.renderTo = 'container';
-		// options.chart.type = 'column';
-		// var chart1 = new Highcharts.Chart(options);
-
-
-		$('.renderChartArea6').hide();
-
-		chartfunc6 = function()
-		{
-		var column = document.getElementById('column6');
-		var bar = document.getElementById('bar6');
-		var pie = document.getElementById('pie6');
-		var line = document.getElementById('line6');
-		var close = document.getElementById('close6');
-
-
-		if(column.checked)
-		    {
-						$('.renderChartArea6').show();
-		        options6.chart.renderTo = 'container6';
-		        options6.chart.type = 'column';
-		        var chart6 = new Highcharts.Chart(options6);
-		    }
-		else if(bar.checked)
-		    {
-						$('.renderChartArea6').show();
-		        options6.chart.renderTo = 'container6';
-		        options6.chart.type = 'bar';
-		        var chart6 = new Highcharts.Chart(options6);
-		    }
-		else if(pie.checked)
-		    {
-						$('.renderChartArea6').show();
-		        options6.chart.renderTo = 'container6';
-		        options6.chart.type = 'pie';
-		        var chart6 = new Highcharts.Chart(options6);
-		    }
-		else if(close.checked)
-		    {
-						$('.renderChartArea6').hide();
-		    }
-		else
-		    {
-						$('.renderChartArea6').show();
-		        options6.chart.renderTo = 'container6';
-		        options6.chart.type = 'line';
-		        var chart5 = new Highcharts.Chart(options6);
-		    }
-		}
-		});
-		</script>
-		<td colspan="3" class="renderChartArea6">
-				<div id="container6"></div>
-		</td>
-	</tr>
-	<tr>
-		<td>- มี</td>
-		<td><?=$same->same_1?></td>
-		<td><?=convert_2_percent($same->same_1,$same_total)?></td>
-	</tr>
-	<tr>
-		<td>- ไม่มี</td>
-		<td><?=$same->same_2?></td>
-		<td><?=convert_2_percent($same->same_2,$same_total)?></td>
 	</tr>
 </table>
+<?endif;?>
+
+
+
+<?if(@$_GET['main_factor'] == 'age' && @$_GET['second_factor'] == 'c1'):?>
+<script>
+$(function () {
+    $('#container2').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามอายุ และโรค'
+        },
+        xAxis: {
+            categories: ['ต่ำกว่า 1 ปี', '1 ปี', '2 ปี', '3 ปี', '4 ปี','5 ปี', '6 ปี', '7 ปี']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'โรค'
+            }
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.2f}%)<br/>',
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent'
+            },
+            series: {
+	            dataLabels: {
+	                enabled: true,
+									format: '{point.percentage:.2f}%'
+	            }
+	        }
+        },
+        series: [{
+            name: 'หวัด',
+            data: [<?=$ageDisease->year_0_c?>, <?=$ageDisease->year_1_c?>, <?=$ageDisease->year_2_c?>, <?=$ageDisease->year_3_c?>, <?=$ageDisease->year_4_c?>, <?=$ageDisease->year_5_c?>, <?=$ageDisease->year_6_c?>, <?=$ageDisease->year_7_c?>]
+        }, {
+            name: 'มือ เท้า ปาก',
+            data: [<?=$ageDisease->year_0_h?>, <?=$ageDisease->year_1_h?>, <?=$ageDisease->year_2_h?>, <?=$ageDisease->year_3_h?>, <?=$ageDisease->year_4_h?>, <?=$ageDisease->year_5_h?>, <?=$ageDisease->year_6_h?>, <?=$ageDisease->year_7_h?>]
+        }, {
+            name: 'อุจจาระร่วง',
+            data: [<?=$ageDisease->year_0_d?>, <?=$ageDisease->year_1_d?>, <?=$ageDisease->year_2_d?>, <?=$ageDisease->year_3_d?>, <?=$ageDisease->year_4_d?>, <?=$ageDisease->year_5_d?>, <?=$ageDisease->year_6_d?>, <?=$ageDisease->year_7_d?>]
+        }, {
+            name: 'ไข้',
+            data: [<?=$ageDisease->year_0_f?>, <?=$ageDisease->year_1_f?>, <?=$ageDisease->year_2_f?>, <?=$ageDisease->year_3_f?>, <?=$ageDisease->year_4_f?>, <?=$ageDisease->year_5_f?>, <?=$ageDisease->year_6_f?>, <?=$ageDisease->year_7_f?>]
+        }, {
+            name: 'ไข้ออกผื่น',
+            data: [<?=$ageDisease->year_0_r?>, <?=$ageDisease->year_1_r?>, <?=$ageDisease->year_2_r?>, <?=$ageDisease->year_3_r?>, <?=$ageDisease->year_4_r?>, <?=$ageDisease->year_5_r?>, <?=$ageDisease->year_6_r?>, <?=$ageDisease->year_7_r?>]
+        }, {
+            name: 'อื่นๆ',
+            data: [<?=$ageDisease->year_0_o?>, <?=$ageDisease->year_1_o?>, <?=$ageDisease->year_2_o?>, <?=$ageDisease->year_3_o?>, <?=$ageDisease->year_4_o?>, <?=$ageDisease->year_5_o?>, <?=$ageDisease->year_6_o?>, <?=$ageDisease->year_7_o?>]
+        }]
+    });
+});
+</script>
+<div id="container2"></div>
+<table class="table table-bordered">
+	<tr>
+		<th rowspan="2">
+			อายุเด็ก
+		</th>
+		<th colspan="7">
+			โรคที่พบบ่อย
+		</th>
+	</tr>
+	<tr>
+		<th width="75">
+			หวัด
+		</th>
+		<th width="75">
+			มือ เท้า ปาก
+		</th>
+		<th width="75">
+			อุจจาระร่วง
+		</th>
+		<th width="75">
+			ไข้
+		</th>
+		<th width="75">
+			ไข้ออกผื่น
+		</th>
+		<th width="75">
+			อื่นๆ
+		</th>
+		<th width="75">
+			รวม
+		</th>
+	</tr>
+	<tr>
+		<td>
+			- ต่ำกว่า 1 ปี
+		</td>
+		<td>
+			<?=$ageDisease->year_0_c?>
+		</td>
+		<td>
+			<?=$ageDisease->year_0_h?>
+		</td>
+		<td>
+			<?=$ageDisease->year_0_d?>
+		</td>
+		<td>
+			<?=$ageDisease->year_0_f?>
+		</td>
+		<td>
+			<?=$ageDisease->year_0_r?>
+		</td>
+		<td>
+			<?=$ageDisease->year_0_o?>
+		</td>
+		<td>
+			<?=$ageDisease->year_0_c + $ageDisease->year_0_h + $ageDisease->year_0_d + $ageDisease->year_0_f + $ageDisease->year_0_r + $ageDisease->year_0_o?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 1 ปี
+		</td>
+		<td>
+			<?=$ageDisease->year_1_c?>
+		</td>
+		<td>
+			<?=$ageDisease->year_1_h?>
+		</td>
+		<td>
+			<?=$ageDisease->year_1_d?>
+		</td>
+		<td>
+			<?=$ageDisease->year_1_f?>
+		</td>
+		<td>
+			<?=$ageDisease->year_1_r?>
+		</td>
+		<td>
+			<?=$ageDisease->year_1_o?>
+		</td>
+		<td>
+			<?=$ageDisease->year_1_c + $ageDisease->year_1_h + $ageDisease->year_1_d + $ageDisease->year_1_f + $ageDisease->year_1_r + $ageDisease->year_1_o?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 2 ปี
+		</td>
+		<td>
+			<?=$ageDisease->year_2_c?>
+		</td>
+		<td>
+			<?=$ageDisease->year_2_h?>
+		</td>
+		<td>
+			<?=$ageDisease->year_2_d?>
+		</td>
+		<td>
+			<?=$ageDisease->year_2_f?>
+		</td>
+		<td>
+			<?=$ageDisease->year_2_r?>
+		</td>
+		<td>
+			<?=$ageDisease->year_2_o?>
+		</td>
+		<td>
+			<?=$ageDisease->year_2_c + $ageDisease->year_2_h + $ageDisease->year_2_d + $ageDisease->year_2_f + $ageDisease->year_2_r + $ageDisease->year_2_o?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 3 ปี
+		</td>
+		<td>
+			<?=$ageDisease->year_3_c?>
+		</td>
+		<td>
+			<?=$ageDisease->year_3_h?>
+		</td>
+		<td>
+			<?=$ageDisease->year_3_d?>
+		</td>
+		<td>
+			<?=$ageDisease->year_3_f?>
+		</td>
+		<td>
+			<?=$ageDisease->year_3_r?>
+		</td>
+		<td>
+			<?=$ageDisease->year_3_o?>
+		</td>
+		<td>
+			<?=$ageDisease->year_3_c + $ageDisease->year_3_h + $ageDisease->year_3_d + $ageDisease->year_3_f + $ageDisease->year_3_r + $ageDisease->year_3_o?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 4 ปี
+		</td>
+		<td>
+			<?=$ageDisease->year_4_c?>
+		</td>
+		<td>
+			<?=$ageDisease->year_4_h?>
+		</td>
+		<td>
+			<?=$ageDisease->year_4_d?>
+		</td>
+		<td>
+			<?=$ageDisease->year_4_f?>
+		</td>
+		<td>
+			<?=$ageDisease->year_4_r?>
+		</td>
+		<td>
+			<?=$ageDisease->year_4_o?>
+		</td>
+		<td>
+			<?=$ageDisease->year_4_c + $ageDisease->year_4_h + $ageDisease->year_4_d + $ageDisease->year_4_f + $ageDisease->year_4_r + $ageDisease->year_4_o?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 5 ปี
+		</td>
+		<td>
+			<?=$ageDisease->year_5_c?>
+		</td>
+		<td>
+			<?=$ageDisease->year_5_h?>
+		</td>
+		<td>
+			<?=$ageDisease->year_5_d?>
+		</td>
+		<td>
+			<?=$ageDisease->year_5_f?>
+		</td>
+		<td>
+			<?=$ageDisease->year_5_r?>
+		</td>
+		<td>
+			<?=$ageDisease->year_5_o?>
+		</td>
+		<td>
+			<?=$ageDisease->year_5_c + $ageDisease->year_5_h + $ageDisease->year_5_d + $ageDisease->year_5_f + $ageDisease->year_5_r + $ageDisease->year_5_o?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 6 ปี
+		</td>
+		<td>
+			<?=$ageDisease->year_6_c?>
+		</td>
+		<td>
+			<?=$ageDisease->year_6_h?>
+		</td>
+		<td>
+			<?=$ageDisease->year_6_d?>
+		</td>
+		<td>
+			<?=$ageDisease->year_6_f?>
+		</td>
+		<td>
+			<?=$ageDisease->year_6_r?>
+		</td>
+		<td>
+			<?=$ageDisease->year_6_o?>
+		</td>
+		<td>
+			<?=$ageDisease->year_6_c + $ageDisease->year_6_h + $ageDisease->year_6_d + $ageDisease->year_6_f + $ageDisease->year_6_r + $ageDisease->year_6_o?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 7 ปี
+		</td>
+		<td>
+			<?=$ageDisease->year_7_c?>
+		</td>
+		<td>
+			<?=$ageDisease->year_7_h?>
+		</td>
+		<td>
+			<?=$ageDisease->year_7_d?>
+		</td>
+		<td>
+			<?=$ageDisease->year_7_f?>
+		</td>
+		<td>
+			<?=$ageDisease->year_7_r?>
+		</td>
+		<td>
+			<?=$ageDisease->year_7_o?>
+		</td>
+		<td>
+			<?=$ageDisease->year_7_c + $ageDisease->year_7_h + $ageDisease->year_7_d + $ageDisease->year_7_f + $ageDisease->year_7_r + $ageDisease->year_7_o?>
+		</td>
+	</tr>
+</table>
+<?endif;?>
+
+
+
+
+<?if(@$_GET['main_factor'] == 'age' && @$_GET['second_factor'] == 'c3'):?>
+<script>
+$(function () {
+    $('#container3').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามอายุ และสถานะเด็กป่วย'
+        },
+        xAxis: {
+            categories: ['ต่ำกว่า 1 ปี', '1 ปี', '2 ปี', '3 ปี', '4 ปี','5 ปี', '6 ปี', '7 ปี']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'สถานะเด็กป่วย'
+            }
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.2f}%)<br/>',
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent'
+            },
+            series: {
+	            dataLabels: {
+	                enabled: true,
+									format: '{point.percentage:.2f}%'
+	            }
+	        }
+        },
+        series: [{
+            name: 'มาเรียน',
+            data: [<?=$ageStatus->status_come_0?>, <?=$ageStatus->status_come_1?>, <?=$ageStatus->status_come_2?>, <?=$ageStatus->status_come_3?>, <?=$ageStatus->status_come_4?>, <?=$ageStatus->status_come_5?>, <?=$ageStatus->status_come_6?>, <?=$ageStatus->status_come_7?>]
+        }, {
+            name: 'หยุดเรียน',
+            data: [<?=$ageStatus->status_absent_0?>, <?=$ageStatus->status_absent_1?>, <?=$ageStatus->status_absent_2?>, <?=$ageStatus->status_absent_3?>, <?=$ageStatus->status_absent_4?>, <?=$ageStatus->status_absent_5?>, <?=$ageStatus->status_absent_6?>, <?=$ageStatus->status_absent_7?>]
+        }]
+    });
+});
+</script>
+
+<div id="container3"></div>
+<table class="table table-bordered">
+	<tr>
+		<th rowspan="2">
+			อายุเด็ก
+		</th>
+		<th colspan="3">
+			สถานะเด็กป่วย
+		</th>
+	</tr>
+	<tr>
+		<th>
+			มาเรียน
+		</th>
+		<th>
+			หยุดเรียน
+		</th>
+		<th>
+			รวม
+		</th>
+	</tr>
+	<tr>
+		<td>
+			- ต่ำกว่า 1 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_0?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_0?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_0+$ageStatus->status_absent_0?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 1 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_1?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_1?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_1+$ageStatus->status_absent_1?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 2 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_2?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_2?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_2+$ageStatus->status_absent_2?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 3 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_3?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_3?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_3+$ageStatus->status_absent_3?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 4 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_4?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_4?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_4+$ageStatus->status_absent_4?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 5 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_5?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_5?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_5+$ageStatus->status_absent_5?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 6 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_6?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_6?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_6+$ageStatus->status_absent_6?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- 7 ปี
+		</td>
+		<td>
+			<?=$ageStatus->status_come_7?>
+		</td>
+		<td>
+			<?=$ageStatus->status_absent_7?>
+		</td>
+		<td>
+			<?=$ageStatus->status_come_7+$ageStatus->status_absent_7?>
+		</td>
+	</tr>
+</table>
+<?endif;?>
+
+
+
+<?if(@$_GET['main_factor'] == 'disease' && @$_GET['second_factor'] == 'sex'):?>
+<script>
+$(function () {
+    $('#container4').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามโรค และเพศ'
+        },
+        xAxis: {
+            categories: ['หวัด', 'มือ เท้า ปาก', 'อุจจาระร่วง', 'ไข้', 'ไข้ออกผื่น','อื่นๆ']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'เพศ'
+            }
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.2f}%)<br/>',
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent'
+            },
+            series: {
+	            dataLabels: {
+	                enabled: true,
+									format: '{point.percentage:.2f}%'
+	            }
+	        }
+        },
+        series: [{
+            name: 'ชาย',
+            data: [<?=$diseaseSex->disease_c_male?>, <?=$diseaseSex->disease_h_male?>, <?=$diseaseSex->disease_d_male?>, <?=$diseaseSex->disease_f_male?>, <?=$diseaseSex->disease_r_male?>, <?=$diseaseSex->disease_o_male?>]
+        }, {
+            name: 'หญิง',
+            data: [<?=$diseaseSex->disease_c_female?>, <?=$diseaseSex->disease_h_female?>, <?=$diseaseSex->disease_d_female?>, <?=$diseaseSex->disease_f_female?>, <?=$diseaseSex->disease_r_female?>, <?=$diseaseSex->disease_o_female?>]
+        }]
+    });
+});
+</script>
+
+<div id="container4"></div>
+<table class="table table-bordered">
+	<tr>
+		<th rowspan="2">
+			โรคที่พบบ่อย
+		</th>
+		<th colspan="3">
+			เพศ
+		</th>
+	</tr>
+	<tr>
+		<th>
+			ชาย
+		</th>
+		<th>
+			หญิง
+		</th>
+		<th>
+			รวม
+		</th>
+	</tr>
+	<tr>
+		<td>
+			- หวัด
+		</td>
+		<td>
+			<?=$diseaseSex->disease_c_male?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_c_female?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_c_male+$diseaseSex->disease_c_female?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- มือ เท้า ปาก
+		</td>
+		<td>
+			<?=$diseaseSex->disease_h_male?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_h_female?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_h_male+$diseaseSex->disease_h_female?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- อุจจาระร่วง
+		</td>
+		<td>
+			<?=$diseaseSex->disease_d_male?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_d_female?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_d_male+$diseaseSex->disease_d_female?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- ไข้
+		</td>
+		<td>
+			<?=$diseaseSex->disease_f_male?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_f_female?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_f_male+$diseaseSex->disease_f_female?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- ไข้ออกผื่น
+		</td>
+		<td>
+			<?=$diseaseSex->disease_r_male?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_r_female?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_r_male+$diseaseSex->disease_r_female?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- อื่นๆ
+		</td>
+		<td>
+			<?=$diseaseSex->disease_o_male?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_o_female?>
+		</td>
+		<td>
+			<?=$diseaseSex->disease_o_male+$diseaseSex->disease_o_female?>
+		</td>
+	</tr>
+</table>
+<?endif;?>
+
+
+
+
+<?if(@$_GET['main_factor'] == 'disease' && @$_GET['second_factor'] == 'c3'):?>
+<script>
+$(function () {
+    $('#container5').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามโรค และสถานะเด็กป่วย'
+        },
+        xAxis: {
+            categories: ['หวัด', 'มือ เท้า ปาก', 'อุจจาระร่วง', 'ไข้', 'ไข้ออกผื่น','อื่นๆ']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'สถานะเด็กป่วย'
+            }
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.2f}%)<br/>',
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent'
+            },
+            series: {
+	            dataLabels: {
+	                enabled: true,
+									format: '{point.percentage:.2f}%'
+	            }
+	        }
+        },
+        series: [{
+            name: 'มาเรียน',
+            data: [<?=$diseaseStatus->disease_c_come?>, <?=$diseaseStatus->disease_h_come?>, <?=$diseaseStatus->disease_d_come?>, <?=$diseaseStatus->disease_f_come?>, <?=$diseaseStatus->disease_r_come?>,<?=$diseaseStatus->disease_o_come?>]
+        }, {
+            name: 'หยุดเรียน',
+            data: [<?=$diseaseStatus->disease_c_absent?>, <?=$diseaseStatus->disease_h_absent?>, <?=$diseaseStatus->disease_d_absent?>, <?=$diseaseStatus->disease_f_absent?>, <?=$diseaseStatus->disease_r_absent?>, <?=$diseaseStatus->disease_o_absent?>]
+        }]
+    });
+});
+</script>
+
+<div id="container5"></div>
+<table class="table table-bordered">
+	<tr>
+		<th rowspan="2">
+			โรคที่พบบ่อย
+		</th>
+		<th colspan="3">
+			สถานะเด็กป่วย
+		</th>
+	</tr>
+	<tr>
+		<th>
+			มาเรียน
+		</th>
+		<th>
+			หยุดเรียน
+		</th>
+		<th>
+			รวม
+		</th>
+	</tr>
+	<tr>
+		<td>
+			- หวัด
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_c_come?>
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_c_absent?>
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_c_come+$diseaseStatus->disease_c_absent?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- มือ เท้า ปาก
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_h_come?>
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_h_absent?>
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_h_come+$diseaseSex->disease_h_absent?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- อุจจาระร่วง
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_d_come?>
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_d_absent?>
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_d_come+$diseaseSex->disease_d_absent?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- ไข้
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_f_come?>
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_f_absent?>
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_f_come+$diseaseSex->disease_f_absent?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- ไข้ออกผื่น
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_r_come?>
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_r_absent?>
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_r_come+$diseaseSex->disease_r_absent?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- อื่นๆ
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_o_come?>
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_o_absent?>
+		</td>
+		<td>
+			<?=$diseaseStatus->disease_o_come+$diseaseSex->disease_o_absent?>
+		</td>
+	</tr>
+</table>
+<?endif;?>
+
+
+
+
+<?if(@$_GET['main_factor'] == 'disease' && @$_GET['second_factor'] == 'c2'):?>
+<script>
+$(function () {
+    $('#container6').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามโรค และการแยกเด็กป่วย'
+        },
+        xAxis: {
+            categories: ['หวัด', 'มือ เท้า ปาก', 'อุจจาระร่วง', 'ไข้', 'ไข้ออกผื่น','อื่นๆ']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'การแยกเด็กป่วย'
+            }
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.2f}%)<br/>',
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent'
+            },
+            series: {
+	            dataLabels: {
+	                enabled: true,
+									format: '{point.percentage:.2f}%'
+	            }
+	        }
+        },
+        series: [{
+            name: 'ไม่มีการแยกนอนแยกเล่น',
+            data: [<?=$diseaseSep->disease_c_0?>, <?=$diseaseSep->disease_h_0?>, <?=$diseaseSep->disease_d_0?>, <?=$diseaseSep->disease_f_0?>, <?=$diseaseSep->disease_r_0?>, <?=$diseaseSep->disease_o_0?>]
+        }, {
+            name: 'แยกนอน',
+            data: [<?=$diseaseSep->disease_c_1?>, <?=$diseaseSep->disease_h_1?>, <?=$diseaseSep->disease_d_1?>, <?=$diseaseSep->disease_f_1?>, <?=$diseaseSep->disease_r_1?>, <?=$diseaseSep->disease_o_1?>]
+        }, {
+            name: 'แยกเล่น',
+            data: [<?=$diseaseSep->disease_c_2?>, <?=$diseaseSep->disease_h_2?>, <?=$diseaseSep->disease_d_2?>, <?=$diseaseSep->disease_f_2?>, <?=$diseaseSep->disease_r_2?>, <?=$diseaseSep->disease_o_2?>]
+        }]
+    });
+});
+</script>
+
+<div id="container6"></div>
+<table class="table table-bordered">
+	<tr>
+		<th rowspan="2">
+			โรคที่พบบ่อย
+		</th>
+		<th colspan="4">
+			การแยกเด็กป่วย
+		</th>
+	</tr>
+	<tr>
+		<th>
+			ไม่มีการแยกนอนแยกเล่น
+		</th>
+		<th>
+			แยกนอน
+		</th>
+		<th>
+			แยกเล่น
+		</th>
+		<th>
+			รวม
+		</th>
+	</tr>
+	<tr>
+		<td>
+			- หวัด
+		</td>
+		<td>
+			<?=$diseaseSep->disease_c_0?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_c_1?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_c_2?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_c_0+$diseaseSep->disease_c_1+$diseaseSep->disease_c_2?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- มือ เท้า ปาก
+		</td>
+		<td>
+			<?=$diseaseSep->disease_h_0?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_h_1?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_h_2?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_h_0+$diseaseSep->disease_h_1+$diseaseSep->disease_h_2?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- อุจจาระร่วง
+		</td>
+		<td>
+			<?=$diseaseSep->disease_d_0?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_d_1?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_d_2?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_d_0+$diseaseSep->disease_d_1+$diseaseSep->disease_d_2?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- ไข้
+		</td>
+		<td>
+			<?=$diseaseSep->disease_f_0?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_f_1?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_f_2?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_f_0+$diseaseSep->disease_f_1+$diseaseSep->disease_f_2?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- ไข้ออกผื่น
+		</td>
+		<td>
+			<?=$diseaseSep->disease_r_0?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_r_1?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_r_2?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_r_0+$diseaseSep->disease_r_1+$diseaseSep->disease_r_2?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- อื่นๆ
+		</td>
+		<td>
+			<?=$diseaseSep->disease_o_0?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_o_1?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_o_2?>
+		</td>
+		<td>
+			<?=$diseaseSep->disease_o_0+$diseaseSep->disease_o_1+$diseaseSep->disease_o_2?>
+		</td>
+	</tr>
+</table>
+<?endif;?>
+
+
+
+
+<?if(@$_GET['main_factor'] == 'disease' && @$_GET['second_factor'] == 'c5'):?>
+<script>
+$(function () {
+    $('#container7').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามโรค และกรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน'
+        },
+        xAxis: {
+            categories: ['หวัด', 'มือ เท้า ปาก', 'อุจจาระร่วง', 'ไข้', 'ไข้ออกผื่น','อื่นๆ']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน'
+            }
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.2f}%)<br/>',
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent'
+            },
+            series: {
+	            dataLabels: {
+	                enabled: true,
+									format: '{point.percentage:.2f}%'
+	            }
+	        }
+        },
+        series: [{
+            name: 'มี',
+            data: [<?=$diseaseSame->disease_c_s1?>, <?=$diseaseSame->disease_h_s1?>, <?=$diseaseSame->disease_d_s1?>, <?=$diseaseSame->disease_f_s1?>, <?=$diseaseSame->disease_r_s1?>, <?=$diseaseSame->disease_o_s1?>]
+        }, {
+            name: 'ไม่มี',
+            data: [<?=$diseaseSame->disease_c_s2?>, <?=$diseaseSame->disease_h_s2?>, <?=$diseaseSame->disease_d_s2?>, <?=$diseaseSame->disease_f_s2?>, <?=$diseaseSame->disease_r_s2?>, <?=$diseaseSame->disease_o_s2?>]
+        }]
+    });
+});
+</script>
+
+<div id="container7"></div>
+<table class="table table-bordered">
+	<tr>
+		<th rowspan="2">
+			โรคที่พบบ่อย
+		</th>
+		<th colspan="3">
+			กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน
+		</th>
+	</tr>
+	<tr>
+		<th>
+			มี
+		</th>
+		<th>
+			ไม่มี
+		</th>
+		<th>
+			รวม
+		</th>
+	</tr>
+	<tr>
+		<td>
+			- หวัด
+		</td>
+		<td>
+			<?=$diseaseSame->disease_c_s1?>
+		</td>
+		<td>
+			<?=$diseaseSame->disease_c_s2?>
+		</td>
+		<td>
+			<?=$diseaseSame->disease_c_s1+$diseaseSame->disease_c_s2?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- มือ เท้า ปาก
+		</td>
+		<td>
+			<?=$diseaseSame->disease_h_s1?>
+		</td>
+		<td>
+			<?=$diseaseSame->disease_h_s2?>
+		</td>
+		<td>
+			<?=$diseaseSame->disease_h_s1+$diseaseSame->disease_h_s2?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- อุจจาระร่วง
+		</td>
+		<td>
+			<?=$diseaseSame->disease_d_s1?>
+		</td>
+		<td>
+			<?=$diseaseSame->disease_d_s2?>
+		</td>
+		<td>
+			<?=$diseaseSame->disease_d_s1+$diseaseSame->disease_d_s2?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- ไข้
+		</td>
+		<td>
+			<?=$diseaseSame->disease_f_s1?>
+		</td>
+		<td>
+			<?=$diseaseSame->disease_f_s2?>
+		</td>
+		<td>
+			<?=$diseaseSame->disease_f_s1+$diseaseSame->disease_f_s2?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- ไข้ออกผื่น
+		</td>
+		<td>
+			<?=$diseaseSame->disease_r_s1?>
+		</td>
+		<td>
+			<?=$diseaseSame->disease_r_s2?>
+		</td>
+		<td>
+			<?=$diseaseSame->disease_r_s1+$diseaseSame->disease_r_s2?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			- อื่นๆ
+		</td>
+		<td>
+			<?=$diseaseSame->disease_o_s1?>
+		</td>
+		<td>
+			<?=$diseaseSame->disease_o_s2?>
+		</td>
+		<td>
+			<?=$diseaseSame->disease_o_s1+$diseaseSame->disease_o_s2?>
+		</td>
+	</tr>
+</table>
+<?endif;?>

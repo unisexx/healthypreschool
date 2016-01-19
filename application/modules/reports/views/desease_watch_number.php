@@ -2,10 +2,10 @@
 #search_report>div{
 	padding-top:10px;
 	padding-bottom:10px;
-}	
+}
 
 #datatable{
-  /*table-layout: fixed;*/ 
+  /*table-layout: fixed;*/
   *margin-left: -326px;/*ie7*/
 }
 #datatable td, th {
@@ -90,7 +90,7 @@ tbody>tr>th{
 <script type="text/javascript">
 var jQuery_1_4_2 = $.noConflict(true);
 $(document).ready(function(){
-jQuery_1_4_2("input.datepicker").date_input(); 
+jQuery_1_4_2("input.datepicker").date_input();
 });
 </script>
 
@@ -98,18 +98,18 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active"><a href="#">รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</a></li>
+  <li class="active"><a href="#">รายงานจำนวนเหตุการณ์การเฝ้าระวังโรคติดต่อ</a></li>
 </ul>
 
-<h1>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h1>
+<h1>รายงานจำนวนเหตุการณ์การเฝ้าระวังโรคติดต่อ</h1>
 
 <form method="get" enctype="multipart/form-data">
 <div id="search_report" style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
     <div>
-        <span>โรค</span>                         
+        <span>โรค</span>
         <?php echo form_dropdown('disease', get_option('id', 'desease_name', 'desease_watch_names', ' order by id '), @$_GET['disease'], '', '--แสดงทั้งหมด--');?>
         <!--
-        <span>พื้นที่ที่เกิดโรค</span>                         
+        <span>พื้นที่ที่เกิดโรค</span>
         <select name="place_type" class="form-control">
                 <option value="">-- ทั้งหมด --</option>
                 <option value="2" <?php echo $selected = @$_GET['place_type'] == 2 ? 'selected="selected"' : '';?>>พื้นที่ชุมชน</option>
@@ -117,16 +117,16 @@ jQuery_1_4_2("input.datepicker").date_input();
         </select>
         -->
         <!--
-        <span>ช่วงอายุ</span>                         
+        <span>ช่วงอายุ</span>
         <?php echo form_dropdown('age_range',get_option('age_range_param','age_range','v_disease_watch_age_range'),@$_GET['age_range'],'','--แสดงทั้งหมด--');?>
         -->
     </div>
-       
+
 	<div>
-		<span>สคร.</span>		
+		<span>สคร.</span>
 		<?php echo form_dropdown('area_id',get_option('id','area_name','areas',' order by id '),@$_GET['area_id'],'id="area" class="span2"','--แสดงทั้งหมด--');?>
 	</div>
-	
+
 	<div>
 		<span>จังหวัด</span>
 		<span id="province">
@@ -141,7 +141,7 @@ jQuery_1_4_2("input.datepicker").date_input();
         <?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
         </span>
 	</div>
-	
+
 	<div>
 		<span>ช่วงเวลาการแสดงผล</span>
 		<span id="range_type">
@@ -155,14 +155,14 @@ jQuery_1_4_2("input.datepicker").date_input();
 	</div>
 	<div id="year_range" style="<?php echo $display = @$_GET['range_type']!='year'? 'display:none;' : '';?>">
 		<span>ช่วงเวลาที่เกิดโรค ระหว่างปี</span>
-		ปีที่เริ่ม 
+		ปีที่เริ่ม
 		<select name="report_start_year">
 			<option value="">--ระบุปีที่เริ่ม--</option>
 			<?php
 				$sql_year = " SELECT
 								DISTINCT YEAR (start_date)report_year
 							FROM
-								disease_watch						 
+								disease_watch
 						 order by report_year desc
 						";
 				$report_year_list = $this->db->query($sql_year)->result();
@@ -171,7 +171,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 			<option value="<?php echo $row->report_year;?>" <?php echo $selected = @$_GET['report_start_year']==$row->report_year ?  'selected="selected"':'';?>><?php echo $row->report_year + 543;?></option>
 			<?php endforeach;?>
 		</select>
-		ปีที่สิ้นสุด 
+		ปีที่สิ้นสุด
 		<select name="report_end_year">
 			<option value="">--ระบุปีที่สิ้นสุด--</option>
 			<?php
@@ -202,9 +202,9 @@ jQuery_1_4_2("input.datepicker").date_input();
 	<input class="btn btn-primary" type="submit" value=" แสดง " style="margin-bottom: 10px;">
 </div>
 <div id="report_header" style="text-align:center;padding:30px;">
-    <h4>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>
+    <h4>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>ทดสอบ
     <?php
-    if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
+    if(@$_GET['area_id']=='' && @$_GET['province_id']==''){
         echo '<h5>จำแนกตามพื้นที่ สคร. 13 เขต </h5>';
     }else if(@$_GET['area_id']!=''&&@$_GET['province_id']==''){
         $area_title = $this->db->query('select * from areas where id = '.$_GET['area_id'])->result();
@@ -233,7 +233,7 @@ jQuery_1_4_2("input.datepicker").date_input();
             if(@$_GET['report_month_year']!='')
                 echo '<h5>จำแนกตามเดือน  ของ ปี'.($_GET['report_month_year']+543).'</h5>';
             else
-                echo '<h5>จำแนกตามเดือน  จากข้อมูลทั้งหมด</h5>'; 
+                echo '<h5>จำแนกตามเดือน  จากข้อมูลทั้งหมด</h5>';
         break;
         case 'time':
             $start_date = @$_GET['start_date']!='' ? @$_GET['start_date'] : '';
@@ -245,14 +245,14 @@ jQuery_1_4_2("input.datepicker").date_input();
             }else if($start_date=='' && $end_date!=''){
                 echo '<h5>ข้อมูล ถึง ณ วันที่ '.$end_date.'</h5>';
             }else{
-                
+
             }
         break;
         default:
         break;
     }
 
-            
+
 ?>
 </div>
 <?php
@@ -280,13 +280,13 @@ $(document).ready(function() {
   			},function(data){
   				$("#province").html(data);
   			});
-  		
+
   		$.post('ajax/get_amphur',{
   				'province_id' : ''
   			},function(data){
   				$("#amphur").html(data);
   			});
-  		
+
   		$.post('ajax/get_district',{
   				'amphur_id' : ''
   			},function(data){
@@ -308,7 +308,7 @@ $(document).ready(function() {
   				$("#district").html(data);
   			});
   	});
-  	
+
   	$("select[name=range_type]").live("change",function(){
   		var range_type = $(this).val();
   		$("#year_range").hide();

@@ -296,13 +296,17 @@
 									#menubar{margin:15px 0;}
 				        		#menubar nav {
 									    display: block;
-									    text-align: center;
+									    text-align: left;
 									  }
 									  #menubar nav ul {
 									    margin: 0;
 									    padding:0;
 									    list-style: none;
 									  }
+										#menubar ul li{
+											padding-bottom:0px !important;
+											border-bottom:#FFFFFF !important;
+										}
 									  #menubar .nav a {
 									    display:block;
 									    background: #007DCC;
@@ -328,11 +332,24 @@
 									    margin-right: 1px;
 									  }
 									  #menubar .nav > li > a {
-									    margin-bottom:1px;
+									    /*margin-bottom:1px;*/
 									    /*box-shadow:inset 0 2em .33em -.5em #555;*/
 									  }
+
 									  #menubar .nav > li:hover , #menubar.nav > li:hover >a{  border-bottom-color:orange; background-color: #004566!important;}
-									  #menubar .nav li:hover > a { color:orange; background-color: #004566!important;}
+									  #menubar .nav li:hover > a {
+											color:orange; background-color: #004566!important;
+										}
+										#menubar .nav > li.sub_menu:hover , #menubar.nav > li.sub_menu:hover >a.sub_menu{
+											border-bottom-color:orange; background-color: #F4F4F4 !important;
+										}
+										#menubar .nav li.sub_menu:hover > a { color:orange; background-color: #F4F4F4 !important;}
+
+										li.main_menu_nolink, li.main_menu_nolink > a, li.main_menu_nolink:hover > a{
+											cursor: default !important;
+											background:orange !important;
+											color:#000000;
+										}
 									  #menubar .nav > li:first-child  { border-radius: 4px 0 0 4px;}
 									  #menubar .nav > li:first-child>a{border-radius: 4px 0 0 0;}
 									  #menubar .nav > li:last-child  {
@@ -340,9 +357,7 @@
 									  	margin-right: 0;
 									  }
 									  #menubar .nav > li:last-child >a{border-radius: 0 4px 0 0; }
-									  #menubar .nav li li a { margin-top:1px}
-
-
+									  /*#menubar .nav li li a { margin-top:1px}*/
 
 									    #menubar .nav li a:first-child:nth-last-child(2):before {
 									     content:"";
@@ -352,6 +367,7 @@
 									     border: 5px solid transparent;
 									     top: 50% ;
 									     right:5px;
+
 									   }
 
 									   /* submenu positioning*/
@@ -362,7 +378,7 @@
 									  z-index: 1;
 									  left: -99999em;
 									}
-									#menubar ul.nav li {padding:0 0 2px !important;}
+									#menubar ul.nav li {padding:0 0 0px !important;}
 									#menubar .nav > li:hover > ul {
 									  left: auto;
 									  padding-top: 5px  ;
@@ -395,7 +411,13 @@
 									  right: 10px;
 									}
 									#menubar .nav>li>a:hover{background-color: #004566!important;}
-
+								  a.sub_menu{
+										background:#FFFFFF !important;
+										color:#000000 !important;
+										margin-left:15px;
+										border-left:2px solid #CCCCCC !important;
+										border-right:2px solid #CCCCCC !important;
+									}
 				        	</style>
 									<!------------------------------------------------------
 											$current_user->user_type_id == 1	ผู้ดูแลระบบ
@@ -455,7 +477,7 @@
 								    </li>
 										<?endif;?>
 										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
-								    <li><a href="#">เหตุการณ์การเฝ้าระวังโรคติดต่อ</a>
+								    <li><a href="#" onclick="return false;">เหตุการณ์การเฝ้าระวังโรคติดต่อ</a>
 											<ul>
 												<li><a href="desease_watch/index">ข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</a></li>
 											</ul>
@@ -470,7 +492,9 @@
 												<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
 												<li><a href="diseases/newreport">รายงานแบบคัดกรองโรค</a></li>
 												<li><a href="surveillances/index">รายงานการเฝ้าระวังโรค</a></li>
-												<li><a href="reports/desease_watch_number">รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรค</a></li>
+												<li class="main_menu_nolink"><a href="#" onclick="return false;">รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรค</a></li>
+												<li class="sub_menu"><a class="sub_menu" href="reports/desease_watch_number">- รายงานจำนวนเหตุการณ์การเฝ้าระวังโรค</a></li>
+												<li class="sub_menu"><a class="sub_menu" href="reports/desease_watch_symptom">- รายงานกลุ่มอาการป่วยจากข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</a></li>
 												<?endif;?>
 												<?if (in_array($current_user->user_type_id, array(9,10))):?>
 												<li><a href="assessments/preview/<?=$current_user->nursery_id?>">รายงานแบบประเมินเข้าร่วมโครงการ</a></li>

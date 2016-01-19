@@ -1,23 +1,23 @@
 <!-- Header. -->
 <ul class="breadcrumb">
       <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-      <li class="active">การเฝ้าระวังโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล</li>
+      <li class="active">ข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</li>
 </ul>
 
 
 <!-- Search box. -->
 <div id="data">
-      <div style="font-size:14px;  font-weight:700; padding-bottom:10px; color:#3C3">การเฝ้าระวังโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล</div>
+      <h4>ข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>
       <form method="get" action="">
             <div style="padding:10px; border:1px solid #ccc; margin-bottom:10px; line-height:50px;">
-                  <label for="disease" style="margin-bottom:0px;">โรค</label>                  
+                  <label for="disease" style="margin-bottom:0px;">โรค</label>
                   <?php echo form_dropdown('disease', get_option('id', 'desease_name', 'desease_watch_names', ' order by id '), @$_GET['disease'], '', '--แสดงทั้งหมด--');?>
-                  <div style="display:block;height:15px;">&nbsp;</div>                
-            	  <div style="width:150px;display:inline;float:left;">                  
+                  <div style="display:block;height:15px;">&nbsp;</div>
+            	  <div style="width:150px;display:inline;float:left;">
     				  <label for="area_id">เขตสคร.</label>
                       <?php get_area_dropdown(@$_GET['area_id']);?>
                   </div>
-            	  <div style="width:150px;display:inline;float:left;">                  
+            	  <div style="width:150px;display:inline;float:left;">
     				  <label for="province_id">จังหวัด</label>
     				  <span id="province">
                       <?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
@@ -34,7 +34,7 @@
                   <span id="district">
                   <?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
                   </span>
-				  </div>				  
+				  </div>
 				  <div style="display:block;height:15px;">&nbsp;</div>
 				  <div style="width:250px;display:inline;float:left;">
     				  <label for="name" style="margin-bottom:0px;">พื้นที่ที่เกิดโรค</label>
@@ -67,7 +67,7 @@
                   <th style='width:35px;'>ลำดับ</th>
                   <th>โรค</th>
                   <th style='width:90px;'>วันที่บันทึก</th>
-                  <th style='width:90px;'>จังหวัด</th>                  
+                  <th style='width:90px;'>จังหวัด</th>
                   <th style='width:90px;'>พื้นที่</th>
                   <th>ชื่อโรงเรียน</th>
                   <th>จัดการข้อมูล</th>
@@ -83,12 +83,12 @@
                               <td><?php echo ++$no; ?></td>
                               <td>
                                   <?php
-                                    $desease_name = new Desease_Watch_name($item->disease); 
-                                    echo $desease_name->desease_name; 
-                                  ?>                                  
+                                    $desease_name = new Desease_Watch_name($item->disease);
+                                    echo $desease_name->desease_name;
+                                  ?>
                               </td>
                               <td><?php echo mysql_to_th($item->created_date); ?></td>
-                              <td><?php echo (empty($item->province->name))?'-':$item->province->name; ?></td>                              
+                              <td><?php echo (empty($item->province->name))?'-':$item->province->name; ?></td>
                               <td>
                                   <?php
                                        switch($item->place_type):
@@ -101,21 +101,21 @@
                                            default:
                                                echo '-';
                                            break;
-                                       endswitch; 
+                                       endswitch;
                                   ?>
                               </td>
                               <td>
-                                  <?php 
+                                  <?php
                                     if($item->place_type == 1){
-                                        $school_name = (empty( $item->nursery->code))? 'รหัส : -<br>': 'รหัส  : '.$item->nursery->code.'<br>'; 
+                                        $school_name = (empty( $item->nursery->code))? 'รหัส : -<br>': 'รหัส  : '.$item->nursery->code.'<br>';
                                         //$school_name.= $school_name!='' ? ' : ' : '';
                                         $school_name.= (empty($item->nursery->name))?'':$item->nursery->name;
-                                        echo $school_name;   
-                                    }                                    
-                                  ?>                                 
+                                        echo $school_name;
+                                    }
+                                  ?>
                               </td>
                               <td>
-                                    <?php 
+                                    <?php
                                           echo anchor('desease_watch/form/'.$item->id, 'แก้ไข', 'class="btn btn-sm btn-warning"').' ';
                                           echo anchor('desease_watch/delete/'.$item->id, 'ลบ', 'class="btn btn-sm btn-danger" onclick="if(!confirm(\'กรุณายืนยันการลบข้อมูล\')) return false;"');
                                     ?>

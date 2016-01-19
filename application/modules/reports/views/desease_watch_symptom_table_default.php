@@ -144,9 +144,13 @@
         </tr>
     </thead>
     <tbody>
-        <?php foreach($symptom as $symptom_row):?>
+        <?php
+        $no=0; 
+        foreach($symptom as $symptom_row):
+            $no++;
+        ?>
         <tr>
-            <th><?php echo $symptom_row->title;?></th>
+            <th><?php echo $no;?>.<?php echo $symptom_row->title;?></th>
             <?php
                 $head_column = '
                 <td style="width:100px;"></td>
@@ -155,8 +159,7 @@
                 ';
             $condition=" AND question='".$symptom_row->code."' AND value = 1 ";
             $sql = "SELECT count(*)n_symptom from disease_watch_question dwq
-                    LEFT JOIN disease_watch dw ON dwq.disease_watch_id = dw.id
-                    LEFT JOIN v_nurseries on dw.nurseries_id = v_nurseries.id 
+                    LEFT JOIN v_disease_watch dw ON dwq.disease_watch_id = dw.id                     
                     WHERE 1=1
                     ".$condition;            
             foreach($desease as $desease_row):              
