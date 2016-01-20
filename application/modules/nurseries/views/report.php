@@ -416,28 +416,56 @@ $(function(){
 		<tbody>
 			<?php foreach($areas as $key=>$area):?>
 				<?php
-					if(@$_GET['year']){
-						$all = $area->nurseries->where("year = ".@$_GET['year'])->get()->result_count();
-						$pass = $area->nurseries->where("year = ".@$_GET['year']." and status = 1")->get()->result_count();
-						$not = $area->nurseries->where("year = ".@$_GET['year']." and status = 0")->get()->result_count();
-					}else{
-						$all = $area->nurseries->where_related('provinces', 'area_id', $area->id)->get()->result_count();
-						$pass = $area->nurseries->where("status = 1")->where_related('provinces', 'area_id', $area->id)->get()->result_count();
-						$not = $area->nurseries->where("status = 0")->where_related('provinces', 'area_id', $area->id)->get()->result_count();
-					}
+						$condition = "";
+						if(@$_GET['year']!=""){
+							@$condition.=" and v_nurseries.year = ".$_GET['year'];
+						}
+						$sql = "SELECT
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.area_id = ".$area->id." ".@$condition."
+										) nursery_all,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.area_id = ".$area->id." ".@$condition."
+											AND v_nurseries.`status` = 1
+										) nursery_pass,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.area_id = ".$area->id." ".@$condition."
+											AND v_nurseries.`status` = 0
+										) nursery_not
+									";
+						$nursery = new V_nursery();
+						$nursery->query($sql);
 				?>
 			<tr>
 				<th><?=$area->area_name?></th>
 				<?if(@$_GET['status'] == 1):?>
-				<td><?=convert_2_percent($all,$arrayTotalAll[$key])?></td>
+				<td><?=convert_2_percent($nursery->nursery_all,$arrayTotalAll[$key])?></td>
 				<?elseif(@$_GET['status'] == 2):?>
-				<td><?=convert_2_percent($pass,$all)?></td>
+				<td><?=convert_2_percent($nursery->nursery_pass,$nursery->nursery_all)?></td>
 				<?elseif(@$_GET['status'] == 3):?>
-				<td><?=convert_2_percent($not,$all)?></td>
+				<td><?=convert_2_percent($nursery->nursery_not,$nursery->nursery_all)?></td>
 				<?else:?>
-				<td><?=convert_2_percent($all,$arrayTotalAll[$key])?></td>
-				<td><?=convert_2_percent($pass,$all)?></td>
-				<td><?=convert_2_percent($not,$all)?></td>
+				<td><?=convert_2_percent($nursery->nursery_all,$arrayTotalAll[$key])?></td>
+				<td><?=convert_2_percent($nursery->nursery_pass,$nursery->nursery_all)?></td>
+				<td><?=convert_2_percent($nursery->nursery_not,$nursery->nursery_all)?></td>
 				<!-- <td><?=convert_2_percent($arrayTotalAll[$key],$arrayTotalAll[$key])?></td> -->
 				<?endif;?>
 			</tr>
@@ -721,57 +749,85 @@ $(function(){
 				<th>เข้าร่วม (แห่ง)</th>
 				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
-				<th>จำนวนทั้งหมดในพื้นที่  (แห่ง)</th>
+				<!-- <th>จำนวนทั้งหมดในพื้นที่  (แห่ง)</th> -->
 				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($areas as $key=>$area):?>
 				<?php
-					if(@$_GET['year']){
-						$all = $area->nurseries->where("year = ".@$_GET['year'])->get()->result_count();
-						$pass = $area->nurseries->where("year = ".@$_GET['year']." and status = 1")->get()->result_count();
-						$not = $area->nurseries->where("year = ".@$_GET['year']." and status = 0")->get()->result_count();
-					}else{
-						$all = $area->nurseries->where_related('provinces', 'area_id', $area->id)->get()->result_count();
-						$pass = $area->nurseries->where("status = 1")->where_related('provinces', 'area_id', $area->id)->get()->result_count();
-						$not = $area->nurseries->where("status = 0")->where_related('provinces', 'area_id', $area->id)->get()->result_count();
-					}
+						$condition = "";
+						if(@$_GET['year']!=""){
+							@$condition.=" and v_nurseries.year = ".$_GET['year'];
+						}
+						$sql = "SELECT
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.area_id = ".$area->id." ".@$condition."
+										) nursery_all,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.area_id = ".$area->id." ".@$condition."
+											AND v_nurseries.`status` = 1
+										) nursery_pass,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.area_id = ".$area->id." ".@$condition."
+											AND v_nurseries.`status` = 0
+										) nursery_not
+									";
+						$nursery = new V_nursery();
+						$nursery->query($sql);
 				?>
 			<tr>
 				<th><a href="nurseries/reports/index/basic_column?year=&type=1&area_id=<?=$area->id?>&status=<?=@$_GET['status']?>"><?=$area->area_name?></a></th>
 				<?if(@$_GET['status'] == 1):?>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"><?=$all?></a></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"><?=$nursery->nursery_all?></a></td>
 				<?elseif(@$_GET['status'] == 2):?>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=1><?=$pass?></a></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=1><?=$nursery->nursery_pass?></a></td>
 				<?elseif(@$_GET['status'] == 3):?>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=0><?=$not?></a></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=0><?=$nursery->nursery_not?></a></td>
 				<?else:?>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"><?=$all?></a></td>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=1&year=<?=@$_GET['year']?>"><?=$pass?></a></td>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=0&year=<?=@$_GET['year']?>"><?=$not?></a></td>
-				<td><?=$arrayTotalAll[$key]?></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"><?=$nursery->nursery_all?></a></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=1&year=<?=@$_GET['year']?>"><?=$nursery->nursery_pass?></a></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=0&year=<?=@$_GET['year']?>"><?=$nursery->nursery_not?></a></td>
+				<!-- <td><?=$arrayTotalAll[$key]?></td> -->
 				<?endif;?>
 			</tr>
 				<?php
-					@$totalAll += $all;
-					@$totalPass += $pass;
-					@$totalNot += $not;
+					@$totalAll += $nursery->nursery_all;
+					@$totalPass += $nursery->nursery_pass;
+					@$totalNot += $nursery->nursery_not;
 				?>
 			<?php endforeach;?>
 			<tr>
 				<th>รวมทั้งหมด</th>
 				<?if(@$_GET['status'] == 1):?>
-				<th><?=$totalAll?></th>
+				<td><?=$totalAll?></td>
 				<?elseif(@$_GET['status'] == 2):?>
-				<th><?=$totalPass?></th>
+				<td><?=$totalPass?></td>
 				<?elseif(@$_GET['status'] == 3):?>
-				<th><?=$totalNot?></th>
+				<td><?=$totalNot?></td>
 				<?else:?>
-				<th><?=$totalAll?></th>
-				<th><?=$totalPass?></th>
-				<th><?=$totalNot?></th>
-				<th>20142</th>
+				<td><?=$totalAll?></td>
+				<td><?=$totalPass?></td>
+				<td><?=$totalNot?></td>
+				<!-- <td>20142</td> -->
 				<?endif;?>
 			</tr>
 		</tbody>

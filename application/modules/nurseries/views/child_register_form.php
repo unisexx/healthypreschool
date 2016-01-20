@@ -1,3 +1,10 @@
+<style>
+#frmnursery th{width:214px !important;}
+#frmnursery th, #frmnursery th a {
+    background-color: #f1f1f1 !important;
+    color:#000 !important;
+}
+</style>
 <script type="text/javascript">
 $(document).ready(function(){
 	$("select[name='area_id']").live("change",function(){

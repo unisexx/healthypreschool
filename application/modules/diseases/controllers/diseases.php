@@ -453,7 +453,7 @@ WHERE 1=1 ".$condition;
 			$data['rs'] = new Amphur();
 			$data['rs']->where('province_id = '.$_GET['province_id'])->order_by('amphur_name','asc')->get();
 		}elseif(isset($_GET['area_id']) && ($_GET['area_id']!="")){
-			$data['rs'] = new Province();
+			$data['rs'] = new V_province();
 			$data['rs']->where('area_id = '.$_GET['area_id'])->order_by('name','asc')->get();
 		}else{
 			$data['rs'] = new Area();

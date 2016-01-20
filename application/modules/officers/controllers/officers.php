@@ -13,7 +13,7 @@ class Officers extends Public_Controller
     
     function index()
     {
-        $data['users'] = new V_User();
+        $data['users'] = new User();
 		if(@$_GET['search'])$data['users']->where("name like '%".$_GET['search']."%' or email like '%".$_GET['search']."%'");
 		if(@$_GET['user_type_id'])$data['users']->where("user_type_id = ".$_GET['user_type_id']);
 		if(@$_GET['area_id'])$data['users']->where("area_id = ".$_GET['area_id']);
@@ -33,7 +33,7 @@ class Officers extends Public_Controller
     }
     
     function form($id=false){
-        $data['user'] = new V_User($id);
+        $data['user'] = new User($id);
         $this->template->build('form',$data);
     }
     
@@ -81,33 +81,33 @@ class Officers extends Public_Controller
 		}
     }
 	
-	function send_mail($_POST){
-        
-        $config = Array(
-            'protocol' => 'smtp',
-            'smtp_host' => 'ssl://smtp.googlemail.com',
-            'smtp_port' => 465,
-            'smtp_user' => 'fdsiakrin@gmail.com',
-            'smtp_pass' => 'f@vourite',
-            'mailtype'  => 'html', 
-            'charset'   => 'utf-8'
-        );
-        $this->load->library('email', $config);
-        $this->email->set_newline("\r\n");
-        
-        // Set to, from, message, etc.
-        $this->email->from('fdsiakrin@gmail.com', 'ศูนย์เด็กเล็กปลอดโรค');
-        $this->email->to($_POST['email']); //ส่งถึงใคร
-        $this->email->subject('แจ้งสถานะสมาชิกเว็บไซต์ศูนย์เด็กเล็กปลอกโรค'); //หัวข้อของอีเมล
-        $this->email->message('สวัสดีครับ<br><br>เจ้าหน้าที่ได้ทำการตรวจสอบข้อมูลแล้ว คุณสามารถล็อกอินเพื่อเข้าใช้งานระบบได้ทันที ตามลิ้งค์ที่แนบไว้ด้านล่างนี้<br><br><a href="http://'.$_SERVER['SERVER_NAME'].'/healthypreschool">http://'.$_SERVER['SERVER_NAME'].'/healthypreschool</a><br><br>ขอบคุณครับ'); //เนื้อหาของอีเมล
-        
-        $result = $this->email->send();
-        //echo $this->email->print_debugger();
+	function send_mail(){
+        if($_POST){
+	        $config = Array(
+	            'protocol' => 'smtp',
+	            'smtp_host' => 'ssl://smtp.googlemail.com',
+	            'smtp_port' => 465,
+	            'smtp_user' => 'fdsiakrin@gmail.com',
+	            'smtp_pass' => 'f@vourite',
+	            'mailtype'  => 'html', 
+	            'charset'   => 'utf-8'
+	        );
+	        $this->load->library('email', $config);
+	        $this->email->set_newline("\r\n");
+	        
+	        // Set to, from, message, etc.
+	        $this->email->from('fdsiakrin@gmail.com', 'ศูนย์เด็กเล็กปลอดโรค');
+	        $this->email->to($_POST['email']); //ส่งถึงใคร
+	        $this->email->subject('แจ้งสถานะสมาชิกเว็บไซต์ศูนย์เด็กเล็กปลอกโรค'); //หัวข้อของอีเมล
+	        $this->email->message('สวัสดีครับ<br><br>เจ้าหน้าที่ได้ทำการตรวจสอบข้อมูลแล้ว คุณสามารถล็อกอินเพื่อเข้าใช้งานระบบได้ทันที ตามลิ้งค์ที่แนบไว้ด้านล่างนี้<br><br><a href="http://'.$_SERVER['SERVER_NAME'].'/healthypreschool">http://'.$_SERVER['SERVER_NAME'].'/healthypreschool</a><br><br>ขอบคุณครับ'); //เนื้อหาของอีเมล
+	        
+	        $result = $this->email->send();
+	        //echo $this->email->print_debugger();
+	    }
     }
 
 	function get_area(){
-		get_area_dropdown(@$_POST['area_id']);
-		//echo form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),@$_POST['area_id'],'class="input-medium"','--- เลือกสคร. ---');
+		echo form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),@$_POST['area_id'],'class="input-medium"','--- เลือกสคร. ---');
 	}
 	
 	function get_province(){

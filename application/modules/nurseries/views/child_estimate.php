@@ -23,6 +23,9 @@ $(document).ready(function(){
   			},function(data){
   				$("#province").html(data);
   			});
+  			
+  			$('select[name=amphur_id] option:first-child,select[name=district_id] option:first-child').attr("selected", "selected").attr("disabled", "disabled");
+			$('select[name=amphur_id],select[name=district_id]').attr("disabled", "disabled");
   	});
   	$("select[name='province_id']").live("change",function(){
   		$.post('ajax/get_amphur',{
@@ -30,6 +33,9 @@ $(document).ready(function(){
   			},function(data){
   				$("#amphur").html(data);
   			});
+  			
+  			$('select[name=district_id] option:first-child').attr("selected", "selected").attr("disabled", "disabled");
+			$('select[name=district_id]').attr("disabled", "disabled");
   	});
 
   	$("select[name='amphur_id']").live("change",function(){
