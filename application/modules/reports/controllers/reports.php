@@ -6,6 +6,11 @@ class Reports extends Public_Controller {
 		parent::__construct();
 		$this->template->set_layout('blank');
 	}
+	
+	// รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค
+	function nursery_register(){
+		$this->template->build('nursery_register');
+	}
 
 	// กราฟแสดงเกณฑ์อ้างอิงการเจริญเติบโต (น้ำหนัก)
 	function children_weight(){

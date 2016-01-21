@@ -457,13 +457,13 @@ $(function(){
 			<tr>
 				<th><?=$area->area_name?></th>
 				<?if(@$_GET['status'] == 1):?>
-				<td><?=convert_2_percent($nursery->nursery_all,$arrayTotalAll[$key])?></td>
+				<td><?=convert_2_percent($nursery->nursery_all,$nursery->nursery_all)?></td>
 				<?elseif(@$_GET['status'] == 2):?>
 				<td><?=convert_2_percent($nursery->nursery_pass,$nursery->nursery_all)?></td>
 				<?elseif(@$_GET['status'] == 3):?>
 				<td><?=convert_2_percent($nursery->nursery_not,$nursery->nursery_all)?></td>
 				<?else:?>
-				<td><?=convert_2_percent($nursery->nursery_all,$arrayTotalAll[$key])?></td>
+				<td><?=convert_2_percent($nursery->nursery_all,$nursery->nursery_all)?></td>
 				<td><?=convert_2_percent($nursery->nursery_pass,$nursery->nursery_all)?></td>
 				<td><?=convert_2_percent($nursery->nursery_not,$nursery->nursery_all)?></td>
 				<!-- <td><?=convert_2_percent($arrayTotalAll[$key],$arrayTotalAll[$key])?></td> -->
