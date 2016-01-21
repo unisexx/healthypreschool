@@ -85,7 +85,9 @@
                   <td>
                         <select name="place_type" class="form-control">
                             <option value="">-- ระบุแหล่งเกิดโรค --</option>
+                            <?php if($current_user->user_type_id <= 8){ ?>
                             <option value="2" <?php echo $selected = @$rs->place_type == 2 ? 'selected="selected"' : '';?>>พื้นที่ชุมชน</option>
+                            <?php } ?>
                             <option value="1" <?php echo $selected = @$rs->place_type == 1 ? 'selected="selected"' : '';?>>ศูนย์เด็กเล็ก/โรงเรียนอนุบาล</option>
                         </select>
                         <div class="errorPlace_place_type"></div>
@@ -106,7 +108,9 @@
                          <div style="width:250px;display:inline;float:left;">
                             <label for="amphur_id">อำเภอ</label>
                             <span id="amphur">
-                                <?php get_amphur_dropdown(@$rs->province_id, @$rs ->amphur_id); ?>
+                                <?php 
+                                	get_amphur_dropdown(@$rs->province_id, @$rs ->amphur_id); 
+                                ?>
                             </span>
                          </div>
                          <div style="width:150px;display:inline;">
@@ -125,10 +129,23 @@
             <tr class="tr_school" style="display:<?php echo $display;?>"><th> 1. ศูนย์เด็กเล็กและโรงเรียนอนุบาล </th></tr>
             <tr class="tr_school" style="display:<?php echo $display;?>">
                   <td>
+                  		<?php if($current_user->user_type_id > 8){?>
+                  			<input type="hidden" name="nurseries_id" value="<?php echo(empty($current_user->nursery_id)) ? null : $current_user -> nursery_id; ?>">
+	                        <div>
+	                              <input type="text" id='nurseryCode' disabled="disabled" style='width:85px;' value="<?php echo @$current_user -> nursery -> code; ?>" placeholder="หมายเลขศูนย์">
+	                              <input type="text" id="nurseryName" disabled="disabled" style="width:350px;" value="<?php echo @$current_user -> nursery -> name; ?>" placeholder="ชื่อศูนย์เด็กเล็ก">	                              
+	                        </div>
+	
+	                        <div style='margin-top:10px;'>
+	                              <input type="text" id='nurseryProvince' disabled="disabled" style='width:150px;' value="<?php echo @$current_user -> nursery -> province -> name; ?>" placeholder="จังหวัด">
+	                              <input type="text" id='nurseryAmphur' disabled="disabled" style='width:150px;' value="<?php echo @$current_user -> nursery -> amphur -> amphur_name; ?>" placeholder="อำเภอ">
+	                              <input type="text" id='nurseryDistrict' disabled="disabled" style='width:150px;' value="<?php echo @$current_user -> nursery -> district -> district_name; ?>" placeholder="ตำบล">
+	                        </div>
+                  		<?php }else{ ?>
                         <input type="hidden" name="nurseries_id" value="<?php echo(empty($rs -> nurseries_id)) ? null : $rs -> nurseries_id; ?>">
                         <div>
                               <input type="text" id='nurseryCode' disabled="disabled" style='width:85px;' value="<?php echo @$rs -> nursery -> code; ?>" placeholder="หมายเลขศูนย์">
-                              <input type="text" id="nurseryName" disabled="disabled" value="<?php echo @$rs -> nursery -> name; ?>" placeholder="ชื่อศูนย์เด็กเล็ก">
+                              <input type="text" id="nurseryName" disabled="disabled" style="width:350px;" value="<?php echo @$rs -> nursery -> name; ?>" placeholder="ชื่อศูนย์เด็กเล็ก">
                               <div href="#nurseries_list" role='button' id='btnCallNurseriesList' class='btn btn-primary' disabled="disabled">ค้นหา</div>
                         </div>
 
@@ -140,6 +157,7 @@
 
 
                         <div class="errorPlace_nurseries_id"></div>
+                        <?php } ?>
                   </td>
             </tr>
 
@@ -697,97 +715,17 @@
 	});
 
 	errorMsgRequired = "กรุณาระบุข้อมูลก่อนดำเนินการบันทึก";
-	/*
-	$('#desease_watch').validate({
-		rules : {
-			place_type : {
-				required : true
-			},
-			nurseries_id : {
-				required : true
-			},
-			disease : {
-				required : true
-			},
-			start_date : {
-				required : true
-			},
-			end_date : {
-				required : true
-			},
-			total_amount : {
-				required : true
-			},
-			boy_amount : {
-				required : true
-			},
-			girl_amount : {
-				required : true
-			},
-			age_duration_start : {
-				required : true
-			},
-			age_duration_end : {
-				required : true
-			},
-		},
-		messages : {
-			place_type : {
-				required : errorMsgRequired
-			},
-			nurseries_id : {
-				required : errorMsgRequired
-			},
-			disease : {
-				required : errorMsgRequired
-			},
-			start_date : {
-				required : errorMsgRequired
-			},
-			end_date : {
-				required : errorMsgRequired
-			},
-			total_amount : {
-				required : errorMsgRequired
-			},
-			boy_amount : {
-				required : errorMsgRequired
-			},
-			girl_amount : {
-				required : errorMsgRequired
-			},
-			age_duration_start : {
-				required : errorMsgRequired
-			},
-			age_duration_end : {
-				required : errorMsgRequired
-			},
-		},
-		errorPlacement : function(error, element) {
-			if (element.attr("name") == "nurseries_id") {
-				error.insertAfter(".errorPlace_nurseries_id");
-			} else if (element.attr("name") == "start_date" || element.attr("name") == "end_date") {
-				$('.errorPlace_duration_date').html('<label for="disease" generated="true" class="error" style="display: block;">' + errorMsgRequired + '</label>');
-			} else if (element.attr("name") == "total_amount" || element.attr("name") == "boy_amount" || element.attr("name") == "girl_amount") {
-				$('.errorPlace_amount').html('<label for="disease" generated="true" class="error" style="display: block;">' + errorMsgRequired + '</label>');
-			} else if (element.attr("name") == "age_duration_start" || element.attr("name") == "age_duration_end") {
-				$('.errorPlace_ageDuration').html('<label for="disease" generated="true" class="error" style="display: block;">' + errorMsgRequired + '</label>');
-			} else {//
-				error.insertAfter(element);
-			}
-		}
-	});
-	*/
+	
 	<?php if(@$rs->place_type == '2'){
 		echo 'validate_with_community();';
-	}else{
+	}else if(@$rs->place_type == '1'){
 		echo 'validate_with_school();';
 	}
 	?>
 	$("select[name=place_type]").change(function(){
 		var place_type = $(this).val();
-		if(place_type=='2'){
-			validate_with_community();
+		if(place_type=='2'){			
+			validate_with_community();			
 		}else{
 			validate_with_school();
 		}
@@ -861,9 +799,7 @@
 				},
 			},
 			errorPlacement : function(error, element) {
-				if (element.attr("name") == "province_id") {
-					error.insertAfter(".errorPlace_province_id");
-				} else if (element.attr("name") == "start_date" || element.attr("name") == "end_date") {
+				if (element.attr("name") == "start_date" || element.attr("name") == "end_date") {
 					$('.errorPlace_duration_date').html('<label for="disease" generated="true" class="error" style="display: block;">' + errorMsgRequired + '</label>');
 				} else if (element.attr("name") == "total_amount" || element.attr("name") == "boy_amount" || element.attr("name") == "girl_amount") {
 					$('.errorPlace_amount').html('<label for="disease" generated="true" class="error" style="display: block;">' + errorMsgRequired + '</label>');

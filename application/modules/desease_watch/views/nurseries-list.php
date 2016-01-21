@@ -12,17 +12,19 @@
                   <div style='margin:10px 0;'>
                         <span class="searchBox">
                               <div class='searchLabel'>จังหวัด</div>
+                              <div id="province_search">
                               <?php 
 			                  	if($current_user->user_type_id >= 7){
 			                  		$ext_condition = ' WHERE id = '.$current_user->province_id;
 								}
 			                  	echo form_dropdown('province_id',get_option('id','name','provinces',@$ext_condition.' order by name asc'),@$_GET['province_id'],' style="width:150px;"','--- เลือกจังหวัด ---') 
 			                  ?>
+			                  </div>
                         </span>
                         
                         <span class="searchBox">
                               <div class='searchLabel'>อำเภอ</div>
-                              <div id="amphur">
+                              <div id="amphur_search">
                                     <?php if(@$_GET['province_id']):?>                        	
 			                        	<?php
 			                        	$ext_condition = 'where province_id = '.$_GET['province_id'];
@@ -37,7 +39,7 @@
                         
                         <span class="searchBox">
                               <div class='searchLabel'>ตำบล</div>
-                              <div id="district">
+                              <div id="district_search">
                                     <?php if(@$_GET['amphur_id']){?> 
 				                        	<?php
 				                        	$ext_condition = 'where province_id = '.$_GET['province_id'].' and amphur_id = '.$_GET['amphur_id'];
@@ -115,21 +117,21 @@
       $(document).ready(function(){
             loadSearch = {
                   loadAmphur:function(){
-                        $('#amphur').html('<select disabled="disabled"><option value="">Loading...</option></select>');
+                        $('#amphur_search').html('<select disabled="disabled"><option value="">Loading...</option></select>');
 
                         $.get('desease_watch/get_amphur', {
-                              province_id:$('[name=province_id] option:selected').val()
+                              province_id:$('#province_search>select[name=province_id] option:selected').val()
                         }, function(data){
-                              $('#amphur').html(data);
+                              $('#amphur_search').html(data);
                         });
                   },
                   loadDistrict:function(){
-                        $('#district').html('<select disabled="disabled"><option value="">Loading...</option></select>');
+                        $('#district_search').html('<select disabled="disabled"><option value="">Loading...</option></select>');
                         
                         $.get('desease_watch/get_district', {
-                              amphur_id:$('[name=amphur_id] option:selected').val()
+                              amphur_id:$('#amphur_search>select[name=amphur_id] option:selected').val()
                         }, function(data){
-                              $('#district').html(data);
+                              $('#district_search').html(data);
                         });
                   }
             };

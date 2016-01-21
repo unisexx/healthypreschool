@@ -19,16 +19,20 @@ class Desease_watch extends Public_Controller {
 			$_GET['amphur_id'] = $current_user->amphur_id;
 			if($current_user->user_type_id > 8){
 				$_GET['district_id'] = $current_user->district_id;	
+				$_GET['nurseries_id'] = $current_user->nursery_id;
+				$_GET['place_type'] = 1;
+				$_GET['name'] = $current_user->nurseries->name;
 			}
 		}
 		$data['list'] = new Disease_watch();
 		//--Search filter
 		if(!empty($_GET['disease'])) {  $data['list']->where('disease', $_GET['disease']); }
         if(!empty($_GET['place_type'])) {  $data['list']->where('place_type', $_GET['place_type']); }        
-		if(!empty($_GET['area_id'])) {    $data['list']->where_related('nurseries', 'province_id IN ( SELECT province_id FROM area_provinces WHERE area_id = '.$_GET['area_id'].')');}
-        if(!empty($_GET['province_id'])) {  $data['list']->where_related('nurseries', 'province_id', $_GET['province_id']); }
-        if(!empty($_GET['amphur_id'])) {    $data['list']->where_related('nurseries', 'amphur_id', $_GET['amphur_id']); }
-        if(!empty($_GET['district_id'])) {  $data['list']->where_related('nurseries', 'district_id', $_GET['district_id']); }
+		if(!empty($_GET['area_id'])) {    $data['list']->where('disease_watch.province_id in (SELECT province_id FROM area_provinces WHERE area_id = '.$_GET['area_id']." AND province_id > 0 )");}
+        if(!empty($_GET['province_id'])) {  $data['list']->where('province_id', $_GET['province_id']); }
+        if(!empty($_GET['amphur_id'])) {    $data['list']->where('amphur_id', $_GET['amphur_id']); }
+        if(!empty($_GET['district_id'])) {  $data['list']->where('district_id', $_GET['district_id']); }
+		if(!empty($_GET['nurseries_id'])) {  $data['list']->where('nurseries_id', $_GET['nurseries_id']); }
         if(@$_GET['place_type']=='1'){        
 		  if(!empty($_GET['name'])) {		$data['list']->like_related('nurseries', 'name', $_GET['name']);	}
         }		
@@ -47,10 +51,23 @@ class Desease_watch extends Public_Controller {
 		}else if($current_user->user_type_id >= 8){
 			$_GET['province_id'] = $current_user->province_id;
 			$_GET['amphur_id'] = $current_user->amphur_id;
-			if($current_user->user_type_id > 8){
+			if($current_user->user_type_id > 8){				
 				$_GET['district_id'] = $current_user->district_id;	
 			}
-		}		if($id) {			// Form data			$data['rs'] = new Disease_watch();			$data['rs']->where('id', $id)->get(1);			// Question data			$question = new Disease_watch_question;			foreach($question->where('disease_watch_id', $id)->get() as $item) {				$data['q'][$item->question] = $item->value;			}		}		$this->template->build('form', @$data);	}	public function save() {		//Question data.		foreach($_POST as $key => $item) {			if(strstr($key, 'qCbox_') || strstr($key, 'qRdo_')) {				$q[$key] = $item;				unset($_POST[$key]);			}		}		//Form data.		$_POST['start_date'] = DATE2DB($_POST['start_date']);		$_POST['end_date'] = DATE2DB($_POST['end_date']);		for($i=1; $i<4; $i++) { $_POST['measure_filter_'.$i] = (empty($_POST['measure_filter_'.$i]))?0:1; }		for($i=1; $i<7; $i++) { $_POST['measure_clean_'.$i] = (empty($_POST['measure_clean_'.$i]))?0:1; }						//Save		$save = new Disease_watch();		foreach($_POST as $key => $item) {			$save->{$key} = $item;		}
+		}		if($id) {			// Form data			$data['rs'] = new Disease_watch();			$data['rs']->where('id', $id)->get(1);			
+						// Question data			$question = new Disease_watch_question;			foreach($question->where('disease_watch_id', $id)->get() as $item) {				$data['q'][$item->question] = $item->value;			}		}else{
+			if($current_user->user_type_id == 7){
+				$data['rs']->province_id = $current_user->province_id;
+			}else if($current_user->user_type_id >= 8){
+				$data['rs']->province_id = $current_user->province_id;
+				$data['rs']->amphur_id = $current_user->amphur_id;
+				if($current_user->user_type_id > 8){
+					$data['rs']->province_id = $current_user->province_id;
+					$data['rs']->amphur_id = $current_user->amphur_id;				
+					$data['rs']->district_id = $current_user->district_id;	
+				}
+			}
+		}		$this->template->build('form', @$data);	}	public function save() {		//Question data.		foreach($_POST as $key => $item) {			if(strstr($key, 'qCbox_') || strstr($key, 'qRdo_')) {				$q[$key] = $item;				unset($_POST[$key]);			}		}		//Form data.		$_POST['start_date'] = DATE2DB($_POST['start_date']);		$_POST['end_date'] = DATE2DB($_POST['end_date']);		for($i=1; $i<4; $i++) { $_POST['measure_filter_'.$i] = (empty($_POST['measure_filter_'.$i]))?0:1; }		for($i=1; $i<7; $i++) { $_POST['measure_clean_'.$i] = (empty($_POST['measure_clean_'.$i]))?0:1; }						//Save		$save = new Disease_watch();		foreach($_POST as $key => $item) {			$save->{$key} = $item;		}
         
         //Plact type
         if($_POST['place_type']==1){

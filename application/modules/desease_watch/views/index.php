@@ -40,7 +40,9 @@
     				  <label for="name" style="margin-bottom:0px;">พื้นที่ที่เกิดโรค</label>
     				  <select name="place_type" class="form-control">
                             <option value="">-- ระบุแหล่งเกิดโรค --</option>
+                            <?php if($current_user->user_type_id < 9){ ?>
                             <option value="2" <?php echo $selected = @$_GET['place_type'] == 2 ? 'selected="selected"' : '';?>>พื้นที่ชุมชน</option>
+                            <?php } ?>
                             <option value="1" <?php echo $selected = @$_GET['place_type'] == 1 ? 'selected="selected"' : '';?>>ศูนย์เด็กเล็ก/โรงเรียนอนุบาล</option>
                       </select>
                   </div>
