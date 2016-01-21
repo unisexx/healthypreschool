@@ -1,6 +1,4 @@
 <?
-	$text = "สรุปผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรคโดยรวมทั้งหมด";
-		
 	if(isset($_GET['classroom_id']) && ($_GET['classroom_id']!="")){
 		$rs = new Classroom();
 		$rs->where('id = ',$_GET['classroom_id'])->order_by('room_name','asc')->get();
@@ -146,10 +144,10 @@ $(document).ready(function() {
 	    <span id="amphur">
 	    <?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
 	    </span>
-	    <span>ตำบล</span>
+	    <!-- <span>ตำบล</span>
 	    <span id="district">
 	    <?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
-	    </span>
+	    </span> -->
 	</div>
 
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
@@ -176,23 +174,23 @@ $(document).ready(function() {
 					if(@$_GET['district_id']!=""){
 						//ชื่อศูนย์เด็กเล็ก + กราฟ categories
 						echo $row->name;
-						$categories = $row->name;
+						$categories[] = "'".$row->name."'";
 					}elseif(@$_GET['amphur_id']!=""){
 						//ชื่อตำบล + กราฟ categories
 						echo $row->district_name;
-						$categories = $row->district_name;
+						$categories[] = "'".$row->district_name."'";
 					}elseif(@$_GET['province_id']!=""){
 						//ชื่ออำเภอ + กราฟ categories
 						echo $row->amphur_name;
-						$categories = $row->amphur_name;
+						$categories[] = "'".$row->amphur_name."'";
 					}elseif(@$_GET['area_id']!=""){
 						//ชื่อจังหวัด + กราฟ categories
 						echo $row->name;
-						$categories = $row->name;
+						$categories[] = "'".$row->name."'";
 					}else{
 						// สคร.+ กราฟ categories
 						echo $row->area_name;
-						$categories = $row->area_name;
+						$categories[] = "'".$row->area_name."'";
 					}
 					//**********************************************
 				?>
@@ -201,7 +199,7 @@ $(document).ready(function() {
 					$condition = " 1=1 ";
 					
 					if(@$_GET['district_id']!=""){
-						@$condition.=" and d.nursery_id = ".$row->id;
+						@$condition.=" and v_nurseries.district_id = ".$row->id;
 					}elseif(@$_GET['amphur_id']!=""){
 						@$condition.=" and v_nurseries.district_id = ".$row->id;
 					}elseif(@$_GET['province_id']!=""){
@@ -226,7 +224,7 @@ $(document).ready(function() {
 							INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 							WHERE
 								".@$condition."
-						) nursery_all,
+						) nursery_register,
 						(
 							SELECT
 								count(v_nurseries.id)
@@ -253,22 +251,31 @@ $(document).ready(function() {
 
 					// echo $sql.'<br><br>';
 				?>
-			<td><?=$nursery->nursery_all?></td>
+			<td><?=$nursery->nursery_register?></td>
 			<td><?=$nursery->nursery_pass?></td>
 			<td><?=$nursery->nursery_not?></td>
 		</tr>
 		
 		<?
-			 /*****************
-			 * สร้างตัวแปรเอาไว้เจนกราฟ
-			 */
-			 // $categories = 
-			 
+			// สร้างตัวแปรสำหรับเจนกราฟ
+			$nursery_register[] = convert_2_percent($nursery->nursery_register,$nursery->nursery_register);
+			$nursery_pass[] = convert_2_percent($nursery->nursery_pass,$nursery->nursery_register);
+			$nursery_not[] = convert_2_percent($nursery->nursery_not,$nursery->nursery_register);
 		?>
 		<?php endforeach;?>
 
 	</tbody>
 </table>
+
+<?
+/*
+ * 	สร้างตัวแปรสำหรับเจนกราฟ
+ */
+	$categories = implode(",", $categories);
+	$nursery_register  = implode(",", $nursery_register);
+	$nursery_pass  = implode(",", $nursery_pass);
+	$nursery_not  = implode(",", $nursery_not);
+?>
 
 <script type="text/javascript">
 $(function () {
@@ -277,38 +284,25 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'Monthly Average Rainfall'
+            text: 'สรุปผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรคโดยรวมทั้งหมด'
         },
-        subtitle: {
-            text: 'Source: WorldClimate.com'
-        },
+        // subtitle: {
+            // text: 'Source: WorldClimate.com'
+        // },
         xAxis: {
-            categories: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec'
-            ],
+            categories: [<?=$categories?>],
             crosshair: true
         },
         yAxis: {
             min: 0,
             title: {
-                text: 'Rainfall (mm)'
+                text: 'ร้อยละ'
             }
         },
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
             pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                '<td style="padding:0"><b>{point.y:.1f} %</b></td></tr>',
             footerFormat: '</table>',
             shared: true,
             useHTML: true
@@ -320,20 +314,16 @@ $(function () {
             }
         },
         series: [{
-            name: 'Tokyo',
-            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+            name: 'เข้าร่วม',
+            data: [<?=$nursery_register?>]
 
         }, {
-            name: 'New York',
-            data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+            name: 'ผ่านเกณฑ์',
+            data: [<?=$nursery_pass?>]
 
         }, {
-            name: 'London',
-            data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
-
-        }, {
-            name: 'Berlin',
-            data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+            name: 'รอการประเมิน',
+            data: [<?=$nursery_not?>]
 
         }]
     });
