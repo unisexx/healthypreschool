@@ -487,15 +487,16 @@
 										<li><a href="#">รายงาน</a>
 											<ul>
 												<?if (in_array($current_user->user_type_id, array(1,6,7,8))):?>
-												<li><a href="nurseries/reports/index/basic_column">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
+												<!-- <li><a href="nurseries/reports/index/basic_column">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li> -->
+												<li><a href="reports/nursery_register">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
 												<?endif;?>
 												<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
-												<li class="main_menu_nolink"><a href="#">รายงานแบบคัดกรองโรค</a></li>
+												<li class="main_menu_nolink"><a href="javascript:void(0)">รายงานแบบคัดกรองโรค</a></li>
 												<li class="sub_menu"><a class="sub_menu" href="diseases/newreport">- สรุปผลรายงานแบบคัดกรองโรค</a></li>
 												<li class="sub_menu"><a class="sub_menu" href="reports/desease_overall">- รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก</a></li>
 												<li class="sub_menu"><a class="sub_menu" href="reports/desease_factor">- รายงานข้อมูลวิเคราะห์ตามปัจจัยต่างๆ</a></li>
 												<!-- <li><a href="surveillances/index">รายงานการเฝ้าระวังโรค</a></li> -->
-												<li class="main_menu_nolink"><a href="#" onclick="return false;">รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรค</a></li>
+												<li class="main_menu_nolink"><a href="javascript:void(0)" onclick="return false;">รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรค</a></li>
 												<li class="sub_menu"><a class="sub_menu" href="reports/desease_watch_number">- รายงานจำนวนเหตุการณ์การเฝ้าระวังโรค</a></li>
 												<li class="sub_menu"><a class="sub_menu" href="reports/desease_watch_symptom">- รายงานกลุ่มอาการป่วยจากข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</a></li>
 												<?endif;?>

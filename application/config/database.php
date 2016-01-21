@@ -59,7 +59,7 @@ $db['default']['stricton'] = FALSE;
 
 $db['local']['hostname'] = 'localhost';
 $db['local']['username'] = 'root';
-$db['local']['password'] = '1234';
+$db['local']['password'] = '';
 $db['local']['database'] = 'healthypreschool';
 $db['local']['dbdriver'] = 'mysql';
 $db['local']['dbprefix'] = '';
