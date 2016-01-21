@@ -128,15 +128,15 @@ jQuery_1_4_2("input.datepicker").date_input();
     <div>
         <span>จังหวัด</span>
         <span id="province">
-        <?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
+        <?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id'],true);?>
         </span>
         <span>อำเภอ</span>
         <span id="amphur">
-        <?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
+        <?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id'],true);?>
         </span>
         <span>ตำบล</span>
         <span id="district">
-        <?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
+        <?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id'],true);?>
         </span>
     </div>
 

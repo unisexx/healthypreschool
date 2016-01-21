@@ -66,38 +66,51 @@ function get_area_dropdown($selected_value=''){
   	echo form_dropdown('area_id',get_option('id','area_name','areas',@$ext_condition.' order by id asc'),@$selected_value,' style="width:150px;"','--- เลือกเขตสคร. ---');
 }   
 
-function get_province_dropdown($area_id, $selected_value=''){
+function get_province_dropdown($area_id, $selected_value='',$show_all = false){
 	$current_user = user_login();	
-  	if(@$current_user->user_type_id >= 7){
-  		$ext_condition = ' WHERE id = '.$current_user->province_id;
-  		$selected_value = $current_user->province_id;
-	}
-	else if(@$area_id>0){
-		$ext_condition = ' WHERE id in (SELECT province_id FROM area_provinces WHERE area_id='.$area_id.')';
-	}
-	else{
-		$ext_condition = ' WHERE 1=1 ';
+	if($show_all==false){
+	  	if(@$current_user->user_type_id >= 7){
+	  		$ext_condition = ' WHERE id = '.$current_user->province_id;
+	  		$selected_value = $current_user->province_id;
+		}
+		else if(@$area_id>0){
+			$ext_condition = ' WHERE id in (SELECT province_id FROM area_provinces WHERE area_id='.$area_id.')';
+		}
+		else{
+			$ext_condition = ' WHERE 1=1 ';
+		}
+	}else{
+		if(@$area_id>0){
+			$ext_condition = ' WHERE id in (SELECT province_id FROM area_provinces WHERE area_id='.$area_id.')';
+		}
+		else{
+			$ext_condition = ' WHERE 1=1 ';
+		}
 	}
   	echo form_dropdown('province_id',get_option('id','name','provinces',@$ext_condition.' order by name asc'),@$selected_value,' style="width:150px;"','--- เลือกจังหวัด ---'); 
 }
-function get_amphur_dropdown($province_id='', $selected_value=''){
+function get_amphur_dropdown($province_id='', $selected_value='',$show_all = false){
 	$current_user = user_login();
 	if($province_id>0){                       	
     	$ext_condition = 'where province_id = '.$province_id;
-    	if(@$current_user->user_type_id >= 8){
-      		$ext_condition .= ' AND id = '.$current_user->amphur_id;
+		if($show_all==false){
+	    	if(@$current_user->user_type_id >= 8){
+	      		$ext_condition .= ' AND id = '.$current_user->amphur_id;
+			}
 		}
        echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures',$ext_condition.' order by amphur_name asc'),@$selected_value,'style="width:250px;"','--- เลือกอำเภอ ---');
 	}else{
 	   echo '<select name="amphur_id" id="amphur_id" disabled="disabled"><option value="">แสดงทั้งหมด</option></select>';
 	}
 }
-function get_district_dropdown($amphur_id, $selected_value=''){
+function get_district_dropdown($amphur_id, $selected_value='', $show_all = false){
 	$current_user = user_login();
 	if($amphur_id>0){
     	$ext_condition = 'where amphur_id = '.$amphur_id;
-    	if(@$current_user->user_type_id > 8){
-      		$ext_condition .= ' AND id = '.$current_user->district_id;
+		if($show_all==false){
+	    	if(@$current_user->user_type_id > 8){
+	      		$ext_condition .= ' AND id = '.$current_user->district_id;
+			}
 		}
    		echo form_dropdown('district_id',get_option('id','district_name','districts',$ext_condition.' order by district_name asc'),@$selected_value,'style="width:250px;"','--- เลือกตำบล ---');
 	}else{ 
