@@ -112,6 +112,47 @@ jQuery_1_4_2("input.datepicker").date_input();
 <form id="search_report" method="get" action="reports/desease_factor" style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
 
 	<div>
+		<span>ปัจจัยหลัก</span>
+		<?
+			$main_factor_array = Array('age'=>'อายุในศูนย์เด็กเล็ก','disease'=>'โรคที่พบบ่อย');
+			echo form_dropdown('main_factor',$main_factor_array,@$_GET['main_factor'],'id="main_factor" class="span3"');
+		?>
+
+		<span>ปัจจัยรอง</span>
+		<?php
+			$second_factor_array_1 = Array('sex'=>'เพศ','c1'=>'โรคที่พบบ่อย','c3'=>'สถานะเด็กป่วย');
+			$second_factor_array_2 = Array('sex'=>'เพศ','c3'=>'สถานะเด็กป่วย','c2'=>'การแยกเด็กป่วย','c5'=>'กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน');
+			echo form_dropdown('second_factor',$second_factor_array_1,@$_GET['second_factor'],'id="second_factor_1" class="span3"');
+			echo form_dropdown('second_factor',$second_factor_array_2,@$_GET['second_factor'],'id="second_factor_2" class="span3"');
+		?>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				if($('select[name=main_factor]').val() == 'age'){
+					$('#second_factor_1').show().removeAttr("disabled", 'disabled');
+					$('#second_factor_2').hide().attr("disabled", 'disabled');
+				}else if($('select[name=main_factor]').val() == 'disease'){
+					$('#second_factor_1').hide().attr("disabled", 'disabled');
+					$('#second_factor_2').show().removeAttr("disabled", 'disabled');
+				}
+
+				$('#main_factor').on('change', function() {
+				  // alert( this.value );
+					if( this.value == 'age'){
+						$('#second_factor_1').show().removeAttr("disabled", 'disabled');
+						$('#second_factor_2').hide().attr("disabled", 'disabled');
+					}else if ( this.value == 'disease' ) {
+						$('#second_factor_1').hide().attr("disabled", 'disabled');
+						$('#second_factor_2').show().removeAttr("disabled", 'disabled');
+					}
+				});
+			});
+		</script>
+	</div>
+
+	<hr>
+
+	<div>
 		<span>ช่วงเวลาที่เกิดโรค</span>
 		วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
 		วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
@@ -163,49 +204,18 @@ jQuery_1_4_2("input.datepicker").date_input();
 		</span>
 	</div>
 
-	<hr>
-
-	<div>
-		<span>ปัจจัยหลัก</span>
-		<?
-			$main_factor_array = Array('age'=>'อายุในศูนย์เด็กเล็ก','disease'=>'โรคที่พบบ่อย');
-			echo form_dropdown('main_factor',$main_factor_array,@$_GET['main_factor'],'id="main_factor" class="span3"');
-		?>
-
-		<span>ปัจจัยรอง</span>
-		<?php
-			$second_factor_array_1 = Array('sex'=>'เพศ','c1'=>'โรคที่พบบ่อย','c3'=>'สถานะเด็กป่วย');
-			$second_factor_array_2 = Array('sex'=>'เพศ','c3'=>'สถานะเด็กป่วย','c2'=>'การแยกเด็กป่วย','c5'=>'กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน');
-			echo form_dropdown('second_factor',$second_factor_array_1,@$_GET['second_factor'],'id="second_factor_1" class="span3"');
-			echo form_dropdown('second_factor',$second_factor_array_2,@$_GET['second_factor'],'id="second_factor_2" class="span3"');
-		?>
-
-		<script type="text/javascript">
-			$(document).ready(function(){
-				if($('select[name=main_factor]').val() == 'age'){
-					$('#second_factor_1').show().removeAttr("disabled", 'disabled');
-					$('#second_factor_2').hide().attr("disabled", 'disabled');
-				}else if($('select[name=main_factor]').val() == 'disease'){
-					$('#second_factor_1').hide().attr("disabled", 'disabled');
-					$('#second_factor_2').show().removeAttr("disabled", 'disabled');
-				}
-
-				$('#main_factor').on('change', function() {
-				  // alert( this.value );
-					if( this.value == 'age'){
-						$('#second_factor_1').show().removeAttr("disabled", 'disabled');
-						$('#second_factor_2').hide().attr("disabled", 'disabled');
-					}else if ( this.value == 'disease' ) {
-						$('#second_factor_1').hide().attr("disabled", 'disabled');
-						$('#second_factor_2').show().removeAttr("disabled", 'disabled');
-					}
-				});
-			});
-		</script>
-	</div>
 
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 </form>
+
+
+
+
+
+
+
+
+<?if(!empty($_GET)): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
 
 
 
@@ -831,7 +841,7 @@ $sql = "SELECT
 
 	$diseaseSex = new Disease();
 	$diseaseSex->query($sql);
-	
+
 	//------------------------------------ [หลัก : โรคที่พบบ่อย] [รอง : สถานะเด็กป่วย] -----------------------------------------
 	$sql = "SELECT
 	(
@@ -910,7 +920,7 @@ $sql = "SELECT
 
 	$diseaseStatus = new Disease();
 	$diseaseStatus->query($sql);
-	
+
 	//------------------------------------ [หลัก : โรคที่พบบ่อย] [รอง : การแยกเด็กป่วย] -----------------------------------------
 	$sql = "SELECT
 	(
@@ -1022,10 +1032,10 @@ $sql = "SELECT
 		d.c2 = '2' ".@$condition."
 	) disease_o_2
 	";
-	
+
 	$diseaseSep = new Disease();
 	$diseaseSep->query($sql);
-	
+
 	//------------------------------------ [หลัก : โรคที่พบบ่อย] [รอง : กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน] -----------------------------------------
 	$sql = "SELECT
 	(
@@ -1101,7 +1111,7 @@ $sql = "SELECT
 		d.c5 = '' ".@$condition."
 	) disease_o_s2
 	";
-	
+
 	$diseaseSame = new Disease();
 	$diseaseSame->query($sql);
 ?>
@@ -2424,4 +2434,8 @@ $(function () {
 		</td>
 	</tr>
 </table>
+<?endif;?>
+
+
+
 <?endif;?>

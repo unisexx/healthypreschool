@@ -6,7 +6,7 @@ $(document).ready(function(){
   			},function(data){
   				$("#province").html(data);
   			});
-  			
+
   			$('select[name=amphur_id] option:first-child,select[name=district_id] option:first-child').attr("selected", "selected").attr("disabled", "disabled");
 			$('select[name=amphur_id],select[name=district_id]').attr("disabled", "disabled");
   	});
@@ -16,7 +16,7 @@ $(document).ready(function(){
   			},function(data){
   				$("#amphur").html(data);
   			});
-  			
+
   			$('select[name=district_id] option:first-child').attr("selected", "selected").attr("disabled", "disabled");
 			$('select[name=district_id]').attr("disabled", "disabled");
   	});
@@ -28,7 +28,7 @@ $(document).ready(function(){
   				$("#district").html(data);
   			});
   	});
-	
+
 	$(".btn-estimate").live("click",function(){
 		$('.loader').show();
 		$.get('nurseries/get_nursery_data2',{
@@ -50,7 +50,7 @@ $(document).ready(function(){
 <script type="text/javascript">
 var jQuery_1_4_2 = $.noConflict(true);
 $(document).ready(function(){
-jQuery_1_4_2("input.datepicker").date_input(); 
+jQuery_1_4_2("input.datepicker").date_input();
 });
 </script>
 
@@ -61,22 +61,22 @@ jQuery_1_4_2("input.datepicker").date_input();
 </ul>
     <div id="data">
     	<div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">รายละเอียดชื่อโครงการศูนย์เด็กเล็กปลอดโรค</div>
-    	
+
     	<form method="get" action="nurseries/register">
 	    	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-	    		
+
 	    	<?// =form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),@$_GET['nursery_category_id'],'','--- เลือกคำนำหน้า ---');?>
 	    	<input name="id" type="number" value="<?=@$_GET['id']?>" placeholder="หมายเลขศูนย์" style="width:100px;"/>
 	    	<input name="name" type="text" value="<?=@$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:280px;"/>
 	    	<?php get_area_dropdown(@$_GET['area_id']);?>
 	    	<span id="province">
 	    	<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
-	    	</span>			
+	    	</span>
 			<span id="amphur">
 			<?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
 			</span>
-			
-			
+
+
 			<span id="district">
 			<?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
 			</span>
@@ -87,18 +87,23 @@ jQuery_1_4_2("input.datepicker").date_input();
 	  	      <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 	    	</div>
     	</form>
+
+
+
+<?if(!empty($_GET['status']) || !empty($_GET['area_id'])): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
+
+
+
+
+
         <div style="margin-bottom: 10px;">
-        	ผ่านเกณฑ์<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=1"> <span class="badge badge-success"><?=$pass_count?></span></a>
-        	ไม่ผ่านเกณฑ์<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=2"> <span class="badge badge-important"><?=$nopass_count?></span></a>
-        	รอการประเมิน<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=3"> <span class="badge"><?=$regis_count-($pass_count+$nopass_count)?></span></a>
-        	เข้าร่วมโครงการ<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=0"> <span class="badge badge-info"><?=$regis_count?></span></a>
-        	
-        	<!-- ผ่านเกณฑ์ <span class="badge badge-success"><?=$pass_count?></span>
-        	ไม่ผ่านเกณฑ์ <span class="badge badge-important"><?=$nopass_count?></span>
-        	รอการประเมิน <span class="badge"><?=$regis_count-($pass_count+$nopass_count)?></span>
-        	เข้าร่วมโครงการ <span class="badge badge-info"><?=$regis_count?></span> -->
+        	ผ่านเกณฑ์<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=1"> <span class="badge badge-success"><?=$count['pass']?></span></a>
+        	ไม่ผ่านเกณฑ์<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=2"> <span class="badge badge-important"><?=$count['not_pass']?></span></a>
+        	รอการประเมิน<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=3"> <span class="badge"><?=($count['total'])-($count['pass']+$count['not_pass'])?></span></a>
+        	เข้าร่วมโครงการ<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=0"> <span class="badge badge-info"><?=$count['pass']+$count['not_pass']?></span></a>
+
         </div>
-        
+
         <!-- <div style="float:right; padding:10px 0;">
         	<a href="nurseries/register_form"><div class="btn">เพิ่มศูนย์เด็กเล็ก</div></a>
         	<?php if(user_login()->user_type_id == 1): //ถ้าเป็นผู้ดูแลระบบ ?>
@@ -112,7 +117,7 @@ jQuery_1_4_2("input.datepicker").date_input();
         		<a href="nurseries/reports/index/basic_column?type=3&amphur_id=<?=user_login()->amphur_id?>" target="_blank"><div class="btn">รายงาน</div></a>
         	<?endif;?>
         </div> -->
-        
+
     	<table class="table table-striped">
         <tr>
 	        <th>ลำดับ</th>
@@ -129,7 +134,7 @@ jQuery_1_4_2("input.datepicker").date_input();
         </tr>
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
-	        <td><?=($key+1)+$nurseries->paged->current_row?></td>
+	        <td><?$_GET['page'] = (@$_GET['page'] == "")?"1":@$_GET['page'];?><?=($key+1)+(20 * (@$_GET['page'] - 1));?></td>
 	        <td>
 	        	<input type="hidden" name="id" value="<?=$nursery->id?>">
 	        	<a href="#myModal" class="btn-estimate" data-toggle="modal"><b><?//=$nursery->nursery_category->title?><?=$nursery->name?> (<?=$nursery->id?>)</b></a>
@@ -160,8 +165,8 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        		<li><a href="assessments/preview/<?=$nursery->id?>" target="_blank">รายงานแบบประเมินสมัครเข้าร่วมโครงการ</a></li>
 	        	</ul>
 	        </td>
-	        <td>จ.<?=$nursery->province->name?></td>
-	        <td>อ.<?=$nursery->amphur->amphur_name?><br>ต.<?=$nursery->district->district_name?> </td>
+	        <td>จ.<?=$nursery->province_name?></td>
+	        <td>อ.<?=$nursery->amphur_name?><br>ต.<?=$nursery->district_name?> </td>
 	        <!-- <td><?=$nursery->year?></td> -->
 	        <td>
 	        	<?php if($nursery->p_title == "นาย"):?>
@@ -180,11 +185,11 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        </td>
 	        <td nowrap="nowrap">
 	        	<?//=($nursery->status == 0)?"รอการประเมิน":"ผ่านเกณฑ์ <br>(พ.ศ. ".$nursery->approve_year.")";?>
-	        	
+
 	        	<?if($nursery->status == 0):?>
-	        		<?if($nursery->assessment->total != 0):?>
+	        		<?if($nursery->assessments_total != 0):?>
 	        			<a href="assessments/preview/<?=$nursery->id?>" target="_blank">
-	        			<span style="color:#D14">ไม่ผ่านเกณฑ์ <br>(<?=$nursery->assessment->total?> คะแนน)</span>
+	        			<span style="color:#D14">ไม่ผ่านเกณฑ์ <br>(<?=$nursery->assessments_total?> คะแนน)</span>
 	        			</a>
 	        		<?else:?>
 	        			รอการประเมิน
@@ -196,7 +201,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        			<span style="color:#d14;">หมดอายุปี <?=$nursery->approve_year + 3?></span>
 	        		<?else:?>
 	        		<a href="assessments/preview/<?=$nursery->id?>" target="_blank">
-	        			ผ่านเกณฑ์ <br>(<?=$nursery->assessment->total?> คะแนน)<br>
+	        			ผ่านเกณฑ์ <br>(<?=$nursery->assessments_total?> คะแนน)<br>
 	        			<span style="color:#d14;">หมดอายุปี <?=date("Y", strtotime($nursery->approve_date)) + 546;?></span>
 	        		</a>
 	        		<?endif;?>
@@ -213,9 +218,9 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        </tr>
 		<?php endforeach;?>
         </table>
-        <?=$nurseries->pagination();?>
+        <?=$pagination;?>
 	</div>
-	
+
 
 
 
@@ -226,3 +231,8 @@ jQuery_1_4_2("input.datepicker").date_input();
   	<div class="modal-body-form"></div>
   </div>
 </div>
+
+
+
+
+<?endif;?>

@@ -60,7 +60,7 @@
 					      <input type="password" id="inputPassword" class="input_boxLogin input-medium" name="password">
 					    </div>
 					</div>
-					<div class="control-group">
+					<!-- <div class="control-group">
 					    <label class="control-label" for="inputType">ประเภท:</label>
 					    <div style="float:left; margin-left: 15px;">
 					      <select class="span2" style="height:25px;" name="user_type_id">
@@ -72,7 +72,7 @@
 					      	<option value="10">ครู / ผู้ดูแลเด็ก</option>
 					      </select>
 					    </div>
-					</div>
+					</div> -->
 					<!-- <div>
 						<input type="text" name="email" value="" class="input_boxLogin input-small" placeholder="E-mail">
 					</div><br clear="all">

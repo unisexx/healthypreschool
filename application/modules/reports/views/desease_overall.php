@@ -168,6 +168,11 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 
 
+<?if(!empty($_GET)): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
+
+
+
+
 <style>
 	tr.subheader{font-weight:bold;background:#f1f1f1;}
 </style>
@@ -1342,3 +1347,7 @@ $same_total = $same->same_1 + $same->same_2;
 		<td><?=convert_2_percent($same->same_2,$same_total)?></td>
 	</tr>
 </table>
+
+
+
+<?endif;?>

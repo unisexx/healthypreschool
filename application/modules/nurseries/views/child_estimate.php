@@ -16,14 +16,14 @@ $(document).ready(function(){
 			});
 	     }
 	});
-	
+
 	$("select[name='area_id']").live("change",function(){
   		$.post('ajax/get_province',{
   				'area_id' : $(this).val()
   			},function(data){
   				$("#province").html(data);
   			});
-  			
+
   			$('select[name=amphur_id] option:first-child,select[name=district_id] option:first-child').attr("selected", "selected").attr("disabled", "disabled");
 			$('select[name=amphur_id],select[name=district_id]').attr("disabled", "disabled");
   	});
@@ -33,7 +33,7 @@ $(document).ready(function(){
   			},function(data){
   				$("#amphur").html(data);
   			});
-  			
+
   			$('select[name=district_id] option:first-child').attr("selected", "selected").attr("disabled", "disabled");
 			$('select[name=district_id]').attr("disabled", "disabled");
   	});
@@ -45,7 +45,7 @@ $(document).ready(function(){
   				$("#district").html(data);
   			});
   	});
-	
+
 	$(".btn-estimate").live("click",function(){
 		$('.loader').show();
 		$.get('nurseries/get_nursery_data',{
@@ -65,22 +65,22 @@ $(document).ready(function(){
 
 
 	<ul class="nav nav-tabs home-nav-tabs estimate-tab">
-	  <li <?=$_GET['status']==0 ?"class='active'" : "" ;?>><a href="nurseries/estimate?status=0&nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">รอการประเมิน <span class="badge"><?=$regis_count?></span></a></li>
-	  <li <?=$_GET['status']==1 ?"class='active'" : "" ;?>><a href="nurseries/estimate?status=1&nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">ผ่านเกณฑ์ <span class="badge badge-success"><?=$pass_count?></span></a></li>
-	  <li <?=$_GET['status']==2 ?"class='active'" : "" ;?>><a href="nurseries/estimate?status=2&nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">ไม่ผ่านเกณฑ์ <span class="badge badge-important"><?=$nopass_count?></a></li>
+	  <li <?=$_GET['status']==0 ?"class='active'" : "" ;?>><a href="nurseries/estimate?status=0&nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">รอการประเมิน <span class="badge"><?=$count['total']?></span></a></li>
+	  <li <?=$_GET['status']==1 ?"class='active'" : "" ;?>><a href="nurseries/estimate?status=1&nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">ผ่านเกณฑ์ <span class="badge badge-success"><?=$count['pass']?></span></a></li>
+	  <li <?=$_GET['status']==2 ?"class='active'" : "" ;?>><a href="nurseries/estimate?status=2&nursery_category_id=<?=@$_GET['nursery_category_id']?>&name=<?=@$_GET['name']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur']?>&district_id=<?=@$_GET['district_id']?>&year=<?=@$_GET['year']?>">ไม่ผ่านเกณฑ์ <span class="badge badge-important"><?=$count['not_pass']?></a></li>
 	</ul>
-    	
+
 	<div id="data">
     	<div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">ส่งผลการประเมินโครงการศูนย์เด็กเล็กปลอดโรค</div>
-    	
+
     <form method="get" action="">
     	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-    	
-    	<?=form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),@$_GET['nursery_category_id'],'','--- เลือกคำนำหน้า ---');?>	
+
+    	<?//=form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),@$_GET['nursery_category_id'],'','--- เลือกคำนำหน้า ---');?>
     	<input name="name" type="text" value="<?=@$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:280px;" />
     	<?php get_area_dropdown(@$_GET['area_id']);?>
     	<span id="province">
-    		<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?> 
+    		<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
     	</span>
     	<!--
 		<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
@@ -89,7 +89,7 @@ $(document).ready(function(){
        		<?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
        	<?php endif;?>
        -->
-       	
+
     	  <span id="amphur">
     	  	<?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
     	  	<!--
@@ -102,7 +102,7 @@ $(document).ready(function(){
                 <?php endif;?>
            -->
     	  </span>
-    	  
+
     	  <span id="district">
     	  	<?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
     	  	<!--
@@ -122,7 +122,14 @@ $(document).ready(function(){
   	      <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
     	</div>
 	</form>
-    	
+
+
+
+	<?if(!empty($_GET)): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
+
+
+
+
 	<table class="table">
         <tr>
 	        <th>ลำดับ</th>
@@ -141,10 +148,10 @@ $(document).ready(function(){
         </tr>
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
-	        <td><?=($key+1)+$nurseries->paged->current_row?></td>
-	        <td><?=$nursery->nursery_category->title?><?=$nursery->name?></td>
-	        <td>จ.<?=$nursery->province->name?></td>
-	        <td>อ.<?=$nursery->amphur->amphur_name?><br>ต.<?=$nursery->district->district_name?></td>
+	        <td><?$_GET['page'] = (@$_GET['page'] == "")?"1":@$_GET['page'];?><?=($key+1)+(20 * (@$_GET['page'] - 1));?></td>
+	        <td><?//=$nursery->nursery_category->title?><?=$nursery->name?></td>
+	        <td>จ.<?=$nursery->province_name?></td>
+	        <td>อ.<?=$nursery->amphur_name?><br>ต.<?=$nursery->district_name?></td>
 	        <td><?=$nursery->year?></td>
 	        <td>
 	        	<?php if($nursery->p_title == "นาย"):?>
@@ -186,9 +193,9 @@ $(document).ready(function(){
 		</tr>
 		<?php endforeach;?>
 	</table>
-	<?=$nurseries->pagination();?>
+	<?=$pagination;?>
 	</div>
- 
+
 <!-- Modal -->
 <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-body" style="height: 500px;">
@@ -196,3 +203,6 @@ $(document).ready(function(){
   	<div class="modal-body-form"></div>
   </div>
 </div>
+
+
+<?endif;?>

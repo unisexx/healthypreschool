@@ -127,9 +127,9 @@ $(document).ready(function() {
 <form id="search_report" method="get" action="reports/nursery_register">
 	<div>
 		<span>ปี</span>
-		<?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),@$_GET['year'],'class="span2"','-- สะสม 3 ปี --');?>	
+		<?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),@$_GET['year'],'class="span2"','-- สะสม 3 ปี --');?>
 	</div>
-	
+
 	<div>
 		<span>สคร.</span>
 		<?php echo form_dropdown('area_id',get_option('id','area_name','areas',' order by id '),@$_GET['area_id'],'id="area" class="span2"','--แสดงทั้งหมด--');?>
@@ -152,6 +152,20 @@ $(document).ready(function() {
 
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 </form>
+
+
+
+
+
+
+
+<?if(!empty($_GET)): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
+
+
+
+
+
+
 
 <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
@@ -197,7 +211,7 @@ $(document).ready(function() {
 			</th>
 				<?
 					$condition = " 1=1 ";
-					
+
 					if(@$_GET['district_id']!=""){
 						@$condition.=" and v_nurseries.district_id = ".$row->id;
 					}elseif(@$_GET['amphur_id']!=""){
@@ -255,7 +269,7 @@ $(document).ready(function() {
 			<td><?=$nursery->nursery_pass?></td>
 			<td><?=$nursery->nursery_not?></td>
 		</tr>
-		
+
 		<?
 			// สร้างตัวแปรสำหรับเจนกราฟ
 			$nursery_register[] = convert_2_percent($nursery->nursery_register,$nursery->nursery_register);
@@ -329,3 +343,9 @@ $(function () {
     });
 });
 </script>
+
+
+
+
+
+<?endif;?>

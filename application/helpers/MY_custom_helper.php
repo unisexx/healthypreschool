@@ -69,16 +69,21 @@ function get_area_dropdown($selected_value=''){
 function get_province_dropdown($area_id, $selected_value='',$show_all = false){
 	$current_user = user_login();	
 	if($show_all==false){
-	  	if(@$current_user->user_type_id >= 7){
-	  		$ext_condition = ' WHERE id = '.$current_user->province_id;
-	  		$selected_value = $current_user->province_id;
-		}
-		else if(@$area_id>0){
-			$ext_condition = ' WHERE id in (SELECT province_id FROM area_provinces WHERE area_id='.$area_id.')';
-		}
-		else{
-			$ext_condition = ' WHERE 1=1 ';
-		}
+		
+				if(@$current_user->user_type_id == 6){
+			  		$ext_condition = ' WHERE id in (SELECT province_id FROM area_provinces WHERE area_id='.$current_user->area_id.')';
+				}
+				else if(@$current_user->user_type_id >= 7){
+			  		$ext_condition = ' WHERE id = '.$current_user->province_id;
+			  		$selected_value = $current_user->province_id;
+				}
+				else if(@$area_id>0){
+					$ext_condition = ' WHERE id in (SELECT province_id FROM area_provinces WHERE area_id='.$area_id.')';
+				}
+				else{
+					$ext_condition = ' WHERE 1=1 ';
+				}
+
 	}else{
 		if(@$area_id>0){
 			$ext_condition = ' WHERE id in (SELECT province_id FROM area_provinces WHERE area_id='.$area_id.')';
