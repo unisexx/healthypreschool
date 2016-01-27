@@ -91,6 +91,117 @@ $(document).ready(function() {
 });
 </script>
 
+
+<!-- load jQuery 1.4.2 -->
+<script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
+
+<link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
+<script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
+<script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
+<script type="text/javascript">
+var jQuery_1_4_2 = $.noConflict(true);
+$(document).ready(function(){
+jQuery_1_4_2("input.datepicker").date_input();
+});
+</script>
+
+<?php $arrayMonth = array('1' => 'มกราคม', '2' => 'กุมภาพันธ์', '3' => 'มีนาคม', '4' => 'เมษายน', '5' => 'พฤษภาคม', '6' => 'มิถุนายน', '7' => 'กรกฎาคม', '8' => 'สิงหาคม', '9' => 'กันยายน', '10' => 'ตุลาคม', '11' => 'พฤศจิกายน', '12' => 'ธันวาคม',);?>
+
+<ul class="breadcrumb">
+  <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
+  <li class="active"><a href="diseases/newreport">รายงานแบบคัดกรองโรค</a></li>
+</ul>
+
+<h1>รายงานแบบคัดกรองโรค</h1>
+
+<form id="search_report" method="get" action="diseases/newreport">
+	<div>
+		<span>ช่วงอายุ</span>
+		<?=form_dropdown('lowage',array('0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7'),@$_GET['lowage'],'class="span1"');?>
+		<?=form_dropdown('agecondition',array('between'=>'ถึง','or'=>'และ'),@$_GET['agecondition'],'class="span1"');?>
+
+		<?if(@!isset($_GET['hiage']) or @$_GET['hiage']==""){$_GET['hiage'] = 7;}?>
+		<?=form_dropdown('hiage',array('1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7'),@$_GET['hiage'],'class="span1"');?>
+	</div>
+
+	<div>
+		<span>ช่วงเวลาที่เกิดโรค</span>
+		วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
+		วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
+	</div>
+
+	<div>
+		<span>สถานะเด็กป่วย</span>
+		<?=form_dropdown('c3',array('/'=>'มาเรียน','x'=>'หยุดเรียน'),@$_GET['c3'],'class="span2"','--- เลือก ---');?>
+	</div>
+
+	<div>
+		<span>การแยกเด็กป่วย</span>
+		<?=form_dropdown('c2',array('0'=>'ไม่มีการแยกนอนแยกเล่น','1'=>'แยกนอน','2'=>'แยกเล่น'),@$_GET['c2'],'class="span3"','--- เลือก ---');?>
+	</div>
+
+	<div>
+		<span>กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน</span>
+		<?=form_dropdown('c5',array('*'=>'มี','no'=>'ไม่มี'),@$_GET['c5'],'class="span2"',"--- เลือก ---");?>
+	</div>
+
+	<div>
+		<span>สคร.</span>
+		<?php echo form_dropdown('area_id',get_option('id','area_name','areas',' order by id '),@$_GET['area_id'],'id="area" class="span2"','--แสดงทั้งหมด--');?>
+	</div>
+
+	<div>
+		<span>จังหวัด</span>
+		<span id="province">
+		<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
+		</span>
+		<span>อำเภอ</span>
+    <span id="amphur">
+    <?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
+    </span>
+    <span>ตำบล</span>
+    <span id="district">
+    <?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
+    </span>
+	</div>
+
+	<div>
+		<span>ศูนย์เด็กเล็ก</span>
+		<span id="nursery">
+		<?php
+			if(isset($_GET['district_id']) && ($_GET['district_id']!="")){
+				echo @form_dropdown('nursery_id',get_option('id','name','nurseries','where district_id = '.@$_GET['district_id'].' order by name asc'),@$_GET['nursery_id'],'id="nursery"','--- เลือกศูนย์เด็กเล็ก ---');
+			}else{
+				echo form_dropdown('nursery_id',array(''=>'--- เลือกศูนย์เด็กเล็ก ---'),'','id="nursery" class="span4" disabled');
+			}
+		?>
+		</span>
+	</div>
+
+	<div>
+		<span>ห้องเรียน</span>
+		<span id="classroom">
+		<?php
+			if(isset($_GET['nursery_id']) && ($_GET['nursery_id']!="")){
+				echo @form_dropdown('classroom_id',get_option('id','room_name','classrooms','where nursery_id = '.@$_GET['nursery_id'].' order by room_name asc'),@$_GET['classroom_id'],'id="classroom"','--- เลือกห้องเรียน ---');
+			}else{
+				echo form_dropdown('id',array(''=>'--- เลือกห้องเรียน ---'),'','id="classroom" class="span4" disabled');
+			}
+		?>
+		</span>
+	</div>
+	<input type="hidden" value="1" name='search'>
+	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
+</form>
+
+
+
+
+
+<?if(@$_GET['search']==1): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
+
+
+
 <script type="text/javascript">
 $(function(){
 	// On document ready, call visualize on the datatable.
@@ -208,109 +319,6 @@ $(function(){
     });
 });
 </script>
-
-
-<!-- load jQuery 1.4.2 -->
-<script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
-
-<link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
-<script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
-<script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
-<script type="text/javascript">
-var jQuery_1_4_2 = $.noConflict(true);
-$(document).ready(function(){
-jQuery_1_4_2("input.datepicker").date_input();
-});
-</script>
-
-<?php $arrayMonth = array('1' => 'มกราคม', '2' => 'กุมภาพันธ์', '3' => 'มีนาคม', '4' => 'เมษายน', '5' => 'พฤษภาคม', '6' => 'มิถุนายน', '7' => 'กรกฎาคม', '8' => 'สิงหาคม', '9' => 'กันยายน', '10' => 'ตุลาคม', '11' => 'พฤศจิกายน', '12' => 'ธันวาคม',);?>
-
-<ul class="breadcrumb">
-  <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active"><a href="diseases/newreport">รายงานแบบคัดกรองโรค</a></li>
-</ul>
-
-<h1>รายงานแบบคัดกรองโรค</h1>
-
-<form id="search_report" method="get" action="diseases/newreport">
-	<div>
-		<span>ช่วงอายุ</span>
-		<?=form_dropdown('lowage',array('0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7'),@$_GET['lowage'],'class="span1"');?>
-		<?=form_dropdown('agecondition',array('between'=>'ถึง','or'=>'และ'),@$_GET['agecondition'],'class="span1"');?>
-
-		<?if(@!isset($_GET['hiage']) or @$_GET['hiage']==""){$_GET['hiage'] = 7;}?>
-		<?=form_dropdown('hiage',array('1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7'),@$_GET['hiage'],'class="span1"');?>
-	</div>
-
-	<div>
-		<span>ช่วงเวลาที่เกิดโรค</span>
-		วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
-		วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
-	</div>
-
-	<div>
-		<span>สถานะเด็กป่วย</span>
-		<?=form_dropdown('c3',array('/'=>'มาเรียน','x'=>'หยุดเรียน'),@$_GET['c3'],'class="span2"','--- เลือก ---');?>
-	</div>
-
-	<div>
-		<span>การแยกเด็กป่วย</span>
-		<?=form_dropdown('c2',array('0'=>'ไม่มีการแยกนอนแยกเล่น','1'=>'แยกนอน','2'=>'แยกเล่น'),@$_GET['c2'],'class="span3"','--- เลือก ---');?>
-	</div>
-
-	<div>
-		<span>กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน</span>
-		<?=form_dropdown('c5',array('*'=>'มี','no'=>'ไม่มี'),@$_GET['c5'],'class="span2"',"--- เลือก ---");?>
-	</div>
-
-	<div>
-		<span>สคร.</span>
-		<?php echo form_dropdown('area_id',get_option('id','area_name','areas',' order by id '),@$_GET['area_id'],'id="area" class="span2"','--แสดงทั้งหมด--');?>
-	</div>
-
-	<div>
-		<span>จังหวัด</span>
-		<span id="province">
-		<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
-		</span>
-		<span>อำเภอ</span>
-    <span id="amphur">
-    <?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
-    </span>
-    <span>ตำบล</span>
-    <span id="district">
-    <?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
-    </span>
-	</div>
-
-	<div>
-		<span>ศูนย์เด็กเล็ก</span>
-		<span id="nursery">
-		<?php
-			if(isset($_GET['district_id']) && ($_GET['district_id']!="")){
-				echo @form_dropdown('nursery_id',get_option('id','name','nurseries','where district_id = '.@$_GET['district_id'].' order by name asc'),@$_GET['nursery_id'],'id="nursery"','--- เลือกศูนย์เด็กเล็ก ---');
-			}else{
-				echo form_dropdown('nursery_id',array(''=>'--- เลือกศูนย์เด็กเล็ก ---'),'','id="nursery" class="span4" disabled');
-			}
-		?>
-		</span>
-	</div>
-
-	<div>
-		<span>ห้องเรียน</span>
-		<span id="classroom">
-		<?php
-			if(isset($_GET['nursery_id']) && ($_GET['nursery_id']!="")){
-				echo @form_dropdown('classroom_id',get_option('id','room_name','classrooms','where nursery_id = '.@$_GET['nursery_id'].' order by room_name asc'),@$_GET['classroom_id'],'id="classroom"','--- เลือกห้องเรียน ---');
-			}else{
-				echo form_dropdown('id',array(''=>'--- เลือกห้องเรียน ---'),'','id="classroom" class="span4" disabled');
-			}
-		?>
-		</span>
-	</div>
-	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
-</form>
-
 <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 <?php $diseasesArray = array(
@@ -383,7 +391,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 						// }else{
 							// @$condition.=" and n.area_id = ".$row->id;
 						// }
-						
+
 						if(@$_GET['classroom_id']!=""){
 							@$condition.=" and d.classroom_id = ".$row->id;
 						}elseif(@$_GET['nursery_id']!=""){
@@ -478,3 +486,8 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 	</tbody>
 </table>
+
+
+
+
+<?endif;?>

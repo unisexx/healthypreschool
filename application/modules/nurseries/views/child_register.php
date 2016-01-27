@@ -84,15 +84,14 @@ jQuery_1_4_2("input.datepicker").date_input();
 	    	  <?=form_dropdown('status',array('1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์','3'=>'รอการประเมิน','0'=>'เข้าร่วมโครงการ','4'=>'หมดอายุแล้ว'),@$_GET['status'],'','--- เลือกสถานะ ---');?><br>
 	    	  วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
 	    	  วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
+	    	  <input type="hidden" name="search" value="1">
 	  	      <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 	    	</div>
     	</form>
 
 
 
-<?if(!empty($_GET['status']) || !empty($_GET['area_id'])): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
-
-
+<?if(@$_GET['search']==1): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
 
 
 
@@ -233,6 +232,65 @@ jQuery_1_4_2("input.datepicker").date_input();
 </div>
 
 
-
-
 <?endif;?>
+
+
+<script type="text/javascript" charset="utf-8">
+//-------------------------- วิธีดึงข้อมูลโดยใช้ jsonp  (ดึงผ่าน http://whateverorigin.org)---------------------------------
+// It is good specify the charset you expect.
+// You can use the charset you want instead of utf-8.
+// See details for scriptCharset and contentType options: 
+// http://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings
+// $.ajaxSetup({
+    // scriptCharset: "utf-8", //or "ISO-8859-1"
+    // contentType: "application/json; charset=utf-8"
+// });
+
+// $.getJSON('http://whateverorigin.org/get?url=' + 
+    // encodeURIComponent('http://www.kpoplover.com/api/mv-list.php') + '&callback=?',
+    // function (data) {
+        // // console.log("> ", data);
+// 
+        // //If the expected response is text/plain
+        // // $("#viewer").html(data.contents);
+// 
+        // //If the expected response is JSON
+        // var response = $.parseJSON(data.contents);
+        // console.log(response);
+//         
+        // $.each(response, function(i, item) {
+		    // // alert(response[i].id);
+		    // $( "#viewer" ).append( "<p>"+response[i].id+"<br>"+response[i].title+"</p>" );
+		// });
+// });
+
+
+//-------------------------- วิธีดึงข้อมูลโดยใช้ ajax (ไฟล์ php ที่ url ปลายทางต้องตั้งค่า header('Access-Control-Allow-Origin: *'); ด้วย ถึงจะดึงข้อมูลได้) ---------------------------------
+// $.ajax({
+     // type: "POST",
+     // url: "http://www.kpoplover.com/api/mv-list.php",
+     // // dataType: 'json',   
+     // cache: false,
+     // success: function(data)
+      // {
+        // // console.log(data);
+        // var response = $.parseJSON(data);
+        // console.log(response);
+        // $.each(response, function(i, item) {
+		    // // alert(response[i].id);
+		    // $( "#viewer" ).append( "<p>"+response[i].id+"<br>"+response[i].title+"</p>" );
+		// });
+      // } 
+  // });
+  
+$.post( "http://www.kpoplover.com/api/mv-list.php", function( data ) {
+	console.log(data);
+    var response = $.parseJSON(data);
+    console.log(response);
+    $.each(response, function(i, item) {
+	    // alert(response[i].id);
+	    $( "#viewer" ).append( "<p>"+response[i].id+"<br>"+response[i].title+"</p>" );
+	});
+});
+</script>
+<div id="viewer"></div>

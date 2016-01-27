@@ -436,7 +436,7 @@
 												<?if (in_array($current_user->user_type_id, array(1,6,7,8))):?>
 												<li><a href="nurseries/register">ตรวจสอบรายชื่อศูนย์เด็กเล็ก</a></li>
 												<li><a href="nurseries/register_form">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
-												<li><a href="nurseries/estimate?status=0">ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
+												<li><a href="nurseries/estimate">ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
 												<?endif;?>
 												<?if (in_array($current_user->user_type_id, array(9))):?>
 												<li><a href="teachers?nursery_id=<?=$current_user->nursery_id?>">ตรวจสอบรายชื่อครู / เจ้าหน้าที่</a></li>

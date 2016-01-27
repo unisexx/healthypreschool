@@ -435,51 +435,37 @@ WHERE 1=1 ".$condition;
 	}
 
 	function newreport (){
-		$data['text'] = "สรุปผลรายงานแบบคัดกรองโรค";
 		
-		if(isset($_GET['classroom_id']) && ($_GET['classroom_id']!="")){
-			$data['rs'] = new Classroom();
-			$data['rs']->where('id = ',$_GET['classroom_id'])->order_by('room_name','asc')->get();
-		}elseif(isset($_GET['nursery_id']) && ($_GET['nursery_id']!="")){
-			$data['rs'] = new Classroom();
-			$data['rs']->where('nursery_id = ',$_GET['nursery_id'])->order_by('room_name','asc')->get();
-		}elseif(isset($_GET['district_id']) && ($_GET['district_id']!="")){
-			$data['rs'] = new Nursery();
-			$data['rs']->where('district_id = ',$_GET['district_id'])->order_by('name','asc')->get();
-		}elseif(isset($_GET['amphur_id']) && ($_GET['amphur_id']!="")){
-			$data['rs'] = new District();
-			$data['rs']->where('amphur_id = ',$_GET['amphur_id'])->order_by('district_name','asc')->get();
-		}elseif(isset($_GET['province_id']) && ($_GET['province_id']!="")){
-			$data['rs'] = new Amphur();
-			$data['rs']->where('province_id = '.$_GET['province_id'])->order_by('amphur_name','asc')->get();
-		}elseif(isset($_GET['area_id']) && ($_GET['area_id']!="")){
-			$data['rs'] = new V_province();
-			$data['rs']->where('area_id = '.$_GET['area_id'])->order_by('name','asc')->get();
-		}else{
-			$data['rs'] = new Area();
-			$data['rs']->order_by('id','asc')->get();
+		if(@$_GET['search']==1){ //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล
+		
+			$data['text'] = "สรุปผลรายงานแบบคัดกรองโรค";
+			
+			if(isset($_GET['classroom_id']) && ($_GET['classroom_id']!="")){
+				$data['rs'] = new Classroom();
+				$data['rs']->where('id = ',$_GET['classroom_id'])->order_by('room_name','asc')->get();
+			}elseif(isset($_GET['nursery_id']) && ($_GET['nursery_id']!="")){
+				$data['rs'] = new Classroom();
+				$data['rs']->where('nursery_id = ',$_GET['nursery_id'])->order_by('room_name','asc')->get();
+			}elseif(isset($_GET['district_id']) && ($_GET['district_id']!="")){
+				$data['rs'] = new Nursery();
+				$data['rs']->where('district_id = ',$_GET['district_id'])->order_by('name','asc')->get();
+			}elseif(isset($_GET['amphur_id']) && ($_GET['amphur_id']!="")){
+				$data['rs'] = new District();
+				$data['rs']->where('amphur_id = ',$_GET['amphur_id'])->order_by('district_name','asc')->get();
+			}elseif(isset($_GET['province_id']) && ($_GET['province_id']!="")){
+				$data['rs'] = new Amphur();
+				$data['rs']->where('province_id = '.$_GET['province_id'])->order_by('amphur_name','asc')->get();
+			}elseif(isset($_GET['area_id']) && ($_GET['area_id']!="")){
+				$data['rs'] = new V_province();
+				$data['rs']->where('area_id = '.$_GET['area_id'])->order_by('name','asc')->get();
+			}else{
+				$data['rs'] = new Area();
+				$data['rs']->order_by('id','asc')->get();
+			}
+		
 		}
 		
-		// หาจำนวนห้อง
-		// $classroom = new Classroom();
-		// $classroom->where('nursery_id = '.$_GET['nursery_id']);
-		// $data['classrooms'] = $classroom->get();
-		
-		// หาปี
-		// $disease = new Disease();
-		// $sql = "SELECT DISTINCT year
-				// FROM diseases
-				// WHERE nursery_id = ".$_GET['nursery_id'];
-		// $data['years'] = $disease->sql_page($sql);
-		
-		// หาเดือน
-		// $disease = new Disease();
-		// $sql = "SELECT DISTINCT month
-				// FROM diseases
-				// WHERE nursery_id = ".$_GET['nursery_id'];
-		// $data['months'] = $disease->sql_page($sql);
-		
-		$this->template->build('newreport',$data);
+		$this->template->build('newreport',@$data);
 	}
 
 	function form3(){

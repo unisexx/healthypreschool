@@ -4,7 +4,7 @@ $(document).ready(function(){
         //alert( this.value );
         switch(this.value)
         {
-			case '6': 
+			case '6':
    				$('.loading').show();
    				$('select[name=province_id],select[name=amphur_id]').remove();
    				$.post('officers/get_area',function(data){
@@ -12,7 +12,7 @@ $(document).ready(function(){
    					$('.loading').hide();
    				});
 			break;
-			case '7': 
+			case '7':
 				$('.loading').show();
 				$('select[name=area_id],select[name=amphur_id]').remove();
    				$.post('officers/get_province',function(data){
@@ -20,7 +20,7 @@ $(document).ready(function(){
    					$('.loading').hide();
    				});
 			break;
-			case '8': 
+			case '8':
 				$('.loading').show();
 				$('select[name=area_id],select[name=province_id]').remove();
 				$.post('officers/get_province',function(data){
@@ -37,7 +37,7 @@ $(document).ready(function(){
 			break;
         }
     });
-    
+
     // $('select[name=area_id]').live('change',function(){
     	// $('.loading').show();
     	// $('select[name=province_id],select[name=amphur_id]').remove();
@@ -48,8 +48,8 @@ $(document).ready(function(){
 			// $('.loading').hide();
 		// });
     // });
-    
-    
+
+
     $('select[name=province_id]').live('change',function(){
     	if($('select[name=user_type_id]').val() == 8){
     		$('.loading').show();
@@ -62,7 +62,7 @@ $(document).ready(function(){
 			});
     	}
     });
-    
+
     <?php if(@$_GET['user_type_id'] == 6):?>
     	$.post('officers/get_area',{
     		area_id : '<?php echo @$_GET['area_id']?>'
@@ -71,7 +71,7 @@ $(document).ready(function(){
 			$('.loading').hide();
 		});
     <?php endif;?>
-    
+
     <?php if(@$_GET['user_type_id'] == 7):?>
     	$.post('officers/get_province',{
     		province_id : '<?php echo @$_GET['province_id']?>'
@@ -80,7 +80,7 @@ $(document).ready(function(){
 			$('.loading').hide();
 		});
     <?php endif;?>
-    
+
     <?php if(@$_GET['user_type_id'] == 8):?>
     $.post('officers/get_province',{
     		province_id : '<?php echo @$_GET['province_id']?>'
@@ -88,7 +88,7 @@ $(document).ready(function(){
 			$('.province').html(data);
 			$('.loading').hide();
 		});
-		
+
     	$.post('officers/get_amphur',{
     		province_id : '<?php echo @$_GET['province_id']?>',
     		amphur_id : '<?php echo @$_GET['amphur_id']?>'
@@ -108,32 +108,34 @@ $(document).ready(function(){
 <form method="get" action="officers">
 	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
 	<input type="text" name="search" value="<?=@$_GET['search']?>" placeholder="ค้นหาชื่อ,อีเมล์">
-	
+
 	<?=form_dropdown('m_status',array('active'=>'เปิด','deactive'=>'ปิด'),@$_GET['m_status'],'','--- เลือกสถานะ ---');?>
-	
-	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
+
+	<?php get_province_dropdown('',@$_GET['province_id']);?>
+
+	<!-- <?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
 		<?=form_dropdown('user_type_id',array('6'=>'เจ้าหน้าที่ประจำเขต','7'=>'เจ้าหน้าที่ประจำจังหวัด','8'=>'เจ้าหน้าที่ประจำอำเภอ'),@$_GET['user_type_id'],'class="input-xlarge"','--- เลือกประเภท ---');?>
 	<?php endif;?>
-	
+
 	<?php if(user_login()->user_type_id == 6): //เจ้าหน้าที่เขต?>
    		<?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
 	<?php endif;?>
-	  
+
 	<?php if(user_login()->user_type_id == 7): //เจ้าหน้าที่จังหวัด?>
 		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.user_login()->province_id.' order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
-	<?php endif;?>
-	
+	<?php endif;?> -->
+
 	<span class="area"></span>
 	<span class="province"></span>
 	<span class="amphur"></span>
-	
+
 	<!-- <?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
 	<span id="area" <?=(@$_GET['area_id'] == "" and @$_GET['user_type_id'] != 6)?"style='display:none;'":"";?>>
 		<?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),@$_GET['area_id'],'class="input-xlarge"','--- เลือกสคร. ---');?>
 	</span>
 	<?php endif;?>
-	
-	
+
+
 	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
 		<span id="province" <?=(@$_GET['province_id'] == "" and @$_GET['user_type_id'] != 7)?"style='display:none;'":"";?>>
    			<?php echo form_dropdown('province_id',get_option('id','name','provinces'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
@@ -141,8 +143,8 @@ $(document).ready(function(){
    	<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร.?>
    		<?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
    	<?php endif;?>
-	
-	
+
+
 	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกอำเภอ?>
 		<span id="amphur" <?=(@$_GET['amphur_id'] == "" and @$_GET['user_type_id'] != 8)?"style='display:none;'":"";?>>
 		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
@@ -151,16 +153,16 @@ $(document).ready(function(){
 	    <?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.user_login()->province_id.' order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
 	<?php endif;?>
 	-->
-	  
+
       <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
       <img class="loading" style="display: none;" src="media/images/ajax-loader.gif">
 	</div>
 </form>
-    	
+
 <div style="margin-bottom: 10px;">
 	พบเจ้าหน้าที่ทั้งหมด <a href="nurseries/register?status=1"> <span class="badge badge-success"><?=$users->paged->total_rows;?></span></a>
 </div>
-        
+
 <table class="table">
     <tr>
         <th>ลำดับ</th>
@@ -180,7 +182,7 @@ $(document).ready(function(){
             <td><?=$user->phone?></td>
             <td><?=$user->user_type->name?></td>
             <td>
-                <?php 
+                <?php
                     if($user->user_type_id == 6){
                         echo $user->area->area_name;
                     }elseif($user->user_type_id == 7){
