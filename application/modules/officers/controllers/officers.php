@@ -17,7 +17,12 @@ class Officers extends Public_Controller
 		if(@$_GET['search'])$data['users']->where("name like '%".$_GET['search']."%' or email like '%".$_GET['search']."%'");
 		if(@$_GET['user_type_id'])$data['users']->where("user_type_id = ".$_GET['user_type_id']);
 		if(@$_GET['area_id'])$data['users']->where("area_id = ".$_GET['area_id']);
-		if(@$_GET['province_id'])$data['users']->where("province_id = ".$_GET['province_id']);
+		if(@$_GET['user_type_id'] == 8){
+			if(@$_GET['province_id'])$data['users']->where("amphur_id in (select id from amphures where province_id = ".$_GET['province_id'].')');
+		}else{
+			if(@$_GET['province_id'])$data['users']->where("province_id = ".$_GET['province_id']);
+		}
+		
 		if(@$_GET['amphur_id'])$data['users']->where("amphur_id = ".$_GET['amphur_id']);
 		if(@$_GET['m_status'])$data['users']->where("m_status = '".$_GET['m_status']."'");
         
@@ -29,6 +34,7 @@ class Officers extends Public_Controller
             $data['users']->where('user_type_id = 8 and amphur_id in (select id from amphures where province_id = '.user_login()->province_id.')');
         }
         $data['users']->order_by('id','desc')->get_page();
+		// $data['users']->check_last_query();
         $this->template->build('index',$data);
     }
     
@@ -43,11 +49,13 @@ class Officers extends Public_Controller
             $captcha = $this->session->userdata('captcha');
             if(($_POST['captcha'] == $captcha) && !empty($captcha)){
                 $user = new User($id);
+				$_POST['area_province_id'] = get_area_province_id($_POST['province_id']);
                 $user->from_array($_POST);
                 $user->save();
 				if($_POST['m_status'] == 'active'){
 					$this->send_mail($_POST);
 				}
+				
                 set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
             }else{
                 set_notify('error','กรอกรหัสไม่ถูกต้อง');
@@ -107,7 +115,7 @@ class Officers extends Public_Controller
     }
 
 	function get_area(){
-		echo form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),@$_POST['area_id'],'class="input-medium"','--- เลือกสคร. ---');
+		echo form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12','13'=>'สคร.13'),@$_POST['area_id'],'class="input-medium"','--- เลือกสคร. ---');
 	}
 	
 	function get_province(){

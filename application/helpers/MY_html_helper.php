@@ -264,6 +264,15 @@ function get_student_room_name($id=false){
 	return $name;
 }
 
+function get_area_province_id($province_id){
+	$CI =& get_instance();
+	$c= new V_province();
+	$c->query("select area_province_id from v_provinces where id =".$province_id);
+	$area_province_id = $c->area_province_id;
+	
+	return $area_province_id;
+}
+
 function get_month_name($id=false){
 	$arrayMonth = array('1' => 'มกราคม', '2' => 'กุมภาพันธ์', '3' => 'มีนาคม', '4' => 'เมษายน', '5' => 'พฤษภาคม', '6' => 'มิถุนายน', '7' => 'กรกฎาคม', '8' => 'สิงหาคม', '9' => 'กันยายน', '10' => 'ตุลาคม', '11' => 'พฤศจิกายน', '12' => 'ธันวาคม');
 	
