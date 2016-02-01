@@ -24,7 +24,7 @@ class Officers extends Public_Controller
         if(user_login()->user_type_id == 1){ // admin เห็นทั้งหมด
             $data['users']->where('user_type_id > '.user_login()->user_type_id.' and user_type_id < 9 ');
         }elseif(user_login()->user_type_id == 6){ // เจ้าหน้าที่เขต เห็นเจ้าหน้าที่จังหวัด
-            $data['users']->where('user_type_id = 7 and province_id in (select id from provinces where area_id = '.user_login()->area_id.')');
+            $data['users']->where('user_type_id = 7 and province_id in (select province_id from area_provinces_detail where area_id = '.user_login()->area_id.')');
         }elseif(user_login()->user_type_id == 7){ // เจ้าหน้าที่จังหวัด เห็นเจ้าหน้าที่อำเภอ
             $data['users']->where('user_type_id = 8 and amphur_id in (select id from amphures where province_id = '.user_login()->province_id.')');
         }
@@ -117,6 +117,26 @@ class Officers extends Public_Controller
 	function get_amphur(){
 		if($_POST){
 			echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.$_POST['province_id'].' order by amphur_name asc'),@$_POST['amphur_id'],'','--- เลือกอำเภอ ---');
+		}
+	}
+	
+	function show_province(){
+		if($_POST){
+			$sql = "SELECT
+							v_provinces.name
+						FROM
+							v_provinces
+						WHERE
+							v_provinces.area_id = ".$_POST['area_id'];
+						
+			$rs = $this->db->query($sql)->result();
+			// var_dump($rs);
+			echo "<div style='border:1px dashed #F44336;padding:10px;width:247px;'>";
+			echo "<b>ครอบคลุมพื้นที่จังหวัด</b><br>";
+			foreach($rs as $row){
+				echo "- ".$row->name."<br>";
+			}
+			echo "</div>";
 		}
 	}
 }

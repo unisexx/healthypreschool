@@ -21,7 +21,7 @@ input[type="radio"], input[type="checkbox"]{margin:-1px 0 0 0;}
 </style>
 <script>
 $(document).ready(function() {
-		$("select[name='area_id']").live("change",function(){
+	$("select[name='area_id']").live("change",function(){
   		$.post('ajax/get_province',{
   				'area_id' : $(this).val()
   			},function(data){

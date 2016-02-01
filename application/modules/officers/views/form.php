@@ -2,6 +2,7 @@
 <script language="javascript">
 $(function(){
     $("#regisform").validate({
+    ignore: ":hidden",
     rules: 
     {
     	name: 
@@ -9,6 +10,12 @@ $(function(){
             required: true
         },
         user_type_id:{
+        	required: true
+        },
+        province_id:{
+        	required: true
+        },
+        amphur_id:{
         	required: true
         },
     	sex: 
@@ -40,6 +47,14 @@ $(function(){
         user_type_id:
         {
         	required: "กรุณาเลือกตำแหน่ง"
+        },
+    	province_id: 
+        { 
+            required: "กรุณาเลือกจังหวัด"
+        },
+    	amphur_id: 
+        { 
+            required: "กรุณาเลือกอำเภอ"
         },
     	sex: 
         { 
@@ -85,8 +100,16 @@ $(function(){
         }
     });
     
-    $("select[name='area_id']").live("change",function(){
-		$.post('users/get_province_under_area',{
+    // $("select[name='area_id']").live("change",function(){
+		// $.post('users/get_province_under_area',{
+			// 'area_id' : $(this).val()
+		// },function(data){
+			// $(".underprovince").html(data);
+		// });
+	// });
+	
+	$("select[name='area_id']").live("change",function(){
+		$.post('officers/show_province',{
 			'area_id' : $(this).val()
 		},function(data){
 			$(".underprovince").html(data);
@@ -101,41 +124,42 @@ $(function(){
 			});
 	});
 	
-	$('.btnclickform').live("click",function(){
-		var user_type_id = $('select[name=user_type_id] option:selected').val();
-		var area_id = $('select[name=area_id] option:selected').val();
-		var province_id = $('#province_select option:selected').val();
-		var province_id2 = $('select[name=province_to_select_amphur] option:selected').val();
-		var amphur_id = $('select[name=amphur_id] option:selected').val();
-		
-		if(user_type_id == 6){
-			if(area_id == ""){
-				alert('กรุณาเลือกพื้นที่');
-				return false;
-			}else{
-				$('#regisform').submit();
-			}
-		}else if(user_type_id == 7){
-			if(province_id == ""){
-				alert('กรุณาเลือกจังหวัด');
-				return false;
-			}else{
-				$('#regisform').submit();
-			}
-		}else if(user_type_id == 8){
-			if(province_id2 == ""){
-				alert('กรุณาเลือกจังหวัด');
-				return false;
-			}else if(amphur_id == ""){
-				alert('กรุณาเลือกตำบล');
-				return false;
-			}else{
-				$('#regisform').submit();
-			}
-		}else{
-			alert('กรุณาเลือกประเภท');
-		}
-	});
+	// $('.btnclickform').live("click",function(){
+		// var user_type_id = $('select[name=user_type_id] option:selected').val();
+		// var area_id = $('select[name=area_id] option:selected').val();
+		// var province_id = $('#province_select option:selected').val();
+		// var province_id2 = $('select[name=province_to_select_amphur] option:selected').val();
+		// var amphur_id = $('select[name=amphur_id] option:selected').val();
+// 		
+		// if(user_type_id == 6){
+			// if(area_id == ""){
+				// alert('กรุณาเลือกพื้นที่');
+				// return false;
+			// }else{
+				// $('#regisform').submit();
+			// }
+		// }else if(user_type_id == 7){
+			// if(province_id == ""){
+				// alert('กรุณาเลือกจังหวัด');
+				// return false;
+			// }else{
+				// $('#regisform').submit();
+			// }
+		// }else if(user_type_id == 8){
+			// if(province_id2 == ""){
+				// alert('กรุณาเลือกจังหวัด');
+				// return false;
+			// }else if(amphur_id == ""){
+				// alert('กรุณาเลือกตำบล');
+				// return false;
+			// }else{
+				// $('#regisform').submit();
+			// }
+		// }else{
+			// alert('กรุณาเลือกประเภท');
+		// }
+	// });
+	
 });
 </script>
 
@@ -175,7 +199,7 @@ $(function(){
             <div class="control-group" id="area" <?=($user->user_type_id == 6)?'':'style="display:none;"';?>>
                 <label class="control-label">เจ้าหน้าที่ประจำเขต</label>
                 <div class="controls">
-                    <?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),$user->area_id,'class="input-xlarge"','--- เลือกสคร. ---');?>
+                    <?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12','13'=>'สคร.13'),$user->area_id,'class="input-xlarge"','--- เลือกสคร. ---');?>
                     <div class="underprovince"></div>
                 </div>
             </div>
@@ -185,7 +209,7 @@ $(function(){
                     <?php if(user_login()->user_type_id == 1): // admin เห็นทุกจังหวัด?>
                     <?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),$user->province_id,'id="province_select" class="input-xlarge"','--- เลือกจังหวัด ---') ?>
                     <?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร. เห็นจังหวัดในเขตตัวเอง?>
-                        <?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),$user->province_id,'id="province_select"','--- เลือกจังหวัด ---') ?>
+                        <?php get_province_dropdown(@$_GET['area_id'],@$user->province_id);?>
                     <?php endif;?>
                 </div>
             </div>
@@ -263,7 +287,7 @@ $(function(){
             </div>
             <div class="control-group">
                 <div class="controls">
-                  <input type="button" class="btn btn-small btn-info btnclickform" value="บันทึก">
+                  <input type="submit" class="btn btn-small btn-info btnclickform" value="บันทึก">
                 </div>
             </div>
         </form>

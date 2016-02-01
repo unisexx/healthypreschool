@@ -394,7 +394,7 @@ class Users extends Public_Controller{
 	function get_province_under_area(){
 		if($_POST){
 			if($_POST){
-				echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.$_POST['area_id'].' order by id asc'),'','id="province_under_area" class="input-xlarge" style="margin-top:5px;"','--- สังกัดจังหวัด ---');
+				echo form_dropdown('province_id',get_option('id','name','v_provinces','where area_id = '.$_POST['area_id'].' order by id asc'),'','id="province_under_area" class="input-xlarge" style="margin-top:5px;"','--- สังกัดจังหวัด ---');
 			}
 		}
 	}

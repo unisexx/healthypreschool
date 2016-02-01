@@ -111,7 +111,7 @@ $(document).ready(function(){
 
 	<?=form_dropdown('m_status',array('active'=>'เปิด','deactive'=>'ปิด'),@$_GET['m_status'],'','--- เลือกสถานะ ---');?>
 
-	<?php get_province_dropdown('',@$_GET['province_id']);?>
+	<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
 
 	<!-- <?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
 		<?=form_dropdown('user_type_id',array('6'=>'เจ้าหน้าที่ประจำเขต','7'=>'เจ้าหน้าที่ประจำจังหวัด','8'=>'เจ้าหน้าที่ประจำอำเภอ'),@$_GET['user_type_id'],'class="input-xlarge"','--- เลือกประเภท ---');?>
