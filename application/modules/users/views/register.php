@@ -117,12 +117,20 @@ $(function(){
         }
     });
     
-    $("select[name='area_id']").live("change",function(){
-		$.post('users/get_province_under_area',{
-				'area_id' : $(this).val()
-			},function(data){
-				$(".underprovince").html(data);
-			});
+    // $("select[name='area_id']").live("change",function(){
+		// $.post('users/get_province_under_area',{
+				// 'area_id' : $(this).val()
+			// },function(data){
+				// $(".underprovince").html(data);
+			// });
+	// });
+	
+	$("select[name='area_id']").live("change",function(){
+		$.post('officers/show_province',{
+			'area_id' : $(this).val()
+		},function(data){
+			$(".underprovince").html(data);
+		});
 	});
 	
 	$("select[name='province_to_select_amphur']").live("change",function(){
@@ -163,7 +171,7 @@ $(function(){
             <div class="control-group" id="area" style="display:none;">
                 <label class="control-label">เจ้าหน้าที่ประจำเขต</label>
                 <div class="controls">
-                    <?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),@$_GET['area_id'],'class="input-xlarge"','--- เลือกสคร. ---');?>
+                    <?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12','13'=>'สคร.13'),@$_GET['area_id'],'class="input-xlarge"','--- เลือกสคร. ---');?>
                     <div class="underprovince"></div>
                 </div>
             </div>

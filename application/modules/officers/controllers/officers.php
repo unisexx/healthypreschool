@@ -44,12 +44,21 @@ class Officers extends Public_Controller
     }
     
     function save($id=false){
+    	// var_dump($_POST);
         if($_POST)
         {
             $captcha = $this->session->userdata('captcha');
             if(($_POST['captcha'] == $captcha) && !empty($captcha)){
                 $user = new User($id);
-				$_POST['area_province_id'] = get_area_province_id($_POST['province_id']);
+				
+				if($_POST['user_type_id'] == 6){
+					$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['area_id']);
+				}elseif($_POST['user_type_id']==7){
+					$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['province_id']);
+				}elseif($_POST['user_type_id']==8){
+					$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['province_to_select_amphur']);
+				}
+				
                 $user->from_array($_POST);
                 $user->save();
 				if($_POST['m_status'] == 'active'){

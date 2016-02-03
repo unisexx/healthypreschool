@@ -264,10 +264,15 @@ function get_student_room_name($id=false){
 	return $name;
 }
 
-function get_area_province_id($province_id){
+function get_area_province_id($user_type_id,$id){
 	$CI =& get_instance();
-	$c= new V_province();
-	$c->query("select area_province_id from v_provinces where id =".$province_id);
+	$c= new Area_province();
+	if($user_type_id == 6){
+		$c->query("select area_province_id from area_provinces where province_id = 0 and area_id =".$id);
+	}else{
+		$c->query("select area_province_id from area_provinces where province_id =".$id);
+	}
+	
 	$area_province_id = $c->area_province_id;
 	
 	return $area_province_id;
