@@ -1,3 +1,8 @@
+<style>
+    .datepicker{
+        width:90px;
+    }
+</style>
 <!-- Header. -->
 <ul class="breadcrumb">
       <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
@@ -50,7 +55,14 @@
 				    <label for="name" style="margin-bottom:0px;">ชื่อศูนย์เด็กเล็ก</label>
 				    <input name="name" type="text" value="<?=@$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:280px;"/>
 				  </div>
+				  <br>
 				  <div style="display:block;height:15px;">&nbsp;</div>
+				  <div style="width:550px;display:inline;float:left;">
+                      <label for="name" style="margin-bottom:0px;">วันที่เริ่มมีเด็กป่วย</label>
+                      <input type="text" name="start_date" class='datepicker' value="<?php echo @$_GET['start_date']; ?>">
+                                                                         ถึง
+                      <input type="text" name="end_date" class='datepicker' value="<?php echo @$_GET['end_date']; ?>">
+                  </div>
 				  <br>
                     <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
             </div>
@@ -69,6 +81,7 @@
                   <th style='width:35px;'>ลำดับ</th>
                   <th>โรค</th>
                   <th style='width:90px;'>วันที่บันทึก</th>
+                  <th style='width:90px;'>วันที่เด็กป่วย</th>
                   <th style='width:90px;'>จังหวัด</th>
                   <th style='width:90px;'>พื้นที่</th>
                   <th>ชื่อโรงเรียน</th>
@@ -90,6 +103,7 @@
                                   ?>
                               </td>
                               <td><?php echo mysql_to_th($item->created_date); ?></td>
+                              <td><?php echo mysql_to_th($item->start_date).' - '.mysql_to_th($item->end_date); ?></td>
                               <td><?php echo (empty($item->province->name))?'-':$item->province->name; ?></td>
                               <td>
                                   <?php
@@ -130,8 +144,15 @@
 
 
 <!-- Script -->
+<script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
+
+<link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
+<script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
+<script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
 <script type="text/javascript">
+    var jQuery_1_4_2 = $.noConflict(true);
       $(document).ready(function(){
+        jQuery_1_4_2("input.datepicker").date_input();
       	$("select[name='area_id']").live("change",function(){
       		$.post('ajax/get_province',{
       				'area_id' : $(this).val()

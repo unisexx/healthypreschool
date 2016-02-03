@@ -533,6 +533,12 @@
 <script type="text/javascript">
 	$(function() {
 		//Modal (Nurseries_list)
+		$('#btnNewNurseriesForm').live('click', function() {
+		    $.get('desease_watch/nurseries_form', function(data) {
+		          $('#nurseries_list').find('div.modal-body').html(data);
+		    });
+		});
+		
 		$('#btnCallNurseriesList').on('click', function() {
 			$.get('desease_watch/nurseries_list', function(data) {
 				$('#nurseries_list').find('div.modal-body').html(data);

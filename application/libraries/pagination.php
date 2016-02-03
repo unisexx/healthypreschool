@@ -14,7 +14,7 @@ Author URI: http://www.mis-algoritmos.com
 		var $target = ""; 
 		var $page = 1;
 		var $adjacents = 2;
-		var $showCounter = false;
+		var $showCounter = true;
 		var $className = "pagination";
 		var $parameterName = "page";
 		var $urlF = false;//urlFriendly
@@ -131,7 +131,9 @@ Author URI: http://www.mis-algoritmos.com
 					Now we apply our rules and draw the pagination object. 
 					We're actually saving the code to a variable in case we want to draw it more than once.
 				*/
-				
+				if($this->showCounter){
+				    $this->pagination .= "<div class=\"pagination_data\">($this->total_pages Pages)</div>";
+                }
 				if($lastpage > 1){
 						if($this->page){
 								//anterior button
@@ -188,13 +190,12 @@ Author URI: http://www.mis-algoritmos.com
 													$this->pagination .= "<a href=\"".$this->get_pagenum_link($counter)."\">$counter</a>";
 									}
 							}
-						if($this->page){
+						if($this->page){						        
 								//siguiente button
 								if ($this->page < $counter - 1)
 										$this->pagination .= "<a href=\"".$this->get_pagenum_link($next)."\" class=\"next\">$n</a>";
 									else
-										$this->pagination .= "<span class=\"disabled\">$n</span>";
-									if($this->showCounter)$this->pagination .= "<div class=\"pagination_data\">($this->total_pages Pages)</div>";
+										$this->pagination .= "<span class=\"disabled\">$n</span>";									
 							}
 					}
 

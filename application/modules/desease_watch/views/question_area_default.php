@@ -19,11 +19,11 @@
         </div>
 
         <div>
-              <?php echo form_checkbox('qCbox_3_1', 1, @$q['qCbox_3_1'], 'class="questionParent"') . ' จาม'; ?>
-              <?php echo form_checkbox('qCbox_3_2', 1, @$q['qCbox_3_2'], 'class="questionParent"') . ' คัดจมูก'; ?>
-              <?php echo form_checkbox('qCbox_3_3', 1, @$q['qCbox_3_3'], 'class="questionParent"') . ' น้ำมูกไหล'; ?>
-              <?php echo form_checkbox('qCbox_3_4', 1, @$q['qCbox_3_4'], 'class="questionParent"') . ' เจ็บคอ'; ?>
-              <?php echo form_checkbox('qCbox_3_5', 1, @$q['qCbox_3_5'], 'class="questionParent"') . ' เจ็บปาก'; ?>
+              <?php echo form_checkbox('qCbox_3_1', 1, @$q['qCbox_3_1'], 'class="questionRequire"') . ' จาม'; ?>
+              <?php echo form_checkbox('qCbox_3_2', 1, @$q['qCbox_3_2'], 'class="questionRequire"') . ' คัดจมูก'; ?>
+              <?php echo form_checkbox('qCbox_3_3', 1, @$q['qCbox_3_3'], 'class="questionRequire"') . ' น้ำมูกไหล'; ?>
+              <?php echo form_checkbox('qCbox_3_4', 1, @$q['qCbox_3_4'], 'class="questionRequire"') . ' เจ็บคอ'; ?>
+              <?php echo form_checkbox('qCbox_3_5', 1, @$q['qCbox_3_5'], 'class="questionRequire"') . ' เจ็บปาก'; ?>
         </div>
 
         <div>
@@ -37,23 +37,23 @@
         </div>
 
         <div>
-              <?php echo form_checkbox('qCbox_5_1', 1, @$q['qCbox_5_1'], 'class="questionParent"') . ' หายใจเร็ว'; ?>
-              <?php echo form_checkbox('qCbox_5_2', 1, @$q['qCbox_5_2'], 'class="questionParent"') . ' หายใจมีเสียงวี๊ด'; ?>
-              <?php echo form_checkbox('qCbox_5_3', 1, @$q['qCbox_5_3'], 'class="questionParent"') . ' หอบ'; ?>
+              <?php echo form_checkbox('qCbox_5_1', 1, @$q['qCbox_5_1'], 'class="questionRequire"') . ' หายใจเร็ว'; ?>
+              <?php echo form_checkbox('qCbox_5_2', 1, @$q['qCbox_5_2'], 'class="questionRequire"') . ' หายใจมีเสียงวี๊ด'; ?>
+              <?php echo form_checkbox('qCbox_5_3', 1, @$q['qCbox_5_3'], 'class="questionRequire"') . ' หอบ'; ?>
         </div>
 
         <div>
-              <?php echo form_checkbox('qCbox_6_1', 1, @$q['qCbox_6_1'], 'class="questionParent"') . ' หายใจลำบาก'; ?>
-              <?php echo form_checkbox('qCbox_6_2', 1, @$q['qCbox_6_2'], 'class="questionParent"') . ' หายใจทางปาก'; ?>
-              <?php echo form_checkbox('qCbox_6_3', 1, @$q['qCbox_6_3'], 'class="questionParent"') . ' ซี่โครงบุ๋ม'; ?>
-              <?php echo form_checkbox('qCbox_6_4', 1, @$q['qCbox_6_4'], 'class="questionParent"') . ' ตัวเขียว'; ?>
+              <?php echo form_checkbox('qCbox_6_1', 1, @$q['qCbox_6_1'], 'class="questionRequire"') . ' หายใจลำบาก'; ?>
+              <?php echo form_checkbox('qCbox_6_2', 1, @$q['qCbox_6_2'], 'class="questionRequire"') . ' หายใจทางปาก'; ?>
+              <?php echo form_checkbox('qCbox_6_3', 1, @$q['qCbox_6_3'], 'class="questionRequire"') . ' ซี่โครงบุ๋ม'; ?>
+              <?php echo form_checkbox('qCbox_6_4', 1, @$q['qCbox_6_4'], 'class="questionRequire"') . ' ตัวเขียว'; ?>
         </div>
 
         <div>
-              <?php echo form_checkbox('qCbox_7_1', 1, @$q['qCbox_7_1'], 'class="questionParent"') . ' คลื่นไส้'; ?>
-              <?php echo form_checkbox('qCbox_7_2', 1, @$q['qCbox_7_2'], 'class="questionParent"') . ' อาเจียน'; ?>
-              <?php echo form_checkbox('qCbox_7_3', 1, @$q['qCbox_7_3'], 'class="questionParent"') . ' เบื่ออาหาร'; ?>
-              <?php echo form_checkbox('qCbox_7_4', 1, @$q['qCbox_7_4'], 'class="questionParent"') . ' ไม่ดูดนม/น้ำ'; ?>
+              <?php echo form_checkbox('qCbox_7_1', 1, @$q['qCbox_7_1'], 'class="questionRequire"') . ' คลื่นไส้'; ?>
+              <?php echo form_checkbox('qCbox_7_2', 1, @$q['qCbox_7_2'], 'class="questionRequire"') . ' อาเจียน'; ?>
+              <?php echo form_checkbox('qCbox_7_3', 1, @$q['qCbox_7_3'], 'class="questionRequire"') . ' เบื่ออาหาร'; ?>
+              <?php echo form_checkbox('qCbox_7_4', 1, @$q['qCbox_7_4'], 'class="questionRequire"') . ' ไม่ดูดนม/น้ำ'; ?>
         </div>
 
         <div>
@@ -67,11 +67,11 @@
         </div>
 
         <div>
-              <?php echo form_checkbox('qCbox_9_1', 1, @$q['qCbox_9_1'], 'class="questionParent"') . ' ปวดศรีษะ'; ?>
-              <?php echo form_checkbox('qCbox_9_2', 1, @$q['qCbox_9_2'], 'class="questionParent"') . ' ปวดกล้ามเนื้อ'; ?>
-              <?php echo form_checkbox('qCbox_9_3', 1, @$q['qCbox_9_3'], 'class="questionParent"') . ' ปวดตา'; ?>
-              <?php echo form_checkbox('qCbox_9_4', 1, @$q['qCbox_9_4'], 'class="questionParent"') . ' ปวดหน้าผาก/จมูก'; ?>
-              <?php echo form_checkbox('qCbox_9_5', 1, @$q['qCbox_9_5'], 'class="questionParent"') . ' ปวดหู'; ?>
+              <?php echo form_checkbox('qCbox_9_1', 1, @$q['qCbox_9_1'], 'class="questionRequire"') . ' ปวดศรีษะ'; ?>
+              <?php echo form_checkbox('qCbox_9_2', 1, @$q['qCbox_9_2'], 'class="questionRequire"') . ' ปวดกล้ามเนื้อ'; ?>
+              <?php echo form_checkbox('qCbox_9_3', 1, @$q['qCbox_9_3'], 'class="questionRequire"') . ' ปวดตา'; ?>
+              <?php echo form_checkbox('qCbox_9_4', 1, @$q['qCbox_9_4'], 'class="questionRequire"') . ' ปวดหน้าผาก/จมูก'; ?>
+              <?php echo form_checkbox('qCbox_9_5', 1, @$q['qCbox_9_5'], 'class="questionRequire"') . ' ปวดหู'; ?>
         </div>
 
         <div>
@@ -103,10 +103,10 @@
         </div>
 
         <div>
-              <?php echo form_checkbox('qCbox_11_1', 1, @$q['qCbox_11_1'], 'class="questionParent"') . ' ซึม'; ?>
-              <?php echo form_checkbox('qCbox_11_2', 2, @$q['qCbox_11_2'], 'class="questionParent"') . ' ตาเหม่อ/ลอย'; ?>
-              <?php echo form_checkbox('qCbox_11_3', 3, @$q['qCbox_11_3'], 'class="questionParent"') . ' กระสับกระส่าย'; ?>
-              <?php echo form_checkbox('qCbox_11_4', 4, @$q['qCbox_11_4'], 'class="questionParent"') . ' ชัก/เกร็ง'; ?>
+              <?php echo form_checkbox('qCbox_11_1', 1, @$q['qCbox_11_1'], 'class="questionRequire"') . ' ซึม'; ?>
+              <?php echo form_checkbox('qCbox_11_2', 2, @$q['qCbox_11_2'], 'class="questionRequire"') . ' ตาเหม่อ/ลอย'; ?>
+              <?php echo form_checkbox('qCbox_11_3', 3, @$q['qCbox_11_3'], 'class="questionRequire"') . ' กระสับกระส่าย'; ?>
+              <?php echo form_checkbox('qCbox_11_4', 4, @$q['qCbox_11_4'], 'class="questionRequire"') . ' ชัก/เกร็ง'; ?>
         </div>
 
         <div>
