@@ -126,7 +126,7 @@ $(function(){
 	// });
 	
 	$("select[name='area_id']").live("change",function(){
-		$.post('officers/show_province',{
+		$.post('ajax/show_province',{
 			'area_id' : $(this).val()
 		},function(data){
 			$(".underprovince").html(data);

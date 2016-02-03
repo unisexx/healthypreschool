@@ -32,5 +32,25 @@ function get_classroom(){
 	}
 }
 
+function show_province(){
+	if($_POST){
+		$sql = "SELECT
+						v_provinces.name
+					FROM
+						v_provinces
+					WHERE
+						v_provinces.area_id = ".$_POST['area_id'];
+					
+		$rs = $this->db->query($sql)->result();
+		// var_dump($rs);
+		echo "<div style='border:1px dashed #F44336;padding:10px;width:247px;'>";
+		echo "<b>ครอบคลุมพื้นที่จังหวัด</b><br>";
+		foreach($rs as $row){
+			echo "- ".$row->name."<br>";
+		}
+		echo "</div>";
+	}
+}
+
 }
 ?>

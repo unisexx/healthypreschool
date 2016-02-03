@@ -77,8 +77,10 @@ class Officers extends Public_Controller
     function delete($id=false){
         if($id)
         {
-            $user = new User($id);
-            $user->delete();
+            // $user = new User($id);
+            // $user->delete();
+			
+			$this->db->query('DELETE FROM users WHERE id='.$id);
             set_notify('success', lang('delete_data_complete'));
         }
         redirect('officers');
@@ -137,24 +139,5 @@ class Officers extends Public_Controller
 		}
 	}
 	
-	function show_province(){
-		if($_POST){
-			$sql = "SELECT
-							v_provinces.name
-						FROM
-							v_provinces
-						WHERE
-							v_provinces.area_id = ".$_POST['area_id'];
-						
-			$rs = $this->db->query($sql)->result();
-			// var_dump($rs);
-			echo "<div style='border:1px dashed #F44336;padding:10px;width:247px;'>";
-			echo "<b>ครอบคลุมพื้นที่จังหวัด</b><br>";
-			foreach($rs as $row){
-				echo "- ".$row->name."<br>";
-			}
-			echo "</div>";
-		}
-	}
 }
 ?>

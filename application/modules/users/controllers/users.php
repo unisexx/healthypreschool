@@ -115,6 +115,7 @@ class Users extends Public_Controller{
 					$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['province_to_select_amphur']);
 				}
 				
+				$_POST['m_status'] = "active";
                 $user->from_array($_POST);
                 $user->save();
 				
