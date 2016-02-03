@@ -97,6 +97,27 @@ $(document).ready(function(){
 			$('.loading').hide();
 		});
     <?php endif;?>
+    
+    $("select[name='area_id']").live("change",function(){
+  		$.post('ajax/get_province',{
+  				'area_id' : $(this).val()
+  			},function(data){
+  				$("#province").html(data);
+  			});
+
+  			$('select[name=amphur_id] option:first-child,select[name=district_id] option:first-child').attr("selected", "selected").attr("disabled", "disabled");
+			$('select[name=amphur_id],select[name=district_id]').attr("disabled", "disabled");
+  	});
+  	$("select[name='province_id']").live("change",function(){
+  		$.post('ajax/get_amphur',{
+  				'province_id' : $(this).val()
+  			},function(data){
+  				$("#amphur").html(data);
+  			});
+
+  			$('select[name=district_id] option:first-child').attr("selected", "selected").attr("disabled", "disabled");
+			$('select[name=district_id]').attr("disabled", "disabled");
+  	});
 });
 </script>
 
@@ -110,20 +131,19 @@ $(document).ready(function(){
 	<input type="text" name="search" value="<?=@$_GET['search']?>" placeholder="ค้นหาชื่อ,อีเมล์">
 
 	<?=form_dropdown('m_status',array('active'=>'เปิด','deactive'=>'ปิด'),@$_GET['m_status'],'','--- เลือกสถานะ ---');?>
+	
 
-	<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
-
-	<!-- <?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
-		<?=form_dropdown('user_type_id',array('6'=>'เจ้าหน้าที่ประจำเขต','7'=>'เจ้าหน้าที่ประจำจังหวัด','8'=>'เจ้าหน้าที่ประจำอำเภอ'),@$_GET['user_type_id'],'class="input-xlarge"','--- เลือกประเภท ---');?>
+	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
+		<?=form_dropdown('user_type_id',array('6'=>'เจ้าหน้าที่ประจำเขต','7'=>'เจ้าหน้าที่ประจำจังหวัด','8'=>'เจ้าหน้าที่ประจำอำเภอ'),@$_GET['user_type_id'],'class="input-xlarge"','--- เลือกประเภทเจ้าหน้าที่ ---');?>
 	<?php endif;?>
 
 	<?php if(user_login()->user_type_id == 6): //เจ้าหน้าที่เขต?>
-   		<?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
+   		<?php echo form_dropdown('province_id',get_option('id','name','v_provinces','where area_id = '.user_login()->area_id.' order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
 	<?php endif;?>
 
 	<?php if(user_login()->user_type_id == 7): //เจ้าหน้าที่จังหวัด?>
 		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.user_login()->province_id.' order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
-	<?php endif;?> -->
+	<?php endif;?>
 
 	<span class="area"></span>
 	<span class="province"></span>
@@ -154,6 +174,14 @@ $(document).ready(function(){
 	<?php endif;?>
 	-->
 
+	<!-- <?php get_area_dropdown(@$_GET['area_id']);?>
+	<span id="province">
+	<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
+	</span>
+	<span id="amphur">
+	<?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
+	</span> -->
+	
       <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
       <img class="loading" style="display: none;" src="media/images/ajax-loader.gif">
 	</div>

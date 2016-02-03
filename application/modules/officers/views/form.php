@@ -109,7 +109,7 @@ $(function(){
 	// });
 	
 	$("select[name='area_id']").live("change",function(){
-		$.post('officers/show_province',{
+		$.post('ajax/show_province',{
 			'area_id' : $(this).val()
 		},function(data){
 			$(".underprovince").html(data);
@@ -220,6 +220,7 @@ $(function(){
                     <div>
                 
                 		<?=form_dropdown('province_to_select_amphur',get_option('id','name','provinces order by name asc'),@$user->amphur->province_id,'class="input-xlarge"','--- เลือกจังหวัด ---');?>
+                		<?//=form_dropdown('province_id',get_option('id','name','provinces order by name asc'),@$user->amphur->province_id,'class="input-xlarge"','--- เลือกจังหวัด ---');?>
                 	</div>
                 	<div class="amphur-frm">
                 		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures'),@$user->amphur_id,'class="input-xlarge" style="margin-top:5px";','--- เลือกอำเภอ ---');?>

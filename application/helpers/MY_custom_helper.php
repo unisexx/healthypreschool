@@ -104,7 +104,11 @@ function get_amphur_dropdown($province_id='', $selected_value='',$show_all = fal
 			}
 		}
        echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures',$ext_condition.' order by amphur_name asc'),@$selected_value,'style="width:250px;"','--- เลือกอำเภอ ---');
-	}else{
+	}else if($show_all==false && @$current_user->user_type_id >= 8){
+	      	$ext_condition = ' WHERE id = '.$current_user->amphur_id;
+			echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures',$ext_condition.' order by amphur_name asc'),@$selected_value,'style="width:250px;"','--- เลือกอำเภอ ---');
+	}
+	else{
 	   echo '<select name="amphur_id" id="amphur_id" disabled="disabled"><option value="">แสดงทั้งหมด</option></select>';
 	}
 }

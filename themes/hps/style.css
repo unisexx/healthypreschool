@@ -192,7 +192,13 @@ label.error{color:red;font-size:12px;}
 .calendar_widget table td{background:#E7F8FA;text-align:center;line-height:18px;border:none;}
 .calendar_widget table td a{background: orange;border-radius: 1em;color: #fff;padding: 0 3px;}
 .calendar_widget table td a:hover{color:#fff !important;}
-.calendar_widget table tr.heading th{background:#E7F8FA; text-align:center; padding:5px 13px; font-weight:bold; color:#0f96b9;}
+.calendar_widget table tr.heading th {
+    background: #E7F8FA !important;
+    text-align: center;
+    padding: 5px 13px;
+    font-weight: bold;
+    color: #0f96b9 !important;
+}
 .calendar_widget table tr.week td{color:#FFF; background:#1AC6DD; font-weight:bold}
 .calendar_widget table tr.week td:first-child{border-top-left-radius: 1em;
 border-bottom-left-radius: 1em;}

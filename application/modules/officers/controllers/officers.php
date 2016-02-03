@@ -17,7 +17,12 @@ class Officers extends Public_Controller
 		if(@$_GET['search'])$data['users']->where("name like '%".$_GET['search']."%' or email like '%".$_GET['search']."%'");
 		if(@$_GET['user_type_id'])$data['users']->where("user_type_id = ".$_GET['user_type_id']);
 		if(@$_GET['area_id'])$data['users']->where("area_id = ".$_GET['area_id']);
-		if(@$_GET['province_id'])$data['users']->where("province_id = ".$_GET['province_id']);
+		if(@$_GET['user_type_id'] == 8){
+			if(@$_GET['province_id'])$data['users']->where("amphur_id in (select id from amphures where province_id = ".$_GET['province_id'].')');
+		}else{
+			if(@$_GET['province_id'])$data['users']->where("province_id = ".$_GET['province_id']);
+		}
+		
 		if(@$_GET['amphur_id'])$data['users']->where("amphur_id = ".$_GET['amphur_id']);
 		if(@$_GET['m_status'])$data['users']->where("m_status = '".$_GET['m_status']."'");
         
@@ -29,6 +34,7 @@ class Officers extends Public_Controller
             $data['users']->where('user_type_id = 8 and amphur_id in (select id from amphures where province_id = '.user_login()->province_id.')');
         }
         $data['users']->order_by('id','desc')->get_page();
+		// $data['users']->check_last_query();
         $this->template->build('index',$data);
     }
     
@@ -38,16 +44,27 @@ class Officers extends Public_Controller
     }
     
     function save($id=false){
+    	// var_dump($_POST);
         if($_POST)
         {
             $captcha = $this->session->userdata('captcha');
             if(($_POST['captcha'] == $captcha) && !empty($captcha)){
                 $user = new User($id);
+				
+				if($_POST['user_type_id'] == 6){
+					$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['area_id']);
+				}elseif($_POST['user_type_id']==7){
+					$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['province_id']);
+				}elseif($_POST['user_type_id']==8){
+					$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['province_to_select_amphur']);
+				}
+				
                 $user->from_array($_POST);
                 $user->save();
 				if($_POST['m_status'] == 'active'){
 					$this->send_mail($_POST);
 				}
+				
                 set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
             }else{
                 set_notify('error','กรอกรหัสไม่ถูกต้อง');
@@ -60,8 +77,10 @@ class Officers extends Public_Controller
     function delete($id=false){
         if($id)
         {
-            $user = new User($id);
-            $user->delete();
+            // $user = new User($id);
+            // $user->delete();
+			
+			$this->db->query('DELETE FROM users WHERE id='.$id);
             set_notify('success', lang('delete_data_complete'));
         }
         redirect('officers');
@@ -107,7 +126,7 @@ class Officers extends Public_Controller
     }
 
 	function get_area(){
-		echo form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),@$_POST['area_id'],'class="input-medium"','--- เลือกสคร. ---');
+		echo form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12','13'=>'สคร.13'),@$_POST['area_id'],'class="input-medium"','--- เลือกสคร. ---');
 	}
 	
 	function get_province(){
@@ -120,24 +139,5 @@ class Officers extends Public_Controller
 		}
 	}
 	
-	function show_province(){
-		if($_POST){
-			$sql = "SELECT
-							v_provinces.name
-						FROM
-							v_provinces
-						WHERE
-							v_provinces.area_id = ".$_POST['area_id'];
-						
-			$rs = $this->db->query($sql)->result();
-			// var_dump($rs);
-			echo "<div style='border:1px dashed #F44336;padding:10px;width:247px;'>";
-			echo "<b>ครอบคลุมพื้นที่จังหวัด</b><br>";
-			foreach($rs as $row){
-				echo "- ".$row->name."<br>";
-			}
-			echo "</div>";
-		}
-	}
 }
 ?>

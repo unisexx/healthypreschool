@@ -105,19 +105,19 @@ class Users extends Public_Controller{
         {
         	$captcha = $this->session->userdata('captcha');
 			if(($_POST['captcha'] == $captcha) && !empty($captcha)){
-				if($_POST['user_type_id'] == 7){ // ถ้าเป็นเจ้าหน้าที่จังหวัดหา area_id
-					$province = new Province($_POST['province_id']);
-					$_POST['area_id'] = $province->area_id;
+				$user = new User($id);
+				
+				if($_POST['user_type_id'] == 6){
+					$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['area_id']);
+				}elseif($_POST['user_type_id']==7){
+					$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['province_id']);
+				}elseif($_POST['user_type_id']==8){
+					$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['province_to_select_amphur']);
 				}
-				if($_POST['user_type_id'] == 8){ // ภ้าเป็นเจ้าหน้าที่อำเภอหา area_id กับ province_id
-					$province = new Province($_POST['province_to_select_amphur']);
-					$_POST['area_id'] = $province->area_id;
-					$_POST['province_id'] == $_POST['province_to_select_amphur'];
-				}
-				$_POST['m_status'] = 'active';
-	            $user = new User();
-	            $user->from_array($_POST);
-	            $user->save();
+				
+				$_POST['m_status'] = "active";
+                $user->from_array($_POST);
+                $user->save();
 				
 				$mailuser = new User();
 				$mailuser->order_by('id','desc')->get(1);
