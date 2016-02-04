@@ -38,6 +38,11 @@ $(document).ready(function(){
 			$('.loader').hide();
 		});
 	});
+	
+	// ถ้าเป็นเจ้าหน้าที่อำเภอ ให้ disable สคร และ จังหวัด
+	if(<?=user_login()->user_type_id;?> == 8){
+		$("select[name=area_id],select[name=province_id]").attr("disabled", true);
+	}
 });
 </script>
 

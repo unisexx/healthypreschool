@@ -1,70 +1,38 @@
 <script type="text/javascript">
 $(document).ready(function(){
-    $('select[name=province_id]').live('change',function(){
-    	if($('select[name=user_type_id]').val() == 8){
-    		$('.loading').show();
-	    	$('select[name=amphur_id]').remove();
-	    	$.post('officers/get_amphur',{
-	    		province_id : $(this).val()
-	    	},function(data){
-				$('.amphur').html(data);
-				$('.loading').hide();
-			});
-    	}
-    });
-    
-    <?php if(user_login()->user_type_id == 1):?>
-    $("select[name=province_id]").live("change",function(){
-		$.post('nurseries/get_amphur',{
-				'province_id' : $(this).val()
-			},function(data){
-				$(".amphur").html(data);
-			});
-	});
-	
-	$("select[name=amphur_id]").live("change",function(){
-		$.post('nurseries/get_district',{
-				'amphur_id' : $(this).val()
-			},function(data){
-				$(".district").html(data);
-			});
-	});
-	<?php endif;?>
-    
-    <?php if(@$_GET['user_type_id'] == 6):?>
-    	$.post('officers/get_area',{
-    		area_id : '<?php echo @$_GET['area_id']?>'
-    	},function(data){
-			$('.area').html(data);
-			$('.loading').hide();
-		});
-    <?php endif;?>
-    
-    <?php if(@$_GET['user_type_id'] == 7):?>
-    	$.post('officers/get_province',{
-    		province_id : '<?php echo @$_GET['province_id']?>'
-    	},function(data){
-			$('.province').html(data);
-			$('.loading').hide();
-		});
-    <?php endif;?>
-    
-    <?php if(@$_GET['user_type_id'] == 8):?>
-    $.post('officers/get_province',{
-    		province_id : '<?php echo @$_GET['province_id']?>'
-    	},function(data){
-			$('.province').html(data);
-			$('.loading').hide();
-		});
-		
-    	$.post('officers/get_amphur',{
-    		province_id : '<?php echo @$_GET['province_id']?>',
-    		amphur_id : '<?php echo @$_GET['amphur_id']?>'
-    	},function(data){
-			$('.amphur').html(data);
-			$('.loading').hide();
-		});
-    <?php endif;?>
+    $("select[name='area_id']").live("change",function(){
+  		$.post('ajax/get_province',{
+  				'area_id' : $(this).val()
+  			},function(data){
+  				$("#province").html(data);
+  			});
+
+  			$('select[name=amphur_id] option:first-child,select[name=district_id] option:first-child').attr("selected", "selected").attr("disabled", "disabled");
+			$('select[name=amphur_id],select[name=district_id]').attr("disabled", "disabled");
+  	});
+  	$("select[name='province_id']").live("change",function(){
+  		$.post('ajax/get_amphur',{
+  				'province_id' : $(this).val()
+  			},function(data){
+  				$("#amphur").html(data);
+  			});
+
+  			$('select[name=district_id] option:first-child').attr("selected", "selected").attr("disabled", "disabled");
+			$('select[name=district_id]').attr("disabled", "disabled");
+  	});
+
+  	$("select[name='amphur_id']").live("change",function(){
+  		$.post('ajax/get_district',{
+  				'amphur_id' : $(this).val()
+  			},function(data){
+  				$("#district").html(data);
+  			});
+  	});
+  	
+  	// ถ้าเป็นเจ้าหน้าที่อำเภอ ให้ disable สคร และ จังหวัด
+	if(<?=user_login()->user_type_id;?> == 8){
+		$("select[name=area_id],select[name=province_id]").attr("disabled", true);
+	}
 });
 </script>
 
@@ -76,52 +44,37 @@ $(document).ready(function(){
 <form method="get" action="staffs">
 	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
 	<?=form_dropdown('user_type_id',array('9'=>'เจ้าหน้าที่ศูนย์','10'=>'เจ้าหน้าที่ครู / ผู้ดูแลเด็ก'),@$_GET['user_type_id'],'','--- เลือกเจ้าหน้าที่ ---');?>
-	<input type="text" name="search" value="<?=@$_GET['search']?>" placeholder="ค้นหาชื่อ, อีเมล์">
+	<input type="text" name="name" value="<?=@$_GET['name']?>" placeholder="ค้นหาชื่อ, อีเมล์">
 	<input type="text" name="nursery_name" value="<?=@$_GET['nursery_name']?>" placeholder="ค้นหาศูนย์เด็กเล็ก">
-	<?php get_province_dropdown('',@$_GET['province_id']);?>
-	<!--
-	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
-		<?php echo form_dropdown('province_id',get_option('id','name','provinces','order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
-	<?php endif;?>
 	
-	<?php if(user_login()->user_type_id == 6): //เจ้าหน้าที่เขต?>
-   		<?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
-	<?php endif;?>
-	  
-	<?php if(user_login()->user_type_id == 7): //เจ้าหน้าที่จังหวัด?>
-		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.user_login()->province_id.' order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
-	<?php endif;?>
-	-->
-	<span class="area"></span>
-	<span class="province"></span>
-	<span class="amphur">
-		<?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
-		<!--
-		<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
-			<?php if(@$_GET['province_id']):?>
-				<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures where province_id = '.@$_GET['province_id']),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
-			<?php endif;?>
-		<?php endif;?>
-		-->
+	<?php get_area_dropdown(@$_GET['area_id']);?>
+	<span id="province">
+	<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
 	</span>
-	<span class="district">
-		<?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
-		<!--
-		<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกตำบล?>
-			<?php if(@$_GET['amphur_id']):?>
-			<?=form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.@$_GET['amphur_id'].' order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
-			<?php endif;?>
-		<?php endif;?>
-		-->
+	<span id="amphur">
+	<?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
+	</span>
+	<span id="district">
+	<?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
 	</span>
 	
+	  <input type="hidden" name="search" value="1">
       <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
       <img class="loading" style="display: none;" src="media/images/ajax-loader.gif">
 	</div>
 </form>
-    	
+
+
+
+
+<?if(@$_GET['search']==1): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
+
+
+
+
+
 <div style="margin-bottom: 10px;">
-	พบเจ้าหน้าที่ทั้งหมด <span class="badge badge-success"><?=$users->paged->total_rows;?></span>
+	พบเจ้าหน้าที่ทั้งหมด <span class="badge badge-success"><?=$count['total'];?></span>
 </div>
     	
 <!-- <div style="float: right; margin-bottom:5px;">
@@ -144,42 +97,40 @@ $(document).ready(function(){
     </tr>
     <?php foreach($users as $key=>$user):?>
         <tr>
-            <td><?=($key+1)+$users->paged->current_row?></td>
+             <td><?$_GET['page'] = (@$_GET['page'] == "")?"1":@$_GET['page'];?><?=($key+1)+(20 * (@$_GET['page'] - 1));?></td>
             <td><?=($user->user_type_id == 9)? 'เจ้าหน้าที่ศูนย์' : 'เจ้าหน้าที่ครู / ผู้ดูแลเด็ก' ;?></td>
             <td><?=$user->email?></td>
             <td><?=$user->name?></td>
             <td>
-            	<?//=$user->nursery->nursery_category->title?><?=$user->nursery->name?>
+            	<?=$user->nursery_name?>
             	<ul>
 	        		<li>
-	        			<a href="childrens/list_guest/<?=$user->nursery->id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a>
+	        			<a href="childrens/list_guest/<?=$user->nursery_id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a>
 	        			<?
 	        				$rs = $this->db->query("SELECT COUNT(id) total FROM classroom_details where nursery_id = ".$user->nursery_id)->row_array();
 							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
 	        			?>
 	        		</li>
 	        		<li>
-	        			<a href="classrooms/list_guest/<?=$user->nursery->id?>" target="_blank">รายชื่อห้องเรียน</a>
+	        			<a href="classrooms/list_guest/<?=$user->nursery_id?>" target="_blank">รายชื่อห้องเรียน</a>
 	        			<?
 	        				$rs = $this->db->query("SELECT COUNT(id) total FROM classrooms where nursery_id = ".$user->nursery_id)->row_array();
 							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
 	        			?>
 	        		</li>
 	        		<li>
-	        			<a href="teachers/list_guest/<?=$user->nursery->id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a>
+	        			<a href="teachers/list_guest/<?=$user->nursery_id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a>
 	        			<?
 	        				$rs = $this->db->query("SELECT COUNT(id) total FROM users where user_type_id = 10 and nursery_id = ".$user->nursery_id)->row_array();
 							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
 	        			?>
 	        		</li>
-	        		<li><a href="diseases/list_guest/<?=$user->nursery->id?>" target="_blank">บันทึกแบบคัดกรองโรค</a></li>
-	        		<li><a href="diseases/report_guest?nursery_id=<?=$user->nursery->id?>" target="_blank">รายงานแบบคัดกรองโรค</a></li>
-	        		<li><a href="assessments/preview/<?=$user->nursery->id?>" target="_blank">รายงานแบบประเมินสมัครเข้าร่วมโครงการ</a></li>
+	        		<li><a href="diseases/list_guest/<?=$user->nursery_id?>" target="_blank">บันทึกแบบคัดกรองโรค</a></li>
+	        		<li><a href="diseases/report_guest?nursery_id=<?=$user->nursery_id?>" target="_blank">รายงานแบบคัดกรองโรค</a></li>
+	        		<li><a href="assessments/preview/<?=$user->nursery_id?>" target="_blank">รายงานแบบประเมินสมัครเข้าร่วมโครงการ</a></li>
 	        	</ul>
             </td>
-            <td>จ.<?=$user->nursery->province->name?><br>อ.<?=$user->nursery->amphur->amphur_name?><br>ต.<?=$user->nursery->district->district_name?></td>
-            <!-- <td><?=$user->nursery->amphur->amphur_name?></td>
-            <td><?=$user->nursery->district->district_name?></td> -->
+            <td>จ.<?=$user->province_name?><br>อ.<?=$user->amphur_name?><br>ต.<?=$user->district_name?></td>
             <td><?=mysql_to_th($user->created)?></td>
             <td>
             	<a class="btn btn-mini" href="staffs/form/<?=$user->nursery_id?>">เพิ่มเจ้าหน้าที่ครู</a>
@@ -190,7 +141,7 @@ $(document).ready(function(){
     <?php endforeach;?>
 </table>
 
-<?=$users->pagination();?>
+<?=$pagination;?>
 
 <!-- Modal -->
 <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -199,3 +150,8 @@ $(document).ready(function(){
     <div class="modal-body-form"></div>
   </div>
 </div>
+
+
+
+
+<?endif;?>

@@ -72,6 +72,9 @@ function get_province_dropdown($area_id, $selected_value='',$show_all = false){
 		
 				if(@$current_user->user_type_id == 6){
 			  		$ext_condition = ' WHERE id in (SELECT province_id FROM area_provinces WHERE area_id='.$current_user->area_id.')';
+				}elseif(@$current_user->user_type_id == 8){
+			  		$ext_condition = ' WHERE id in (SELECT province_id FROM amphures WHERE id = '.$current_user->amphur_id.')';
+					$selected_value = $current_user->province_id;
 				}
 				else if(@$current_user->user_type_id >= 7){
 			  		$ext_condition = ' WHERE id = '.$current_user->province_id;
@@ -106,6 +109,7 @@ function get_amphur_dropdown($province_id='', $selected_value='',$show_all = fal
        echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures',$ext_condition.' order by amphur_name asc'),@$selected_value,'style="width:250px;"','--- เลือกอำเภอ ---');
 	}else if($show_all==false && @$current_user->user_type_id >= 8){
 	      	$ext_condition = ' WHERE id = '.$current_user->amphur_id;
+			$selected_value = $current_user->amphur_id;
 			echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures',$ext_condition.' order by amphur_name asc'),@$selected_value,'style="width:250px;"','--- เลือกอำเภอ ---');
 	}
 	else{
