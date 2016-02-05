@@ -52,5 +52,42 @@ function show_province(){
 	}
 }
 
+function save_nurseries($id=false){
+    if($_POST){
+        $captcha = $this->session->userdata('captcha');
+        if(($_POST['captcha'] == $captcha) && !empty($captcha)){
+
+            if(@$id == ""){
+                $nuchk = new Nursery();
+                $nuchk = $nuchk->where('name like "%'.$_POST['name'].'%" and district_id = '.$_POST['district_id'])->get()->result_count();
+                if($nuchk > 0){
+                    set_notify('error', 'ชื่อศูนย์เด็กเล็กนี้มีแล้วค่ะ');
+                    redirect($_SERVER['HTTP_REFERER']);
+                }
+            }
+            
+            $area_province = new Area_Province();
+            $area_province->where("province_id = ".$_POST['province_id']);
+            $area_province->get();
+            $_POST['area_province_id'] = $area_province->area_province_id;
+
+            $_POST['user_id'] = $this->session->userdata('id'); // ไอดีเจ้าหน้าที่ที่แอด nursery
+            //$_POST['area_id'] = login_data('nursery');
+            $nursery = new Nursery(@$id);
+            $nursery->from_array($_POST);
+            
+            $nursery->save();
+            $nursery->select_max('id');
+            $nursery->get();
+            $id = $nursery->id;
+            set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
+            echo $id;
+        }else{
+            set_notify('error','กรอกรหัสไม่ถูกต้อง');
+            echo 'false';
+        }        
+    }
+}
+
 }
 ?>

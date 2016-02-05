@@ -5,17 +5,10 @@
     color:#000 !important;
 }
 </style>
-<ul class="breadcrumb">
-  <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="nurseries">ศูนย์เด็กเล็กปลอดโรค</a> <span class="divider">/</span></li>
-  <li><a href="nurseries/register">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a> <span class="divider">/</span></li>
-  <li class="active">ฟอร์ม</li>
-</ul>
-
 <form id="frmnursery" method="post" action="desease_watch/nurseries_save">
 
         <div id="data">
-            <div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</div>
+            <div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">เพิ่มข้อมูลศูนย์เด็กเล็กปลอดโรค</div>
     <!--search-->
         <fieldset style="border:1px dashed #ccc; padding:10px; margin-bottom:10px;">
         <legend style="padding:0 5px; font-size:14px; font-weight:700; color:#666;">ข้อมูลศูนย์เด็กเล็ก</legend>
@@ -71,7 +64,7 @@
                  </tr>
                  <tr>
                    <th>รหัสไปรษณีย์<strong> <span class="TxtRed">*</span></strong></th>
-                   <td><input name="code" type="text" value="" id="textfield4" size="10" /></td>
+                   <td><input name="code" type="text" value="" id="code" size="10" /></td>
                  </tr>
                  <tr>
                     <th>สังกัด</th>
@@ -87,7 +80,7 @@
                     <th>รหัสลับ <span class="TxtRed">*</span></th>
                     <td>
                         <img src="users/captcha" /><Br>
-                        <input class="input-small" type="text" name="captcha" id="inputCaptcha" placeholder="รหัสลับ">
+                        <input class="input-small" type="text" name="captcha" id="inputCaptcha" required="required" placeholder="รหัสลับ">
                     </td>
                  </tr>
             </table>
@@ -267,8 +260,23 @@ $(document).ready(function(){
         },function(data){
             if(data == "false"){
                 alert("มีชื่อศูนย์เด็กเล็ก"+name+"\nจังหวัด"+province_name+"\nอำเภอ"+amphur_name+"\nตำบล"+district_name+"\nอยู่ในระบบแล้ว");
-            }else{
-                $("#frmnursery").submit();
+            }else{                
+                $.ajax({
+                    url: "ajax/save_nurseries",
+                    type: "post",
+                    data: $('#frmnursery').serialize(),
+                    success: function(data) {
+                        if(data > 0){
+                            $('[name=nurseries_id]').val(data);
+                            $('#nurseryCode').val($("#frmnursery").find('[name=code]').val());
+                            $('#nurseryName').val($("#frmnursery").find('[name=name]').val());
+                            $('#nurseryProvince').val($("#frmnursery").find('select[name=province_id] option:selected').text());
+                            $('#nurseryAmphur').val($("#frmnursery").find('select[name=amphur_id] option:selected').text());
+                            $('#nurseryDistrict').val($("#frmnursery").find('select[name=district_id] option:selected').text());      
+                            $('#nurseries_list').modal('hide')
+                        }
+                    }
+                });                                               
             }
         });
     });
