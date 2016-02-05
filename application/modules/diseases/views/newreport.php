@@ -129,8 +129,26 @@ jQuery_1_4_2("input.datepicker").date_input();
 		วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
 		วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
 	</div>
-
+	
 	<div>
+		<span>ปีที่คัดกรอง</span>
+		<?
+			$sql = "select DISTINCT(`year`) FROM diseases";
+			$years = $this->db->query($sql)->result();
+		?>
+		<select name="year" class="span2">
+			<option value="">--- เลือกปี ---</option>
+			<?foreach($years as $item):?>
+			<option value="<?=$item->year?>" <?if(@$_GET['year'] == $item->year){echo "selected";}?>><?=$item->year?></option>
+			<?endforeach;?>
+		</select>
+		
+		<span>เดือนที่คัดกรองโรค</span>
+		<?=form_dropdown('month',$arrayMonth,@$_GET['month'],'class="span2"','--- เลือกเดือน ---');?>
+		
+	</div>
+
+	<!-- <div>
 		<span>สถานะเด็กป่วย</span>
 		<?=form_dropdown('c3',array('/'=>'มาเรียน','x'=>'หยุดเรียน'),@$_GET['c3'],'class="span2"','--- เลือก ---');?>
 	</div>
@@ -143,7 +161,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	<div>
 		<span>กรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน</span>
 		<?=form_dropdown('c5',array('*'=>'มี','no'=>'ไม่มี'),@$_GET['c5'],'class="span2"',"--- เลือก ---");?>
-	</div>
+	</div> -->
 
 	<div>
 		<span>สคร.</span>
@@ -448,6 +466,16 @@ $(function(){
 						if(@$_GET['end_date'] and @empty($_GET['start_date'])){
 							$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
 							$condition .= " and start_date >= ".$end_date;
+						}
+						
+						// ปีที่คัดกรอง
+						if(@$_GET['year']){
+							$condition .= " and d.year = ".$_GET['year'];
+						}
+						
+						// เดือนที่คัดกรอง
+						if(@$_GET['month']){
+							$condition .= " and d.month = ".$_GET['month'];
 						}
 
 						$sql = "

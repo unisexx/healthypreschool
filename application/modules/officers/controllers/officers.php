@@ -13,29 +13,35 @@ class Officers extends Public_Controller
     
     function index()
     {
-        $data['users'] = new User();
-		if(@$_GET['search'])$data['users']->where("name like '%".$_GET['search']."%' or email like '%".$_GET['search']."%'");
-		if(@$_GET['user_type_id'])$data['users']->where("user_type_id = ".$_GET['user_type_id']);
-		if(@$_GET['area_id'])$data['users']->where("area_id = ".$_GET['area_id']);
-		if(@$_GET['user_type_id'] == 8){
-			if(@$_GET['province_id'])$data['users']->where("amphur_id in (select id from amphures where province_id = ".$_GET['province_id'].')');
-		}else{
-			if(@$_GET['province_id'])$data['users']->where("province_id = ".$_GET['province_id']);
-		}
+    	
+		if(@$_GET['search']==1){ //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล
 		
-		if(@$_GET['amphur_id'])$data['users']->where("amphur_id = ".$_GET['amphur_id']);
-		if(@$_GET['m_status'])$data['users']->where("m_status = '".$_GET['m_status']."'");
-        
-        if(user_login()->user_type_id == 1){ // admin เห็นทั้งหมด
-            $data['users']->where('user_type_id > '.user_login()->user_type_id.' and user_type_id < 9 ');
-        }elseif(user_login()->user_type_id == 6){ // เจ้าหน้าที่เขต เห็นเจ้าหน้าที่จังหวัด
-            $data['users']->where('user_type_id = 7 and province_id in (select province_id from area_provinces_detail where area_id = '.user_login()->area_id.')');
-        }elseif(user_login()->user_type_id == 7){ // เจ้าหน้าที่จังหวัด เห็นเจ้าหน้าที่อำเภอ
-            $data['users']->where('user_type_id = 8 and amphur_id in (select id from amphures where province_id = '.user_login()->province_id.')');
-        }
-        $data['users']->order_by('id','desc')->get_page();
-		// $data['users']->check_last_query();
-        $this->template->build('index',$data);
+	        $data['users'] = new User();
+			if(@$_GET['name'])$data['users']->where("name like '%".$_GET['name']."%' or email like '%".$_GET['name']."%'");
+			if(@$_GET['user_type_id'])$data['users']->where("user_type_id = ".$_GET['user_type_id']);
+			if(@$_GET['area_id'])$data['users']->where("area_id = ".$_GET['area_id']);
+			if(@$_GET['user_type_id'] == 8){
+				if(@$_GET['province_id'])$data['users']->where("amphur_id in (select id from amphures where province_id = ".$_GET['province_id'].')');
+			}else{
+				if(@$_GET['province_id'])$data['users']->where("province_id = ".$_GET['province_id']);
+			}
+			
+			if(@$_GET['amphur_id'])$data['users']->where("amphur_id = ".$_GET['amphur_id']);
+			if(@$_GET['m_status'])$data['users']->where("m_status = '".$_GET['m_status']."'");
+	        
+	        if(user_login()->user_type_id == 1){ // admin เห็นทั้งหมด
+	            $data['users']->where('user_type_id > '.user_login()->user_type_id.' and user_type_id < 9 ');
+	        }elseif(user_login()->user_type_id == 6){ // เจ้าหน้าที่เขต เห็นเจ้าหน้าที่จังหวัด
+	            $data['users']->where('user_type_id = 7 and province_id in (select province_id from area_provinces_detail where area_id = '.user_login()->area_id.')');
+	        }elseif(user_login()->user_type_id == 7){ // เจ้าหน้าที่จังหวัด เห็นเจ้าหน้าที่อำเภอ
+	            $data['users']->where('user_type_id = 8 and amphur_id in (select id from amphures where province_id = '.user_login()->province_id.')');
+	        }
+	        $data['users']->order_by('id','desc')->get_page();
+			// $data['users']->check_last_query();
+			
+		} //endif search=1
+		
+        $this->template->build('index',@$data);
     }
     
     function form($id=false){
