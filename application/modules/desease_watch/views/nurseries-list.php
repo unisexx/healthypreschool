@@ -66,13 +66,8 @@
       </form>
  </div>
 <?php 
-if($current_user->user_type_id<=6){
+if(!empty($_GET) && @$_GET['search']!='') { 
 ?>
-<input type="button" name="btnNewNurseriesForm" id="btnNewNurseriesForm" class="btn btn-primary" value="เพิ่มรายการ">
-<?php    
-}
-?>
-<?php if(!empty($_GET) && @$_GET['search']!='') { ?>
       <table class='table'>
             <thead>
                   <tr>
@@ -115,6 +110,14 @@ if($current_user->user_type_id<=6){
                   ?>
             </tbody>
       </table>
+      
+      <?php 
+        if($current_user->user_type_id<=6){
+        ?>
+        <div align="center"><input type="button" name="btnNewNurseriesForm" id="btnNewNurseriesForm" class="btn btn-primary" value="เพิ่มรายการ"></div>
+        <?php    
+        }
+        ?>
 <?php } ?>
 
 
