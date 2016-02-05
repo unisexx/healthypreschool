@@ -201,6 +201,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	</div>
 	<input class="btn btn-primary" type="submit" value=" แสดง " style="margin-bottom: 10px;">
 </div>
+<?php if(@$_GET): ?>
 <div id="report_header" style="text-align:center;padding:30px;">
     <h4>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>ทดสอบ
     <?php
@@ -272,6 +273,7 @@ jQuery_1_4_2("input.datepicker").date_input();
     }
     echo Modules::run("reports/desease_watch_number_symptom");
 ?>
+<?php endif;?>
 <script>
 $(document).ready(function() {
 	$("select[name='area_id']").live("change",function(){

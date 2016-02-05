@@ -174,31 +174,31 @@ function get_elearning_pass_count(){
     return @$result[0]->nresult;  
 }   
 
-function report_desease_watch_report_column($value){
+function report_desease_watch_report_column($value,$mode='all',$add_class){
     //$child_style = 'style="border-left:2px dotted #CCCCCC;"';
     $child_style = '';
     $data ='';
-    $data.= create_desease_watch_report_column(@$value[0]->n_event);
-    $data.= create_desease_watch_report_column(@$value[0]->n_event_school,$child_style);
-    $data.= create_desease_watch_report_column(@$value[0]->n_event_community,$child_style);
-    
-    $data.= create_desease_watch_report_column(@$value[0]->total_amount);
-    $data.= create_desease_watch_report_column(@$value[0]->total_amount_school,$child_style);
-    $data.= create_desease_watch_report_column(@$value[0]->total_amount_community,$child_style);
-    
-    $data.= create_desease_watch_report_column(@$value[0]->boy_amount);
-    $data.= create_desease_watch_report_column(@$value[0]->boy_amount_school,$child_style);
-    $data.= create_desease_watch_report_column(@$value[0]->boy_amount_community,$child_style);
-    
-    $data.= create_desease_watch_report_column(@$value[0]->girl_amount);
-    $data.= create_desease_watch_report_column(@$value[0]->girl_amount_school,$child_style);
-    $data.= create_desease_watch_report_column(@$value[0]->girl_amount_community,$child_style);
-    
+    if($mode=='all'){
+        $data.= create_desease_watch_report_column(@$value[0]->n_event,'',$add_class);
+        $data.= create_desease_watch_report_column(@$value[0]->total_amount,'',$add_class);
+        $data.= create_desease_watch_report_column(@$value[0]->boy_amount,'',$add_class);
+        $data.= create_desease_watch_report_column(@$value[0]->girl_amount,'',$add_class);
+    }else if($mode='school'){
+        $data.= create_desease_watch_report_column(@$value[0]->n_event_school,$child_style,$add_class);
+        $data.= create_desease_watch_report_column(@$value[0]->total_amount_school,$child_style,$add_class);
+        $data.= create_desease_watch_report_column(@$value[0]->boy_amount_school,$child_style,$add_class);
+        $data.= create_desease_watch_report_column(@$value[0]->girl_amount_school,$child_style,$add_class);
+    }else if($mode=='community'){
+        $data.= create_desease_watch_report_column(@$value[0]->n_event_community,$child_style,$add_class);
+        $data.= create_desease_watch_report_column(@$value[0]->total_amount_community,$child_style,$add_class);
+        $data.= create_desease_watch_report_column(@$value[0]->boy_amount_community,$child_style,$add_class);
+        $data.= create_desease_watch_report_column(@$value[0]->girl_amount_community,$child_style,$add_class);
+    }
     echo $data;        
 }
 
-function create_desease_watch_report_column($dvalue,$style=''){
-    $str_column ='<td '.$style.'>';    
+function create_desease_watch_report_column($dvalue,$style='',$add_class){
+    $str_column ='<td class="'.$add_class.'" '.$style.'>';    
     $str_column.= @$dvalue > 0 ? number_format($dvalue,0) : '&nbsp;';
     $str_column.='</td>';
     return $str_column;
@@ -258,13 +258,17 @@ function get_desease_watch_sql($condition){
                     return $sql;
 }
 
-function report_desease_watch_symptom_report_column($sql){
+function report_desease_watch_symptom_report_column($sql,$mode='all'){    
         $CI = &get_instance();
-        $all = $CI->db->query($sql.' and place_type = 1 ')->result();
-        $school = $CI->db->query($sql.' and place_type = 1 ')->result();
-        $community = $CI->db->query($sql.' and place_type = 2 ')->result();
-        echo $column =$all[0]->n_symptom > 0 ?'<td style="width:100px;">'.$all[0]->n_symptom.'</td>' : '<td style="width:100px;">&nbsp;</td>';
-        echo $column =$school[0]->n_symptom > 0 ?'<td style="width:100px;">'.$school[0]->n_symptom.'</td>' : '<td style="width:100px;">&nbsp;</td>';
-        echo $column =$community[0]->n_symptom > 0 ?'<td style="width:100px;">'.$community[0]->n_symptom.'</td>' : '<td style="width:100px;">&nbsp;</td>';
+        if($mode=='all'){
+            $all = $CI->db->query($sql.' and place_type = 1 ')->result();
+            echo $column =$all[0]->n_symptom > 0 ?'<td style="width:100px;">'.$all[0]->n_symptom.'</td>' : '<td style="width:100px;">&nbsp;</td>';
+        }else if($mode=='school'){
+            $school = $CI->db->query($sql.' and place_type = 1 ')->result();
+            echo $column =$school[0]->n_symptom > 0 ?'<td style="width:100px;">'.$school[0]->n_symptom.'</td>' : '<td style="width:100px;">&nbsp;</td>';
+        }else if($mode=='community'){
+            $community = $CI->db->query($sql.' and place_type = 2 ')->result();
+            echo $column =$community[0]->n_symptom > 0 ?'<td style="width:100px;">'.$community[0]->n_symptom.'</td>' : '<td style="width:100px;">&nbsp;</td>';
+        }
 }
 ?>
