@@ -89,5 +89,32 @@ function save_nurseries($id=false){
     }
 }
 
+function get_other_disease_detail(){
+	if($_GET){
+		$sql = "SELECT other, count(*) AS count
+					FROM diseases d
+					INNER JOIN nurseries AS n ON d.nursery_id = n.id
+					INNER JOIN classroom_childrens ON d.classroom_children_id = classroom_childrens.id
+					INNER JOIN childrens ON classroom_childrens.children_id = childrens.id
+					INNER JOIN area_provinces ON n.area_province_id = area_provinces.area_province_id
+					WHERE
+						1 = 1
+					AND d.c1 = 'O'
+					".$_GET['condition']."
+					GROUP BY other
+					ORDER BY other ASC";
+		
+		$query = $this->db->query($sql);
+		echo "<table class='table table-striped table-bordered'>";
+		echo "<tr><th>โรค</th><th>จำนวน</th></tr>";
+		foreach($query->result() as $row){
+			echo"<tr>";
+			echo"<td>".$row->other."</td><td>".$row->count."</td>";
+			echo"</tr>";
+		}
+		echo "</table>";
+	}
+}
+
 }
 ?>

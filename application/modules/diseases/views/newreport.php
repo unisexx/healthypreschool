@@ -385,6 +385,11 @@ $(function(){
 					//**********************************************
 				?>
 			</th>
+				<?
+					// หา last loop ใส่ class other ที่ td สุดท้าย
+					$numItems = count($diseasesArray);
+					$i = 0;
+				?>
 				<? foreach($diseasesArray as $key=>$disease):?>
 					<?
 						$condition = "";
@@ -492,7 +497,7 @@ $(function(){
 
 						// echo $sql.'<br><br>';
 					?>
-					<td class="span2"><?=$rs->total?></td>
+					<td class="span2 <?if((++$i === $numItems) && ($rs->total != 0)) { echo 'other" href="#myModal" role="button" data-toggle="modal" data-condition="'.@$condition.'" style="cursor:pointer;" '; }?>"><?=$rs->total?></td>
 				<? endforeach;?>
 		</tr>
 
@@ -516,6 +521,26 @@ $(function(){
 </table>
 
 
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-body" style="height: 500px;">
+  	<div>&nbsp;<img class="loader" src="media/images/ajax-loader.gif"></div>
+  	<div class="modal-body-form"></div>
+  </div>
+</div>
 
 
 <?endif;?>
+
+
+<script>
+$(".other").live("click",function(){
+	$('.loader').show();
+	$.get('ajax/get_other_disease_detail',{
+		'condition' : $(this).attr('data-condition')
+	},function(data){
+		$('.modal-body-form').html(data);
+		$('.loader').hide();
+	});
+});
+</script>
