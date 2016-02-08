@@ -118,7 +118,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	</div>
 	
 	<div>
-		<span>ปีที่คัดกรอง</span>
+		<span>ปีที่สัมผัสโรค</span>
 		<?
 			$sql = "select DISTINCT(`year`) FROM diseases";
 			$years = $this->db->query($sql)->result();
@@ -130,7 +130,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 			<?endforeach;?>
 		</select>
 		
-		<span>เดือนที่คัดกรองโรค</span>
+		<span>เดือนที่สัมผัสโรค</span>
 		<?=form_dropdown('month',$arrayMonth,@$_GET['month'],'class="span2"','--- เลือกเดือน ---');?>
 	</div>
 
@@ -224,11 +224,11 @@ if(@$_GET['end_date'] and @empty($_GET['start_date'])){
 	$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
 	$condition .= " and d.start_date >= ".$end_date;
 }
-// ปีที่คัดกรอง
+// ปีที่สัมผัสโรค
 if(@$_GET['year']){
 	$condition .= " and d.year = ".$_GET['year'];
 }
-// เดือนที่คัดกรอง
+// เดือนที่สัมผัสโรค
 if(@$_GET['month']){
 	$condition .= " and d.month = ".$_GET['month'];
 }
@@ -404,8 +404,8 @@ $same_total = $same->same_1 + $same->same_2;
 <br>
 <table class="table">
 	<tr>
-		<th>ข้อมูลรายงานแบบคัดกรองโรค</th>
-		<th>จำนวน</th>
+		<th>ข้อมูลจำนวนและร้อยละรายงานแบบคัดกรองโรค <a href="reports/desease_overall_export?<?=$_SERVER['QUERY_STRING']?>" target="_blank"><i class="fa fa-file-excel-o"></i></a></th>
+		<th>จำนวน (N=)</th>
 		<th>ร้อยละ</th>
 	</tr>
 	<tr class="subheader">
