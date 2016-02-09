@@ -64,13 +64,18 @@
                       <input type="text" name="end_date" class='datepicker' value="<?php echo @$_GET['end_date']; ?>">
                   </div>
 				  <br>
+				  <div style="display:block;height:15px;">&nbsp;</div>
+				  <div style="display:block;height:15px;">&nbsp;</div>
+				  <div style="margin:0 auto;">
                     <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
+                  </div>
             </div>
       </form>
 </div>
 
 
 <!-- list content. -->
+<?php if(@$_GET):?>
 <?php echo $list->pagination(); ?>
 <div style="float:right;">
 <?php echo anchor('desease_watch/form', 'เพิ่มข้อมูลการเฝ้าระวังโรคติดต่อ', 'class="btn btn-primary pull-right"'); ?>
@@ -141,7 +146,7 @@
             ?>
       </tbody>
 </table>
-
+<?php endif;?>
 
 <!-- Script -->
 <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>

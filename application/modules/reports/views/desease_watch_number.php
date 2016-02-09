@@ -1,3 +1,17 @@
+<?php
+switch(@$_GET['place_type']){
+    case '2':
+        $place_type_name = 'พื้นที่ชุมชน';
+        break;
+    case '1':
+        $place_type_name = 'ศูนย์เด็กเล็ก';
+        break;
+    default:
+        $place_type_name = 'ทั้งหมด';
+        break;
+}
+?>
+<base href="<?php echo base_url(); ?>" />
 <style type="text/css">
 #search_report>div{
 	padding-top:10px;
@@ -14,7 +28,7 @@
   padding:10px;
 }
 #datatable th {
-  position:absolute;
+  /*position:absolute;
   *position: relative; /*ie7*/
 	left: 0;
 	width: 172px;
@@ -23,21 +37,21 @@
 	font-weight: normal;
 	padding: 10px;
 	font-weight:normal;
-	}
-	.outer {
-		position: relative
-	}
-	.inner {
-		overflow-x: scroll;
-		overflow-y: visible;
-		width:752px;
-		margin-left: 192px;
-	}
-	.th_datatable {
-		background: #0088CC !important;
-		color: #FFFFFF;
-		text-align:center !important;
-	}
+}
+.outer {
+/*	position: relative*/
+}
+.inner {
+/*	overflow-x: scroll;
+	overflow-y: visible;
+	width:752px;
+	margin-left: 192px;*/
+}
+.th_datatable {
+	background: #0088CC !important;
+	color: #FFFFFF;
+	text-align:center !important;
+}
 #datatable>thead>tr>td{
 	/*width:650px !important;*/
 }
@@ -79,11 +93,17 @@ tbody>tr>th{
 	background:#ffffff !important;
 	color:#000000 !important;
 }
-
+.th_total{
+    width:150px !important;
+}
 </style>
+<?php $arrayMonth = array('1' => 'มกราคม', '2' => 'กุมภาพันธ์', '3' => 'มีนาคม', '4' => 'เมษายน', '5' => 'พฤษภาคม', '6' => 'มิถุนายน', '7' => 'กรกฎาคม', '8' => 'สิงหาคม', '9' => 'กันยายน', '10' => 'ตุลาคม', '11' => 'พฤศจิกายน', '12' => 'ธันวาคม',);?>
+
+<?php 
+if(@$_GET['export_type']==''){
+?>
 <!-- load jQuery 1.4.2 -->
 <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
-
 <link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
 <script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
 <script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
@@ -93,9 +113,8 @@ $(document).ready(function(){
 jQuery_1_4_2("input.datepicker").date_input();
 });
 </script>
-
-<?php $arrayMonth = array('1' => 'มกราคม', '2' => 'กุมภาพันธ์', '3' => 'มีนาคม', '4' => 'เมษายน', '5' => 'พฤษภาคม', '6' => 'มิถุนายน', '7' => 'กรกฎาคม', '8' => 'สิงหาคม', '9' => 'กันยายน', '10' => 'ตุลาคม', '11' => 'พฤศจิกายน', '12' => 'ธันวาคม',);?>
-
+    
+     
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
   <li class="active"><a href="#">รายงานจำนวนเหตุการณ์การเฝ้าระวังโรคติดต่อ</a></li>
@@ -108,14 +127,14 @@ jQuery_1_4_2("input.datepicker").date_input();
     <div>
         <span>โรค</span>
         <?php echo form_dropdown('disease', get_option('id', 'desease_name', 'desease_watch_names', ' order by id '), @$_GET['disease'], '', '--แสดงทั้งหมด--');?>
-        <!--
+        
         <span>พื้นที่ที่เกิดโรค</span>
         <select name="place_type" class="form-control">
                 <option value="">-- ทั้งหมด --</option>
                 <option value="2" <?php echo $selected = @$_GET['place_type'] == 2 ? 'selected="selected"' : '';?>>พื้นที่ชุมชน</option>
                 <option value="1" <?php echo $selected = @$_GET['place_type'] == 1 ? 'selected="selected"' : '';?>>ศูนย์เด็กเล็ก/โรงเรียนอนุบาล</option>
         </select>
-        -->
+        
         <!--
         <span>ช่วงอายุ</span>
         <?php echo form_dropdown('age_range',get_option('age_range_param','age_range','v_disease_watch_age_range'),@$_GET['age_range'],'','--แสดงทั้งหมด--');?>
@@ -198,30 +217,48 @@ jQuery_1_4_2("input.datepicker").date_input();
 		<span>ช่วงเวลาที่เกิดโรค</span>
 		วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
 		วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
-	</div>
+	</div>	
 	<input class="btn btn-primary" type="submit" value=" แสดง " style="margin-bottom: 10px;">
 </div>
+<?php }else{?>
+    <link rel="stylesheet" href="media/js/bootstrap/css/bootstrap.min.css" type="text/css">
+    <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
+    <link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
+    <script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
+    <script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script src="http://code.highcharts.com/modules/offline-exporting.js"></script>
+    <script type="text/javascript" src="media/js/rgbcolor.js"></script>
+    <script type="text/javascript" src="media/js/canvg.js"></script>
+<?php } ?>    
 <?php if(@$_GET): ?>
-<div id="report_header" style="text-align:center;padding:30px;">
-    <h4>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>ทดสอบ
+<div style="text-align:right;padding-top:30px;">ข้อมูล ณ วันที่ <?php echo mysql_to_th(date("Y-m-d H:i:s"));?></div>
+<div id="report_header" style="text-align:center;">    
+    <h4>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>
     <?php
     if(@$_GET['area_id']=='' && @$_GET['province_id']==''){
         echo '<h5>จำแนกตามพื้นที่ สคร. 13 เขต </h5>';
+        echo '<h5>พื้นที่ที่เกิดโรค '.$place_type_name.'</h5>';
     }else if(@$_GET['area_id']!=''&&@$_GET['province_id']==''){
         $area_title = $this->db->query('select * from areas where id = '.$_GET['area_id'])->result();
         echo '<h5>จำแนกตามจังหวัด ในเขตพื้นที่ '.$area_title[0]->area_name.'</h5>';
+        echo '<h5>พื้นที่ที่เกิดโรค '.$place_type_name.'</h5>';
     }else if(@$_GET['province_id']!=''&&@$_GET['amphur_id']==''){
         $province_title = $this->db->query('select * from provinces where id = '.$_GET['province_id'])->result();
         echo '<h5>จำแนกตามอำเภอ ในเขตพื้นที่จังหวัด  '.$province_title[0]->name.'</h5>';
+        echo '<h5>พื้นที่ที่เกิดโรค '.$place_type_name.'</h5>';
     }else if(@$_GET['amphur_id']!=''&&@$_GET['district_id']==''){
         $province_title = $this->db->query('select * from provinces where id = '.$_GET['province_id'])->result();
         $amphur_title = $this->db->query('select * from amphures where id = '.$_GET['amphur_id'])->result();
         echo '<h5>จำแนกตามพื้นที่ตำบล ในเขตพื้นที่ เขต/อำเภอ '.$amphur_title[0]->amphur_name.' จังหวัด '.$province_title[0]->name.'</h5>';
+        echo '<h5>พื้นที่ที่เกิดโรค '.$place_type_name.'</h5>';
     }else if(@$_GET['district_id']!=''){
         $province_title = $this->db->query('select * from provinces where id = '.$_GET['province_id'])->result();
         $amphur_title = $this->db->query('select * from amphures where id = '.$_GET['amphur_id'])->result();
         $district_title = $this->db->query('select * from districts where id = '.$_GET['district_id'])->result();
         echo '<h5>จำแนกตามศูนย์เด็กเล็กและโรงเรียนอนุบาล ในเขตพื้นที่ แขวง/ตำบล '.$district_title[0]->district_name.' เขต/อำเภอ '.$amphur_title[0]->amphur_name.' จังหวัด '.$province_title[0]->name.'</h5>';
+        echo '<h5>พื้นที่ที่เกิดโรค '.$place_type_name.'</h5>';
     }
 
     switch(@$_GET['range_type']){
@@ -258,14 +295,14 @@ jQuery_1_4_2("input.datepicker").date_input();
 </div>
 <?php
     switch(@$_GET['range_type']){
-        case 'year':
+        case 'year':                       
             echo Modules::run("reports/desease_watch_number_table_year");
         break;
         case 'month_year':
             echo Modules::run("reports/desease_watch_number_table_month_year");
         break;
         case 'time':
-            echo Modules::run("reports/desease_watch_number_table_time");
+            echo Modules::run("reports/desease_watch_number_table_default");
         break;
         default:
             echo Modules::run("reports/desease_watch_number_table_default");
@@ -328,5 +365,6 @@ $(document).ready(function() {
             break;
   		}
   	});
+  	
 });
 </script>

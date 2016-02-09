@@ -1,5 +1,6 @@
 <?php
     $xAxis='';
+    $line_chart_category = '';
     $series = '';
     $series_idx = 0;
     $desease = New Desease_watch_name();    
@@ -31,15 +32,88 @@
             $display_mode = 'all';
             break;
     }
+    
+    $start_date = @$_GET['start_date']!='' ? @$_GET['start_date'] : '';
+    $end_date = @$_GET['end_date']!='' ? @$_GET['end_date'] : '';
+    if($start_date!='' && $end_date != ''){
+        $time_condition = " AND date(start_date) BETWEEN '".Date2DB($start_date)."' AND '".Date2DB($end_date)."' ";
+    }else if($start_date!='' && $end_date==''){
+        $time_condition = " AND date(start_date) >= '".Date2DB($start_date)."' ";
+    }else if($start_date=='' && $end_date!=''){
+        $time_condition = " AND date(start_date) <= '".Date2DB($start_date)."' ";
+    }else{
+        $time_condition = '';
+    }
 ?>
-<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-<div class="outer"> 
-  <div class="inner">
-<table id="datatable" class="table table-bordered">
+<?php if(@$_GET['export_type']==''):?>
+  <div style="float:left;text-align:right;width:100%;padding-top:10px;padding-bottom: 10px;">
+    <div style="width:100%;text-align:center;">     
+    <div class="input-prepend">
+        <span class="add-on">แสดงผลกราฟ</span>
+            <div class="add-on">
+                <input type="radio" name="mychart" class="mychart" id="column2" value="column" onclick="show_chart('stack-chart')">
+                <i class="fa fa-bar-chart"></i>
+            </div>
+            <div class="add-on">
+            <input type="radio" name="mychart" class="mychart" id="bar2" value="bar" onclick="show_chart('line-chart')">
+            <i class="fa fa-line-chart"></i>
+            </div>
+            <div class="add-on">
+            <input type="radio" name="mychart" class="mychart" id="close2" value="close" onclick="show_chart('')">
+            <i class="fa fa-times"></i>
+            </div>
+    </div>
+    </div>      
+</div>           
+<?php endif;?>
+<div id="stack-chart" style="<?php if(@$_GET['export_type']!=''){echo 'width:650px; ';}else{echo 'width:950px;';}?>height: 400px; margin: 0 auto"></div>
+<div id="line-chart" style="<?php if(@$_GET['export_type']!=''){echo 'width:650px; ';}else{echo 'width:950px;';}?>height: 400px; margin: 0 auto"></div>        
+<br>
+<div class="outer" style="margin-top:50px;"> 
+  <div class="inner">            
+<?php if(@$_GET['export_type']==''):?>
+  <div style="float:left;text-align:right;width:100%;padding-top:10px;padding-bottom: 10px;">
+        <div class="input-prepend">
+        <span class="add-on">เลือกดูตามพื้นที่</span>
+        <select name="select_data" class="form-control">
+            <option value="col_total">รวม</option>
+                <?php
+                    if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
+                        foreach($area as $area_row):
+                            echo '<option value="col_area_'.$area_row->id.'" >'.$area_row->area_name.'</option>';
+                        endforeach;
+                    }else if(@$_GET['area_id']!=''&&@$_GET['province_id']==''){
+                        foreach($province as $province_row):                    
+                            echo '<option value="col_province_'.$province_row->id.'" >'.$province_row->name.'</option>';
+                        endforeach;
+                    }else if(@$_GET['province_id']!=''&&@$_GET['amphur_id']==''){
+                        foreach($amphur as $amphur_row):                    
+                            echo '<option value="col_amphur_'.$amphur_row->id.'">'.$amphur_row->amphur_name.'</option>';
+                        endforeach;
+                    }else if(@$_GET['amphur_id']!=''&&@$_GET['district_id']==''){
+                        foreach($district as $district_row):                    
+                            echo '<option value="col_district_'.$district_row->id.'" >'.$district_row->district_name.'</option>';
+                        endforeach;
+                    }else if(@$_GET['district_id']!=''){                
+                        foreach($nursery as $nursery_row):                    
+                            echo '<option value="col_nursery_'.$nursery_row->id.'" >'.$nursery_row->name.'</option>';
+                        endforeach;
+                    }
+                    ?>
+        </select>
+        </div>
+        <div class="input-prepend">
+        <span class="add-on">ส่งออก</span>
+            <span class="btn btn-default btn-print-report">เครื่องพิมพ์</span>
+            <span class="btn btn-default btn-excel-report">Excel</span>            
+        </div>
+</div>           
+<?php endif;?>      
+<table id="datatable" class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
     <thead>
         <tr>
-            <th style="background:#fff !important;border-left:none;">
-                
+            <th rowspan="2" style="text-align: center;vertical-align: middle;">
+                                        โรค
             </th>
             <td colspan="4" style="width:650px;" class="th_datatable col_total" >
                                             รวม
@@ -49,42 +123,45 @@
             if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
                 foreach($area as $area_row):
                     $xAxis .= $xAxis == '' ? "'".$area_row->area_name."'" : ",'".$area_row->area_name."'";
+                    $line_chart_category .= $line_chart_category == '' ? "'".$area_row->area_name."'" : ",'".$area_row->area_name."'";
                     echo '<td colspan="4"  class="th_datatable col_area col_area_'.$area_row->id.'" >'.$area_row->area_name.'</td>';
                 endforeach;
             }else if(@$_GET['area_id']!=''&&@$_GET['province_id']==''){
                 foreach($province as $province_row):
                     $xAxis .= $xAxis == '' ? "'".$province_row->name."'" : ",'".$province_row->name."'";
+                    $line_chart_category .= $line_chart_category == '' ? "'".$province_row->name."'" : ",'".$province_row->name."'";
                     echo '<td colspan="4"  class="th_datatable col_province col_province_'.$province_row->id.'" >'.$province_row->name.'</td>';
                 endforeach;
             }else if(@$_GET['province_id']!=''&&@$_GET['amphur_id']==''){
                 foreach($amphur as $amphur_row):
                     $xAxis .= $xAxis == '' ? "'".$amphur_row->amphur_name."'" : ",'".$amphur_row->amphur_name."'";
+                    $line_chart_category .= $line_chart_category == '' ? "'".$amphur_row->amphur_name."'" : ",'".$amphur_row->amphur_name."'";
                     echo '<td colspan="4"  class="th_datatable col_amphur col_amphur_'.$amphur_row->id.'">'.$amphur_row->amphur_name.'</td>';
                 endforeach;
             }else if(@$_GET['amphur_id']!=''&&@$_GET['district_id']==''){
                 foreach($district as $district_row):
                     $xAxis .= $xAxis == '' ? "'".$district_row->district_name."'" : ",'".$district_row->district_name."'";
+                    $line_chart_category .= $line_chart_category == '' ? "'".$district_row->district_name."'" : ",'".$district_row->district_name."'";
                     echo '<td colspan="4"  class="th_datatable col_district col_district_'.$district_row->id.'" >'.$district_row->district_name.'</td>';
                 endforeach;
             }else if(@$_GET['district_id']!=''){
                 $xAxis .= $xAxis == '' ? "'พื้นที่ชุมชุน'" : ",'พื้นที่ชุมชุน'";
                 foreach($nursery as $nursery_row):
                     $xAxis .= $xAxis == '' ? "'".$nursery_row->name."'" : ",'".$nursery_row->name."'";
+                    $line_chart_category .= $line_chart_category == '' ? "'".$nursery_row->name."'" : ",'".$nursery_row->name."'";
                     echo '<td colspan="4"  class="th_datatable col_nursery col_nursery_'.$nursery_row->id.'" >'.$nursery_row->name.'</td>';
                 endforeach;
             }
             ?>
         </tr>
         <tr>    
-            <th style="height: 60px;">
-                                        โรค
-            </th>
+            
             <?php 
             echo $head_column = '
-            <td class="th_datatable th_total" style="col_total">จำนวนเหตุการณ์</td>
-            <td class="th_datatable th_total" style="col_total">จำนวนผู้ป่วย</td>
-            <td class="th_datatable th_total" style="col_total">ชาย</td>
-            <td class="th_datatable th_total" style="col_total">หญิง</td>';   
+            <td class="th_datatable th_total col_total" style="col_total">จำนวนเหตุการณ์</td>
+            <td class="th_datatable th_total col_total" style="col_total">จำนวนผู้ป่วย</td>
+            <td class="th_datatable th_total col_total" style="col_total">ชาย</td>
+            <td class="th_datatable th_total col_total" style="col_total">หญิง</td>';   
                         
             if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
                 foreach($area as $area_row):          
@@ -145,6 +222,7 @@
             $condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND amphur_id = ".@$_GET['amphur_id'] : '';
             $condition.= @$_GET['district_id']!='' ? " AND district_id = ".@$_GET['district_id'] : '';
             $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
+            $condition.= @$time_condition != '' ? $time_condition : "";
             $sql = get_desease_watch_sql($condition);                
             $desease_age = $this->db->query($sql)->result();       
             
@@ -170,7 +248,7 @@
             ?>      
             <?php                 
                 $condition = " AND disease = ".$desease_row->id;       
-                //$condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
+                $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
                 @$series[$series_idx]['data'] = '';                         
                 if(@$_GET['area_id']=='' && @@$_GET['province_id']==''){
                     foreach($area as $area_row):                
@@ -233,6 +311,8 @@
                 $condition.= @$_GET['province_id'] != '' && @$_GET['amphur_id'] == '' ? " AND province_id = ".$_GET['province_id'] : '';
                 $condition.= @$_GET['amphur_id'] != '' && @$_GET['district_id'] == '' ? " AND amphur_id = ".$_GET['amphur_id'] : '';
                 $condition.= @$_GET['district_id'] != '' ? " AND district_id = ".$_GET['district_id'] : '';
+                $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
+                $condition.= @$time_condition != '' ? $time_condition : "";
                 $sql = " SELECT
                             disease,
                             age_duration_start age_start,
@@ -251,20 +331,23 @@
                     $condition.= @$_GET['area_id'] != '' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
                     $condition.= @$_GET['province_id'] != '' && @$_GET['amphur_id'] == '' ? " AND province_id = ".$_GET['province_id'] : '';
                     $condition.= @$_GET['amphur_id'] != '' && @$_GET['district_id'] == '' ? " AND amphur_id = ".$_GET['amphur_id'] : '';
-                    $condition.= @$_GET['district_id'] != '' ? " AND district_id = ".$_GET['district_id'] : ''; 
+                    $condition.= @$_GET['district_id'] != '' ? " AND district_id = ".$_GET['district_id'] : '';
+                    $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
+                    $condition.= @$time_condition != '' ? $time_condition : ""; 
                     $sql = get_desease_watch_sql($condition);
-                    $value = $this->db->query($sql)->result();                          
+                    $value = $this->db->query($sql)->result();
             ?>
                 <tr class="desease_age_range <?php echo 'tr_desease_'.$desease_row->id;?>">
                     <th>
                         <?php echo $age->age_range;?>
                     </th>
                     <?php
-                    report_desease_watch_report_column($desease_age,$display_mode,'col_total');        
+                    report_desease_watch_report_column($value,$display_mode,'col_total');        
                     ?>
                     <?php 
                     $condition = " AND disease = ".$desease_row->id." AND age_duration_start = ".$age->age_start." AND age_duration_end = ".$age->age_end;
-                    //$condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';                                                          
+                    $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
+                    $condition.= @$time_condition != '' ? $time_condition : "";                                                          
                     if(@$_GET['area_id']==''&&@ $_GET['province_id']==''){
                         foreach($area as $area_row):
                             $ex_condition = " AND area_id = ".$area_row->id;                                        
@@ -311,21 +394,76 @@
 </div>
 
 <script type="text/javascript">
+function show_chart(chart_type){
+        switch(chart_type){
+            case 'line-chart':
+                $('#line-chart').show();
+                $('#stack-chart').hide();
+            break;
+            case 'stack-chart':
+                $('#line-chart').hide();
+                $('#stack-chart').show();
+            break;
+            default:
+                $('#line-chart').hide();
+                $('#stack-chart').hide();
+            break;
+        }
+    }
 $(function(){
-    $('.desease_age_range').hide();
-    $('.col_area').hide();
-    $('.col_province').hide();
-    $('.col_amphur').hide();
-    $('.col_district').hide();
+    hide_data_col();    
+    $('.col_total').show();
+    <?php if(@$_GET['export_type']==''){?>
+        $("#line-chart").hide();
+        $("#stack-chart").hide();
+        $('.desease_age_range').hide();
+    <?php }else{ ?>
+        show_data_col('<?php echo @$_GET['select_data'];?>');
+    <?php } ?>
+    
+    
+    
+    $('.btn-print-report').click(function(){
+        var select_data = $('select[name=select_data]').val();
+        var url = 'reports/desease_watch_number?<?php $parameter;?>&export_type=print&select_data='+select_data;
+        window.open(url);
+    });
+    
+    $('.btn-excel-report').click(function(){
+        var select_data = $('select[name=select_data]').val();
+        var url = 'reports/desease_watch_number?<?php $parameter;?>&export_type=excel&select_data='+select_data;
+        window.open(url);
+    });
+    
+    function hide_data_col(){
+        $('.col_total').hide();
+        $('.col_area').hide();
+        $('.col_province').hide();
+        $('.col_amphur').hide();
+        $('.col_district').hide();
+    }
+    
+    function show_data_col(col_val){
+        hide_data_col();
+        $('.'+col_val).show();
+    }
+    
+    $('select[name=select_data]').live('click',function(){
+        var select_col = $(this).val();
+        hide_data_col();
+        show_data_col(select_col);
+    })
+    
     $(".desease_name").live('click',function(){
         var tr = "tr_" + $(this).attr('id');
         $('.'+tr).toggle();
-    })
+    })       
     
-    $('#container').highcharts({
+    $('#stack-chart').highcharts({
         chart: {
             type: 'column'
         },
+        exporting: { enabled: false },
         title: {
             text: ''
         },
@@ -392,5 +530,45 @@ $(function(){
             ?>
         ]
     });
+    
+    
+    $('#line-chart').highcharts({
+        title: {
+            text: ''            
+        },        
+        xAxis: {
+            categories: [<?php echo $line_chart_category;?>]
+        },
+        yAxis: {
+            title: {
+                text: 'จำนวนของเหตุการณ์'
+            },
+            allowDecimals: false
+        },
+        exporting: { enabled: false },
+        tooltip: {
+            
+        },
+        legend: {
+            
+        },
+        series: [
+            <?php 
+            $series_txt = '';
+            for($i=1;$i<=$series_idx;$i++):
+                $series_txt.= $series_txt !='' ? ',' : '';
+                $series_txt.="{name: '".$series[$i]['name']."', data: [".$series[$i]['data']."]}";
+            endfor;
+            echo $series_txt;
+            ?>
+        ]
+    });        
 });
+<?php if(@$_GET['export_type']=='print'):?>
+canvg();
+<?php endif;?>
+<?php if(@$_GET['export_type']=='print'):?>
+setTimeout("window.print();",5000);
+<?php endif;?>
 </script>
+

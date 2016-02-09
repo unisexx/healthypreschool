@@ -22,83 +22,11 @@
         $nursery = new V_Nursery();
         $nursery->where('district_id = '.$_GET['district_id'])->get();
     }
-    switch (@$_GET['place_type']) {
-        case 'school':
-            $display_mode = 'school';
-            break;
-        case 'community':
-            $display_mode = 'community';
-            break; 
-        default:
-            $display_mode = 'all';
-            break;
-    }
 ?>
-<?php if(@$_GET['export_type']==''):?>
-  <div style="float:left;text-align:right;width:100%;padding-top:10px;padding-bottom: 10px;">
-    <div style="width:100%;text-align:center;">     
-    <div class="input-prepend">
-        <span class="add-on">แสดงผลกราฟ</span>
-            <div class="add-on">
-                <input type="radio" name="mychart" class="mychart" id="column2" value="column" onclick="show_chart('stack-chart')">
-                <i class="fa fa-bar-chart"></i>
-            </div>
-            <div class="add-on">
-            <input type="radio" name="mychart" class="mychart" id="bar2" value="bar" onclick="show_chart('line-chart')">
-            <i class="fa fa-line-chart"></i>
-            </div>
-            <div class="add-on">
-            <input type="radio" name="mychart" class="mychart" id="close2" value="close" onclick="show_chart('')">
-            <i class="fa fa-times"></i>
-            </div>
-    </div>
-    </div>      
-</div>           
-<?php endif;?>
-<div id="stack-chart" style="<?php if(@$_GET['export_type']!=''){echo 'width:650px; ';}else{echo 'width:950px;';}?>height: 400px; margin: 0 auto"></div>
-<div id="line-chart" style="<?php if(@$_GET['export_type']!=''){echo 'width:650px; ';}else{echo 'width:950px;';}?>height: 400px; margin: 0 auto"></div>        
-<br>
-<div class="outer" style="margin-top:50px;"> 
-  <div class="inner">            
-<?php if(@$_GET['export_type']==''):?>
-  <div style="float:left;text-align:right;width:100%;padding-top:10px;padding-bottom: 10px;">
-        <div class="input-prepend">
-        <span class="add-on">เลือกดูตามพื้นที่</span>
-        <select name="select_data" class="form-control">
-            <option value="col_total">รวม</option>
-                <?php
-                    if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
-                        foreach($area as $area_row):
-                            echo '<option value="col_area_'.$area_row->id.'" >'.$area_row->area_name.'</option>';
-                        endforeach;
-                    }else if(@$_GET['area_id']!=''&&@$_GET['province_id']==''){
-                        foreach($province as $province_row):                    
-                            echo '<option value="col_province_'.$province_row->id.'" >'.$province_row->name.'</option>';
-                        endforeach;
-                    }else if(@$_GET['province_id']!=''&&@$_GET['amphur_id']==''){
-                        foreach($amphur as $amphur_row):                    
-                            echo '<option value="col_amphur_'.$amphur_row->id.'">'.$amphur_row->amphur_name.'</option>';
-                        endforeach;
-                    }else if(@$_GET['amphur_id']!=''&&@$_GET['district_id']==''){
-                        foreach($district as $district_row):                    
-                            echo '<option value="col_district_'.$district_row->id.'" >'.$district_row->district_name.'</option>';
-                        endforeach;
-                    }else if(@$_GET['district_id']!=''){                
-                        foreach($nursery as $nursery_row):                    
-                            echo '<option value="col_nursery_'.$nursery_row->id.'" >'.$nursery_row->name.'</option>';
-                        endforeach;
-                    }
-                    ?>
-        </select>
-        </div>
-        <div class="input-prepend">
-        <span class="add-on">ส่งออก</span>
-            <span class="btn btn-default btn-print-report">เครื่องพิมพ์</span>
-            <span class="btn btn-default btn-excel-report">Excel</span>            
-        </div>
-</div>           
-<?php endif;?>
-<table id="datatable" class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<div class="outer"> 
+  <div class="inner">
+<table id="datatable" class="table table-bordered">
     <thead>
         <tr>
             <th rowspan="2" style="text-align: center;vertical-align: middle;">
@@ -323,7 +251,8 @@
         <?php            
             foreach($desease as $desease_row):
             $series_idx++;                                  
-            $condition = " AND disease = ".$desease_row->id;            
+            $condition = " AND disease = ".$desease_row->id;
+            $condition.= $year_condition;
             $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
             $condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND v_nurseries.area_id = ".$_GET['area_id'] : '';
             $condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND v_nurseries.province_id = ".@$_GET['province_id'] : '';
@@ -333,13 +262,13 @@
             $sql = get_desease_watch_sql($condition.$year_condition);                    
             $desease_age = $this->db->query($sql)->result();
             
-            $sql = " SELECT count(*)nrec FROM v_disease_watch WHERE 1=1 ".$condition.$year_condition;
+            $sql = " SELECT count(*)nrec FROM v_disease_watch WHERE 1=1 ".$condition;
             $exist = $this->db->query($sql)->result();
         ?>
         <tr class="desease_total">
             <th>
                 <?php if($exist[0]->nrec > 0){?>
-                <span id="desease_<?php echo $i_year.'_'.$desease_row->id;?>" class="desease_name" style="cursor:hand;cursor:pointer;">
+                <span id="desease_<?php echo $desease_row->id;?>" class="desease_name" style="cursor:hand;cursor:pointer;">
                     <?php echo $desease_row->desease_name;?>                                                       
                 </span>
                 <div style="float:right;padding-top:8px;">
@@ -369,9 +298,8 @@
                                 disease_watch
                                 LEFT JOIN v_nurseries on disease_watch.nurseries_id = v_nurseries.id
                             WHERE
-                                1=1 ";
-                $condition.= $year_condition;
-                $condition.= " AND disease = ".$desease_row->id;
+                                1=1 ".$year_condition;
+                $condition = " AND disease = ".$desease_row->id;
                 $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
                 if(@$_GET['area_id']=='' && @@$_GET['province_id']==''){
                     foreach($area as $area_row):                
@@ -442,7 +370,7 @@
                     $sql = get_desease_watch_sql($condition);                     
                     $value = $this->db->query($sql)->result();                          
             ?>
-                <tr class="desease_age_range <?php echo 'tr_desease_'.$i_year.'_'.$desease_row->id;?>">
+                <tr class="desease_age_range <?php echo 'tr_desease_'.$desease_row->id;?>">
                     <th>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $age->age_range;?>
                     </th>
@@ -496,77 +424,3 @@
 </table>
 </div>
 </div>
-<script type="text/javascript">
-function show_chart(chart_type){
-        switch(chart_type){
-            case 'line-chart':
-                $('#line-chart').show();
-                $('#stack-chart').hide();
-            break;
-            case 'stack-chart':
-                $('#line-chart').hide();
-                $('#stack-chart').show();
-            break;
-            default:
-                $('#line-chart').hide();
-                $('#stack-chart').hide();
-            break;
-        }
-    }
-$(function(){
-    hide_data_col();    
-    $('.col_total').show();
-    <?php if(@$_GET['export_type']==''){?>
-        $("#line-chart").hide();
-        $("#stack-chart").hide();
-        $('.desease_age_range').hide();
-    <?php }else{ ?>
-        show_data_col('<?php echo @$_GET['select_data'];?>');
-    <?php } ?>
-    
-    
-    
-    $('.btn-print-report').click(function(){
-        var select_data = $('select[name=select_data]').val();
-        var url = 'reports/desease_watch_number?<?php @$parameter;?>&export_type=print&select_data='+select_data;
-        window.open(url);
-    });
-    
-    $('.btn-excel-report').click(function(){
-        var select_data = $('select[name=select_data]').val();
-        var url = 'reports/desease_watch_number?<?php @$parameter;?>&export_type=excel&select_data='+select_data;
-        window.open(url);
-    });
-    
-    function hide_data_col(){
-        $('.col_total').hide();
-        $('.col_area').hide();
-        $('.col_province').hide();
-        $('.col_amphur').hide();
-        $('.col_district').hide();
-    }
-    
-    function show_data_col(col_val){
-        hide_data_col();
-        $('.'+col_val).show();
-    }
-    
-    $('select[name=select_data]').live('click',function(){
-        var select_col = $(this).val();
-        hide_data_col();
-        show_data_col(select_col);
-    })
-    
-    $(".desease_name").live('click',function(){
-        var tr = "tr_" + $(this).attr('id');
-        $('.'+tr).toggle();
-    })       
-     
-});
-<?php if(@$_GET['export_type']=='print'):?>
-canvg();
-<?php endif;?>
-<?php if(@$_GET['export_type']=='print'):?>
-setTimeout("window.print();",5000);
-<?php endif;?>
-</script>
