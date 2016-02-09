@@ -136,9 +136,9 @@ $(document).ready(function(){
 
 
 	<ul class="nav nav-tabs home-nav-tabs estimate-tab">
-		<li <?=@$_GET['status']==0 ?"class='active'" : "" ;?>><a href="nurseries/estimate?<?=@$_SERVER['QUERY_STRING']?>&status=0">รอการประเมิน <span class="badge"><?=@$count['total']?></span></a></li>
-		<li <?=@$_GET['status']==1 ?"class='active'" : "" ;?>><a href="nurseries/estimate?<?=@$_SERVER['QUERY_STRING']?>&status=1">ผ่านเกณฑ์ <span class="badge badge-success"><?=@$count['pass']?></span></a></li>
-		<li <?=@$_GET['status']==2 ?"class='active'" : "" ;?>><a href="nurseries/estimate?<?=@$_SERVER['QUERY_STRING']?>&status=2">ไม่ผ่านเกณฑ์ <span class="badge badge-important"><?=@$count['not_pass']?></a></li>
+		<li <?=@$_GET['status']==3 ?"class='active'" : "" ;?>><a href="nurseries/estimate?<?=@$_SERVER['QUERY_STRING']?>&status=3&page=1">รอการประเมิน <span class="badge"><?=@$count['wait']?></span></a></li>
+		<li <?=@$_GET['status']==1 ?"class='active'" : "" ;?>><a href="nurseries/estimate?<?=@$_SERVER['QUERY_STRING']?>&status=1&page=1">ผ่านเกณฑ์ <span class="badge badge-success"><?=@$count['pass']?></span></a></li>
+		<li <?=@$_GET['status']==2 ?"class='active'" : "" ;?>><a href="nurseries/estimate?<?=@$_SERVER['QUERY_STRING']?>&status=2&page=1">ไม่ผ่านเกณฑ์ <span class="badge badge-important"><?=@$count['not_pass']?></a></li>
 	</ul>
 
 	<table class="table">

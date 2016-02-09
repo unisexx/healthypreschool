@@ -477,9 +477,9 @@
 								    </li>
 										<?endif;?>
 										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
-								    <li><a href="#" onclick="return false;">เหตุการณ์การเฝ้าระวังโรคติดต่อ</a>
+								    <li><a href="#" onclick="return false;">ระบบเฝ้าระวังโรคติดต่อในเด็ก</a>
 											<ul>
-												<li><a href="desease_watch/index">ข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</a></li>
+												<li><a href="desease_watch/index">บันทึกเหตุการณ์เฝ้าระวังโรคติดต่อ</a></li>
 											</ul>
 										</li>
 										<?endif;?>
@@ -488,7 +488,10 @@
 											<ul>
 												<?if (in_array($current_user->user_type_id, array(1,6,7,8))):?>
 												<!-- <li><a href="nurseries/reports/index/basic_column">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li> -->
-												<li><a href="reports/nursery_register">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
+												<li class="main_menu_nolink"><a href="javascript:void(0)">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
+												<!-- <li class="sub_menu"><a class="sub_menu" href="reports/nursery_register">- สรุปผลการสมัครเข้าร่วมโครงการฯ</a></li> -->
+												<li class="sub_menu"><a class="sub_menu" href="nurseries/reports/index/basic_column">- สรุปผลการสมัครเข้าร่วมโครงการฯ</a></li>
+												<li class="sub_menu"><a class="sub_menu" href="nurseries/estimate">- รายละเอียดการประเมินผลโครงการฯ</a></li>
 												<?endif;?>
 												<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
 												<li class="main_menu_nolink"><a href="javascript:void(0)">รายงานแบบคัดกรองโรค</a></li>

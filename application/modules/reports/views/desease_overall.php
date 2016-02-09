@@ -116,6 +116,23 @@ jQuery_1_4_2("input.datepicker").date_input();
 		วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
 		วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
 	</div>
+	
+	<div>
+		<span>ปีที่สัมผัสโรค</span>
+		<?
+			$sql = "select DISTINCT(`year`) FROM diseases";
+			$years = $this->db->query($sql)->result();
+		?>
+		<select name="year" class="span2">
+			<option value="">--- เลือกปี ---</option>
+			<?foreach($years as $item):?>
+			<option value="<?=$item->year?>" <?if(@$_GET['year'] == $item->year){echo "selected";}?>><?=$item->year?></option>
+			<?endforeach;?>
+		</select>
+		
+		<span>เดือนที่สัมผัสโรค</span>
+		<?=form_dropdown('month',$arrayMonth,@$_GET['month'],'class="span2"','--- เลือกเดือน ---');?>
+	</div>
 
 	<div>
 		<span>สคร.</span>
@@ -162,13 +179,13 @@ jQuery_1_4_2("input.datepicker").date_input();
 		?>
 		</span>
 	</div>
-
+	<input type="hidden" name="search" value="1">
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 </form>
 
 
 
-<?if(!empty($_GET)): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
+<?if(@$_GET['search']==1): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
 
 
 
@@ -206,6 +223,14 @@ if(@$_GET['start_date'] and @empty($_GET['end_date'])){
 if(@$_GET['end_date'] and @empty($_GET['start_date'])){
 	$end_date = str_replace("-", "", Date2DB($_GET['end_date']));
 	$condition .= " and d.start_date >= ".$end_date;
+}
+// ปีที่สัมผัสโรค
+if(@$_GET['year']){
+	$condition .= " and d.year = ".$_GET['year'];
+}
+// เดือนที่สัมผัสโรค
+if(@$_GET['month']){
+	$condition .= " and d.month = ".$_GET['month'];
 }
 
 //-------------------------------------------- sql select join template --------------------------------
@@ -379,8 +404,8 @@ $same_total = $same->same_1 + $same->same_2;
 <br>
 <table class="table">
 	<tr>
-		<th>ข้อมูลรายงานแบบคัดกรองโรค</th>
-		<th>จำนวน</th>
+		<th>ข้อมูลจำนวนและร้อยละรายงานแบบคัดกรองโรค <a href="reports/desease_overall_export?<?=$_SERVER['QUERY_STRING']?>" target="_blank"><i class="fa fa-file-excel-o"></i></a></th>
+		<th>จำนวน (N=)</th>
 		<th>ร้อยละ</th>
 	</tr>
 	<tr class="subheader">

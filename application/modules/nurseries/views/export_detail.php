@@ -24,11 +24,11 @@ if($filetype == 'excel'){
 	<tbody>
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
-		        <td><?=$key+1?></td>
-		        <td><?=$nursery->nursery_category->title?><?=$nursery->name?></td>
-		        <td>ต.<?=$nursery->district->district_name?></td>
-		        <td>อ.<?=$nursery->amphur->amphur_name?></td>
-		        <td>จ.<?=$nursery->province->name?></td>
+		        <td><?$_GET['page'] = (@$_GET['page'] == "")?"1":@$_GET['page'];?><?=($key+1)+(20 * (@$_GET['page'] - 1));?></td>
+		        <td><?//=$nursery->nursery_category->title?><?=$nursery->name?></td>
+		        <td>ต.<?=$nursery->district_name?></td>
+		        <td>อ.<?=$nursery->amphur_name?></td>
+		        <td>จ.<?=$nursery->province_name?></td>
 		        <td><?=$nursery->year?></td>
 		        <td><?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?></td>
 		        <td><?=($nursery->status == 0)?"เข้าร่วมโครงการ":"ผ่านเกณฑ์";?></td>

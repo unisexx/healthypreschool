@@ -8,6 +8,15 @@ if($filetype == 'excel'){
 }
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<?
+	// search condition
+	$condition = "";
+	if(@$_GET['year']!=""){
+		@$condition.=" and v_nurseries.year = ".$_GET['year'];
+	}
+?>
+
 <?=$text?>
 <?php if(@$_GET['type'] == 1):?>
 	<table class="table">
@@ -22,21 +31,48 @@ if($filetype == 'excel'){
 		<tbody>
 			<?php foreach($provinces as $province):?>
 				<?php
-					if($_GET['year'] == ""){
-						$all = $province->nurseries->get()->result_count();
-						$pass = $province->nurseries->where("status = 1")->get()->result_count();
-						$not = $province->nurseries->where("status = 0")->get()->result_count();
-					}else{
-						$all = $province->nurseries->where("year = ".$_GET['year'])->get()->result_count();
-						$pass = $province->nurseries->where("year = ".$_GET['year']." and status = 1")->get()->result_count();
-						$not = $province->nurseries->where("year = ".$_GET['year']." and status = 0")->get()->result_count();
-					}
+						$sql = "SELECT
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.id = ".$province->id." ".@$condition."
+										) nursery_all,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.id = ".$province->id." ".@$condition."
+											AND v_nurseries.`status` = 1
+										) nursery_pass,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.id = ".$province->id." ".@$condition."
+											AND v_nurseries.`status` = 0
+										) nursery_not
+									";
+						$nursery = new V_nursery();
+						$nursery->query($sql);
+						$all = $nursery->nursery_all;
+						$pass = $nursery->nursery_pass;
+						$not = $nursery->nursery_not;
 				?>
 			<tr>
 				<th><?=$province->name?></th>
 				<td><?=$all?></td>
-				<td><?=$pass?></td>
 				<td><?=$not?></td>
+				<td><?=$pass?></td>
 			</tr>
 			<?php endforeach;?>
 		</tbody>
@@ -54,21 +90,48 @@ if($filetype == 'excel'){
 		<tbody>
 			<?php foreach($amphurs as $amphur):?>
 				<?php
-					if($_GET['year'] == ""){
-						$all = $amphur->nurseries->get()->result_count();
-						$pass = $amphur->nurseries->where("status = 1")->get()->result_count();
-						$not = $amphur->nurseries->where("status = 0")->get()->result_count();
-					}else{
-						$all = $amphur->nurseries->where("year = ".$_GET['year'])->get()->result_count();
-						$pass = $amphur->nurseries->where("year = ".$_GET['year']." and status = 1")->get()->result_count();
-						$not = $amphur->nurseries->where("year = ".$_GET['year']." and status = 0")->get()->result_count();
-					}
+						$sql = "SELECT
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.amphur_id= ".$amphur->id." ".@$condition."
+										) nursery_all,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.amphur_id = ".$amphur->id." ".@$condition."
+											AND v_nurseries.`status` = 1
+										) nursery_pass,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.amphur_id = ".$amphur->id." ".@$condition."
+											AND v_nurseries.`status` = 0
+										) nursery_not
+									";
+						$nursery = new V_nursery();
+						$nursery->query($sql);
+						$all = $nursery->nursery_all;
+						$pass = $nursery->nursery_pass;
+						$not = $nursery->nursery_not;
 				?>
 			<tr>
 				<th><?=$amphur->amphur_name?></th>
 				<td><?=$all?></td>
-				<td><?=$pass?></td>
 				<td><?=$not?></td>
+				<td><?=$pass?></td>
 			</tr>
 			<?php endforeach;?>
 		</tbody>
@@ -86,21 +149,48 @@ if($filetype == 'excel'){
 		<tbody>
 			<?php foreach($districts as $district):?>
 				<?php
-					if($_GET['year'] == ""){
-						$all = $district->nurseries->get()->result_count();
-						$pass = $district->nurseries->where("status = 1")->get()->result_count();
-						$not = $district->nurseries->where("status = 0")->get()->result_count();
-					}else{
-						$all = $district->nurseries->where("year = ".$_GET['year'])->get()->result_count();
-						$pass = $district->nurseries->where("year = ".$_GET['year']." and status = 1")->get()->result_count();
-						$not = $district->nurseries->where("year = ".$_GET['year']." and status = 0")->get()->result_count();
-					}
+						$sql = "SELECT
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.district_id= ".$district->id." ".@$condition."
+										) nursery_all,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.district_id = ".$district->id." ".@$condition."
+											AND v_nurseries.`status` = 1
+										) nursery_pass,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.district_id = ".$district->id." ".@$condition."
+											AND v_nurseries.`status` = 0
+										) nursery_not
+									";
+						$nursery = new V_nursery();
+						$nursery->query($sql);
+						$all = $nursery->nursery_all;
+						$pass = $nursery->nursery_pass;
+						$not = $nursery->nursery_not;
 				?>
 			<tr>
 				<th><?=$district->district_name?></th>
 				<td><?=$all?></td>
-				<td><?=$pass?></td>
 				<td><?=$not?></td>
+				<td><?=$pass?></td>
 			</tr>
 			<?php endforeach;?>
 		</tbody>
@@ -146,21 +236,48 @@ if($filetype == 'excel'){
 		<tbody>
 			<?php foreach($areas as $area):?>
 				<?php
-					if(@$_GET['year']){
-						$all = $area->nurseries->where("year = ".@$_GET['year'])->get()->result_count();
-						$pass = $area->nurseries->where("year = ".@$_GET['year']." and status = 1")->get()->result_count();
-						$not = $area->nurseries->where("year = ".@$_GET['year']." and status = 0")->get()->result_count();
-					}else{
-						$all = $area->nurseries->get()->result_count();
-						$pass = $area->nurseries->where("status = 1")->get()->result_count();
-						$not = $area->nurseries->where("status = 0")->get()->result_count();
-					}
+						$sql = "SELECT
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.area_id = ".$area->id." ".@$condition."
+										) nursery_all,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.area_id = ".$area->id." ".@$condition."
+											AND v_nurseries.`status` = 1
+										) nursery_pass,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.area_id = ".$area->id." ".@$condition."
+											AND v_nurseries.`status` = 0
+										) nursery_not
+									";
+						$nursery = new V_nursery();
+						$nursery->query($sql);
+						$all = $nursery->nursery_all;
+						$pass = $nursery->nursery_pass;
+						$not = $nursery->nursery_not;
 				?>
 			<tr>
 				<th><?=$area->area_name?></th>
 				<td><?=$all?></td>
-				<td><?=$pass?></td>
 				<td><?=$not?></td>
+				<td><?=$pass?></td>
 			</tr>
 			<?php endforeach;?>
 		</tbody>

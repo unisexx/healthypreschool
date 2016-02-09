@@ -51,7 +51,7 @@
         <table class="table table-condensed">
         	<tr>
         		<th>แบบประเมิน 35 ข้อ</th>
-        		<td><a href="assessments/form?nursery_id=<?=$nursery->id?>">ประเมินผล</a></td>
+        		<td><a href="assessments/form?nursery_id=<?=$nursery->id?>" target="_blank">ประเมินผล</a></td>
         	</tr>
 	   	    <tr>
 		      <th>ผ่านเกณฑ์</th>
@@ -68,6 +68,12 @@
 		      	<?=form_dropdown('approve_year',$arr,$nursery->approve_year,'','ไม่ผ่านเกณฑ์ ');?>
 		      	<input type="hidden" name="id" value="<?=$nursery->id?>">
 		      </td>
+			</tr>
+			<tr>
+				<th>หมดอายุ</th>
+				<td>
+					<?if($nursery->status == 1){echo $nursery->approve_year + 3;}?>
+				</td>
 			</tr>
 			<tr>
 				<th></th>

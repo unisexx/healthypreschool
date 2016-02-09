@@ -128,7 +128,7 @@ $(document).ready(function(){
 
 <form method="get" action="officers">
 	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-	<input type="text" name="search" value="<?=@$_GET['search']?>" placeholder="ค้นหาชื่อ,อีเมล์">
+	<input type="text" name="name" value="<?=@$_GET['name']?>" placeholder="ค้นหาชื่อ,อีเมล์">
 
 	<?=form_dropdown('m_status',array('active'=>'เปิด','deactive'=>'ปิด'),@$_GET['m_status'],'','--- เลือกสถานะ ---');?>
 	
@@ -182,10 +182,17 @@ $(document).ready(function(){
 	<?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
 	</span> -->
 	
+		<input type="hidden" name="search" value="1">
       <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
       <img class="loading" style="display: none;" src="media/images/ajax-loader.gif">
 	</div>
 </form>
+
+
+
+<?if(@$_GET['search']==1): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
+
+
 
 <div style="margin-bottom: 10px;">
 	พบเจ้าหน้าที่ทั้งหมด <a href="nurseries/register?status=1"> <span class="badge badge-success"><?=$users->paged->total_rows;?></span></a>
@@ -238,3 +245,7 @@ $(document).ready(function(){
     <div class="modal-body-form"></div>
   </div>
 </div>
+
+
+
+<?endif;?>

@@ -13,7 +13,7 @@ class Reports extends Public_Controller
 		(@$_GET['year'])?$txt="ปีงบประมาณ ".@$_GET['year']:$txt="โดยรวมทั้งหมด";
 		
 		if(@$_GET['type'] == 1 ){ // สคร
-			$data['provinces'] = new Province();
+			$data['provinces'] = new V_province();
 			$data['provinces']->where('area_id = '.$_GET['area_id'])->get();
 			$data['text'] = "ผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรค".$txt." (สคร.".$_GET['area_id'].")";
 		}elseif(@$_GET['type'] == 2 ){ // จังหวัด
@@ -78,40 +78,63 @@ class Reports extends Public_Controller
 	function detail(){
 		$this->template->set_layout('blank');
 		
-		$data['nurseries'] = new Nursery();
+		$condition = " 1=1 ";
 		
 		if(@$_GET['area_id']){
-			// $data['nurseries']->where('area_id',$_GET['area_id']);
-			$data['nurseries']->where_related_province('area_id',$_GET['area_id']);
+			$condition .= " and area_provinces_detail.area_id = ".$_GET['area_id'];
 			$data['area'] = "สคร.".$_GET['area_id'];
 		}
 		if(@$_GET['province_id']){
-			$data['nurseries']->where('province_id',$_GET['province_id']);
-			$province = new Province($_GET['province_id']);
-			$data['province'] = "จังหวัด".$province->name;
+			$condition .= " and area_provinces_detail.province_id = ".$_GET['province_id'];
+			$data['province'] = "จังหวัด".get_province_name($_GET['province_id']);
 		}
 		if(@$_GET['amphur_id']){
-			$data['nurseries']->where("amphur_id = ".$_GET['amphur_id']);
-			$amphur = new Amphur($_GET['amphur_id']);
-			$data['amphur'] = "อำเภอ".$amphur->amphur_name;
+			$condition .=" and v_nurseries.amphur_id = ".$_GET['amphur_id'];
+			$data['amphur'] = "อำเภอ".get_amphur_name($_GET['amphur_id']);
 		}
 
 		if(@$_GET['district_id']){
-			$data['nurseries']->where("district_id = ".$_GET['district_id']);
-			$district = new District($_GET['district_id']);
-			$data['district'] = "ตำบล".$district->district_name;
+			$condition .=" and v_nurseries.district_id = ".$_GET['district_id'];
+			$data['district'] = "ตำบล".get_district_name($_GET['district_id']);
 		}
 		if(@$_GET['year']){
-			$data['nurseries']->where("year = ".$_GET['year']);
+			$condition .=" and v_nurseries.year = ".$_GET['year'];
 			$data['year'] = "ปี ".$_GET['year'];
 		}
 		if(isset($_GET['status'])){
-			$data['nurseries']->where("status = ".$_GET['status']);
+			$condition .=" and v_nurseries.status = ".$_GET['status'];
 		}
 		
-		$data['nurseries']->order_by('id','desc')->get_page();
-		// $data['nurseries']->check_last_query();
+		$sql="SELECT
+						v_nurseries.id,
+						v_nurseries.name,
+						v_nurseries.p_title,
+						v_nurseries.p_name,
+						v_nurseries.p_surname,
+						v_nurseries.created,
+						v_nurseries.user_id,
+						v_nurseries.status,
+						v_nurseries.year,
+						v_nurseries.approve_year,
+						v_nurseries.approve_date,
+						v_nurseries.approve_user_id,
+						area_provinces_detail.name province_name,
+						amphures.amphur_name,
+						districts.district_name,
+						assessments.total assessments_total
+					FROM
+						v_nurseries
+					LEFT JOIN area_provinces_detail ON v_nurseries.area_province_id = area_provinces_detail.area_province_id
+					LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
+					LEFT JOIN districts ON v_nurseries.district_id = districts.id
+					LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
+					WHERE
+					".@$condition." order by v_nurseries.id desc";
 		
+		$nursery = new V_nursery();
+		$data['nurseries'] = $nursery->sql_page($sql, 20);
+		$data['pagination'] = $nursery->sql_pagination;
+		// echo $sql;
 		$this->template->build('report_detail',$data);
 	}
 
@@ -151,33 +174,63 @@ class Reports extends Public_Controller
 
 	function export_detail($filetype){
 		$data['filetype'] = $filetype;
-		$data['nurseries'] = new Nursery();
+		
+		$condition = " 1=1 ";
+		
 		if(@$_GET['area_id']){
-			$data['nurseries']->where('area_id',$_GET['area_id']);
+			$condition .= " and area_provinces_detail.area_id = ".$_GET['area_id'];
 			$data['area'] = "สคร.".$_GET['area_id'];
 		}
 		if(@$_GET['province_id']){
-			$data['nurseries']->where('province_id',$_GET['province_id']);
-			$province = new Province($_GET['province_id']);
-			$data['province'] = "จังหวัด".$province->name;
+			$condition .= " and area_provinces_detail.province_id = ".$_GET['province_id'];
+			$data['province'] = "จังหวัด".get_province_name($_GET['province_id']);
 		}
 		if(@$_GET['amphur_id']){
-			$data['nurseries']->where("amphur_id = ".$_GET['amphur_id']);
-			$amphur = new Amphur($_GET['amphur_id']);
-			$data['amphur'] = "อำเภอ".$amphur->amphur_name;
+			$condition .=" and v_nurseries.amphur_id = ".$_GET['amphur_id'];
+			$data['amphur'] = "อำเภอ".get_amphur_name($_GET['amphur_id']);
 		}
 
 		if(@$_GET['district_id']){
-			$data['nurseries']->where("district_id = ".$_GET['district_id']);
-			$district = new District($_GET['district_id']);
-			$data['district'] = "ตำบล".$district->district_name;
+			$condition .=" and v_nurseries.district_id = ".$_GET['district_id'];
+			$data['district'] = "ตำบล".get_district_name($_GET['district_id']);
 		}
 		if(@$_GET['year']){
-			$data['nurseries']->where("year = ".$_GET['year']);
+			$condition .=" and v_nurseries.year = ".$_GET['year'];
 			$data['year'] = "ปี ".$_GET['year'];
 		}
-		if(@$_GET['status'])$data['nurseries']->where("status = ".$_GET['status']);
-		$data['nurseries']->order_by('id','desc')->get();
+		if(isset($_GET['status'])){
+			$condition .=" and v_nurseries.status = ".$_GET['status'];
+		}
+		
+		$sql="SELECT
+						v_nurseries.id,
+						v_nurseries.name,
+						v_nurseries.p_title,
+						v_nurseries.p_name,
+						v_nurseries.p_surname,
+						v_nurseries.created,
+						v_nurseries.user_id,
+						v_nurseries.status,
+						v_nurseries.year,
+						v_nurseries.approve_year,
+						v_nurseries.approve_date,
+						v_nurseries.approve_user_id,
+						area_provinces_detail.name province_name,
+						amphures.amphur_name,
+						districts.district_name,
+						assessments.total assessments_total
+					FROM
+						v_nurseries
+					LEFT JOIN area_provinces_detail ON v_nurseries.area_province_id = area_provinces_detail.area_province_id
+					LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
+					LEFT JOIN districts ON v_nurseries.district_id = districts.id
+					LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
+					WHERE
+					".@$condition." order by v_nurseries.id desc";
+		
+		$nursery = new V_nursery();
+		$data['nurseries'] = $nursery->sql_page($sql, 999999);
+		
 		$this->load->view('export_detail',$data);
 	}
 

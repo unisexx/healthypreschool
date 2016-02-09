@@ -13,73 +13,77 @@ class Staffs extends Public_Controller
     
     function index()
     {
-        $data['users'] = new User();
-		
-		$condition = " user_type_id between 9 and 10 ";
-		
-		if(@$_GET['search']){
-			$condition .= " and (v_users.name like '%".$_GET['name']."%' or v_users.email like '%".$_GET['name']."%')";
-		}
-		if(@$_GET['nursery_name']){
-			$condition .= " and v_nurseries.name like '%".$_GET['nursery_name']."%'";
-		}
-		if(@$_GET['user_type_id']){
-			$condition .= " and v_users.user_type_id = ".$_GET['user_type_id'];
-		}
-		if(@$_GET['area_id']){
-			$condition .= " and v_provinces.area_id = ".$_GET['area_id'];
-		}
-		if(@$_GET['province_id']){
-			$condition .= " and v_provinces.id = ".$_GET['province_id'];
-		}
-		if(@$_GET['amphur_id']){
-			$condition .= " and v_users.amphur_id = ".$_GET['amphur_id'];
-		}
-		if(@$_GET['district_id']){
-			$condition .= " and v_users.district_id = ".$_GET['district_id'];
-		}
-		if(@$_GET['m_status']){
-			$condition .= " and v_users.m_status = '".$_GET['m_status']."'";
-		}
-		
-		$sql = "SELECT
-						v_users.user_type_id,
-						v_users.id,
-						v_users.`name`,
-						v_users.email,
-						v_provinces.`name` province_name,
-						amphures.amphur_name amphur_name,
-						districts.district_name district_name,
-						v_users.nursery_id,
-						v_nurseries.`name` nursery_name,
-						v_users.created
-						FROM
-						v_users
-						INNER JOIN v_nurseries ON v_users.nursery_id = v_nurseries.id
-						LEFT JOIN v_provinces ON v_users.area_province_id = v_provinces.area_province_id
-						LEFT JOIN amphures ON v_users.amphur_id = amphures.id
-						LEFT JOIN districts ON v_users.district_id = districts.id
-						WHERE  ".$condition;
-	
-			$user = new User();
-	        $data['users'] = $user->sql_page($sql, 20);
-			$data['pagination'] = $user->sql_pagination;
+    	if(@$_GET['search']==1){ //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล
+    	
+	        $data['users'] = new User();
 			
-			// echo $sql;
+			$condition = " user_type_id between 9 and 10 ";
 			
-		// นับจำนวนที่ทำการค้นหา
-		$sql = "SELECT
-						count(v_users.id) total
-						FROM
-						v_users
-						INNER JOIN v_nurseries ON v_users.nursery_id = v_nurseries.id
-						LEFT JOIN v_provinces ON v_users.area_province_id = v_provinces.area_province_id
-						LEFT JOIN amphures ON v_users.amphur_id = amphures.id
-						LEFT JOIN districts ON v_users.district_id = districts.id
-						WHERE  ".$condition;
-		$data['count'] = $this->db->query($sql)->row_array();
+			if(@$_GET['search']){
+				$condition .= " and (v_users.name like '%".$_GET['name']."%' or v_users.email like '%".$_GET['name']."%')";
+			}
+			if(@$_GET['nursery_name']){
+				$condition .= " and v_nurseries.name like '%".$_GET['nursery_name']."%'";
+			}
+			if(@$_GET['user_type_id']){
+				$condition .= " and v_users.user_type_id = ".$_GET['user_type_id'];
+			}
+			if(@$_GET['area_id']){
+				$condition .= " and v_provinces.area_id = ".$_GET['area_id'];
+			}
+			if(@$_GET['province_id']){
+				$condition .= " and v_provinces.id = ".$_GET['province_id'];
+			}
+			if(@$_GET['amphur_id']){
+				$condition .= " and v_users.amphur_id = ".$_GET['amphur_id'];
+			}
+			if(@$_GET['district_id']){
+				$condition .= " and v_users.district_id = ".$_GET['district_id'];
+			}
+			if(@$_GET['m_status']){
+				$condition .= " and v_users.m_status = '".$_GET['m_status']."'";
+			}
+			
+			$sql = "SELECT
+							v_users.user_type_id,
+							v_users.id,
+							v_users.`name`,
+							v_users.email,
+							v_provinces.`name` province_name,
+							amphures.amphur_name amphur_name,
+							districts.district_name district_name,
+							v_users.nursery_id,
+							v_nurseries.`name` nursery_name,
+							v_users.created
+							FROM
+							v_users
+							INNER JOIN v_nurseries ON v_users.nursery_id = v_nurseries.id
+							LEFT JOIN v_provinces ON v_users.area_province_id = v_provinces.area_province_id
+							LEFT JOIN amphures ON v_users.amphur_id = amphures.id
+							LEFT JOIN districts ON v_users.district_id = districts.id
+							WHERE  ".$condition;
 		
-        $this->template->build('index',$data);
+				$user = new User();
+		        $data['users'] = $user->sql_page($sql, 20);
+				$data['pagination'] = $user->sql_pagination;
+				
+				// echo $sql;
+				
+			// นับจำนวนที่ทำการค้นหา
+			$sql = "SELECT
+							count(v_users.id) total
+							FROM
+							v_users
+							INNER JOIN v_nurseries ON v_users.nursery_id = v_nurseries.id
+							LEFT JOIN v_provinces ON v_users.area_province_id = v_provinces.area_province_id
+							LEFT JOIN amphures ON v_users.amphur_id = amphures.id
+							LEFT JOIN districts ON v_users.district_id = districts.id
+							WHERE  ".$condition;
+			$data['count'] = $this->db->query($sql)->row_array();
+		
+		} //endif search=1
+		
+        $this->template->build('index',@$data);
     }
     
     function form($nursery_id,$id=false){

@@ -47,6 +47,10 @@ class Reports extends Public_Controller {
 		$this->template->build('desease_overall');
 	}
 
+	function desease_overall_export(){
+		$this->load->view('desease_overall_export');
+	}
+
 	// รายงานข้อมูลแบบคัดกรองโรค -- จำแนกตามปัจจัยต่างๆ --
 	function desease_factor(){
 		$this->template->build('desease_factor');

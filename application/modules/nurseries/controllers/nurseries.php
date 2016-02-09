@@ -158,7 +158,7 @@ class Nurseries extends Public_Controller
 	
 			// echo $sql;
 
-		}
+		} //endif search=1
 
 		$this->template->build('child_register',@$data);
 	}
@@ -347,7 +347,7 @@ class Nurseries extends Public_Controller
 			        break;
 				case 3: // รอการประเมิน
 			        // $data['nurseries']->where("status = 0")->where_related_assessment('total IS NULL');
-			        $condition .= " and v_nurseries.status >= 0 and assessments.total IS NULL ";
+			        $condition .= " and v_nurseries.status = 0 and assessments.total IS NULL ";
 			        break;
 				case 4: // หมดอายุ ระบบเก่า
 			        // $data['nurseries']->where("status = 1 and approve_type = 1 and approve_year < ".(date("Y")+540));
@@ -383,11 +383,14 @@ class Nurseries extends Public_Controller
 						LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 						LEFT JOIN districts ON v_nurseries.district_id = districts.id
 						LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-						WHERE ".$condition;
+						WHERE ".$condition." 
+						ORDER BY v_nurseries.id desc";
 	
 			$nursery = new Nursery();
 			$data['nurseries'] = $nursery->sql_page($sql, 20);
 			$data['pagination'] = $nursery->sql_pagination;
+			
+			// echo $sql;
 	
 			// นับจำนวนศูนย์เด็กเล็ก
 			$sql = "	SELECT
@@ -422,13 +425,14 @@ class Nurseries extends Public_Controller
 							LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 							LEFT JOIN districts ON v_nurseries.district_id = districts.id
 							LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-							WHERE ".$condition2."
-						) total
+							WHERE ".$condition2."  and v_nurseries.status = 0 and assessments.total IS NULL 
+						) wait
 						";
 	
 			$data['count'] = $this->db->query($sql)->row_array();
 			// echo $sql;	
-		}
+			
+		}//endif search=1
 
 		$this->template->build('child_estimate',@$data);
 	}
