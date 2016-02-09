@@ -104,7 +104,7 @@ jQuery_1_4_2("input.datepicker").date_input();
         	ผ่านเกณฑ์<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=1"> <span class="badge badge-success"><?=$count['pass']?></span></a>
         	ไม่ผ่านเกณฑ์<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=2"> <span class="badge badge-important"><?=$count['not_pass']?></span></a>
         	รอการประเมิน<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=3"> <span class="badge"><?=($count['total'])-($count['pass']+$count['not_pass'])?></span></a>
-        	เข้าร่วมโครงการ<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=0"> <span class="badge badge-info"><?=$count['pass']+$count['not_pass']?></span></a>
+        	เข้าร่วมโครงการ<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=0"> <span class="badge badge-info"><?=$count['total']?></span></a>
 
         </div>
 
