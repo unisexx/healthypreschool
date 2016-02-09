@@ -568,7 +568,7 @@ $(function(){
 canvg();
 <?php endif;?>
 <?php if(@$_GET['export_type']=='print'):?>
-setTimeout("window.print();",5000);
+setTimeout("window.print();",2000);
 <?php endif;?>
 </script>
 
