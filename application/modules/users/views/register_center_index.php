@@ -49,7 +49,7 @@ $(document).ready(function(){
     	</form>
 
 <?php if($_GET):?>
-	ผลการค้นหาพบทั้งหมด <?=$count?> แห่ง
+	ผลการค้นหาพบทั้งหมด <?=$count->total?> แห่ง
         <div style="float:right; padding:10px 0;">
         	<a href="users/register_center_form"><div class="btn">ลงทะเบียนศูนย์ใหม่</div></a>
         </div>
@@ -64,7 +64,7 @@ $(document).ready(function(){
         </tr>
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
-		        <td><?=($key+1)+$nurseries->paged->current_row?></td>
+		        <td><?$_GET['page'] = (@$_GET['page'] == "")?"1":@$_GET['page'];?><?=($key+1)+(20 * (@$_GET['page'] - 1));?></td>
 		        <td><?//=$nursery->title?><?=$nursery->name?></td>
 		        <td style="white-space: nowrap; overflow: hidden; text-overflow:ellipsis;">ต.<?=$nursery->district_name?> อ.<?=$nursery->amphur_name?> จ.<?=$nursery->province_name?></td>
 		        <!-- <td><?=$nursery->year?></td>
@@ -82,6 +82,6 @@ $(document).ready(function(){
 	        </tr>
 		<?php endforeach;?>
         </table>
-        <?php echo $nurseries->pagination(); ?>
+        <?php echo $pagination; ?>
 <?php endif;?>
 	</div>

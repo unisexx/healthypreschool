@@ -11,35 +11,39 @@ class Users extends Public_Controller{
     }
 	
 	function register_center(){ // เจ้าหน้าที่ศูนย์
+		$condition = " 1=1 ";
+		if(@$_GET['name']) $condition .= ' and nurseries.name like "%'.$_GET['name'].'%"';
+		if(@$_GET['province_id']) $condition .= ' and nurseries.province_id = '.$_GET['province_id'];
+		if(@$_GET['amphur_id']) $condition .= ' and nurseries.amphur_id = '.$_GET['amphur_id'];
+		if(@$_GET['district_id']) $condition .= ' and nurseries.district_id = '.$_GET['district_id'];
+		
 		$sql = "SELECT
 				nurseries.id,
-				nurseries.name,
-				nurseries.year,
-				nurseries.p_title,
-				nurseries.p_name,
-				nurseries.p_surname,
-				nurseries.status,
-				nurseries.approve_year,
-				nursery_categories.title,
+				nurseries.`name`,
 				districts.district_name,
 				amphures.amphur_name,
-				provinces.name province_name
+				provinces.`name` AS province_name
 				FROM
 				nurseries
-				LEFT JOIN nursery_categories ON nurseries.nursery_category_id = nursery_categories.id
 				LEFT JOIN districts on nurseries.district_id = districts.id
 				LEFT JOIN amphures on nurseries.amphur_id = amphures.id
 				LEFT JOIN provinces on nurseries.province_id = provinces.id
-				WHERE 1=1";
-		if(@$_GET['name']) $sql .= ' and CONCAT(nursery_categories.title,nurseries.name) like "%'.$_GET['name'].'%"';
-		if(@$_GET['province_id']) $sql .= ' and nurseries.province_id = '.$_GET['province_id'];
-		if(@$_GET['amphur_id']) $sql .= ' and nurseries.amphur_id = '.$_GET['amphur_id'];
-		if(@$_GET['district_id']) $sql .= ' and nurseries.district_id = '.$_GET['district_id'];
-		$sql .= " ORDER BY nurseries.id DESC";
+				WHERE ".$condition." ORDER BY nurseries.id DESC";
+		$nursery = new Nursery();
+        $data['nurseries'] = $nursery->sql_page($sql, 20);
+		$data['pagination'] = $nursery->sql_pagination;
 		
-		$nurseries = new Nursery();
-		$data['nurseries'] = $nurseries->sql($sql)->get_page();
-		$data['count'] = $nurseries->paged->total_rows;
+		// นับจำนวน
+		$sql = "SELECT
+				count(nurseries.id) total
+				FROM
+				nurseries
+				LEFT JOIN districts on nurseries.district_id = districts.id
+				LEFT JOIN amphures on nurseries.amphur_id = amphures.id
+				LEFT JOIN provinces on nurseries.province_id = provinces.id
+				WHERE ".$condition." ORDER BY nurseries.id DESC";
+		$data['count'] = $this->db->query($sql)->row();
+		
 		$this->template->build('register_center_index',$data);
 	}
 	
