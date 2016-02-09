@@ -69,12 +69,12 @@ $(document).ready(function(){
     	
 <form method="get" action="nurseries/reports/index/stacked_column">
 	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-	<?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),@$_GET['year'],'','--- เลือกปี ---');?>
+	<?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558','2559'=>'2559'),@$_GET['year'],'','--- เลือกปี ---');?>
 		
 	<?=form_dropdown('type',array('1'=>'สคร.','2'=>'จังหวัด','3'=>'อำเภอ','4'=>'ตำบล'),@$_GET['type'],'','--- แยกตาม ---');?>
 	
 	<span id="area" <?=(@$_GET['area_id'] == "")?'style="display:none;"':'';?>>
-	<?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),@$_GET['area_id'],'','--- เลือกสคร. ---');?>
+	<?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12','13'=>'สคร.13'),@$_GET['area_id'],'','--- เลือกสคร. ---');?>
 	</span>
 	
 	<span id="province" <?=(@$_GET['province_id'] == "")?'style="display:none;"':'';?>>
@@ -116,9 +116,9 @@ $(document).ready(function(){
 	<tbody>
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
-		        <td><?=($key+1)+$nurseries->paged->current_row?></td>
+		        <td><?$_GET['page'] = (@$_GET['page'] == "")?"1":@$_GET['page'];?><?=($key+1)+(20 * (@$_GET['page'] - 1));?></td>
 		        <td><?//=$nursery->nursery_category->title?><?=$nursery->name?></td>
-		        <td>ต.<?=$nursery->district->district_name?><br>อ.<?=$nursery->amphur->amphur_name?><br>จ.<?=$nursery->province->name?></td>
+		        <td>ต.<?=$nursery->district_name?><br>อ.<?=$nursery->amphur_name?><br>จ.<?=$nursery->province_name?></td>
 		        <td><?=$nursery->year?></td>
 		        <td>
 		        	<?php if($nursery->p_title == "นาย"):?>
@@ -132,4 +132,4 @@ $(document).ready(function(){
 		<?php endforeach;?>
 	</tbody>
 </table>
-<?=$nurseries->pagination();?>
+<?=$pagination;?>

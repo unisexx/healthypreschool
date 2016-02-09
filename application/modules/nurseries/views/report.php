@@ -154,12 +154,12 @@ $(function(){
     	
 <form method="get" action="nurseries/reports/index/basic_column">
 	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-	<?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556'),@$_GET['year'],'','--- ผลการดำเนินงานสะสม 3 ปี ---');?>
+	<?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558','2559'=>'2559'),@$_GET['year'],'','--- เลือกปี ---');?>
 		
 	<?=form_dropdown('type',array('1'=>'สคร.','2'=>'จังหวัด','3'=>'อำเภอ','4'=>'ตำบล'),@$_GET['type'],'','--- แยกตาม ---');?>
 	
 	<span id="area" <?=(@$_GET['area_id'] == "")?'style="display:none;"':'';?>>
-	<?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12'),@$_GET['area_id'],'','--- เลือกสคร. ---');?>
+	<?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12','13'=>'สคร.13'),@$_GET['area_id'],'','--- เลือกสคร. ---');?>
 	</span>
 	
 	<span id="province" <?=(@$_GET['province_id'] == "")?'style="display:none;"':'';?>>
@@ -174,15 +174,25 @@ $(function(){
 		<?=form_dropdown('district_id',get_option('id','district_name','districts','order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
 	</span>
 	
-	<?=form_dropdown('status',array('1'=>'เข้าร่วม','2'=>'ผ่านเกณฑ์','3'=>'รอประเมิน'),@$_GET['status'],'','--- สถานะ ---');?>
-	
+	<?//=form_dropdown('status',array('1'=>'เข้าร่วม','2'=>'ผ่านเกณฑ์','3'=>'รอประเมิน'),@$_GET['status'],'','--- สถานะ ---');?>
+	<input type="hidden" name="search" value="1">
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 	</div>
 </form>
 
-<div class='pull-right' <?=(@$_GET['type'] == 4)?"style='display:none;'":"";?>>
+
+
+
+
+<?if(@$_GET['search']==1): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
+
+
+
+
+
+<!-- <div class='pull-right' <?=(@$_GET['type'] == 4)?"style='display:none;'":"";?>>
 	<a href="nurseries/reports/index/basic_column?<?=$_SERVER['QUERY_STRING']?>"><div class="btn btn-mini">Basic Column</div></a> <a href="nurseries/reports/index/stacked_column?<?=$_SERVER['QUERY_STRING']?>"><div class="btn btn-mini">Stacked Column</div></a>
-</div>
+</div> -->
 
 <div class='pull-left' <?=(@!$_GET)?"style='display:none;'":"";?>>
 	<a class="btn btn-small" action="action" type="button" onclick="history.go(-1);" /><i class="icon-arrow-left"></i></a>
@@ -210,7 +220,13 @@ $(function(){
 
 
 
-
+<?
+	// search condition
+	$condition = "";
+	if(@$_GET['year']!=""){
+		@$condition.=" and v_nurseries.year = ".$_GET['year'];
+	}
+?>
 
 
 
@@ -229,23 +245,50 @@ $(function(){
 				<th>รอการประเมิน</th>
 				<?else:?>
 				<th>เข้าร่วม</th>
-				<th>ผ่านเกณฑ์</th>
 				<th>รอการประเมิน</th>
+				<th>ผ่านเกณฑ์</th>
 				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($provinces as $province):?>
 				<?php
-					if($_GET['year'] == ""){
-						$all = $province->nurseries->get()->result_count();
-						$pass = $province->nurseries->where("status = 1")->get()->result_count();
-						$not = $province->nurseries->where("status = 0")->get()->result_count();
-					}else{
-						$all = $province->nurseries->where("year = ".$_GET['year'])->get()->result_count();
-						$pass = $province->nurseries->where("year = ".$_GET['year']." and status = 1")->get()->result_count();
-						$not = $province->nurseries->where("year = ".$_GET['year']." and status = 0")->get()->result_count();
-					}
+						$sql = "SELECT
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.id = ".$province->id." ".@$condition."
+										) nursery_all,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.id = ".$province->id." ".@$condition."
+											AND v_nurseries.`status` = 1
+										) nursery_pass,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.id = ".$province->id." ".@$condition."
+											AND v_nurseries.`status` = 0
+										) nursery_not
+									";
+						$nursery = new V_nursery();
+						$nursery->query($sql);
+						$all = $nursery->nursery_all;
+						$pass = $nursery->nursery_pass;
+						$not = $nursery->nursery_not;
 				?>
 			<tr>
 				<th><?=$province->name?></th>
@@ -257,8 +300,8 @@ $(function(){
 				<td><?=convert_2_percent($not,$all)?></td>
 				<?else:?>
 				<td><?=convert_2_percent($all,$all)?></td>
-				<td><?=convert_2_percent($pass,$all)?></td>
 				<td><?=convert_2_percent($not,$all)?></td>
+				<td><?=convert_2_percent($pass,$all)?></td>
 				<?endif;?>
 			</tr>
 			<?php endforeach;?>
@@ -277,23 +320,50 @@ $(function(){
 				<th>รอการประเมิน</th>
 				<?else:?>
 				<th>เข้าร่วม</th>
-				<th>ผ่านเกณฑ์</th>
 				<th>รอการประเมิน</th>
+				<th>ผ่านเกณฑ์</th>
 				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($amphurs as $amphur):?>
 				<?php
-					if($_GET['year'] == ""){
-						$all = $amphur->nurseries->get()->result_count();
-						$pass = $amphur->nurseries->where("status = 1")->get()->result_count();
-						$not = $amphur->nurseries->where("status = 0")->get()->result_count();
-					}else{
-						$all = $amphur->nurseries->where("year = ".$_GET['year'])->get()->result_count();
-						$pass = $amphur->nurseries->where("year = ".$_GET['year']." and status = 1")->get()->result_count();
-						$not = $amphur->nurseries->where("year = ".$_GET['year']." and status = 0")->get()->result_count();
-					}
+						$sql = "SELECT
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.amphur_id= ".$amphur->id." ".@$condition."
+										) nursery_all,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.amphur_id = ".$amphur->id." ".@$condition."
+											AND v_nurseries.`status` = 1
+										) nursery_pass,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.amphur_id = ".$amphur->id." ".@$condition."
+											AND v_nurseries.`status` = 0
+										) nursery_not
+									";
+						$nursery = new V_nursery();
+						$nursery->query($sql);
+						$all = $nursery->nursery_all;
+						$pass = $nursery->nursery_pass;
+						$not = $nursery->nursery_not;
 				?>
 			<tr>
 				<th><?=$amphur->amphur_name?></th>
@@ -305,8 +375,8 @@ $(function(){
 				<td><?=convert_2_percent($not,$all)?></td>
 				<?else:?>
 				<td><?=convert_2_percent($all,$all)?></td>
-				<td><?=convert_2_percent($pass,$all)?></td>
 				<td><?=convert_2_percent($not,$all)?></td>
+				<td><?=convert_2_percent($pass,$all)?></td>
 				<?endif;?>
 			</tr>
 			<?php endforeach;?>
@@ -325,23 +395,50 @@ $(function(){
 				<th>รอการประเมิน</th>
 				<?else:?>
 				<th>เข้าร่วม</th>
-				<th>ผ่านเกณฑ์</th>
 				<th>รอการประเมิน</th>
+				<th>ผ่านเกณฑ์</th>
 				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($districts as $district):?>
 				<?php
-					if($_GET['year'] == ""){
-						$all = $district->nurseries->get()->result_count();
-						$pass = $district->nurseries->where("status = 1")->get()->result_count();
-						$not = $district->nurseries->where("status = 0")->get()->result_count();
-					}else{
-						$all = $district->nurseries->where("year = ".$_GET['year'])->get()->result_count();
-						$pass = $district->nurseries->where("year = ".$_GET['year']." and status = 1")->get()->result_count();
-						$not = $district->nurseries->where("year = ".$_GET['year']." and status = 0")->get()->result_count();
-					}
+						$sql = "SELECT
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.district_id= ".$district->id." ".@$condition."
+										) nursery_all,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.district_id = ".$district->id." ".@$condition."
+											AND v_nurseries.`status` = 1
+										) nursery_pass,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.district_id = ".$district->id." ".@$condition."
+											AND v_nurseries.`status` = 0
+										) nursery_not
+									";
+						$nursery = new V_nursery();
+						$nursery->query($sql);
+						$all = $nursery->nursery_all;
+						$pass = $nursery->nursery_pass;
+						$not = $nursery->nursery_not;
 				?>
 			<tr>
 				<th><?=$district->district_name?></th>
@@ -353,8 +450,8 @@ $(function(){
 				<td><?=convert_2_percent($not,$all)?></td>
 				<?else:?>
 				<td><?=convert_2_percent($all,$all)?></td>
-				<td><?=convert_2_percent($pass,$all)?></td>
 				<td><?=convert_2_percent($not,$all)?></td>
+				<td><?=convert_2_percent($pass,$all)?></td>
 				<?endif;?>
 			</tr>
 			<?php endforeach;?>
@@ -407,8 +504,8 @@ $(function(){
 				<th>รอการประเมิน</th>
 				<?else:?>
 				<th>เข้าร่วม</th>
-				<th>ผ่านเกณฑ์</th>
 				<th>รอการประเมิน</th>
+				<th>ผ่านเกณฑ์</th>
 				<!-- <th>จำนวนทั้งหมดในพื้นที่</th> -->
 				<?endif;?>
 			</tr>
@@ -416,10 +513,6 @@ $(function(){
 		<tbody>
 			<?php foreach($areas as $key=>$area):?>
 				<?php
-						$condition = "";
-						if(@$_GET['year']!=""){
-							@$condition.=" and v_nurseries.year = ".$_GET['year'];
-						}
 						$sql = "SELECT
 										(
 											SELECT
@@ -457,15 +550,15 @@ $(function(){
 			<tr>
 				<th><?=$area->area_name?></th>
 				<?if(@$_GET['status'] == 1):?>
-				<td><?=convert_2_percent($nursery->nursery_all,$nursery->nursery_all)?></td>
+				<td><?=convert_2_percent($nursery->nursery_all,$arrayTotalAll[$key])?></td>
 				<?elseif(@$_GET['status'] == 2):?>
 				<td><?=convert_2_percent($nursery->nursery_pass,$nursery->nursery_all)?></td>
 				<?elseif(@$_GET['status'] == 3):?>
 				<td><?=convert_2_percent($nursery->nursery_not,$nursery->nursery_all)?></td>
 				<?else:?>
-				<td><?=convert_2_percent($nursery->nursery_all,$nursery->nursery_all)?></td>
-				<td><?=convert_2_percent($nursery->nursery_pass,$nursery->nursery_all)?></td>
+				<td><?=convert_2_percent($nursery->nursery_all,$arrayTotalAll[$key])?></td>
 				<td><?=convert_2_percent($nursery->nursery_not,$nursery->nursery_all)?></td>
+				<td><?=convert_2_percent($nursery->nursery_pass,$nursery->nursery_all)?></td>
 				<!-- <td><?=convert_2_percent($arrayTotalAll[$key],$arrayTotalAll[$key])?></td> -->
 				<?endif;?>
 			</tr>
@@ -505,23 +598,50 @@ $(function(){
 				<th>รอการประเมิน (แห่ง)</th>
 				<?else:?>
 				<th>เข้าร่วม (แห่ง)</th>
-				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
+				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($provinces as $province):?>
 				<?php
-					if($_GET['year'] == ""){
-						$all = $province->nurseries->get()->result_count();
-						$pass = $province->nurseries->where("status = 1")->get()->result_count();
-						$not = $province->nurseries->where("status = 0")->get()->result_count();
-					}else{
-						$all = $province->nurseries->where("year = ".$_GET['year'])->get()->result_count();
-						$pass = $province->nurseries->where("year = ".$_GET['year']." and status = 1")->get()->result_count();
-						$not = $province->nurseries->where("year = ".$_GET['year']." and status = 0")->get()->result_count();
-					}
+						$sql = "SELECT
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.id = ".$province->id." ".@$condition."
+										) nursery_all,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.id = ".$province->id." ".@$condition."
+											AND v_nurseries.`status` = 1
+										) nursery_pass,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_provinces.id = ".$province->id." ".@$condition."
+											AND v_nurseries.`status` = 0
+										) nursery_not
+									";
+						$nursery = new V_nursery();
+						$nursery->query($sql);
+						$all = $nursery->nursery_all;
+						$pass = $nursery->nursery_pass;
+						$not = $nursery->nursery_not;
 				?>
 			<tr>
 				<th>
@@ -535,8 +655,8 @@ $(function(){
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=0"><?=$not?></a></td>
 				<?else:?>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>"><?=$all?></a></td>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=1"><?=$pass?></a></td>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=0"><?=$not?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=1"><?=$pass?></a></td>
 				<?endif;?>
 			</tr>
 			
@@ -556,8 +676,8 @@ $(function(){
 				<th><?=$totalNot?></th>
 				<?else:?>
 				<th><?=$totalAll?></th>
-				<th><?=$totalPass?></th>
 				<th><?=$totalNot?></th>
+				<th><?=$totalPass?></th>
 				<?endif;?>
 			</tr>
 		</tbody>
@@ -575,23 +695,50 @@ $(function(){
 				<th>รอการประเมิน (แห่ง)</th>
 				<?else:?>
 				<th>เข้าร่วม (แห่ง)</th>
-				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
+				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($amphurs as $amphur):?>
 				<?php
-					if($_GET['year'] == ""){
-						$all = $amphur->nurseries->get()->result_count();
-						$pass = $amphur->nurseries->where("status = 1")->get()->result_count();
-						$not = $amphur->nurseries->where("status = 0")->get()->result_count();
-					}else{
-						$all = $amphur->nurseries->where("year = ".$_GET['year'])->get()->result_count();
-						$pass = $amphur->nurseries->where("year = ".$_GET['year']." and status = 1")->get()->result_count();
-						$not = $amphur->nurseries->where("year = ".$_GET['year']." and status = 0")->get()->result_count();
-					}
+						$sql = "SELECT
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.amphur_id= ".$amphur->id." ".@$condition."
+										) nursery_all,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.amphur_id = ".$amphur->id." ".@$condition."
+											AND v_nurseries.`status` = 1
+										) nursery_pass,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.amphur_id = ".$amphur->id." ".@$condition."
+											AND v_nurseries.`status` = 0
+										) nursery_not
+									";
+						$nursery = new V_nursery();
+						$nursery->query($sql);
+						$all = $nursery->nursery_all;
+						$pass = $nursery->nursery_pass;
+						$not = $nursery->nursery_not;
 				?>
 			<tr>
 				<th>
@@ -605,8 +752,8 @@ $(function(){
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=0"><?=$not?></a></td>
 				<?else:?>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>"><?=$all?></a></td>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=1"><?=$pass?></a></td>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=0"><?=$not?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=1"><?=$pass?></a></td>
 				<?endif;?>
 			</tr>
 				<?php
@@ -625,8 +772,8 @@ $(function(){
 				<th><?=$totalNot?></th>
 				<?else:?>
 				<th><?=$totalAll?></th>
-				<th><?=$totalPass?></th>
 				<th><?=$totalNot?></th>
+				<th><?=$totalPass?></th>
 				<?endif;?>
 			</tr>
 		</tbody>
@@ -644,23 +791,50 @@ $(function(){
 				<th>รอการประเมิน (แห่ง)</th>
 				<?else:?>
 				<th>เข้าร่วม (แห่ง)</th>
-				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
+				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($districts as $district):?>
 				<?php
-					if($_GET['year'] == ""){
-						$all = $district->nurseries->get()->result_count();
-						$pass = $district->nurseries->where("status = 1")->get()->result_count();
-						$not = $district->nurseries->where("status = 0")->get()->result_count();
-					}else{
-						$all = $district->nurseries->where("year = ".$_GET['year'])->get()->result_count();
-						$pass = $district->nurseries->where("year = ".$_GET['year']." and status = 1")->get()->result_count();
-						$not = $district->nurseries->where("year = ".$_GET['year']." and status = 0")->get()->result_count();
-					}
+						$sql = "SELECT
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.district_id= ".$district->id." ".@$condition."
+										) nursery_all,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.district_id = ".$district->id." ".@$condition."
+											AND v_nurseries.`status` = 1
+										) nursery_pass,
+										(
+											SELECT
+												count(v_nurseries.id)
+											FROM
+												v_nurseries
+											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
+											WHERE
+												v_nurseries.district_id = ".$district->id." ".@$condition."
+											AND v_nurseries.`status` = 0
+										) nursery_not
+									";
+						$nursery = new V_nursery();
+						$nursery->query($sql);
+						$all = $nursery->nursery_all;
+						$pass = $nursery->nursery_pass;
+						$not = $nursery->nursery_not;
 				?>
 			<tr>
 				<th>
@@ -674,8 +848,8 @@ $(function(){
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=0"><?=$not?></a></td>
 				<?else:?>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>"><?=$all?></a></td>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=1"><?=$pass?></a></td>
 				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=0"><?=$not?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=1"><?=$pass?></a></td>
 				<?endif;?>
 			</tr>
 				<?php
@@ -694,8 +868,8 @@ $(function(){
 				<th><?=$totalNot?></th>
 				<?else:?>
 				<th><?=$totalAll?></th>
-				<th><?=$totalPass?></th>
 				<th><?=$totalNot?></th>
+				<th><?=$totalPass?></th>
 				<?endif;?>
 			</tr>
 		</tbody>
@@ -747,19 +921,15 @@ $(function(){
 				<th>รอการประเมิน (แห่ง)</th>
 				<?else:?>
 				<th>เข้าร่วม (แห่ง)</th>
-				<th>ผ่านเกณฑ์ (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
-				<!-- <th>จำนวนทั้งหมดในพื้นที่  (แห่ง)</th> -->
+				<th>ผ่านเกณฑ์ (แห่ง)</th>
+				<th>จำนวนทั้งหมดในพื้นที่  (แห่ง)</th>
 				<?endif;?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($areas as $key=>$area):?>
 				<?php
-						$condition = "";
-						if(@$_GET['year']!=""){
-							@$condition.=" and v_nurseries.year = ".$_GET['year'];
-						}
 						$sql = "SELECT
 										(
 											SELECT
@@ -804,9 +974,9 @@ $(function(){
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=0><?=$nursery->nursery_not?></a></td>
 				<?else:?>
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"><?=$nursery->nursery_all?></a></td>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=1&year=<?=@$_GET['year']?>"><?=$nursery->nursery_pass?></a></td>
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=0&year=<?=@$_GET['year']?>"><?=$nursery->nursery_not?></a></td>
-				<!-- <td><?=$arrayTotalAll[$key]?></td> -->
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=1&year=<?=@$_GET['year']?>"><?=$nursery->nursery_pass?></a></td>
+				<td><?=$arrayTotalAll[$key]?></td>
 				<?endif;?>
 			</tr>
 				<?php
@@ -825,11 +995,16 @@ $(function(){
 				<td><?=$totalNot?></td>
 				<?else:?>
 				<td><?=$totalAll?></td>
-				<td><?=$totalPass?></td>
 				<td><?=$totalNot?></td>
-				<!-- <td>20142</td> -->
+				<td><?=$totalPass?></td>
+				<td>20142</td>
 				<?endif;?>
 			</tr>
 		</tbody>
 	</table>
 <?php endif;?>
+
+
+
+
+<?endif;?>
