@@ -156,10 +156,10 @@ $(function(){
 		  <li><a href="users/register_center">เจ้าหน้าที่ศูนย์</a></li>
 		</ul> -->
 	
-    	<div class="alert alert-info" style="width:600px;">
+    	<!-- <div class="alert alert-info" style="width:600px;">
 		  <button type="button" class="close" data-dismiss="alert">&times;</button>
 		  <strong>ประกาศ!!!</strong> หลังจากสมัครสมาชิกแล้ว ผู้สมัครจะต้องรอการตรวจสอบจากเจ้าหน้าที่ก่อนจึงจะเข้าใช้งานระบบได้
-		</div>
+		</div> -->
 
         <form id="regisform" class="form-horizontal" method="post" action="users/signup">
         	<div class="control-group">

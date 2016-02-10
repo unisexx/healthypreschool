@@ -23,6 +23,15 @@ $(document).ready(function(){
     {
     	/*nursery_category_id:{required: true},*/
     	name:{required: true},
+    	province_id:{
+        	required: true
+        },
+        amphur_id:{
+        	required: true
+        },
+        district_id:{
+        	required: true
+        },
         email: 
         { 
             required: true,
@@ -48,6 +57,18 @@ $(document).ready(function(){
     {
     	/*nursery_category_id:{required: "กรุณาเลือกคำนำหน้าชื่อ"},*/
     	name:{required: "กรุณากรอกชื่อศูนย์เด็กเล็ก"},
+    	province_id: 
+        { 
+            required: "กรุณาเลือกจังหวัด"
+        },
+    	amphur_id: 
+        { 
+            required: "กรุณาเลือกอำเภอ"
+        },
+    	district_id: 
+        { 
+            required: "กรุณาเลือกตำบล"
+        },
         email: 
         { 
             required: "กรุณากรอกอีเมล์",
@@ -144,21 +165,21 @@ $(document).ready(function(){
             </div>
             
             <div class="control-group">
-                <label class="control-label">จังหวัด/อำเภอ/ตำบล</label>
+                <label class="control-label">จังหวัด/อำเภอ/ตำบล<span class="TxtRed">*</span></label>
                 <div class="controls">
                   <?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),@$nursery->province_id,'','--- เลือกจังหวัด ---') ?>
 	           	
-					<span id="amphur">
+					<div id="amphur" style="margin-top:10px;">
 						<?php if(@$nursery->amphur_id):?>
 							<?php echo form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.$nursery->province_id),@$nursery->amphur_id,'','--- เลือกอำเภอ ---') ?>
 						<?php endif;?>
-					</span>
+					</div>
 					
-					<span id="district">
+					<div id="district" style="margin-top:10px;">
 						<?php if(@$nursery->district_id):?>
 							<?php echo form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.$nursery->amphur_id),@$nursery->district_id,'','--- เลือกตำบล ---') ?>
 						<?php endif;?>
-					</span>
+					</div>
 					
                 </div>
             </div>

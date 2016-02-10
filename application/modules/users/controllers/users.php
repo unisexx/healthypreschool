@@ -79,6 +79,7 @@ class Users extends Public_Controller{
 				$_POST['nursery_id'] = $nursery->id;
 				$_POST['m_status'] = 'active';
 				$_POST['name'] = $_POST['p_name'].' '.$_POST['p_surname'];
+				$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['province_id']);
 				
 				$user = new User();
 	            $user->from_array($_POST);
@@ -89,7 +90,7 @@ class Users extends Public_Controller{
 	            {
 	                set_notify('success', 'ยินดีต้อนรับเข้าสู่ระบบค่ะ');
 					
-					redirect('teachers');
+					redirect('teachers?nursery_id='.$_POST['nursery_id']);
 	            }
 				
 				// set_notify('success', 'ลงทะเบียนเรียบร้อย');
