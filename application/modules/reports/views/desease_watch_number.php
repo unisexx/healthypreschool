@@ -221,6 +221,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	<input class="btn btn-primary" type="submit" value=" แสดง " style="margin-bottom: 10px;">
 </div>
 <?php }else{?>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="media/js/bootstrap/css/bootstrap.min.css" type="text/css">
     <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
     <link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">

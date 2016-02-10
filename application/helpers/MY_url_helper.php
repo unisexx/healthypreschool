@@ -10,4 +10,15 @@ function clean_url($text)
 	$text = @ereg_replace('(-)$', '', $text);
 	return $text;
 } 
+
+function GetCurrentUrlGetParameter($is_first_parameter=TRUE){
+	$parameter = '';
+	$pos = strrpos($_SERVER['REQUEST_URI'],'?');
+	if($pos > 0){
+		$tmp = explode('?',$_SERVER['REQUEST_URI']);
+		$parameter = $tmp[1];
+		$parameter = $is_first_parameter == FALSE ? '&'.$parameter : '?'.$parameter;
+	}
+	return $parameter;
+}
 ?>

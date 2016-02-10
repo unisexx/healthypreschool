@@ -1,4 +1,5 @@
 <?php
+	$parameter = GetCurrentUrlGetParameter();
     $xAxis='';
     $line_chart_category = '';
     $series = '';
@@ -425,13 +426,13 @@ $(function(){
     
     $('.btn-print-report').click(function(){
         var select_data = $('select[name=select_data]').val();
-        var url = 'reports/desease_watch_number?<?php $parameter;?>&export_type=print&select_data='+select_data;
+        var url = 'reports/desease_watch_number<?php echo $parameter;?>&export_type=print&select_data='+select_data;
         window.open(url);
     });
     
     $('.btn-excel-report').click(function(){
         var select_data = $('select[name=select_data]').val();
-        var url = 'reports/desease_watch_number?<?php $parameter;?>&export_type=excel&select_data='+select_data;
+        var url = 'reports/desease_watch_number<?php echo $parameter;?>&export_type=excel&select_data='+select_data;
         window.open(url);
     });
     
