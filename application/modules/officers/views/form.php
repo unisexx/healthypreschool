@@ -288,6 +288,7 @@ $(function(){
             </div>
             <div class="control-group">
                 <div class="controls">
+                  <input type="hidden" name="create_by_user_id" value="<?=user_login()->id?>">
                   <input type="submit" class="btn btn-small btn-info btnclickform" value="บันทึก">
                 </div>
             </div>

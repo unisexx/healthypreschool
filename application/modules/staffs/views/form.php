@@ -187,6 +187,7 @@ $(function(){
                   <input type="hidden" name="amphur_id" value="<?=@$nursery->amphur_id?>">
                   <input type="hidden" name="district_id" value="<?=@$nursery->district_id?>">
                   <input type="hidden" name="id" value="<?=@$user->id?>">
+                  <input type="hidden" name="create_by_user_id" value="<?=user_login()->id?>">
                   <input type="submit" class="btn btn-small btn-info" value="บันทึก">
                   <input type="button" class="btn btn-small btn-danger" value="ย้อนกลับ" onclick="history.back(-1)">
                 </div>

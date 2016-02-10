@@ -25,6 +25,7 @@
                   <?php echo form_referer() ?>
                   <input type="hidden" name="nursery_id" value="<?=$classroom->nursery_id == ''? $_GET['nursery_id'] : $classroom->nursery_id ;?>">
                   <input type="hidden" name="id" value="<?=$classroom->id?>">
+                  <input type="hidden" name="user_id" value="<?=user_login()->id?>"/>
                   <input type="submit" class="btn btn-small btn-info" value="บันทึก">
                   <input type="button" class="btn btn-small btn-danger" value="ย้อนกลับ" onclick="history.back(-1)">
                 </div>

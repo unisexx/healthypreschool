@@ -189,37 +189,6 @@ $(document).ready(function(){
 		$("#childrenData").html(ChildrenForm);
 		// jQuery_1_4_2("input.datepicker").date_input();
 	});
-	
-	
-	//------------------- Teacher Save Form ---------------------
-	$('.btnTeacherSubmitButton').live('click',function(){
-		$.post('classrooms/ajax_teacher_save',$("#teacherform").serialize(),function(data){
-			if(data != ""){
-				alert("บันทึกข้อมูลสำเร็จ");
-				$.get('home/ajax_get_teacher',{
-					'name' : data
-				},function(data){
-					$('#teacherData').html(data);
-				});
-			}
-			return false;
-		});
-	});
-	
-	//------------------- Children Save Form ---------------------
-	$('.btnChildrenSubmitButton').live('click',function(){
-		$.post('classrooms/ajax_children_save',$("#childrenform").serialize(),function(data){
-			if(data != ""){
-				alert("บันทึกข้อมูลสำเร็จ");
-				$.get('home/ajax_get_children',{
-					'name' : data
-				},function(data){
-					$('#childrenData').html(data);
-				});
-			}
-			return false;
-		});
-	});
 });
 </script>
 
@@ -274,7 +243,21 @@ $(function(){
 	        password: {required: "กรุณากรอกรหัสผ่าน",minlength: "กรุณากรอกรหัสผ่านอย่างน้อย 4 ตัวอักษร" },
 	        _password:{equalTo: "กรุณากรอกรหัสผ่านให้ตรงกันทั้ง 2 ช่อง" },
 	        captcha:{required: "กรุณากรอกตัวอักษรตัวที่เห็นในภาพ",remote: "กรุณากรอกตัวอักษรให้ตรงกับภาพ" }
-	    }
+	    },
+         submitHandler: function (form) {
+             // alert('valid form submission'); // for demo
+             $.post('classrooms/ajax_teacher_save',$("#teacherform").serialize(),function(data){
+				if(data != ""){
+					alert("บันทึกข้อมูลสำเร็จ");
+					$.get('home/ajax_get_teacher',{
+						'name' : data
+					},function(data){
+						$('#teacherData').html(data);
+					});
+				}
+				return false;
+			});
+         }
 	});
 });
 </script>
@@ -307,7 +290,7 @@ $(function(){
 			        </div>
 			    </div>
 			     <div class="control-group">
-			        <label class="control-label">อีเมล์</label>
+			        <label class="control-label">อีเมล์<span class="TxtRed">*</span></label>
 			        <div class="controls">
 			          <input class="input-xlarge" type="text" name="email" value="<?=@$teacher->email?>">
 			        </div>
@@ -333,6 +316,12 @@ $(function(){
 	            </div>
 			    <div class="control-group">
 	                <div class="controls">
+	                  <!-- บัญชีครูคนนี้ถูกสร้างครั้งแรกที่ไหน -->
+	                  <input type="hidden" name="area_province_id" value="<?=user_login()->area_province_id?>">
+	                  <input type="hidden" name="nursery_id" value="<?=user_login()->nursery_id?>">
+	                  <input type="hidden" name="create_by_user_id" value="<?=user_login()->id?>">
+	                  <!-- บัญชีครูคนนี้ถูกสร้างครั้งแรกที่ไหน -->
+	                  
 	                  <input type="hidden" name="m_status" value="active">
 	                  <input type="hidden" name="user_type_id" value="10">
 	                  <input type="submit" class="btn btn-small btn-info btnTeacherSubmitButton" value="บันทึก">
@@ -353,7 +342,7 @@ $(function(){
 <script type="text/javascript">
 $(function(){
 	 $.validator.addMethod("DateFormat", function(value,element) {
-    return value.match(/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/);
+    	return value.match(/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/);
         },
             "กรุณาใส่วันที่ตามตัวอย่างที่กำหนด วว/ดด/ปปปป"
         );
@@ -361,14 +350,28 @@ $(function(){
     $("#childrenform").validate({
 	    rules: 
 	    {
-	    	child_name: { required: true},
+	    	name: { required: true},
 	    	birth_date: { required: true , DateFormat: true}
 	    },
 	    messages:
 	    {
-	    	child_name: { required: "กรุณากรอกชื่อ - นามสกุล"},
+	    	name: { required: "กรุณากรอกชื่อ - นามสกุล"},
 	    	birth_date: { required: "กรุณาระบุวันเกิด"}
-	    }
+	    },
+         submitHandler: function (form) {
+             // alert('valid form submission'); // for demo
+             $.post('classrooms/ajax_children_save',$("#childrenform").serialize(),function(data){
+				if(data != ""){
+					alert("บันทึกข้อมูลสำเร็จ");
+					$.get('home/ajax_get_children',{
+						'name' : data
+					},function(data){
+						$('#childrenData').html(data);
+					});
+				}
+				return false;
+			});
+         }
 	});
 });
 </script>
@@ -398,6 +401,7 @@ $(function(){
 			</div>
 		    <div class="control-group">
                 <div class="controls">
+                  <input type="hidden" name="create_by_user_id" value="<?=user_login()->id?>">
                   <input type="submit" class="btn btn-small btn-info btnChildrenSubmitButton" value="บันทึก">
                 </div>
             </div>

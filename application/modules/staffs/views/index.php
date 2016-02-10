@@ -133,7 +133,7 @@ $(document).ready(function(){
             <td>จ.<?=$user->province_name?><br>อ.<?=$user->amphur_name?><br>ต.<?=$user->district_name?></td>
             <td><?=mysql_to_th($user->created)?></td>
             <td>
-            	<a class="btn btn-mini" href="staffs/form/<?=$user->nursery_id?>">เพิ่มเจ้าหน้าที่ครู</a>
+            	<!-- <a class="btn btn-mini" href="staffs/form/<?=$user->nursery_id?>">เพิ่มเจ้าหน้าที่ครู</a> -->
                 <a class="btn btn-mini" href="staffs/form/<?=$user->nursery_id?>/<?=$user->id?>">แก้ไข</a>
                 <a class="btn btn-mini" href="staffs/delete/<?=$user->id?>" style="width:27px;" onclick="return confirm('<?php echo lang('notice_confirm_delete');?>')">ลบ</a>
             </td>

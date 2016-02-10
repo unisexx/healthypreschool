@@ -214,3 +214,14 @@ th,th a{
     background-color: #0088CC !important;
     color: white !important;
 }
+
+#search_report {
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+#search_report>div {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

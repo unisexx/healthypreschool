@@ -61,7 +61,7 @@ class Staffs extends Public_Controller
 							LEFT JOIN v_provinces ON v_users.area_province_id = v_provinces.area_province_id
 							LEFT JOIN amphures ON v_users.amphur_id = amphures.id
 							LEFT JOIN districts ON v_users.district_id = districts.id
-							WHERE  ".$condition;
+							WHERE  ".$condition." order by id desc";
 		
 				$user = new User();
 		        $data['users'] = $user->sql_page($sql, 20);

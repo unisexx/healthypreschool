@@ -14,8 +14,36 @@ class Classrooms extends Public_Controller{
 			$classroom->where('user_id = '.user_login()->id);
 		}
 		$data['classes'] = $classroom->order_by('id','desc')->get_page();
+		
+		// $classroom = new Classroom();
+        // $data['classes'] = $classroom->sql_page($sql, 20);
+		// $data['pagination'] = $classroom->sql_pagination;
     	$this->template->build('index',$data);
     }
+	
+	function classroom_teacher(){
+		$condition = " 1=1 ";
+		if(@$_GET['year']){ @$condition.=" and classroom_teachers.`year` = ".$_GET['year'];  }
+		if(@$_GET['room_name']){ @$condition .= " and classrooms.room_name like '%".$_GET['room_name']."%'"; }
+		
+		$sql = "SELECT
+			classrooms.id,
+			classrooms.room_name,
+			classroom_teachers.`year`,
+			(select count(id) from classroom_childrens WHERE classroom_id = classrooms.id AND `year` = classroom_teachers.`year` ) children_count
+			FROM
+			classrooms
+			LEFT JOIN classroom_teachers ON classrooms.id = classroom_teachers.classroom_id 
+			WHERE
+			".$condition."
+			and classroom_teachers.user_id = ".user_login()->id."
+		";
+		
+		$classroom = new Classroom();
+        $data['classes'] = $classroom->sql_page($sql, 20);
+		$data['pagination'] = $classroom->sql_pagination;
+		$this->template->build('classroom_teacher',$data);
+	}
 	
 	function form($id=false){
 		$data['classroom'] = new Classroom($id);
