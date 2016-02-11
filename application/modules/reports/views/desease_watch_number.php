@@ -97,8 +97,6 @@ tbody>tr>th{
     width:150px !important;
 }
 </style>
-<?php $arrayMonth = array('1' => 'มกราคม', '2' => 'กุมภาพันธ์', '3' => 'มีนาคม', '4' => 'เมษายน', '5' => 'พฤษภาคม', '6' => 'มิถุนายน', '7' => 'กรกฎาคม', '8' => 'สิงหาคม', '9' => 'กันยายน', '10' => 'ตุลาคม', '11' => 'พฤศจิกายน', '12' => 'ธันวาคม',);?>
-
 <?php 
 if(@$_GET['export_type']==''){
 ?>
@@ -236,7 +234,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 <?php if(@$_GET): ?>
 <div style="text-align:right;padding-top:30px;">ข้อมูล ณ วันที่ <?php echo mysql_to_th(date("Y-m-d H:i:s"));?></div>
 <div id="report_header" style="text-align:center;">    
-    <h4>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>
+    <h4>รายงานจำนวนเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>
     <?php
     if(@$_GET['area_id']=='' && @$_GET['province_id']==''){
         echo '<h5>จำแนกตามพื้นที่ สคร. 13 เขต </h5>';
