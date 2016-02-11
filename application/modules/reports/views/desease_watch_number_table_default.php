@@ -119,7 +119,6 @@
             <td colspan="4" style="width:650px;" class="th_datatable col_total" >
                                             รวม
             </td>
-            
             <?php
             if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
                 foreach($area as $area_row):

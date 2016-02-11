@@ -112,33 +112,23 @@
             <?php
             if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
                 foreach($area as $area_row):
-                    $xAxis .= $xAxis == '' ? "'".$area_row->area_name."'" : ",'".$area_row->area_name."'";
-                    $line_chart_category .= $line_chart_category == '' ? "'".$area_row->area_name."'" : ",'".$area_row->area_name."'";
                     echo '<td colspan="4"  class="th_datatable col_area col_area_'.$area_row->id.'" >'.$area_row->area_name.'</td>';
                 endforeach;
             }else if(@$_GET['area_id']!=''&&@$_GET['province_id']==''){
                 foreach($province as $province_row):
-                    $xAxis .= $xAxis == '' ? "'".$province_row->name."'" : ",'".$province_row->name."'";
-                    $line_chart_category .= $line_chart_category == '' ? "'".$province_row->name."'" : ",'".$province_row->name."'";
                     echo '<td colspan="4"  class="th_datatable col_province col_province_'.$province_row->id.'" >'.$province_row->name.'</td>';
                 endforeach;
             }else if(@$_GET['province_id']!=''&&@$_GET['amphur_id']==''){
                 foreach($amphur as $amphur_row):
-                    $xAxis .= $xAxis == '' ? "'".$amphur_row->amphur_name."'" : ",'".$amphur_row->amphur_name."'";
-                    $line_chart_category .= $line_chart_category == '' ? "'".$amphur_row->amphur_name."'" : ",'".$amphur_row->amphur_name."'";
                     echo '<td colspan="4"  class="th_datatable col_amphur col_amphur_'.$amphur_row->id.'">'.$amphur_row->amphur_name.'</td>';
                 endforeach;
             }else if(@$_GET['amphur_id']!=''&&@$_GET['district_id']==''){
                 foreach($district as $district_row):
-                    $xAxis .= $xAxis == '' ? "'".$district_row->district_name."'" : ",'".$district_row->district_name."'";
-                    $line_chart_category .= $line_chart_category == '' ? "'".$district_row->district_name."'" : ",'".$district_row->district_name."'";
                     echo '<td colspan="4"  class="th_datatable col_district col_district_'.$district_row->id.'" >'.$district_row->district_name.'</td>';
                 endforeach;
             }else if(@$_GET['district_id']!=''){
                 $xAxis .= $xAxis == '' ? "'พื้นที่ชุมชุน'" : ",'พื้นที่ชุมชุน'";
                 foreach($nursery as $nursery_row):
-                    $xAxis .= $xAxis == '' ? "'".$nursery_row->name."'" : ",'".$nursery_row->name."'";
-                    $line_chart_category .= $line_chart_category == '' ? "'".$nursery_row->name."'" : ",'".$nursery_row->name."'";
                     echo '<td colspan="4"  class="th_datatable col_nursery col_nursery_'.$nursery_row->id.'" >'.$nursery_row->name.'</td>';
                 endforeach;
             }
@@ -266,7 +256,10 @@
             ?>
         </tr>    
         <?php 
-        for($i_month=1;$i_month<=12;$i_month++):            
+        for($i_month=1;$i_month<=12;$i_month++):
+            $month_name = month_th($i_month);      
+            $xAxis .= $xAxis == '' ? "'".$month_name."'" : ",'".$month_name."'";
+            $line_chart_category .= $line_chart_category == '' ? "'".$month_name."'" : ",'".$month_name."'";      
             $condition = " AND month(start_date) = ".$i_month;
             $condition.= @$_GET['disease']!='' ? " AND disease = ".@$_GET['disease'] : "";
             $condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
@@ -279,7 +272,7 @@
         ?>
           <tr class="month_total">
             <th>
-                <?php echo $month_desc = month_th($i_month);?>                
+                <?php echo $month_name;?>             
             </th>
             <?php            
                 report_desease_watch_report_column($year_age,$display_mode,'col_total');
@@ -327,7 +320,9 @@
             ?>
         </tr>       
         <?php
-            foreach($desease as $desease_row):          
+            $series_idx = 0;
+            foreach($desease as $desease_row):
+            $series_idx++;                     
             $condition = " AND disease = ".$desease_row->id." AND month(start_date) = ".$i_month;
 			$condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';	
             $condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
@@ -352,9 +347,12 @@
                 <?php }else{ ?>
                     <?php echo $desease_row->desease_name;?>
                 <?php } ?>
+                <?php $series[$series_idx]['name'] = $desease_row->desease_name;?>
             </th>
             <?php
             report_desease_watch_report_column($desease_age,$display_mode,'col_total');
+            $series[$series_idx]['data'] = @$series[$series_idx]['data'] != '' ? $series[$series_idx]['data'].',' :'';
+            $series[$series_idx]['data'].= number_format(@$desease_age[0]->n_event,0);
             ?>      
             <?php 
                 $condition = $year_condition." AND disease = ".$desease_row->id." AND month(start_date) = ".$i_month;
@@ -364,7 +362,7 @@
                         $ex_condition = " AND area_id = ".$area_row->id;
                         $sql = get_desease_watch_sql($condition.$ex_condition);                        
                         $desease_age = $this->db->query($sql)->result();
-                        report_desease_watch_report_column($desease_age,$display_mode,'col_area col_area_'.$area_row->id);           
+                        report_desease_watch_report_column($desease_age,$display_mode,'col_area col_area_'.$area_row->id);                                  
                     endforeach;
                 }else if(@$_GET['area_id']!='' && @$_GET['province_id']==''){
                     foreach($province as $province_row):                
@@ -541,12 +539,116 @@ $(function(){
         var select_col = $(this).val();
         hide_data_col();
         show_data_col(select_col);
-    })
+    });
     
     $(".desease_name").live('click',function(){
         var tr = "tr_" + $(this).attr('id');
         $('.'+tr).toggle();
-    })     
+    });
+    
+    $('#stack-chart').highcharts({
+        chart: {
+            type: 'column'
+        },
+        exporting: { enabled: false },
+        title: {
+            text: ''
+        },
+        xAxis: {
+            categories: [<?php echo $xAxis;?>]
+        },
+        yAxis: {
+            min: 0,
+            allowDecimals: false,
+            <?php if(@$_GET['disease']==''){?>
+                title: {
+                text: 'สัดส่วนจำนวนของเหตุการณ์'
+            },
+            <?php }else{ ?>
+            title: {
+                text: 'จำนวนของเหตุการณ์'
+            },
+            <?php } ?>
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        legend: {
+            
+        },
+        tooltip: {
+            formatter: function () {
+                <?php if(@$_GET['disease']==''){?>
+                return '<b>' + this.x + '</b><br/>' +
+                    this.series.name + ': ' + this.y + '<br/>' +
+                    'Total: ' + this.point.stackTotal;
+                <?php }else{ ?>
+                return '<b>' + this.x + '</b><br/>' +
+                    this.series.name + ': ' + this.y;
+                <?php } ?>
+            }
+        },
+        plotOptions: {
+            column: {
+                <?php if(@$_GET['disease']==''){?>
+                stacking: 'percent',
+                dataLabels: {
+                    enabled: true,
+                    formatter: function() {
+                        return Math.round(this.percentage*100)/100 + ' %';
+                    },
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black'
+                }
+                <?php } ?>
+            }
+        },
+        series: [
+            <?php 
+            $series_txt = '';
+            for($i=1;$i<=$series_idx;$i++):
+                $series_txt.= $series_txt !='' ? ',' : '';
+                $series_txt.="{name: '".$series[$i]['name']."', data: [".$series[$i]['data']."]}";
+            endfor;
+            echo $series_txt;
+            ?>
+        ]
+    });
+    
+    $('#line-chart').highcharts({
+        title: {
+            text: ''            
+        },        
+        xAxis: {
+            categories: [<?php echo $line_chart_category;?>]
+        },
+        yAxis: {
+            title: {
+                text: 'จำนวนของเหตุการณ์'
+            },
+            allowDecimals: false
+        },
+        exporting: { enabled: false },
+        tooltip: {
+            
+        },
+        legend: {
+            
+        },
+        series: [
+            <?php 
+            $series_txt = '';
+            for($i=1;$i<=$series_idx;$i++):
+                $series_txt.= $series_txt !='' ? ',' : '';
+                $series_txt.="{name: '".$series[$i]['name']."', data: [".$series[$i]['data']."]}";
+            endfor;
+            echo $series_txt;
+            ?> 
+        ]       
+    }); 
     
 });
 <?php if(@$_GET['export_type']=='print'):?>

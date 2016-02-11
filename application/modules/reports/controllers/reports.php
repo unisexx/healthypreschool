@@ -88,7 +88,15 @@ class Reports extends Public_Controller {
 
     function desease_watch_symptom(){
         $data = '';
-        $this->template->build('desease_watch_symptom',$data);
+        if(@$_GET['export_type']!=''){
+            if(@$_GET['export_type']=='excel'){
+                $filename= "รายงานกลุ่มอาการป่วยจากข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ".date("Y-m-d_H_i_s").".xls";
+                header("Content-Disposition: attachment; filename=".$filename);
+            }
+            $this->load->view('desease_watch_symptom',$data);
+        }else{
+            $this->template->build('desease_watch_symptom',$data);    
+        }
     }
 
     function desease_watch_symptom_table_default(){

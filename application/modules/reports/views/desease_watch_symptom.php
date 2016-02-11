@@ -1,3 +1,17 @@
+<?php
+switch(@$_GET['place_type']){
+    case '2':
+        $place_type_name = 'พื้นที่ชุมชน';
+        break;
+    case '1':
+        $place_type_name = 'ศูนย์เด็กเล็ก';
+        break;
+    default:
+        $place_type_name = 'ทั้งหมด';
+        break;
+}
+?>
+<base href="<?php echo base_url(); ?>" />
 <style type="text/css">
 #search_report>div{
     padding-top:10px;
@@ -5,33 +19,17 @@
 }
 
 #datatable{
-  /*table-layout: fixed;*/
-  *margin-left: -326px;/*ie7*/
 }
 #datatable td, th {
-  vertical-align: top;
-  /*border-top: 1px solid #ccc;*/
+  vertical-align: middle;
   padding:10px;
 }
 #datatable th {
-  position:absolute;
-  *position: relative; /*ie7*/
-    left: 0;
-    width: 172px;
-    border-right: 1px solid #ccc;
-    margin-top: 0px;
-    font-weight: normal;
-    padding: 10px;
-    font-weight:normal;
+  
     }
     .outer {
-        position: relative
     }
     .inner {
-        overflow-x: scroll;
-        overflow-y: visible;
-        width:752px;
-        margin-left: 192px;
     }
     .th_datatable {
         background: #0088CC !important;
@@ -81,9 +79,11 @@ tbody>tr>th{
 }
 
 </style>
+<?php 
+if(@$_GET['export_type']==''){
+?>
 <!-- load jQuery 1.4.2 -->
 <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
-
 <link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
 <script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
 <script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
@@ -146,7 +146,7 @@ jQuery_1_4_2("input.datepicker").date_input();
             <select name="range_type">
                 <option value="">--ไม่ระบุ--</option>
                 <option value="year" <?php echo $selected = @$_GET['range_type']=='year' ?  'selected="selected"':'';?>>ระหว่างปี</option>
-                <option value="month_year" <?php echo $selected = @$_GET['range_type']=='month_year' ?  'selected="selected"':'';?>>รายเดือนของปี</option>
+                <!--<option value="month_year" <?php echo $selected = @$_GET['range_type']=='month_year' ?  'selected="selected"':'';?>>รายเดือนของปี</option>-->
                 <option value="time" <?php echo $selected = @$_GET['range_type']=='time' ?  'selected="selected"':'';?>>ช่วงวันที่</option>
             </select>
         </span>
@@ -199,8 +199,23 @@ jQuery_1_4_2("input.datepicker").date_input();
     </div>
     <input class="btn btn-primary" type="submit" value=" แสดง " style="margin-bottom: 10px;">
 </div>
-<div id="report_header" style="text-align:center;padding:30px;">
-    <h4>รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>
+<?php }else{?>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="media/js/bootstrap/css/bootstrap.min.css" type="text/css">
+    <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
+    <link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
+    <script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
+    <script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script src="http://code.highcharts.com/modules/offline-exporting.js"></script>
+    <script type="text/javascript" src="media/js/rgbcolor.js"></script>
+    <script type="text/javascript" src="media/js/canvg.js"></script>
+<?php } ?>    
+<?php if(@$_GET): ?>
+<div style="text-align:right;padding-top:30px;">ข้อมูล ณ วันที่ <?php echo mysql_to_th(date("Y-m-d H:i:s"));?></div>
+<div id="report_header" style="text-align:center;">  
+    <h4>รายงานกลุ่มอาการป่วยจากข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>
     <?php
     if(@$_GET['area_id']=='' && @$_GET['province_id']==''){
         echo '<h5>จำแนกตามพื้นที่ สคร. 13 เขต </h5>';
@@ -220,6 +235,7 @@ jQuery_1_4_2("input.datepicker").date_input();
         $district_title = $this->db->query('select * from districts where id = '.$_GET['district_id'])->result();
         echo '<h5>จำแนกตามศูนย์เด็กเล็กและโรงเรียนอนุบาล ในเขตพื้นที่ แขวง/ตำบล '.$district_title[0]->district_name.' เขต/อำเภอ '.$amphur_title[0]->amphur_name.' จังหวัด '.$province_title[0]->name.'</h5>';
     }
+    echo '<h5>พื้นที่ที่เกิดโรค '.$place_type_name.'</h5>';
 
     switch(@$_GET['range_type']){
         case 'year':
@@ -256,19 +272,20 @@ jQuery_1_4_2("input.datepicker").date_input();
 <?php
     switch(@$_GET['range_type']){
         case 'year':
-            echo Modules::run("reports/desease_watch_symptom_table_year");
+            echo Modules::run("reports/desease_watch_symptom_table_default");
         break;
         case 'month_year':
             echo Modules::run("reports/desease_watch_symptom_table_month_year");
         break;
         case 'time':
-            echo Modules::run("reports/desease_watch_symptom_table_time");
+            echo Modules::run("reports/desease_watch_symptom_table_default");
         break;
         default:
             echo Modules::run("reports/desease_watch_symptom_table_default");
         break;
     }
 ?>
+<?php endif;?>
 <script>
 $(document).ready(function() {
     $("select[name='area_id']").live("change",function(){
