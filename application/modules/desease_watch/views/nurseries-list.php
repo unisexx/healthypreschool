@@ -102,7 +102,25 @@ if(!empty($_GET) && @$_GET['search']!='') {
                                           echo '</td>';
                                           echo '<td>'.$item->year.'</td>';
                                           echo '<td>'.$chifeDevCen.'</td>';
-                                          echo '<td>'.$item->status.'</td>';
+                                          echo '<td>';
+                                          if($item->status == 0):
+                                            if($item->assessments_total != 0):                                                
+                                                echo '<span style="color:#D14">ไม่ผ่านเกณฑ์ <br>('.$item->assessments_total.'คะแนน)</span>';
+                                            else:
+                                                echo 'รอการประเมิน';
+                                            endif;
+                                          else:
+                                            echo '<span style="color:teal">';
+                                            if($item->approve_year != 0):
+                                                echo 'ผ่านเกณฑ์ <br>(พ.ศ. '.$item->approve_year.')<br>';
+                                                echo '<span style="color:#d14;">หมดอายุปี  '.($item->approve_year + 3).'</span>';
+                                            else:
+                                                echo 'ผ่านเกณฑ์ <br>(<?=$item->assessments_total?> คะแนน)<br>';
+                                                echo '<span style="color:#d14;">หมดอายุปี '.date("Y", (strtotime($item->approve_date) + 546)).'</span>';                                            
+                                            endif;
+                                            echo '</span>';
+                                          endif;
+                                          echo '</td>';
                                           echo '<td><button class="btn btn-default btnSelectNursery" code="'.$item->code.'" rel="'.$item->id.'">เลือก</button></td>';
                                     echo '</tr>';
                               }
