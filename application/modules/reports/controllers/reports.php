@@ -87,7 +87,25 @@ class Reports extends Public_Controller {
     }
 
     function desease_watch_symptom(){
-        $data = '';
+        
+        $start_date = @$_GET['start_date']!='' ? @$_GET['start_date'] : '';
+        $end_date = @$_GET['end_date']!='' ? @$_GET['end_date'] : '';
+        if($start_date!='' && $end_date != ''){
+            $time_condition = " AND date(start_date) BETWEEN '".Date2DB($start_date)."' AND '".Date2DB($end_date)."' ";
+        }else if($start_date!='' && $end_date==''){
+            $time_condition = " AND date(start_date) >= '".Date2DB($start_date)."' ";
+        }else if($start_date=='' && $end_date!=''){
+            $time_condition = " AND date(start_date) <= '".Date2DB($start_date)."' ";
+        }else{
+            $time_condition = '';
+        } 
+        $data['time_condition'] = $time_condition;
+        
+        $list_condition = "";
+        $list_condition.= @$_GET['desease']!='' ? " AND desease = ".$_GET['desease'] : '';
+        $list_condition.= @$_GET['place_type']!='' ? " AND place_type = ".$_GET['place_type'] : '';
+        $list_condition.= $time_condition;
+        $data['list_condition'] = $list_condition;
         if(@$_GET['export_type']!=''){
             if(@$_GET['export_type']=='excel'){
                 $filename= "รายงานกลุ่มอาการป่วยจากข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ".date("Y-m-d_H_i_s").".xls";

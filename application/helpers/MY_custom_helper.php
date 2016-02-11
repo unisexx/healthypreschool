@@ -258,17 +258,26 @@ function get_desease_watch_sql($condition){
                     return $sql;
 }
 
-function report_desease_watch_symptom_report_column($sql,$mode='all'){    
+function report_desease_watch_symptom_report_column($sql,$mode='all',$col_class_name=''){    
         $CI = &get_instance();
         if($mode=='all'){
-            $all = $CI->db->query($sql.' and place_type = 1 ')->result();
-            echo $column =$all[0]->n_symptom > 0 ?'<td style="width:100px;">'.$all[0]->n_symptom.'</td>' : '<td style="width:100px;">&nbsp;</td>';
+            $all = $CI->db->query($sql)->result();
+            echo $column =$all[0]->n_symptom > 0 ?'<td style="width:250px;" class="'.$col_class_name.'">'.$all[0]->n_symptom.'</td>' : '<td style="width:250px;" class="'.$col_class_name.'">&nbsp;</td>';
         }else if($mode=='school'){
             $school = $CI->db->query($sql.' and place_type = 1 ')->result();
-            echo $column =$school[0]->n_symptom > 0 ?'<td style="width:100px;">'.$school[0]->n_symptom.'</td>' : '<td style="width:100px;">&nbsp;</td>';
+            echo $column =$school[0]->n_symptom > 0 ?'<td style="width:100px;" class="'.$col_class_name.'">'.$school[0]->n_symptom.'</td>' : '<td style="width:100px;" class="'.$col_class_name.'">&nbsp;</td>';
         }else if($mode=='community'){
             $community = $CI->db->query($sql.' and place_type = 2 ')->result();
-            echo $column =$community[0]->n_symptom > 0 ?'<td style="width:100px;">'.$community[0]->n_symptom.'</td>' : '<td style="width:100px;">&nbsp;</td>';
+            echo $column =$community[0]->n_symptom > 0 ?'<td style="width:100px;" class="'.$col_class_name.'">'.$community[0]->n_symptom.'</td>' : '<td style="width:100px;" class="'.$col_class_name.'">&nbsp;</td>';
         }
+}
+
+function count_desease_watch_event($condition){
+    $n_event = 0;
+    $sql = " SELECT COUNT(*)n_event FROM v_disease_watch WHERE 1=1 ".$condition;
+    $CI = &get_instance();
+    $result = $CI->db->query($sql)->result();
+    $n_event = $result[0]->n_event;
+    return $n_event;
 }
 ?>

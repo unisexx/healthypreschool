@@ -37,11 +37,22 @@
     }
     $start_date = @$_GET['start_date']!='' ? @$_GET['start_date'] : '';
     $end_date = @$_GET['end_date']!='' ? @$_GET['end_date'] : '';
+    
+    $list_condition = "";    
+    $list_condition.= @$_GET['disease']!='' ? " AND disease = ".$_GET['disease'] : '';
+    $list_condition.= @$_GET['place_type']!='' ? " AND place_type = ".$_GET['place_type'] : '';
+    $list_condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
+    $list_condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND province_id = ".@$_GET['province_id'] : '';
+    $list_condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND amphur_id = ".@$_GET['amphur_id'] : '';
+    $list_condition.= @$_GET['district_id']!='' ? " AND district_id = ".@$_GET['district_id'] : '';
+    
+    $time_condition = '';
     switch (@$_GET['range_type']) {
         case 'year':
             $start_year = @$_GET['report_end_year']!='' ? @$_GET['report_end_year'] : date("Y");
             $end_year =   @$_GET['report_start_year']!='' ? @$_GET['report_start_year'] : $start_year-5;
-            //$time_condition = " AND (year(start_date) between ".$end_year." AND ".$start_year.")";
+            $time_condition = " AND (year(start_date) between ".$end_year." AND ".$start_year.")";
+            
             break;
         case'month_year':
         break; 
@@ -57,6 +68,7 @@
             }
             break;
     }
+    $list_condition.= $time_condition; 
 ?>
 <?php if(@$_GET['export_type']==''):?>
   <div style="float:left;text-align:right;width:100%;padding-top:10px;padding-bottom: 10px;">
@@ -89,27 +101,27 @@
         <div class="input-prepend">
         <span class="add-on">เลือกดูตามพื้นที่</span>
         <select name="select_data" class="form-control">
-            <option value="col_total">รวม</option>
+            <option value="col_total">รวม <?php echo ' [ '.count_desease_watch_event($list_condition).' เหตุการณ์ ]';?></option>
                 <?php
                     if(@$_GET['area_id']=='' && @$_GET['province_id']==''){ 
                         foreach($area as $area_row):
-                            echo '<option value="col_area_'.$area_row->id.'" >'.$area_row->area_name.'</option>';
+                            echo '<option value="col_area_'.$area_row->id.'" >'.$area_row->area_name.' [ '.count_desease_watch_event($list_condition." AND area_id = ".$area_row->id).' เหตุการณ์ ]'.'</option>';
                         endforeach;
-                    }else if(@$_GET['area_id']!=''&& @$_GET['province_id']==''){
+                    }else if(@$_GET['area_id']!=''&&@$_GET['province_id']==''){
                         foreach($province as $province_row):                    
-                            echo '<option value="col_province_'.$province_row->id.'" >'.$province_row->name.'</option>';
+                            echo '<option value="col_province_'.$province_row->id.'" >'.$province_row->name.' [ '.count_desease_watch_event($list_condition." AND province_id = ".$province_row->id).' เหตุการณ์ ]'.'</option>';
                         endforeach;
-                    }else if(@$_GET['province_id']!=''&& @$_GET['amphur_id']==''){
+                    }else if(@$_GET['province_id']!=''&&@$_GET['amphur_id']==''){
                         foreach($amphur as $amphur_row):                    
-                            echo '<option value="col_amphur_'.$amphur_row->id.'">'.$amphur_row->amphur_name.'</option>';
+                            echo '<option value="col_amphur_'.$amphur_row->id.'">'.$amphur_row->amphur_name.' [ '.count_desease_watch_event($list_condition." AND amphur_id = ".$amphur_row->id).' เหตุการณ์ ]'.'</option>';
                         endforeach;
-                    }else if(@$_GET['amphur_id']!=''&& @$_GET['district_id']==''){
+                    }else if(@$_GET['amphur_id']!=''&&@$_GET['district_id']==''){
                         foreach($district as $district_row):                    
-                            echo '<option value="col_district_'.$district_row->id.'" >'.$district_row->district_name.'</option>';
+                            echo '<option value="col_district_'.$district_row->id.'" >'.$district_row->district_name.' [ '.count_desease_watch_event($list_condition." AND district_id = ".$district_row->id).' เหตุการณ์ ]'.'</option>';
                         endforeach;
                     }else if(@$_GET['district_id']!=''){                
                         foreach($nursery as $nursery_row):                    
-                            echo '<option value="col_nursery_'.$nursery_row->id.'" >'.$nursery_row->name.'</option>';
+                            echo '<option value="col_nursery_'.$nursery_row->id.'" >'.$nursery_row->name.' [ '.count_desease_watch_event($list_condition." AND nurseries_id = ".$nursery_row->id).' เหตุการณ์ ]'.'</option>';
                         endforeach;
                     }
                     ?>
@@ -128,7 +140,7 @@
             <th>
                                             พื้นที่
             </th>
-            <td colspan="5" style="width:650px;" class="th_datatable col_total" >
+            <td colspan="<?php echo $desease->count();?>" style="width:650px;" class="th_datatable col_total" >
                                             รวม
             </td>            
             <?php
@@ -136,31 +148,31 @@
                 foreach($area as $area_row):
                     //$xAxis .= $xAxis == '' ? "'".$area_row->area_name."'" : ",'".$area_row->area_name."'";
                     //$line_chart_category .= $line_chart_category == '' ? "'".$area_row->area_name."'" : ",'".$area_row->area_name."'";
-                    echo '<td colspan="'.count($desease).'"  class="th_datatable col_area col_area_'.$area_row->id.'" >'.$area_row->area_name.'</td>';
+                    echo '<td colspan="'.$desease->count().'"  class="th_datatable col_area col_area_'.$area_row->id.'" >'.$area_row->area_name.'</td>';
                 endforeach;
             }else if(@$_GET['area_id']!=''&& @$_GET['province_id']==''){
                 foreach($province as $province_row):
                     //$xAxis .= $xAxis == '' ? "'".$province_row->name."'" : ",'".$province_row->name."'";
                     //$line_chart_category .= $line_chart_category == '' ? "'".$province_row->name."'" : ",'".$province_row->name."'";
-                    echo '<td colspan="'.count($desease).'"  class="th_datatable col_province col_province_'.$province_row->id.'" >'.$province_row->name.'</td>';
+                    echo '<td colspan="'.$desease->count().'"  class="th_datatable col_province col_province_'.$province_row->id.'" >'.$province_row->name.'</td>';
                 endforeach;
             }else if(@$_GET['province_id']!=''&& @$_GET['amphur_id']==''){
                 foreach($amphur as $amphur_row):
                     //$xAxis .= $xAxis == '' ? "'".$amphur_row->amphur_name."'" : ",'".$amphur_row->amphur_name."'";
                     //$line_chart_category .= $line_chart_category == '' ? "'".$amphur_row->amphur_name."'" : ",'".$amphur_row->amphur_name."'";
-                    echo '<td colspan="'.count($desease).'"  class="th_datatable col_amphur col_amphur_'.$amphur_row->id.'" >'.$amphur_row->amphur_name.'</td>';
+                    echo '<td colspan="'.$desease->count().'"  class="th_datatable col_amphur col_amphur_'.$amphur_row->id.'" >'.$amphur_row->amphur_name.'</td>';
                 endforeach;
             }else if(@$_GET['amphur_id']!=''&& @$_GET['district_id']==''){
                 foreach($district as $district_row):
                     //$xAxis .= $xAxis == '' ? "'".$district_row->district_name."'" : ",'".$district_row->district_name."'";
                     //$line_chart_category .= $line_chart_category == '' ? "'".$district_row->district_name."'" : ",'".$district_row->district_name."'";
-                    echo '<td colspan="'.count($desease).'"  class="th_datatable col_district col_district_'.$district_row->id.'" >'.$district_row->district_name.'</td>';
+                    echo '<td colspan="'.$desease->count().'"  class="th_datatable col_district col_district_'.$district_row->id.'" >'.$district_row->district_name.'</td>';
                 endforeach;
             }else if(@$_GET['district_id']!=''){
                 foreach($nursery as $nursery_row):
                     //$xAxis .= $xAxis == '' ? "'".$nursery_row->name."'" : ",'".$nursery_row->name."'";
                     //$line_chart_category .= $line_chart_category == '' ? "'".$nursery_row->name."'" : ",'".$nursery_row->name."'";
-                    echo '<td colspan="'.count($desease).'"  class="th_datatable col_nursery col_nursery_'.$nursery_row->id.'" >'.$nursery_row->name.'</td>';
+                    echo '<td colspan="'.$desease->count().'"  class="th_datatable col_nursery col_nursery_'.$nursery_row->id.'" >'.$nursery_row->name.'</td>';
                 endforeach;
             }
             ?>
