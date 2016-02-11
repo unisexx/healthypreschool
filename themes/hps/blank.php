@@ -439,10 +439,10 @@
 												<li><a href="nurseries/estimate">ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
 												<?endif;?>
 												<?if (in_array($current_user->user_type_id, array(9))):?>
-												<li><a href="teachers?nursery_id=<?=$current_user->nursery_id?>">ตรวจสอบรายชื่อครู / เจ้าหน้าที่</a></li>
+												<li><a href="classrooms?nursery_id=<?=$current_user->nursery_id?>">ตรวจสอบรายชื่อห้องเรียยน</a></li>
 												<?endif;?>
 												<?if (in_array($current_user->user_type_id, array(9))):?>
-												<li><a href="classrooms?nursery_id=<?=$current_user->nursery_id?>">ตรวจสอบรายชื่อห้องเรียยน</a></li>
+												<li><a href="teachers?nursery_id=<?=$current_user->nursery_id?>">ตรวจสอบรายชื่อครู / เจ้าหน้าที่</a></li>
 												<?endif;?>
 												<?if (in_array($current_user->user_type_id, array(10))):?>
 												<li><a href="classrooms/classroom_teacher?nursery_id=<?=$current_user->nursery_id?>">ตรวจสอบรายชื่อห้องเรียยน</a></li>

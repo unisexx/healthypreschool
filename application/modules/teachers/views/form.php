@@ -93,7 +93,7 @@ $(function(){
 			<div class="control-group">
                 <label class="control-label" for="inputUsername">สถานะเจ้าหน้าที่</label>
                 <div class="controls">
-                  <?=form_dropdown('m_status',array('deactive'=>'ปิดการใช้งาน','active'=>'เปิดการใช้งาน'),$teacher->m_status,'class="input-xlarge"');?>
+                  <?=form_dropdown('m_status',array('active'=>'เปิดการใช้งาน','deactive'=>'ปิดการใช้งาน'),$teacher->m_status,'class="input-xlarge"');?>
                 </div>
             </div>
 			<hr>
@@ -156,6 +156,11 @@ $(function(){
 		    <div class="control-group">
                 <div class="controls">
                   <?php echo form_referer() ?>
+                  <!-- บัญชีครูคนนี้ถูกสร้างครั้งแรกที่ไหน -->
+                  <input type="hidden" name="area_province_id" value="<?=user_login()->area_province_id?>">
+                  <input type="hidden" name="create_by_user_id" value="<?=user_login()->id?>">
+                  <!-- บัญชีครูคนนี้ถูกสร้างครั้งแรกที่ไหน -->
+                  
                   <input type="hidden" name="nursery_id" value="<?=$nursery->id?>">
                   <input type="hidden" name="user_type_id" value="10">
                   <input type="hidden" name="area_id" value="<?=$nursery->area_id?>">

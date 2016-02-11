@@ -110,7 +110,7 @@ class Nurseries extends Public_Controller
 						LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 						LEFT JOIN districts ON v_nurseries.district_id = districts.id
 						LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-						WHERE ".$condition;
+						WHERE ".$condition." order by v_nurseries.id desc";
 	
 			$nursery = new Nursery();
 	        $data['nurseries'] = $nursery->sql_page($sql, 20);
