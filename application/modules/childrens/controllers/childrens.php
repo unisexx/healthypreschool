@@ -15,7 +15,7 @@ class Childrens extends Public_Controller{
 		if(@$_GET['sex']){ $child->where_related_children("title = '".$_GET['sex']."'"); }
 		
 		$child->where_related('classroom','nursery_id',$_GET['nursery_id']);
-		if(user_login()->user_type_id == 10){ $child->where('classroom_id in (select id from classrooms where user_id = '.user_login()->id.')'); }
+		if(user_login()->user_type_id == 10){ $child->where('classroom_id in (select classroom_id from classroom_teachers where user_id = '.user_login()->id.')'); }
 		$data['childs'] = $child->order_by('id','desc')->get();
 		
 		// $data['childs']->check_last_query();

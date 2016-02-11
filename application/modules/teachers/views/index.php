@@ -28,7 +28,7 @@
 	</tr>
 	<?foreach($teachers as $key=>$row):?>
 	<tr>
-		<td><?=($key+1)+$teachers->paged->current_row?></td>
+		<td><?$_GET['page'] = (@$_GET['page'] == "")?"1":@$_GET['page'];?><?=($key+1)+(20 * (@$_GET['page'] - 1));?></td>
 		<td><?=($row->m_status == 'active')?'<div class="label label-info">เปิด</div>':'<div class="label">ปิด</div>';?></td>
 		<td><?=$row->name?></td>
 		<td><?=$row->email?></td>
@@ -84,4 +84,4 @@
 	</tr>
 	<?endforeach;?>
 </table>
-<?=$teachers->pagination();?>
+<?=$pagination;?>

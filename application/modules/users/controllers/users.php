@@ -66,6 +66,7 @@ class Users extends Public_Controller{
 		if($_POST){
 			$captcha = $this->session->userdata('captcha');
 			if(($_POST['captcha'] == $captcha) && !empty($captcha)){
+				$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['province_id']);
 				
 				$nursery = new Nursery($id);
 				$nursery->from_array($_POST);
@@ -79,7 +80,6 @@ class Users extends Public_Controller{
 				$_POST['nursery_id'] = $nursery->id;
 				$_POST['m_status'] = 'active';
 				$_POST['name'] = $_POST['p_name'].' '.$_POST['p_surname'];
-				$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['province_id']);
 				
 				$user = new User();
 	            $user->from_array($_POST);
@@ -203,7 +203,7 @@ class Users extends Public_Controller{
 				}elseif(user_login()->user_type_id == 9){
 					redirect('teachers?nursery_id='.user_login()->nursery_id);
 				}elseif(user_login()->user_type_id == 10){
-					redirect('classrooms?nursery_id='.user_login()->nursery_id);
+					redirect('classrooms/classroom_teacher?nursery_id='.user_login()->nursery_id);
 				}
 				
 				// redirect('home/menu');
