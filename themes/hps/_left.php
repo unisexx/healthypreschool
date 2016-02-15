@@ -100,7 +100,7 @@
 	         <ul>
 	            <li><a href="users/register">เจ้าหน้าที่สาธารณะสุข</a></li>
 	            <li><a href="users/register_center">เจ้าหน้าที่ศูนย์เด็กเล็ก</a></li>
-	            <!-- <li><a href="nurseries/searchs">เจ้าหน้าที่โรงเรียน</a></li> -->
+	            <li><a href="users/register_center_school">เจ้าหน้าที่ครูโรงเรียนอนุบาล</a></li>
 	         </ul>
 	         </div>
 	         <hr>

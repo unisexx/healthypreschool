@@ -49,10 +49,10 @@
 				                        echo $current_user->province->name;
 				                    }elseif($current_user->user_type_id == 8){
 				                        echo $current_user->amphur->amphur_name;
-				                    }elseif($current_user->user_type_id == 9 or $current_user->user_type_id == 10){
+				                    }elseif($current_user->user_type_id == 9 or $current_user->user_type_id == 10 or $current_user->user_type_id == 11){
 
 				                    	echo '('.$current_user->nursery->name.')';
-										echo '<br><b>สถานะศูนย์เด็กเล็ก : </b>';
+										echo '<br><b>สถานะ : </b>';
 
 										echo '<a href="assessments/preview/'.$current_user->nursery_id.'">';
 										if($current_user->nursery->status == 0){
@@ -472,7 +472,7 @@
 								      </ul>
 								    </li>
 										<?endif;?>
-										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
+										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10,11))):?>
 								    <li><a href="#">E-learning</a>
 								      <ul>
 								        <li><a href="pages/view/1">คำแนะนำ</a></li>
@@ -481,7 +481,7 @@
 								      </ul>
 								    </li>
 										<?endif;?>
-										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
+										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10,11))):?>
 								    <li><a href="#" onclick="return false;">ระบบเฝ้าระวังโรคติดต่อในเด็ก</a>
 											<ul>
 												<li><a href="desease_watch/index">บันทึกเหตุการณ์เฝ้าระวังโรคติดต่อ</a></li>

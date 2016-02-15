@@ -10,7 +10,7 @@ class Users extends Public_Controller{
         $this->template->build('register');
     }
 	
-	function register_center(){ // เจ้าหน้าที่ศูนย์
+	function register_center(){ // เจ้าหน้าที่ศูนย์เด็กเล็ก
 		$condition = " 1=1 ";
 		if(@$_GET['name']) $condition .= ' and nurseries.name like "%'.$_GET['name'].'%"';
 		if(@$_GET['province_id']) $condition .= ' and nurseries.province_id = '.$_GET['province_id'];
@@ -41,10 +41,53 @@ class Users extends Public_Controller{
 				LEFT JOIN districts on nurseries.district_id = districts.id
 				LEFT JOIN amphures on nurseries.amphur_id = amphures.id
 				LEFT JOIN provinces on nurseries.province_id = provinces.id
-				WHERE ".$condition." ORDER BY nurseries.id DESC";
+				WHERE ".$condition." 
+				AND nursery_type != 2
+				ORDER BY nurseries.id DESC";
 		$data['count'] = $this->db->query($sql)->row();
 		
 		$this->template->build('register_center_index',$data);
+	}
+	
+	function register_center_school(){ // เจ้าหน้าที่ศูนย์โรงเรียนอนุบาล (โค้ดเดียวกับ register_center ต่างกันแค่ nursery_type)
+		$condition = " 1=1 ";
+		if(@$_GET['name']) $condition .= ' and nurseries.name like "%'.$_GET['name'].'%"';
+		if(@$_GET['province_id']) $condition .= ' and nurseries.province_id = '.$_GET['province_id'];
+		if(@$_GET['amphur_id']) $condition .= ' and nurseries.amphur_id = '.$_GET['amphur_id'];
+		if(@$_GET['district_id']) $condition .= ' and nurseries.district_id = '.$_GET['district_id'];
+		
+		$sql = "SELECT
+				nurseries.id,
+				nurseries.`name`,
+				districts.district_name,
+				amphures.amphur_name,
+				provinces.`name` AS province_name
+				FROM
+				nurseries
+				LEFT JOIN districts on nurseries.district_id = districts.id
+				LEFT JOIN amphures on nurseries.amphur_id = amphures.id
+				LEFT JOIN provinces on nurseries.province_id = provinces.id
+				WHERE ".$condition."
+				AND nursery_type = 2
+				ORDER BY nurseries.id DESC";
+		$nursery = new Nursery();
+        $data['nurseries'] = $nursery->sql_page($sql, 20);
+		$data['pagination'] = $nursery->sql_pagination;
+		
+		// นับจำนวน
+		$sql = "SELECT
+				count(nurseries.id) total
+				FROM
+				nurseries
+				LEFT JOIN districts on nurseries.district_id = districts.id
+				LEFT JOIN amphures on nurseries.amphur_id = amphures.id
+				LEFT JOIN provinces on nurseries.province_id = provinces.id
+				WHERE ".$condition." 
+				AND nursery_type = 2
+				ORDER BY nurseries.id DESC";
+		$data['count'] = $this->db->query($sql)->row();
+		
+		$this->template->build('register_center_school',$data);
 	}
 	
 	function register_center_form($id=false){
@@ -60,6 +103,21 @@ class Users extends Public_Controller{
 
 		$data['nursery'] = new Nursery($id);
 		$this->template->build('register_center_form',$data);
+	}
+	
+	function register_center_school_form($id=false){
+		if($id){
+			$u = new User();
+			$u->query("select id from users where user_type_id = 11 and nursery_id = ".$id);
+			if($u->exists())
+			{
+				set_notify('success', 'ศูนย์เด็กเล็กนี้มีเจ้าหน้าที่ศูนย์แล้ว');
+				redirect('users/register_center_school');
+			}	
+		}
+
+		$data['nursery'] = new Nursery($id);
+		$this->template->build('register_center_school_form',$data);
 	}
 	
 	function signup_center($id=false){
@@ -86,7 +144,7 @@ class Users extends Public_Controller{
 	            $user->save();
 	            
 	            // สมัครเสร็จ login ต่อทันที
-	            if(login($_POST['email'], $_POST['password'], 9))
+	            if(login($_POST['email'], $_POST['password'], $_POST['user_type_id']))
 	            {
 	                set_notify('success', 'ยินดีต้อนรับเข้าสู่ระบบค่ะ');
 					

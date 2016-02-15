@@ -119,13 +119,13 @@ $(document).ready(function(){
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="users/register_center">ลงทะเบียนเจ้าหน้าที่ศูนย์</a> <span class="divider">/</span></li>
+  <li><a href="users/register_center">ลงทะเบียนเจ้าหน้าที่ครูโรงเรียนอนุบาล</a> <span class="divider">/</span></li>
   <li class="active"><?=$nursery->nursery_category->title?><?=$nursery->name?></li>
 </ul>
 
 
 <div id="data">
-	<div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">ลงทะเบียนเจ้าหน้าที่ศูนย์</div>
+	<div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">ลงทะเบียนเจ้าหน้าที่ครูโรงเรียนอนุบาล</div>
     	
     	<!-- <ul class="nav nav-tabs home-nav-tabs estimate-tab">
 		  <li><a href="users/register">เจ้าหน้าที่สาธารณสุข</a></li>
@@ -144,7 +144,7 @@ $(document).ready(function(){
             </div> -->
             
             <div class="control-group">
-                <label class="control-label">ชื่อศูนย์เด็กเล็ก<span class="TxtRed">*</span></label>
+                <label class="control-label">ชื่อโรงเรียนอนุบาล<span class="TxtRed">*</span></label>
                 <div class="controls">
                   <input class="input-xlarge" type="text" name="name" value="<?=$nursery->name?>">
                 </div>
@@ -200,7 +200,7 @@ $(document).ready(function(){
             </div>
             
             <div class="control-group">
-                <label class="control-label">ชื่อหัวหน้าศูนย์</label>
+                <label class="control-label">ชื่อเจ้าหน้าที่</label>
                 <div class="controls">
                   <input class="input-xlarge" type="text" name="p_name" value="<?=$nursery->p_name?>">
                 </div>
@@ -257,8 +257,8 @@ $(document).ready(function(){
                 <div class="controls">
                   <input type="hidden" name="area_id" value="<?=$nursery->area_id?>">
                   <input type="hidden" name="m_status" value="active">
-                  <input type="hidden" name="user_type_id" value="9">
-                  <input type="hidden" name="nursery_type" value="1">
+                  <input type="hidden" name="user_type_id" value="11">
+                  <input type="hidden" name="nursery_type" value="2">
                   <input type="submit" class="btn btn-small btn-info" value="สมัครสมาชิก">
                 </div>
             </div>
