@@ -76,11 +76,11 @@
 				                ?>
 
 				            <?php if($current_user->m_status == 'active'):?>
-		                		<?php if($current_user->user_type_id == 1 || $current_user->user_type_id == 6 || $current_user->user_type_id == 7 || $current_user->user_type_id == 8):?>
+		                		<!-- <?php if($current_user->user_type_id == 1 || $current_user->user_type_id == 6 || $current_user->user_type_id == 7 || $current_user->user_type_id == 8):?>
 		                			<b class="tabspace"><a href="nurseries/register">เมนูหลัก</a></b>
 		                		<?php else:?>
 		                			<b class="tabspace"><a href="home/menu">เมนูหลัก</a></b>
-		                		<?php endif;?>
+		                		<?php endif;?> -->
 			                <?php else:?>
 			                	สถานะ : <span style="color:orangered;">รอการตรวจสอบ</span>
 			                <?php endif;?>
@@ -426,28 +426,29 @@
 											$current_user->user_type_id == 8	เจ้าหน้าที่ประจำอำเภอ
 											$current_user->user_type_id == 9	เจ้าหน้าที่ศูนย์
 											$current_user->user_type_id == 10	เจ้าหน้าที่ครู/ผู้ดูแลเด็ก
+											$current_user->user_type_id == 11เจ้าหน้าที่ศูนย์เด็กเล็กโรงเรียนอนุบาล
 									-------------------------------------------------------->
 								<div id="menubar">
 									<nav>
 								  <ul class="nav">
-										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
-								    <li><a href="#">บริหารจัดการศูนย์เด็กเล็ก</a>
+										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10,11))):?>
+										<li><a href="#">บริหารจัดการศูนย์เด็กเล็ก / โรงเรียนอนุบาล</a>
 											<ul>
 												<?if (in_array($current_user->user_type_id, array(1,6,7,8))):?>
 												<li><a href="nurseries/register">ตรวจสอบรายชื่อศูนย์เด็กเล็ก</a></li>
 												<li><a href="nurseries/register_form">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
 												<li><a href="nurseries/estimate">ประเมินผลโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
 												<?endif;?>
-												<?if (in_array($current_user->user_type_id, array(9))):?>
+												<?if (in_array($current_user->user_type_id, array(9,11))):?>
 												<li><a href="classrooms?nursery_id=<?=$current_user->nursery_id?>">ตรวจสอบรายชื่อห้องเรียยน</a></li>
 												<?endif;?>
-												<?if (in_array($current_user->user_type_id, array(9))):?>
+												<?if (in_array($current_user->user_type_id, array(9,11))):?>
 												<li><a href="teachers?nursery_id=<?=$current_user->nursery_id?>">ตรวจสอบรายชื่อครู / เจ้าหน้าที่</a></li>
 												<?endif;?>
 												<?if (in_array($current_user->user_type_id, array(10))):?>
 												<li><a href="classrooms/classroom_teacher?nursery_id=<?=$current_user->nursery_id?>">ตรวจสอบรายชื่อห้องเรียยน</a></li>
 												<?endif;?>
-												<?if (in_array($current_user->user_type_id, array(9,10))):?>
+												<?if (in_array($current_user->user_type_id, array(9,10,11))):?>
 												<li><a href="childrens?nursery_id=<?=$current_user->nursery_id?>">ตรวจสอบรายชื่อเด็ก / นักเรียน</a></li>
 												<?endif;?>
 											</ul>
@@ -465,7 +466,7 @@
 											</ul>
 										</li>
 										<?endif;?>
-										<?if (in_array($current_user->user_type_id, array(9,10))):?>
+										<?if (in_array($current_user->user_type_id, array(9,10,11))):?>
 								    <li><a href="#">แบบคัดกรองโรค</a>
 								      <ul>
 								        <li><a href="diseases">ตรวจสอบรายการแบบคัดกรองโรค</a></li>
@@ -488,7 +489,7 @@
 											</ul>
 										</li>
 										<?endif;?>
-										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
+										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10,11))):?>
 										<li><a href="#">รายงาน</a>
 											<ul>
 												<?if (in_array($current_user->user_type_id, array(1,6,7,8))):?>
@@ -498,7 +499,7 @@
 												<li class="sub_menu"><a class="sub_menu" href="nurseries/reports/index/basic_column">- สรุปผลการสมัครเข้าร่วมโครงการฯ</a></li>
 												<li class="sub_menu"><a class="sub_menu" href="nurseries/estimate">- รายละเอียดการประเมินผลโครงการฯ</a></li>
 												<?endif;?>
-												<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10))):?>
+												<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10,11))):?>
 												<li class="main_menu_nolink"><a href="javascript:void(0)">รายงานแบบคัดกรองโรค</a></li>
 												<li class="sub_menu"><a class="sub_menu" href="diseases/newreport">- สรุปผลรายงานแบบคัดกรองโรค</a></li>
 												<li class="sub_menu"><a class="sub_menu" href="reports/desease_overall">- รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก</a></li>
@@ -508,7 +509,7 @@
 												<li class="sub_menu"><a class="sub_menu" href="reports/desease_watch_number">- รายงานจำนวนเหตุการณ์การเฝ้าระวังโรค</a></li>
 												<li class="sub_menu"><a class="sub_menu" href="reports/desease_watch_symptom">- รายงานกลุ่มอาการป่วยจากข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</a></li>
 												<?endif;?>
-												<?if (in_array($current_user->user_type_id, array(9,10))):?>
+												<?if (in_array($current_user->user_type_id, array(9,10,11))):?>
 												<li><a href="assessments/preview/<?=$current_user->nursery_id?>">รายงานแบบประเมินเข้าร่วมโครงการ</a></li>
 												<?endif;?>
 											</ul>

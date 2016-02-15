@@ -9,8 +9,8 @@ class Diseases extends Public_Controller{
     function index(){
     	$disease = new Disease();
 		
-		if(user_login()->user_type_id == 9){ $condition = " and diseases.nursery_id = ".user_login()->nursery_id; }
-		if(user_login()->user_type_id == 10){ $condition = " and diseases.classroom_id in (select classroom_id from classroom_teachers where user_id = ".user_login()->id.")"; }
+		if(in_array(user_login()->user_type_id, array(9,11))){ $condition = " and diseases.nursery_id = ".user_login()->nursery_id; }
+		if(in_array(user_login()->user_type_id, array(10))){ $condition = " and diseases.classroom_id in (select classroom_id from classroom_teachers where user_id = ".user_login()->id.")"; }
 		
 		$sql = "SELECT DISTINCT diseases.year,`month`,classroom_id,room_name,users.name teacher_name,diseases.nursery_id,diseases.user_id from diseases
 LEFT JOIN classrooms ON classrooms.id = diseases.classroom_id
@@ -37,8 +37,8 @@ WHERE 1=1 ".$condition;
 		
 		// หาจำนวนห้อง
 		$classroom = new Classroom();
-		if(user_login()->user_type_id == 9){ $classroom->where('nursery_id = '.user_login()->nursery_id); }
-		if(user_login()->user_type_id == 10){ $classroom->where_related('classroom_teachers','user_id = '.user_login()->id); }
+		if(in_array(user_login()->user_type_id, array(9,11))){ $classroom->where('nursery_id = '.user_login()->nursery_id); }
+		if(in_array(user_login()->user_type_id, array(10))){ $classroom->where_related('classroom_teachers','user_id = '.user_login()->id); }
 		$data['classrooms'] = $classroom->order_by('room_name','asc')->get();
 		// $data['classrooms']->check_last_query();
 		

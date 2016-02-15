@@ -1,4 +1,4 @@
-<style type="text/css">
+<!-- <style type="text/css">
 .child {text-align:center;}
 .child img{margin:10px 0;}
 </style>
@@ -32,4 +32,4 @@
     	สถานะ : <span style="color:orangered;">รอการตรวจสอบ</span>
     <?php endif;?>
     
-</div>
+</div> -->
