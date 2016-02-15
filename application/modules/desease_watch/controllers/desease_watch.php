@@ -10,6 +10,7 @@ class Desease_watch extends Public_Controller {
         //Model
         if (is_login()) {
             $current_user = user_login();
+            //echo $current_user->nurseries->nursery_type;
             $data['current_user'] = $current_user;
             if ($current_user -> user_type_id >= 6)
                 $_GET['area_id'] = $current_user -> area_id;
@@ -21,7 +22,7 @@ class Desease_watch extends Public_Controller {
                 if ($current_user -> user_type_id > 8) {
                     $_GET['district_id'] = $current_user -> district_id;
                     $_GET['nurseries_id'] = $current_user -> nursery_id;
-                    $_GET['place_type'] = 1;
+                    $_GET['place_type'] = $current_user->nurseries->nursery_type == 1 ? 1 : 3;
                     $_GET['name'] = $current_user -> nurseries -> name;
                 }
             }
@@ -30,8 +31,6 @@ class Desease_watch extends Public_Controller {
                 $data['list'] = new Disease_watch();
                 //--Search filter
                 if (!empty($_GET['disease'])) {  $data['list'] -> where('disease', $_GET['disease']);
-                }
-                if (!empty($_GET['place_type'])) {  $data['list'] -> where('place_type', $_GET['place_type']);
                 }
                 if (!empty($_GET['area_id'])) {    $data['list'] -> where('disease_watch.province_id in (SELECT province_id FROM area_provinces WHERE area_id = ' . $_GET['area_id'] . " AND province_id > 0 )");
                 }
@@ -44,8 +43,16 @@ class Desease_watch extends Public_Controller {
                 if (!empty($_GET['nurseries_id'])) {  $data['list'] -> where('nurseries_id', $_GET['nurseries_id']);
                 }
                 if (@$_GET['place_type'] == '1') {
-                    if (!empty($_GET['name'])) {		$data['list'] -> like_related('nurseries', 'name', $_GET['name']);
+                    $data['list'] -> where('place_type', $_GET['place_type']);
+                    $data['list'] -> like_related('nurseries', 'nursery_type', 1);
+                    if (!empty($_GET['name'])) {
+                        $data['list'] -> like_related('nurseries', 'name', $_GET['name']);
                     }
+                }else if(@$_GET['place_type']=='2'){
+                    $data['list'] -> where('place_type', $_GET['place_type']);
+                }else if(@$_GET['place_type']=='3'){
+                    $data['list'] -> where('place_type', 1);
+                    $data['list'] -> like_related('nurseries', 'nursery_type', 2);                    
                 }
                 if (@$_GET['start_date'] != '' && @$_GET['end_date'] != '') {
                     $condition = "disease_watch.start_date  between '" . Date2DB(@$_GET['start_date']) . "' AND '" . Date2DB(@$_GET['end_date']) . "'";

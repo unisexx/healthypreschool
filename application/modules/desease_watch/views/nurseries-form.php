@@ -20,7 +20,16 @@
                     </td>
                 </tr>
                 <tr>
-                  <th>ชื่อศูนย์เด็กเล็ก<strong> <span class="TxtRed">*</span></strong></th>
+                    <th>ประเภท <strong> <span class="TxtRed">*</span></strong></th>
+                    <td>
+                        <select name="nursery_type" required="required">
+                            <option value="1">ศูนย์เด็กเล็ก</option>
+                            <option value="2">โรงเรียนอนุบาล</option>
+                        </select>                   
+                    </td>
+                </tr>
+                <tr>
+                  <th>ชื่อศูนย์เด็กเล็ก/โรงเรียนอนุบาล<strong> <span class="TxtRed">*</span></strong></th>
                   <td><input type="text" name="name" value="" id="textfield"  style="width:350px;"/></td>
                 </tr>
                  <tr>

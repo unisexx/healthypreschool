@@ -38,9 +38,27 @@
     $start_date = @$_GET['start_date']!='' ? @$_GET['start_date'] : '';
     $end_date = @$_GET['end_date']!='' ? @$_GET['end_date'] : '';
     
-    $list_condition = "";    
+    $list_condition = "";$place_type_condition = '';
     $list_condition.= @$_GET['disease']!='' ? " AND disease = ".$_GET['disease'] : '';
-    $list_condition.= @$_GET['place_type']!='' ? " AND place_type = ".$_GET['place_type'] : '';
+    switch(@$_GET['place_type']){
+        case '1':
+            $place_type_condition = @$_GET['place_type']!='' ? " AND place_type = 1 " : '';
+            $place_type_condition .= " AND nursery_type = 1 ";
+            break;
+        case '2':
+            $place_type_condition = @$_GET['place_type']!='' ? " AND place_type = 2 " : '';
+            break;
+        case '3':
+            $place_type_condition = @$_GET['place_type']!='' ? " AND place_type = 1 " : '';
+            $place_type_condition .= " AND nursery_type = 2 ";
+            break;
+        default:
+            $place_type_condition.= @$_GET['place_type']!='' ? " AND place_type = ".$_GET['place_type'] : '';
+            break;
+    }
+    
+    $list_condition.= $place_type_condition; 
+    $list_condition.= @$_GET['disease']!='' ? " AND disease = ".$_GET['disease'] : '';
     $list_condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
     $list_condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND province_id = ".@$_GET['province_id'] : '';
     $list_condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND amphur_id = ".@$_GET['amphur_id'] : '';
@@ -242,7 +260,7 @@
             </td>
             <?php                
             $condition=" AND question='".$symptom_row->code."' AND value = 1 ";
-            $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
+            $condition.= $place_type_condition;
             $condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
             $condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND province_id = ".@$_GET['province_id'] : '';
             $condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND amphur_id = ".@$_GET['amphur_id'] : '';

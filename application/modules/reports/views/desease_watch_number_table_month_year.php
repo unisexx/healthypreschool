@@ -35,9 +35,27 @@
             break;
     }
     
-    $list_condition = "";
+    $list_condition = "";$place_type_condition = '';
     $list_condition.= @$_GET['disease']!='' ? " AND disease = ".$_GET['disease'] : '';
-    $list_condition.= @$_GET['place_type']!='' ? " AND place_type = ".$_GET['place_type'] : '';
+    switch(@$_GET['place_type']){
+        case '1':
+            $place_type_condition = @$_GET['place_type']!='' ? " AND place_type = 1 " : '';
+            $place_type_condition .= " AND nursery_type = 1 ";
+            break;
+        case '2':
+            $place_type_condition = @$_GET['place_type']!='' ? " AND place_type = 2 " : '';
+            break;
+        case '3':
+            $place_type_condition = @$_GET['place_type']!='' ? " AND place_type = 1 " : '';
+            $place_type_condition .= " AND nursery_type = 2 ";
+            break;
+        default:
+            $place_type_condition.= @$_GET['place_type']!='' ? " AND place_type = ".$_GET['place_type'] : '';
+            break;
+    }
+    
+    $list_condition.= $place_type_condition;
+    $list_condition.= @$_GET['disease']!='' ? " AND disease = ".$_GET['disease'] : '';
     $list_condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
     $list_condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND province_id = ".@$_GET['province_id'] : '';
     $list_condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND amphur_id = ".@$_GET['amphur_id'] : '';
@@ -210,7 +228,7 @@
             $condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND province_id = ".@$_GET['province_id'] : '';
             $condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND amphur_id = ".@$_GET['amphur_id'] : '';
             $condition.= @$_GET['district_id']!='' ? " AND district_id = ".@$_GET['district_id'] : '';
-			$condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
+			$condition.= $place_type_condition;
             $sql = get_desease_watch_sql($condition);
             $year_age = $this->db->query($sql)->result();
         ?>
@@ -224,7 +242,7 @@
             <?php                 
                 $condition = $report_month_year == '' ? '' : " AND year(start_date) = ".$report_month_year;    
                 $condition.= @$_GET['disease']!='' ? " AND disease = ".@$_GET['disease'] : "";
-				$condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';                            
+				$condition.= $place_type_condition;                          
                 if(@$_GET['area_id']=='' && @$_GET['province_id']==''){
                     foreach($area as $area_row):                
                         $ex_condition = " AND area_id = ".$area_row->id;
@@ -274,7 +292,7 @@
             $condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND province_id = ".@$_GET['province_id'] : '';
             $condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND amphur_id = ".@$_GET['amphur_id'] : '';
             $condition.= @$_GET['district_id']!='' ? " AND district_id = ".@$_GET['district_id'] : '';
-			$condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
+			$condition.= $place_type_condition;
             $sql = get_desease_watch_sql($year_condition.$condition);                   
             $year_age = $this->db->query($sql)->result();
         ?>
@@ -288,7 +306,7 @@
             <?php 
                 $condition = $year_condition." AND month(start_date) = ".$i_month;
                 $condition.= @$_GET['disease']!='' ? " AND disease = ".@$_GET['disease'] : "";
-                $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
+                $condition.= $place_type_condition;
                 if(@$_GET['area_id']=='' && @@$_GET['province_id']==''){
                     foreach($area as $area_row):                
                         $ex_condition = " AND area_id = ".$area_row->id;   
@@ -332,7 +350,7 @@
             foreach($desease as $desease_row):
             $series_idx++;                     
             $condition = " AND disease = ".$desease_row->id." AND month(start_date) = ".$i_month;
-			$condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';	
+			$condition.= $place_type_condition;	
             $condition.= @$_GET['area_id']!='' && @$_GET['province_id'] == '' ? " AND area_id = ".$_GET['area_id'] : '';
             $condition.= @$_GET['province_id']!='' && @$_GET['amphur_id'] == '' ? " AND province_id = ".@$_GET['province_id'] : '';
             $condition.= @$_GET['amphur_id']!='' && @$_GET['district_id'] == '' ? " AND amphur_id = ".@$_GET['amphur_id'] : '';
@@ -364,7 +382,7 @@
             ?>      
             <?php 
                 $condition = $year_condition." AND disease = ".$desease_row->id." AND month(start_date) = ".$i_month;
-                $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';                                
+                $condition.= $place_type_condition;                                
                 if(@$_GET['area_id']=='' && @$_GET['province_id']==''){
                     foreach($area as $area_row):                
                         $ex_condition = " AND area_id = ".$area_row->id;
@@ -409,7 +427,7 @@
                 $condition.= @$_GET['province_id'] != '' && @$_GET['amphur_id'] == '' ? " AND province_id = ".$_GET['province_id'] : '';
                 $condition.= @$_GET['amphur_id'] != '' && @$_GET['district_id'] == '' ? " AND amphur_id = ".$_GET['amphur_id'] : '';
                 $condition.= @$_GET['district_id'] != '' ? " AND district_id = ".$_GET['district_id'] : '';
-				$condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';
+				$condition.= $place_type_condition;
                 $sql = " SELECT
                             disease,
                             age_duration_start age_start,
@@ -429,7 +447,7 @@
                     $condition.= @$_GET['province_id'] != '' && @$_GET['amphur_id'] == '' ? " AND province_id = ".$_GET['province_id'] : '';
                     $condition.= @$_GET['amphur_id'] != '' && @$_GET['district_id'] == '' ? " AND amphur_id = ".$_GET['amphur_id'] : '';
                     $condition.= @$_GET['district_id'] != '' ? " AND district_id = ".$_GET['district_id'] : '';
-                    $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : ''; 
+                    $condition.= $place_type_condition; 
                     $sql = get_desease_watch_sql($condition);
                     $value = $this->db->query($sql)->result();                          
             ?>
@@ -442,7 +460,7 @@
                     ?>
                     <?php 
                     $condition = $year_condition." AND month(start_date) = ".$i_month." AND disease = ".$desease_row->id." AND age_duration_start = ".$age->age_start." AND age_duration_end = ".$age->age_end;
-                    $condition.= @$_GET['place_type']!='' ? " AND place_type = ".@$_GET['place_type'] : '';                    
+                    $condition.= $place_type_condition;                    
                     if(@$_GET['area_id']==''&&@ $_GET['province_id']==''){
                         foreach($area as $area_row):
                             $ex_condition = " AND area_id = ".$area_row->id;                                        
