@@ -1,5 +1,8 @@
 <?php
 switch(@$_GET['place_type']){
+    case '3':
+        $place_type_name = 'โรงเรียนอนุบาล';
+        break;
     case '2':
         $place_type_name = 'พื้นที่ชุมชน';
         break;
@@ -112,7 +115,8 @@ jQuery_1_4_2("input.datepicker").date_input();
         <select name="place_type" class="form-control">
                 <option value="">-- ทั้งหมด --</option>
                 <option value="2" <?php echo $selected = @$_GET['place_type'] == 2 ? 'selected="selected"' : '';?>>พื้นที่ชุมชน</option>
-                <option value="1" <?php echo $selected = @$_GET['place_type'] == 1 ? 'selected="selected"' : '';?>>ศูนย์เด็กเล็ก/โรงเรียนอนุบาล</option>
+                <option value="1" <?php echo $selected = @$_GET['place_type'] == 1 ? 'selected="selected"' : '';?>>ศูนย์เด็กเล็ก</option>
+                <option value="3" <?php echo $selected = @$_GET['place_type'] == 3 ? 'selected="selected"' : '';?>>โรงเรียนอนุบาล</option>
         </select>
         <!--
         <span>ช่วงอายุ</span>
@@ -290,26 +294,30 @@ jQuery_1_4_2("input.datepicker").date_input();
 $(document).ready(function() {
     $("select[name='area_id']").live("change",function(){
         $.post('ajax/get_province',{
-                'area_id' : $(this).val()
+                'area_id' : $(this).val(),
+                'mode':'all'
             },function(data){
                 $("#province").html(data);
             });
 
         $.post('ajax/get_amphur',{
-                'province_id' : ''
+                'province_id' : '',
+                'mode':'all'
             },function(data){
                 $("#amphur").html(data);
             });
 
         $.post('ajax/get_district',{
-                'amphur_id' : ''
+                'amphur_id' : '',
+                'mode':'all'
             },function(data){
                 $("#district").html(data);
             });
     });
     $("select[name='province_id']").live("change",function(){
         $.post('ajax/get_amphur',{
-                'province_id' : $(this).val()
+                'province_id' : $(this).val(),
+                'mode':'all'
             },function(data){
                 $("#amphur").html(data);
             });
@@ -317,7 +325,8 @@ $(document).ready(function() {
 
     $("select[name='amphur_id']").live("change",function(){
         $.post('ajax/get_district',{
-                'amphur_id' : $(this).val()
+                'amphur_id' : $(this).val(),
+                'mode':'all'
             },function(data){
                 $("#district").html(data);
             });

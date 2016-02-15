@@ -15,8 +15,27 @@
       <h4>ข้อมูลเหตุการณ์การเฝ้าระวังโรคติดต่อ</h4>
       <form method="get" action="">
             <div style="padding:10px; border:1px solid #ccc; margin-bottom:10px; line-height:50px;">
-                  <label for="disease" style="margin-bottom:0px;">โรค</label>
-                  <?php echo form_dropdown('disease', get_option('id', 'desease_name', 'desease_watch_names', ' order by id '), @$_GET['disease'], '', '--แสดงทั้งหมด--');?>
+                  <div style="display:inline;float:left;">
+                    <label for="disease" style="margin-bottom:0px;">โรค</label>
+                    <?php echo form_dropdown('disease', get_option('id', 'desease_name', 'desease_watch_names', ' order by id '), @$_GET['disease'], '', '--แสดงทั้งหมด--');?>
+                  </div>
+                  <div>
+                  <label for="name" style="margin-bottom:0px;">พื้นที่ที่เกิดโรค</label>
+                  <select name="place_type" class="form-control">                        
+                        <?php if($current_user->user_type_id < 9){ ?>
+                        <option value="">-- แสดงทั้งหมด --</option>
+                        <option value="2" <?php echo $selected = @$_GET['place_type'] == 2 ? 'selected="selected"' : '';?>>พื้นที่ชุมชน</option>
+                        <option value="1" <?php echo $selected = @$_GET['place_type'] == 1 ? 'selected="selected"' : '';?>>ศูนย์เด็กเล็ก</option>
+                        <option value="3" <?php echo $selected = @$_GET['place_type'] == 3 ? 'selected="selected"' : '';?>>โรงเรียนอนุบาล</option>
+                        <?php }else{ ?>
+                            <?php if($current_user->nurseries->nursery_type==1){ ?>
+                            <option value="1" <?php echo $selected = @$_GET['place_type'] == 1 ? 'selected="selected"' : '';?>>ศูนย์เด็กเล็ก</option>
+                            <?php }else{ ?>
+                            <option value="3" <?php echo $selected = @$_GET['place_type'] == 3 ? 'selected="selected"' : '';?>>โรงเรียนอนุบาล</option>
+                            <?php } ?>
+                        <?php } ?>
+                  </select>
+                  </div>
                   <div style="display:block;height:15px;">&nbsp;</div>
             	  <div style="width:150px;display:inline;float:left;">
     				  <label for="area_id">เขตสคร.</label>
@@ -40,20 +59,16 @@
                   <?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
                   </span>
 				  </div>
-				  <div style="display:block;height:15px;">&nbsp;</div>
-				  <div style="width:250px;display:inline;float:left;">
-    				  <label for="name" style="margin-bottom:0px;">พื้นที่ที่เกิดโรค</label>
-    				  <select name="place_type" class="form-control">
-                            <option value="">-- ระบุแหล่งเกิดโรค --</option>
-                            <?php if($current_user->user_type_id < 9){ ?>
-                            <option value="2" <?php echo $selected = @$_GET['place_type'] == 2 ? 'selected="selected"' : '';?>>พื้นที่ชุมชน</option>
-                            <?php } ?>
-                            <option value="1" <?php echo $selected = @$_GET['place_type'] == 1 ? 'selected="selected"' : '';?>>ศูนย์เด็กเล็ก/โรงเรียนอนุบาล</option>
-                      </select>
-                  </div>
+				  <div style="display:block;height:15px;">&nbsp;</div>				  
                   <div style="width:350px;display:inline;float:left;">
-				    <label for="name" style="margin-bottom:0px;">ชื่อศูนย์เด็กเล็ก</label>
-				    <input name="name" type="text" value="<?=@$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:280px;"/>
+				    <label for="name" style="margin-bottom:0px;">ชื่อศูนย์เด็กเล็ก/โรงเรียนอนุบาล</label>
+				    <?php 
+				    if(@$current_user -> user_type_id > 8){
+				        echo '<input name="name" type="text" value="'.@$_GET['name'].'" disabled="disabled" style="width:280px;"/>';    
+				    }else{
+				        echo '<input name="name" type="text" value="'.@$_GET['name'].'" placeholder="ชื่อศูนย์เด็กเล็ก/โรงเรียนอนุบาล" style="width:280px;"/>';
+				    }				    
+                    ?>
 				  </div>
 				  <br>
 				  <div style="display:block;height:15px;">&nbsp;</div>
