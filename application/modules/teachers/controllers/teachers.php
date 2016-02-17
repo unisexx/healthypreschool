@@ -18,26 +18,42 @@ class Teachers extends Public_Controller{
 		
 		$condition = " 1=1 ";
 		if(@$_GET['name']){
-			$condition .= " (users.name like '%".$_GET['name']."%' or users.email like '%".$_GET['name']."%')";
+			$condition .= " and (users.name like '%".$_GET['name']."%' or users.email like '%".$_GET['name']."%')";
 		}
 		if(@$_GET['m_status']){
 			$condition .= " and users.m_status = '".$_GET['m_status']."'";
 		}
 		
-		$sql="SELECT
-			users.id,
-			users.`name`,
-			users.email,
-			users.phone,
-			users.m_status
-			FROM
-			classrooms
-			INNER JOIN users ON classrooms.user_id = users.id
-			WHERE
-			".$condition." AND
-			users.user_type_id = 10 AND
-			users.nursery_id = ".$_GET['nursery_id']."
-			GROUP BY(users.id)";
+		// $sql="SELECT
+			// users.id,
+			// users.`name`,
+			// users.email,
+			// users.phone,
+			// users.m_status
+			// FROM
+			// classrooms
+			// INNER JOIN users ON classrooms.user_id = users.id
+			// WHERE
+			// ".$condition." AND
+			// users.user_type_id = 10 AND
+			// users.nursery_id = ".$_GET['nursery_id']."
+			// GROUP BY(users.id)";
+		$sql = "SELECT
+						users.id,
+							users.`name`,
+							users.email,
+							users.phone,
+							users.m_status
+					FROM
+						classrooms
+					INNER JOIN classroom_teachers ON classrooms.id = classroom_teachers.classroom_id
+					INNER JOIN users ON classroom_teachers.user_id = users.id
+					WHERE
+						".$condition."
+					AND users.user_type_id = 10
+					AND classrooms.nursery_id = ".$_GET['nursery_id']."
+					GROUP BY
+						users.id ";
 		$q = new User();
         $data['teachers'] = $q->sql_page($sql, 20);
 		$data['pagination'] = $q->sql_pagination;

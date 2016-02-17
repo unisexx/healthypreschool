@@ -172,7 +172,7 @@ ORDER BY year desc";
 			
 			set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
 		}
-		redirect('classrooms/view/'.$_POST['classroom_id']);
+		redirect('classrooms?nursery_id='.$_POST['nursery_id']);
 	}
 	
 	function ajax_delete_teacher(){

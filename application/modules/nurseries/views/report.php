@@ -78,9 +78,11 @@ $(function(){
                 }
             },
             tooltip: {
-                formatter: function() {
-                    return '<b>'+ this.x.toLowerCase() +'</b><br/>'+ this.series.name +' '+ this.y +'%'
-                }
+                headerFormat: '<b>{point.key}</b><table style="font-weight:bold;">',
+	            pointFormat: '<tr><td style="color:{series.color};">{series.name}:</td><td style="text-align: right;">{point.y}%<td></tr>',
+	            footerFormat: '</table>',
+	            shared: true,
+	            useHTML: true
             },
             plotOptions: {
                 column: {

@@ -17,7 +17,7 @@
 	<?foreach($classes as $key=>$class):?>
 	<tr>
 		<td><?=($key+1)+$classes->paged->current_row?></td>
-		<td><a href="classrooms/view/<?=$class->id?>"><?=$class->room_name?></a></td>
+		<td><a href="classrooms/form_detail/<?=$class->id?>"><?=$class->room_name?></a></td>
 		<td>
 			<?
 				$sql = "SELECT
@@ -38,10 +38,12 @@
 				$years = $this->db->query($sql)->result_array();
 			?>
 			<?foreach($years as $row):?>
-				<div>
-				- ปีการศึกษา <?=$row['year']?>, 
-				  ครู <?=$this->db->query("SELECT id FROM classroom_teachers where classroom_id = ".$class->id." and year = ".$row['year'])->num_rows();?> คน, 
-				  นักเรียน <?=$this->db->query("SELECT id FROM classroom_childrens where classroom_id = ".$class->id." and year = ".$row['year'])->num_rows();?> คน
+				<div>- 
+					<a href="classrooms/form_detail/<?=$class->id?>/<?=$row['year']?>">
+						ปีการศึกษา <?=$row['year']?>, 
+						ครู <?=$this->db->query("SELECT id FROM classroom_teachers where classroom_id = ".$class->id." and year = ".$row['year'])->num_rows();?> คน, 
+						นักเรียน <?=$this->db->query("SELECT id FROM classroom_childrens where classroom_id = ".$class->id." and year = ".$row['year'])->num_rows();?> คน
+				  	</a>
 				</div> 
 			<?endforeach;?>
 		</td>
