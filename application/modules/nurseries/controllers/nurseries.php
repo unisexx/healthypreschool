@@ -26,6 +26,9 @@ class Nurseries extends Public_Controller
 			if(@$_GET['nursery_category_id']){
 				$condition .= " and v_nurseries.nursery_category_id = ".$_GET['nursery_category_id'];
 			}
+			if(@$_GET['nursery_type']){
+				$condition .= " and v_nurseries.nursery_type = ".$_GET['nursery_type'];
+			}
 			if(@$_GET['id']){
 				$condition .= " and v_nurseries.id = ".$_GET['id'];
 			}
@@ -312,6 +315,9 @@ class Nurseries extends Public_Controller
 			if(@$_GET['nursery_category_id']){
 				$condition .= " and v_nurseries.nursery_category_id = ".$_GET['nursery_category_id'];
 			}
+			if(@$_GET['nursery_type']){
+				$condition .= " and v_nurseries.nursery_type = ".$_GET['nursery_type'];
+			}
 			if(@$_GET['id']){
 				$condition .= " and v_nurseries.id = ".$_GET['id'];
 			}
@@ -544,7 +550,7 @@ class Nurseries extends Public_Controller
 
 	function get_nursery_data(){
 		if($_GET){
-			$data['nursery'] = new Nursery($_GET['id']);
+			$data['nursery'] = new V_nursery($_GET['id']);
 			$this->load->view('child_estimate_form',$data);
 		}
 	}

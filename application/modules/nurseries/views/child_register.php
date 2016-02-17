@@ -69,7 +69,8 @@ jQuery_1_4_2("input.datepicker").date_input();
 
     	<form method="get" action="nurseries/register">
 	    	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-
+			
+			<?=form_dropdown('nursery_type',array('1'=>'ศูนย์เด็กเล็ก','2'=>'โรงเรียนอนุบาล'),@$_GET['nursery_type']);?>
 	    	<?// =form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),@$_GET['nursery_category_id'],'','--- เลือกคำนำหน้า ---');?>
 	    	<input name="id" type="number" value="<?=@$_GET['id']?>" placeholder="หมายเลขศูนย์" style="width:100px;"/>
 	    	<input name="name" type="text" value="<?=@$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:280px;"/>
@@ -85,7 +86,15 @@ jQuery_1_4_2("input.datepicker").date_input();
 			<span id="district">
 			<?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
 			</span>
-	    	  <?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558','2559'=>'2559'),@$_GET['year'],'','--- ปีที่เข้าร่วมโครงการ ---');?>
+	    	  <select name="year">
+				<option value="">--- ปีที่เข้าร่วมโครงการ ---</option>
+			    <?php
+				    for($i=2554;$i<=(date("Y")+543);$i++) {
+				        $sel = ($i == @$_GET['year']) ? 'selected' : "";
+				        echo "<option value=".$i." ".$sel.">".date("Y", mktime(0,0,0,0,1,$i+1))."</option>";
+				    }
+			    ?>
+			</select>
 	    	  <?=form_dropdown('status',array('1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์','3'=>'รอการประเมิน','0'=>'เข้าร่วมโครงการ','4'=>'หมดอายุแล้ว'),@$_GET['status'],'','--- เลือกสถานะ ---');?><br>
 	    	  วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
 	    	  วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>

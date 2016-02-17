@@ -35,6 +35,10 @@ $(document).ready(function(){
 		onclick: false,
 	rules: 
 	{
+		nursery_type: 
+		{ 
+			required: true
+		},
 		name: 
 		{ 
 			required: true
@@ -100,6 +104,10 @@ $(document).ready(function(){
 	},
 	messages:
 	{
+		nursery_type:
+		{
+			required: "กรุณาเลือกประเภทค่ะ"
+		},
 		name:
 		{
 			required: "กรุณากรอกชื่อศูนย์เด็กเล็กค่ะ"
@@ -201,6 +209,12 @@ $(document).ready(function(){
         <legend style="padding:0 5px; font-size:14px; font-weight:700; color:#666;">ข้อมูลศูนย์เด็กเล็ก</legend>
         	<table class="table">
         		<tr>
+        			<th>ประเภท <strong> <span class="TxtRed">*</span></strong></th>
+        			<td>
+        				<?=form_dropdown('nursery_type',array('1'=>'ศูนย์เด็กเล็ก','2'=>'โรงเรียนอนุบาล'),@$nursery->nursery_type);?>
+        			</td>
+        		</tr>
+        		<tr>
         			<th>สคร.<strong> <span class="TxtRed">*</span></strong></th>
         			<td>
         				<?php get_area_dropdown($nursery->area_id);?>
@@ -222,7 +236,16 @@ $(document).ready(function(){
         		</tr>
 				<tr>
                    <th>ปีที่เข้าร่วมโครงการ<strong> <span class="TxtRed">*</span></strong></th>
-                   <td><?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558'),$nursery->year)?></td>
+                   <td>
+                   		<select name="year">
+						    <?php
+							    for($i=(date("Y")+543);$i>=2554;$i--) {
+							        $sel = ($i == $nursery->year) ? 'selected' : "";
+							        echo "<option value=".$i." ".$sel.">".date("Y", mktime(0,0,0,0,1,$i+1))."</option>";
+							    }
+						    ?>
+						</select>
+                   	</td>
                    <td><!-- <?=date("Y")+543?>
                    	<input type="hidden" name="year" value="<?=date("Y")+543?>"> --></td>
                  </tr>

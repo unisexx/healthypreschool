@@ -7,7 +7,7 @@
 	<table class="table table-condensed">
 		<tr>
 			<th>สคร.</th>
-			<td><?=$nursery->area->area_name?></td>
+			<td><?=$nursery->area_id?></td>
 		</tr>
 		<tr>
 	       <th>ปีที่เข้าร่วมโครงการ</th>
