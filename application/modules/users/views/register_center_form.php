@@ -256,6 +256,7 @@ $(document).ready(function(){
             <div class="control-group">
                 <div class="controls">
                   <input type="hidden" name="area_id" value="<?=$nursery->area_id?>">
+                  <input type="hidden" name="year" value="<?=(date("Y")+543)?>">
                   <input type="hidden" name="m_status" value="active">
                   <input type="hidden" name="user_type_id" value="9">
                   <input type="hidden" name="nursery_type" value="1">

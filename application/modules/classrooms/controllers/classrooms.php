@@ -8,7 +8,7 @@ class Classrooms extends Public_Controller{
     
     function index(){
     	$classroom = new Classroom();
-		if(user_login()->user_type_id == 9 or user_login()->user_type_id == 1 or user_login()->user_type_id == 6 or user_login()->user_type_id == 7){ //เจ้าหน้าที่ศูนย์ & สาธารณะสุข
+		if (in_array(user_login()->user_type_id, array(1,6,7,8,9,11))){ //เจ้าหน้าที่ศูนย์ & สาธารณะสุข
 			$classroom->where('nursery_id = '.$_GET['nursery_id']);
 		}elseif(user_login()->user_type_id == 10){ //เจ้าหน้าที่ครู ผู้ดูแลเด็ก
 			$classroom->where('user_id = '.user_login()->id);
@@ -100,10 +100,11 @@ class Classrooms extends Public_Controller{
 	
 	function view($id){
 		$data['rs'] = new Classroom($id);
-		$data['years'] = $this->db->query("SELECT year FROM classroom_teachers where classroom_id = ".$id." 
+		$sql = "SELECT year FROM classroom_teachers where classroom_id = ".$id." 
 UNION
 SELECT year FROM classroom_childrens where classroom_id = ".$id." 
-ORDER BY year desc")->result();
+ORDER BY year desc";
+		$data['years'] = $this->db->query($sql)->result();
 		$this->template->build('view',$data);
 	}
 	
@@ -171,7 +172,7 @@ ORDER BY year desc")->result();
 			
 			set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
 		}
-		redirect('classrooms/view/'.$_POST['classroom_id']);
+		redirect('classrooms?nursery_id='.$_POST['nursery_id']);
 	}
 	
 	function ajax_delete_teacher(){

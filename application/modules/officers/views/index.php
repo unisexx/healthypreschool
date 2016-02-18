@@ -135,11 +135,13 @@ $(document).ready(function(){
 
 	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
 		<?=form_dropdown('user_type_id',array('6'=>'เจ้าหน้าที่ประจำเขต','7'=>'เจ้าหน้าที่ประจำจังหวัด','8'=>'เจ้าหน้าที่ประจำอำเภอ'),@$_GET['user_type_id'],'class="input-xlarge"','--- เลือกประเภทเจ้าหน้าที่ ---');?>
+	<?php elseif(user_login()->user_type_id == 6):?>
+		<?=form_dropdown('user_type_id',array('7'=>'เจ้าหน้าที่ประจำจังหวัด','8'=>'เจ้าหน้าที่ประจำอำเภอ'),@$_GET['user_type_id'],'class="input-xlarge"','--- เลือกประเภทเจ้าหน้าที่ ---');?>
 	<?php endif;?>
 
-	<?php if(user_login()->user_type_id == 6): //เจ้าหน้าที่เขต?>
+	<!-- <?php if(user_login()->user_type_id == 6): //เจ้าหน้าที่เขต?>
    		<?php echo form_dropdown('province_id',get_option('id','name','v_provinces','where area_id = '.user_login()->area_id.' order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
-	<?php endif;?>
+	<?php endif;?> -->
 
 	<?php if(user_login()->user_type_id == 7): //เจ้าหน้าที่จังหวัด?>
 		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.user_login()->province_id.' order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>

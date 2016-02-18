@@ -144,7 +144,7 @@ class Users extends Public_Controller{
 	            $user->save();
 	            
 	            // สมัครเสร็จ login ต่อทันที
-	            if(login($_POST['email'], $_POST['password'], $_POST['user_type_id']))
+	            if(login($_POST['email'], $_POST['password']))
 	            {
 	                set_notify('success', 'ยินดีต้อนรับเข้าสู่ระบบค่ะ');
 					
@@ -251,20 +251,22 @@ class Users extends Public_Controller{
     {
         if($_POST)
         {
-            if(login($_POST['email'], $_POST['password'], $_POST['user_type_id']))
+            if(login($_POST['email'], $_POST['password']))
             {
                 set_notify('success', 'ยินดีต้อนรับเข้าสู่ระบบค่ะ');
 				
 				
-				if(user_login()->user_type_id == 1 || user_login()->user_type_id == 6 || user_login()->user_type_id == 7 || user_login()->user_type_id == 8){
-					redirect('nurseries/register');
-				}elseif(user_login()->user_type_id == 9){
-					redirect('teachers?nursery_id='.user_login()->nursery_id);
-				}elseif(user_login()->user_type_id == 10){
-					redirect('classrooms/classroom_teacher?nursery_id='.user_login()->nursery_id);
-				}
+				// if(user_login()->user_type_id == 1 || user_login()->user_type_id == 6 || user_login()->user_type_id == 7 || user_login()->user_type_id == 8){
+					// redirect('nurseries/register');
+				// }elseif(user_login()->user_type_id == 9){
+					// redirect('teachers?nursery_id='.user_login()->nursery_id);
+				// }elseif(user_login()->user_type_id == 10){
+					// redirect('classrooms/classroom_teacher?nursery_id='.user_login()->nursery_id);
+				// }elseif(user_login()->user_type_id == 11){
+					// redirect('home/menu');
+				// }
 				
-				// redirect('home/menu');
+				redirect('home/menu');
                 // redirect($_SERVER['HTTP_REFERER']);
             }
             else

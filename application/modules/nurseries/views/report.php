@@ -19,22 +19,40 @@ $(function(){
             });
     
             // the data series
-            options.series = [];
-            $('tr', table).each( function(i) {
-                var tr = this;
-                $('th, td', tr).each( function(j) {
-                    if (j > 0) { // skip first column
-                        if (i == 0) { // get the name and init the series
-                            options.series[j - 1] = {
-                                name: this.innerHTML,
-                                data: []
-                            };
-                        } else { // add values
-                            options.series[j - 1].data.push(parseFloat(this.innerHTML));
-                        }
-                    }
-                });
-            });
+            // options.series = [];
+            // $('tr', table).each( function(i) {
+                // var tr = this;
+                // $('th, td', tr).each( function(j) {
+                    // if (j > 0) { // skip first column
+                        // if (i == 0) { // get the name and init the series
+                            // options.series[j - 1] = {
+                                // name: this.innerHTML,
+                                // data: []
+                            // };
+                        // } else { // add values
+                            // options.series[j - 1].data.push(parseFloat(this.innerHTML));
+                        // }
+                    // }
+                // });
+            // });
+            
+            // the data series  (โชว์ฌฉพาะผ่านเกณฑ์)
+	        options.series = [];
+	        $('tr', table).each( function(i) {
+	            var tr = this;
+	            $('th, td', tr).each( function(j) {
+	                if (j == 3) { // skip first column
+	                    if (i == 0) { // get the name and init the series
+	                        options.series[0] = {
+	                            name: this.innerHTML,
+	                            data: []
+	                        };
+	                    } else { // add values
+	                        options.series[0].data.push(parseFloat(this.innerHTML));
+	                    }
+	                }
+	            });
+	        });
     
             var chart = new Highcharts.Chart(options);
         }
@@ -60,8 +78,22 @@ $(function(){
                 }
             },
             tooltip: {
-                formatter: function() {
-                    return '<b>'+ this.x.toLowerCase() +'</b><br/>'+ this.series.name +' '+ this.y +'%'
+                headerFormat: '<b>{point.key}</b><table style="font-weight:bold;">',
+	            pointFormat: '<tr><td style="color:{series.color};">{series.name}:</td><td style="text-align: right;">{point.y}%<td></tr>',
+	            footerFormat: '</table>',
+	            shared: true,
+	            useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    // stacking: 'percent',
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+	                        return this.y + ' %';
+	                    },
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black'
+                    }
                 }
             },
             exporting: {
@@ -184,7 +216,7 @@ $(function(){
 
 
 
-<?if(@$_GET['search']==1): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
+<?if(@!empty($_GET)): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
 
 
 
@@ -923,7 +955,7 @@ $(function(){
 				<th>เข้าร่วม (แห่ง)</th>
 				<th>รอการประเมิน (แห่ง)</th>
 				<th>ผ่านเกณฑ์ (แห่ง)</th>
-				<th>จำนวนทั้งหมดในพื้นที่  (แห่ง)</th>
+				<!-- <th>จำนวนทั้งหมดในพื้นที่  (แห่ง)</th> -->
 				<?endif;?>
 			</tr>
 		</thead>
@@ -976,7 +1008,7 @@ $(function(){
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"><?=$nursery->nursery_all?></a></td>
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=0&year=<?=@$_GET['year']?>"><?=$nursery->nursery_not?></a></td>
 				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=1&year=<?=@$_GET['year']?>"><?=$nursery->nursery_pass?></a></td>
-				<td><?=$arrayTotalAll[$key]?></td>
+				<!-- <td><?=$arrayTotalAll[$key]?></td> -->
 				<?endif;?>
 			</tr>
 				<?php
@@ -997,7 +1029,7 @@ $(function(){
 				<td><?=$totalAll?></td>
 				<td><?=$totalNot?></td>
 				<td><?=$totalPass?></td>
-				<td>20142</td>
+				<!-- <td>20142</td> -->
 				<?endif;?>
 			</tr>
 		</tbody>
