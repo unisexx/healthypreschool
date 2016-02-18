@@ -487,14 +487,28 @@
                               <li><?php echo form_checkbox('measure_clean_5', 1, @$rs -> measure_clean_5, 'class="measure_clean"'); ?> ห้องครัว/ห้องรับประทานอาหาร</li>
                               <li><?php echo form_checkbox('measure_clean_6', 1, @$rs -> measure_clean_6, 'class="measure_clean"'); ?> ห้องน้ำ/ห้องส้วม</li>
                         </ul>
-                        <div style='font-weight:bold;'>7.3 ผู้มีส่วนเกี่ยวข้อง <span class='errorPlace_measurePerson'></span></div>
+                        <div style='font-weight:bold;'>7.3 การแจ้งผู้ที่มีส่วนเกี่ยวข้อง <span class='errorPlace_measurePerson'></span></div>
                         <ul>
-                              <li><?php echo form_checkbox('measure_person_1', 1, @$rs -> measure_person_1, 'class="measure_person"'); ?> เจ้าหน้าที่สาธารณสุข</li>
-                              <li><?php echo form_checkbox('measure_person_2', 1, @$rs -> measure_person_2, 'class="measure_person"'); ?> นายก อบต./เทศมนตรี</li>
-                              <li><?php echo form_checkbox('measure_person_3', 1, @$rs -> measure_person_3, 'class="measure_person"'); ?> ผู้ปกครอง</li>
+                              <li>
+                                  <?php echo form_checkbox('measure_person_1', 1, @$rs -> measure_person_1, 'class="measure_person"'); ?> เจ้าหน้าที่สาธารณสุข
+                                                                                                       วันที่แจ้ง
+                                  <input type="text" name="measure_person_1_date" class='datepicker' value="<?php echo(@!strtotime($rs -> measure_person_1_date)) ? null : DB2Date($rs -> measure_person_1_date, false); ?>">
+                              </li>
+                              <li>
+                                  <?php echo form_checkbox('measure_person_2', 1, @$rs -> measure_person_2, 'class="measure_person"'); ?> นายก อบต./เทศมนตรี
+                                                                                                       วันที่แจ้ง
+                                  <input type="text" name="measure_person_2_date" class='datepicker' value="<?php echo(@!strtotime($rs -> measure_person_2_date)) ? null : DB2Date($rs -> measure_person_2_date, false); ?>">
+                              </li>
+                              <li>
+                                  <?php echo form_checkbox('measure_person_3', 1, @$rs -> measure_person_3, 'class="measure_person"'); ?> ผู้ปกครอง
+                                   วันที่แจ้ง
+                                  <input type="text" name="measure_person_3_date" class='datepicker' value="<?php echo(@!strtotime($rs -> measure_person_3_date)) ? null : DB2Date($rs -> measure_person_3_date, false); ?>">
+                              </li>
                               <li>
                                   <?php echo form_checkbox('measure_person_4', 1, @$rs -> measure_person_4, 'class="measure_person"'); ?> อื่น ๆ
                                   <input type="text" name="measure_person_4_desc" value="<?php echo @$rs -> measure_person_4_desc; ?>">
+                                   วันที่แจ้ง
+                                  <input type="text" name="measure_person_4_date" class='datepicker' value="<?php echo(@!strtotime($rs -> measure_person_4_date)) ? null : DB2Date($rs -> measure_person_4_date, false); ?>">
                               </li>
                         </ul>
                   </td>

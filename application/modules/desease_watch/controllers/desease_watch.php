@@ -104,6 +104,11 @@ class Desease_watch extends Public_Controller {
     public function save() {        //Question data.
         if (is_login()) {            foreach ($_POST as $key => $item) {                if (strstr($key, 'qCbox_') || strstr($key, 'qRdo_')) {                    $q[$key] = $item;                    unset($_POST[$key]);                }            }            //Form data.            $_POST['start_date'] = DATE2DB($_POST['start_date']);            $_POST['end_date'] = DATE2DB($_POST['end_date']);            for ($i = 1; $i < 4; $i++) { $_POST['measure_filter_' . $i] = (empty($_POST['measure_filter_' . $i])) ? 0 : 1;
             }            for ($i = 1; $i < 7; $i++) { $_POST['measure_clean_' . $i] = (empty($_POST['measure_clean_' . $i])) ? 0 : 1;
+            }
+            
+            for ($i = 1; $i < 4; $i++) {
+                 $_POST['measure_person_' . $i] = (empty($_POST['measure_person_' . $i])) ? 0 : 1;
+                 $_POST['measure_person_'.$i.'_date'] = DATE2DB($_POST['measure_person_'.$i.'_date']);
             }            //Save            $save = new Disease_watch();            foreach ($_POST as $key => $item) {                $save -> {$key} = $item;            }
 
             //Plact type
