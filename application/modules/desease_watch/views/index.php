@@ -120,6 +120,9 @@
                                   <?php
                                     $desease_name = new Desease_Watch_name($item->disease);
                                     echo $desease_name->desease_name;
+									if(@$item->disease == 99){
+										echo ':::'.$item->other_desease;
+									}
                                   ?>
                               </td>
                               <td><?php echo mysql_to_th($item->created_date); ?></td>
