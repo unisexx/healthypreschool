@@ -28,7 +28,9 @@ class Users extends Public_Controller{
 				LEFT JOIN districts on nurseries.district_id = districts.id
 				LEFT JOIN amphures on nurseries.amphur_id = amphures.id
 				LEFT JOIN provinces on nurseries.province_id = provinces.id
-				WHERE ".$condition." ORDER BY nurseries.id DESC";
+				WHERE ".$condition." 
+				AND nursery_type != 2
+				ORDER BY nurseries.id DESC";
 		$nursery = new Nursery();
         $data['nurseries'] = $nursery->sql_page($sql, 20);
 		$data['pagination'] = $nursery->sql_pagination;

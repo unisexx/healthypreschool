@@ -132,7 +132,7 @@ $(document).ready(function(){
 			    }
 		    ?>
 			</select>
-    	  <?//=form_dropdown('status',array('1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์','0'=>'รอการประเมิน'),@$_GET['status'],'','');?>
+    	  <?=form_dropdown('status',array('3'=>'รอการประเมิน','1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์'),@$_GET['status'],'','');?>
     	  <input type="hidden" name="search" value="1">
   	      <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
     	</div>

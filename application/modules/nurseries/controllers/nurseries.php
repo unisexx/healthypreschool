@@ -337,7 +337,8 @@ class Nurseries extends Public_Controller
 				$condition .= " and v_nurseries.district_id = ".$_GET['district_id'];
 			}
 			if(@$_GET['year']){
-				$condition .= " and v_nurseries.created LIKE '".($_GET['year']-543)."%'";
+				// $condition .= " and v_nurseries.created LIKE '".($_GET['year']-543)."%'";
+				$condition .= " and v_nurseries.year = ".$_GET['year'];
 			}
 	
 			$condition2 = $condition;
