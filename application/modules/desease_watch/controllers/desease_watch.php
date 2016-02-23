@@ -160,7 +160,9 @@ class Desease_watch extends Public_Controller {
         }    }
 
     function get_question_detail() {
-        if (@$_GET['disease'] != 4) {
+    	if(@$_GET['disease']==99){
+    		$this -> load -> view('question_area_other');
+    	}else if (@$_GET['disease'] != 4) {
             $this -> load -> view('question_area_default');
         } else if (@$_GET['disease'] == 4) {
             $this -> load -> view('question_area_diarrhoeal');

@@ -187,6 +187,9 @@
                                     ?>
                                     <div style='padding-left:20px;'>
         <div>
+			<div>ระบุชื่อโรค <input type="text" name="other_desease" value="<?php echo @$rs->other_desease;?>" required="required"></div>
+		</div>
+        <div>
               <div><?php echo form_checkbox('qCbox_1', 1, @$q['qCbox_1'], 'class="questionParent"') . ' ไข้'; ?></div>
               <div class="questionChild">
                     <div>ลักษณะที่พบ</div>
@@ -262,10 +265,11 @@
         </div>
 
         <div>
-              <div><?php echo form_checkbox('qCbox_10_1', 1, @$q['qCbox_10_1'], 'class="questionParent"') . ' แผล หรือ ' . form_checkbox('qCbox_10_2', 1, @$q['qCbox_10_2'], 'class="questionParent"') . ' ผื่น/ตุ่มแดง'; ?></div>
+              <div><?php echo form_checkbox('qCbox_10_2', 1, @$q['qCbox_10_2'], 'class="questionParent"') . ' ผื่น/ตุ่ม /แผล'; ?></div>
               <div class='questionChild'>
                     <div>
                           <div>ลักษณะที่พบ</div>
+                          <?php echo form_radio('qRdo_10_1', 3, @$q['qRdo_10_1']); ?> ตุ่มแดง
                           <?php echo form_radio('qRdo_10_1', 1, @$q['qRdo_10_1']); ?> ตุ่มน้ำใส
                           <?php echo form_radio('qRdo_10_1', 2, @$q['qRdo_10_1']); ?> ตุ่มน้ำขุ่น/เป็นหนอง
                     </div>
@@ -638,6 +642,7 @@
 				if (checked) {
 					obj.parent().parent().find('.questionChild').show();
 				} else {
+					obj.parent().parent().find('input[type=radio]').prop('checked',false);
 					obj.parent().parent().find('.questionChild').hide();
 				}
 			}

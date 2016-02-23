@@ -8,7 +8,10 @@
 
       <form id="formSearch" method="get" action="">
             <div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-      
+      			  <div style='margin:10px 0;'>
+                        <div class="searchLabel">คำค้น</div>
+                        <input name="name" type="text" value="<?php echo @$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:675px;"/>
+                  </div>
                   <div style='margin:10px 0;'>
                         <span class="searchBox">
                               <div class='searchLabel'>จังหวัด</div>
@@ -56,11 +59,7 @@
                               </div>
                         </span>
                   </div>
-                  
-                  <div style='margin:10px 0;'>
-                        <div class="searchLabel">คำค้น</div>
-                        <input name="name" type="text" value="<?php echo @$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:675px;"/>
-                  </div>
+                                    
                   <button type="button" class="btn btn-primary" id="btnNurserySubmitSearch">ค้นหา</button>
             </div>
       </form>
