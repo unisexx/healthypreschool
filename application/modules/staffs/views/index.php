@@ -105,21 +105,24 @@ $(document).ready(function(){
             	<?=$user->nursery_name?>
             	<ul>
 	        		<li>
-	        			<a href="childrens/list_guest/<?=$user->nursery_id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a>
+	        			<a href="childrens?nursery_id=<?=$user->nursery_id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a>
+	        			<!-- <a href="childrens/list_guest/<?=$user->nursery_id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a> -->
 	        			<?
 	        				$rs = $this->db->query("SELECT COUNT(id) total FROM classroom_details where nursery_id = ".$user->nursery_id)->row_array();
 							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
 	        			?>
 	        		</li>
 	        		<li>
-	        			<a href="classrooms/list_guest/<?=$user->nursery_id?>" target="_blank">รายชื่อห้องเรียน</a>
+	        			<a href="classrooms?nursery_id=<?=$user->nursery_id?>" target="_blank">รายชื่อห้องเรียน</a>
+	        			<!-- <a href="classrooms/list_guest/<?=$user->nursery_id?>" target="_blank">รายชื่อห้องเรียน</a> -->
 	        			<?
 	        				$rs = $this->db->query("SELECT COUNT(id) total FROM classrooms where nursery_id = ".$user->nursery_id)->row_array();
 							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
 	        			?>
 	        		</li>
 	        		<li>
-	        			<a href="teachers/list_guest/<?=$user->nursery_id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a>
+	        			<a href="teachers?nursery_id=<?=$user->nursery_id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a>
+	        			<!-- <a href="teachers/list_guest/<?=$user->nursery_id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a> -->
 	        			<?
 	        				$rs = $this->db->query("SELECT COUNT(id) total FROM users where user_type_id = 10 and nursery_id = ".$user->nursery_id)->row_array();
 							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
