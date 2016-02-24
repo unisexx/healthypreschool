@@ -32,7 +32,7 @@ class Officers extends Public_Controller
 	        if(user_login()->user_type_id == 1){ // admin เห็นทั้งหมด
 	            $data['users']->where('user_type_id > '.user_login()->user_type_id.' and user_type_id < 9 ');
 	        }elseif(user_login()->user_type_id == 6){ // เจ้าหน้าที่เขต เห็นเจ้าหน้าที่จังหวัด กับอำเภอ
-	            $data['users']->where('(user_type_id > 6 and user_type_id < 9) and province_id in (select province_id from area_provinces_detail where area_id = '.user_login()->area_id.')');
+	            $data['users']->where('(user_type_id > 6 and user_type_id < 9) and area_province_id in (select area_province_id from area_provinces_detail where area_id = '.user_login()->area_id.')');
 	        }elseif(user_login()->user_type_id == 7){ // เจ้าหน้าที่จังหวัด เห็นเจ้าหน้าที่อำเภอ
 	            $data['users']->where('user_type_id = 8 and amphur_id in (select id from amphures where province_id = '.user_login()->province_id.')');
 	        }

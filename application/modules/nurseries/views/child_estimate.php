@@ -158,6 +158,9 @@ $(document).ready(function(){
 	        <th>จังหวัด</th>
 	        <th>ที่อยู่</th>
 	        <th>ปีที่เข้าร่วม</th>
+	        <?if(@$_GET['status']==1):?>
+	        <th>หมดอายุ</th>
+	        <?endif;?>
 	        <th>หัวหน้าศูนย์</th>
 	        <th>วันที่ประเมิน</th>
 	        <th>ผู้ประเมิน</th>
@@ -174,6 +177,11 @@ $(document).ready(function(){
 	        <td>จ.<?=$nursery->province_name?></td>
 	        <td>อ.<?=$nursery->amphur_name?><br>ต.<?=$nursery->district_name?></td>
 	        <td><?=$nursery->year?></td>
+	        <?if(@$_GET['status']==1):?>
+	        <td>
+	        	<?if($nursery->status == 1){echo $nursery->approve_year + 3;}?>
+	        </td>
+	        <?endif;?>
 	        <td>
 	        	<?php if($nursery->p_title == "นาย"):?>
 	        		<img class="icon-boy" src="themes/hps/images/boy.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_other?><?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
@@ -208,7 +216,11 @@ $(document).ready(function(){
 	        	<?endif;?>
 	        <?php else:?>
 		        	<input type="hidden" name="id" value="<?=$nursery->id?>">
-		        	<a href="#myModal" role="button" data-toggle="modal" class='btn btn-mini btn-estimate btn-info'>ประเมินผล</a>
+		        	<?if(@$_GET['status']==1):?>
+		        		<a href="#myModal" role="button" data-toggle="modal" class='btn btn-mini btn-estimate btn-success'>รายละเอียด</a>
+		        	<?else:?>
+		        		<a href="#myModal" role="button" data-toggle="modal" class='btn btn-mini btn-estimate btn-info'>ประเมินผล</a>
+		        	<?endif;?>
 	        <?php endif;?>
 	        </td>
 		</tr>

@@ -200,6 +200,10 @@ $(document).ready(function(){
 	พบเจ้าหน้าที่ทั้งหมด <a href="nurseries/register?status=1"> <span class="badge badge-success"><?=$users->paged->total_rows;?></span></a>
 </div>
 
+<div class="pull-right" style="margin-bottom: 10px;">
+	<a class="btn btn-primary" href="officers/form">เพิ่มเจ้าหน้าที่</a>
+</div>
+
 <table class="table">
     <tr>
         <th>ลำดับ</th>
@@ -209,7 +213,7 @@ $(document).ready(function(){
         <th>ประเภท</th>
         <th>พื้นที่</th>
         <th>วันที่สมัคร</th>
-        <th width="80"><a class="btn btn-mini btn-info" href="officers/form">เพิ่มเจ้าหน้าที่</a></th>
+        <th width="80">จัดการ</th>
     </tr>
     <?php foreach($users as $key=>$user):?>
         <tr>
