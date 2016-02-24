@@ -58,14 +58,15 @@
 		      <td>
 		      	<?php
 		      		// กำหนดปีที่ผ่านเกณฑ์เริ่มต้นจากปีที่เข้าร่วม
-		      		$year = $nursery->year; // ปีที่เข้าร่วม
+		      		// $year = $nursery->year; // ปีที่เข้าร่วม
+		      		$year = 2557;
 					$start_year = $year > 2554 ? $year : 2554;
 					$end_year = date("Y") + 543;
 					for($start=$start_year;$start<=$end_year;$start++){
 		      			$arr[$start] = 'ผ่านเกณฑ์ปี '.$start; 
 					}
 		      	?>
-		      	<?=form_dropdown('approve_year',$arr,$nursery->approve_year,'','ไม่ผ่านเกณฑ์ ');?>
+		      	<?=form_dropdown('approve_year',$arr,$nursery->approve_year,'','--- เลือกปีที่ผ่านเกณฑ์ ---');?>
 		      	<input type="hidden" name="id" value="<?=$nursery->id?>">
 		      </td>
 			</tr>
