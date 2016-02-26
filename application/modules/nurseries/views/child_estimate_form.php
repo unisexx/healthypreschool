@@ -1,7 +1,7 @@
 <style>
 	table th{width:150px;}
 </style>
-<form method="post" action="nurseries/save_status" enctype="multipart/form-data">
+<form method="post" action="nurseries/save_status/<?=$nursery->id?>" enctype="multipart/form-data">
   	<fieldset style="border:1px dashed #ccc; padding:10px;">
 	        <legend style="color:#01a8d2 !important; padding:0 5px; font-size:14px; font-weight:700; color:#666; margin:0px; border-bottom: none !important;">ข้อมูลศูนย์เด็กเล็ก (<?=$nursery->nursery_category->title?><?=$nursery->name?>)</legend>
 	<table class="table table-condensed">
@@ -66,14 +66,14 @@
 		      			$arr[$start] = 'ผ่านเกณฑ์ปี '.$start; 
 					}
 		      	?>
-		      	<?=form_dropdown('approve_year',$arr,$nursery->approve_year,'','--- เลือกปีที่ผ่านเกณฑ์ ---');?>
+		      	<?=form_dropdown('approve_year',$arr,$nursery->approve_year,'','ปรับสถานะเป็นรอการประเมิน');?>
 		      	<input type="hidden" name="id" value="<?=$nursery->id?>">
 		      </td>
 			</tr>
 			<tr>
 				<th>หมดอายุ</th>
 				<td>
-					<?if($nursery->status == 1){echo $nursery->approve_year + 3;}?>
+					<?if($nursery->status == 1){echo $nursery->approve_year + 2;}?>
 				</td>
 			</tr>
 			<tr>

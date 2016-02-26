@@ -179,7 +179,7 @@ $(document).ready(function(){
 	        <td><?=$nursery->year?></td>
 	        <?if(@$_GET['status']==1):?>
 	        <td>
-	        	<?if($nursery->status == 1){echo $nursery->approve_year + 3;}?>
+	        	<?if($nursery->status == 1){echo $nursery->approve_year + 2;}?>
 	        </td>
 	        <?endif;?>
 	        <td>
@@ -205,7 +205,7 @@ $(document).ready(function(){
 	        		<span style="color:teal">
 	        		<?if($nursery->approve_year != 0):?>
 	        			ผ่านเกณฑ์ <br>(พ.ศ. <?=$nursery->approve_year?>)<br>
-	        			<span style="color:#d14;">หมดอายุปี <?=$nursery->approve_year + 3?></span>
+	        			<span style="color:#d14;">หมดอายุปี <?=$nursery->approve_year + 2?></span>
 	        		<?else:?>
 	        		<a href="assessments/preview/<?=$nursery->id?>" target="_blank">
 	        			ผ่านเกณฑ์ <br>(<?=$nursery->assessment->total?> คะแนน)<br>
