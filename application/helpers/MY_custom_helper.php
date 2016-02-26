@@ -31,6 +31,122 @@ function get_pass_all_status($user_id = false) {
 				and ifnull(set_final,0) = 0
 				and topic_status = 'approve'
 				and score < pass";
+                
+    $sql = "
+    SELECT COUNT(*)n_nopass FROM (
+SELECT
+qr.*,
+question_topics.orderlist,
+(
+        SELECT
+            `user_question_result`.`create_date`
+        FROM
+            `user_question_result`
+        WHERE
+            (
+                (
+                    `user_question_result`.`user_id` = `qr`.`user_id`
+                )
+                AND (
+                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                )
+            )
+    ) AS `create_date`,
+(
+        SELECT
+            `user_question_result`.`update_date`
+        FROM
+            `user_question_result`
+        WHERE
+            (
+                (
+                    `user_question_result`.`user_id` = `qr`.`user_id`
+                )
+                AND (
+                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                )
+            )
+    ) AS `update_date`,
+(
+        SELECT
+            ifnull(
+                sum(`question_choices`.`score`),
+                0
+            )
+        FROM
+            (
+                (
+                    `question_choices`
+                    JOIN `question_answers` ON (
+                        (
+                            `question_choices`.`id` = `question_answers`.`choice_id`
+                        )
+                    )
+                )
+                LEFT JOIN `question_titles` ON (
+                    (
+                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                    )
+                )
+            )
+        WHERE
+            (
+                (
+                    `question_answers`.`user_id` = `qr`.`user_id`
+                )
+                AND (
+                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                )
+            )
+    ) AS score,
+(
+        SELECT
+            ifnull(count(0), 0)
+        FROM
+            (
+                `question_answers`
+                LEFT JOIN `question_titles` ON (
+                    (
+                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                    )
+                )
+            )
+        WHERE
+            (
+                (
+                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                )
+                AND (
+                    `question_answers`.`user_id` = `qr`.`user_id`
+                )
+            )
+    ) AS `n_answer`
+FROM
+(
+SELECT
+    `users`.`id` AS `user_id`,
+    `users`.`name` AS `name`,
+    `qt`.`id` AS `topic_id`,
+    `qt`.`title` AS `topic_title`,
+    `qt`.`set_final` AS `set_final`,
+    `qt`.`status` AS `topic_status`,
+    `qt`.`pass` AS `pass`,
+  `qt`.`random` AS `n_question` 
+FROM
+    (
+        `users`
+        JOIN `question_topics` `qt`
+    )
+WHERE 
+users.id = ".$user_id."
+)qr
+left join question_topics on qr.topic_id = question_topics.id
+WHERE
+ifnull(qr.set_final,0) = 0
+and topic_status = 'approve'
+)b
+WHERE score < pass
+    ";
 	$result = $CI -> db -> query($sql) -> result();
 	$status = $result[0] -> n_nopass > 0 ? FALSE : TRUE;
 	return $status;
@@ -48,6 +164,123 @@ function get_pass_final_status($user_id = false){
 				and ifnull(set_final,0) = 1
 				and topic_status = 'approve'
 				and score >= pass ";
+    
+    $sql = "
+SELECT COUNT(*)n_pass FROM (
+SELECT
+qr.*,
+question_topics.orderlist,
+(
+        SELECT
+            `user_question_result`.`create_date`
+        FROM
+            `user_question_result`
+        WHERE
+            (
+                (
+                    `user_question_result`.`user_id` = `qr`.`user_id`
+                )
+                AND (
+                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                )
+            )
+    ) AS `create_date`,
+(
+        SELECT
+            `user_question_result`.`update_date`
+        FROM
+            `user_question_result`
+        WHERE
+            (
+                (
+                    `user_question_result`.`user_id` = `qr`.`user_id`
+                )
+                AND (
+                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                )
+            )
+    ) AS `update_date`,
+(
+        SELECT
+            ifnull(
+                sum(`question_choices`.`score`),
+                0
+            )
+        FROM
+            (
+                (
+                    `question_choices`
+                    JOIN `question_answers` ON (
+                        (
+                            `question_choices`.`id` = `question_answers`.`choice_id`
+                        )
+                    )
+                )
+                LEFT JOIN `question_titles` ON (
+                    (
+                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                    )
+                )
+            )
+        WHERE
+            (
+                (
+                    `question_answers`.`user_id` = `qr`.`user_id`
+                )
+                AND (
+                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                )
+            )
+    ) AS score,
+(
+        SELECT
+            ifnull(count(0), 0)
+        FROM
+            (
+                `question_answers`
+                LEFT JOIN `question_titles` ON (
+                    (
+                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                    )
+                )
+            )
+        WHERE
+            (
+                (
+                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                )
+                AND (
+                    `question_answers`.`user_id` = `qr`.`user_id`
+                )
+            )
+    ) AS `n_answer`
+FROM
+(
+SELECT
+    `users`.`id` AS `user_id`,
+    `users`.`name` AS `name`,
+    `qt`.`id` AS `topic_id`,
+    `qt`.`title` AS `topic_title`,
+    `qt`.`set_final` AS `set_final`,
+    `qt`.`status` AS `topic_status`,
+    `qt`.`pass` AS `pass`,
+  `qt`.`random` AS `n_question` 
+FROM
+    (
+        `users`
+        JOIN `question_topics` `qt`
+    )
+WHERE 
+users.id = ".$user_id."
+)qr
+left join question_topics on qr.topic_id = question_topics.id
+WHERE
+ifnull(qr.set_final,0) = 1
+and topic_status = 'approve'
+)b
+WHERE score >= pass    
+    ";
+				
 	$result = $CI -> db -> query($sql) -> result();
 	$status = $result[0] -> n_pass > 0 ? TRUE : FALSE;
 	return $status;
@@ -146,28 +379,126 @@ function get_nursery_dropdown($area_id='',$province_id='',$amphur_id='',$distric
 
 function get_elearning_count(){
   $CI = &get_instance();
-  $sql = "SELECT
-                count(*)nresult
-            FROM
-                v_user_question_result
-            WHERE
-                set_final = 1
-                AND n_answer > 0;
-         ";
+  $sql = "
+  select count(*)nresult from (
+        SELECT
+                        `users`.`id` AS `user_id`,
+                        `users`.`name` AS `name`,
+                        `qt`.`id` AS `topic_id`,
+                        `qt`.`title` AS `topic_title`,
+                        `qt`.`set_final` AS `set_final`,
+                        `qt`.`status` AS `topic_status`,                
+                        (
+                            SELECT
+                                ifnull(count(0), 0)
+                            FROM
+                                (
+                                    `question_answers`
+                                    LEFT JOIN `question_titles` ON (
+                                        (
+                                            `question_answers`.`questionaire_id` = `question_titles`.`id`
+                                        )
+                                    )
+                                )
+                            WHERE
+                                (
+                                    (
+                                        `question_titles`.`topic_id` = `qt`.`id`
+                                    )
+                                    AND (
+                                        `question_answers`.`user_id` = `users`.`id`
+                                    )
+                                )
+                        ) AS `n_answer`,
+                        `qt`.`random` AS `n_question`
+                    FROM
+                        (
+                            `users`
+                            JOIN `question_topics` `qt`
+                        )
+                                WHERE set_final = 1
+        )a 
+        where 
+        n_answer > 0
+    ";
+    
     $result = $CI -> db -> query($sql)->result();
     return @$result[0]->nresult;  
 } 
 
 function get_elearning_pass_count(){
   $CI = &get_instance();
-  $sql = "SELECT
-                count(*)nresult
+  $sql = "
+select count(*)nresult from (
+SELECT
+                `users`.`id` AS `user_id`,
+                `users`.`name` AS `name`,
+                `qt`.`id` AS `topic_id`,
+                `qt`.`title` AS `topic_title`,
+                `qt`.`set_final` AS `set_final`,
+                `qt`.`status` AS `topic_status`,  
+                `qt`.`pass` AS `pass`,
+                (
+                    SELECT
+                        ifnull(count(0), 0)
+                    FROM
+                        (
+                            `question_answers`
+                            LEFT JOIN `question_titles` ON (
+                                (
+                                    `question_answers`.`questionaire_id` = `question_titles`.`id`
+                                )
+                            )
+                        )
+                    WHERE
+                        (
+                            (
+                                `question_titles`.`topic_id` = `qt`.`id`
+                            )
+                            AND (
+                                `question_answers`.`user_id` = `users`.`id`
+                            )
+                        )
+                ) AS `n_answer`,
+                                (
+                                    SELECT                                      
+                                            sum(`question_choices`.`score`)
+                                    FROM
+                                        (
+                                            (
+                                                `question_choices`
+                                                JOIN `question_answers` ON (
+                                                    (
+                                                        `question_choices`.`id` = `question_answers`.`choice_id`
+                                                    )
+                                                )
+                                            )
+                                            LEFT JOIN `question_titles` ON (
+                                                (
+                                                    `question_answers`.`questionaire_id` = `question_titles`.`id`
+                                                )
+                                            )
+                                        )
+                                    WHERE
+                                        (
+                                            (
+                                                `question_answers`.`user_id` = `users`.`id`
+                                            )
+                                            AND (
+                                                `question_titles`.`topic_id` = `qt`.`id`
+                                            )
+                                        )
+                                ) AS `score`,
+                `qt`.`random` AS `n_question`
             FROM
-                v_user_question_result
-            WHERE
-                set_final = 1
-                AND n_answer > 0
-                AND score>=pass
+                (
+                    `users`
+                    JOIN `question_topics` `qt`
+                )
+                        WHERE set_final = 1
+)a 
+where 
+n_answer > 0 and score >= pass
          ";
 
     $result = $CI -> db -> query($sql)->result();

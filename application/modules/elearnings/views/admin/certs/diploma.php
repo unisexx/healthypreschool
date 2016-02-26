@@ -41,7 +41,7 @@
 				<br>
 				เรื่องการป้องกันควบคุมโรคติดต่อในศูนย์เด็กเล็กและโรงเรียนอนุบาล
 				<br>
-				ให้ไว้ ณ <?=thainumDigit(mysql_to_th_cert($user -> questionresult -> where("set_final = 1") -> update_date, "F")) ?>
+				ให้ไว้ ณ <?=thainumDigit(mysql_to_th_cert($questionresult[0]-> update_date, "F")) ?>
 				<br>
 
 				<div style="margin-top:20px; font-size:32px;">
