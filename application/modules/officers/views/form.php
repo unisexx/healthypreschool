@@ -228,7 +228,7 @@ $(function(){
                 	</div>
                 	<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่เขต เห็นจังหวัดในเขตตัวเอง?>
                 		<div>
-	                		<?=form_dropdown('province_to_select_amphur',get_option('id','name','v_provinces where area_province_id = '.user_login()->area_province_id.'  order by name asc'),@$user->amphur->province_id,'class="input-xlarge"','--- เลือกจังหวัด ---');?>
+	                		<?=form_dropdown('province_to_select_amphur',get_option('id','name','v_provinces where area_id = '.user_login()->area_id.'  order by name asc'),@$user->amphur->province_id,'class="input-xlarge"','--- เลือกจังหวัด ---');?>
 	                	</div>
 	                	<div class="amphur-frm">
 	                		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures'),@$user->amphur_id,'class="input-xlarge" style="margin-top:5px";','--- เลือกอำเภอ ---');?>
