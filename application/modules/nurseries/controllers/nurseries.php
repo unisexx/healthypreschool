@@ -350,7 +350,7 @@ class Nurseries extends Public_Controller
 			        break;
 			    case 2: // ไม่ผ่านเกณฑ์ (ประเมินแล้วแต่ไม่ผ่าน)
 			        // $data['nurseries']->where("status = 0")->where_related_assessment('total < 28');
-					$condition .= " and v_nurseries.status >= 0 and assessments.total < 28 ";
+					$condition .= " and v_nurseries.status >= 0 and assessments.total < 28";
 			        break;
 				case 3: // รอการประเมิน
 			        // $data['nurseries']->where("status = 0")->where_related_assessment('total IS NULL');
@@ -421,7 +421,7 @@ class Nurseries extends Public_Controller
 							LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 							LEFT JOIN districts ON v_nurseries.district_id = districts.id
 							LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-							WHERE ".$condition2." and STATUS = 0 and v_nurseries.approve_type = 2
+							WHERE ".$condition2." and STATUS >= 0 and assessments.total < 28
 						) not_pass,
 						(
 							SELECT
@@ -437,7 +437,8 @@ class Nurseries extends Public_Controller
 						";
 	
 			$data['count'] = $this->db->query($sql)->row_array();
-			// echo $sql;	
+			
+			// echo "<br><br><br>".$sql;	
 			
 		}//endif search=1
 
@@ -565,8 +566,9 @@ class Nurseries extends Public_Controller
 
 	function save_status($id=false){
 		if($_POST){
-			if($_POST['approve_year'] == ""){
+			if($_POST['approve_year'] == ""){ // ปรับสถานะเป็นรอการประเมิน
 				$_POST['status'] = 0;
+				$this->db->query("DELETE FROM assessments WHERE nursery_id = ".$id);
 			}else{
 				$_POST['status'] = 1;
 			}

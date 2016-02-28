@@ -57,7 +57,120 @@ class Elearnings extends Public_Controller {
 					user_id = " . $user_id . "
 			) uqr ON qt.id = uqr.topic_id
 			WHERE 1=1 ";
-			$sql .= " AND qt.status = 'approve' AND  uqr.user_id = ".$user_id." ORDER BY orderlist ";
+            
+            $sql = "
+
+            SELECT
+qr.*,
+question_topics.orderlist,
+(
+        SELECT
+            `user_question_result`.`create_date`
+        FROM
+            `user_question_result`
+        WHERE
+            (
+                (
+                    `user_question_result`.`user_id` = `qr`.`user_id`
+                )
+                AND (
+                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                )
+            )
+    ) AS `create_date`,
+(
+        SELECT
+            `user_question_result`.`update_date`
+        FROM
+            `user_question_result`
+        WHERE
+            (
+                (
+                    `user_question_result`.`user_id` = `qr`.`user_id`
+                )
+                AND (
+                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                )
+            )
+    ) AS `update_date`,
+(
+        SELECT
+            ifnull(
+                sum(`question_choices`.`score`),
+                0
+            )
+        FROM
+            (
+                (
+                    `question_choices`
+                    JOIN `question_answers` ON (
+                        (
+                            `question_choices`.`id` = `question_answers`.`choice_id`
+                        )
+                    )
+                )
+                LEFT JOIN `question_titles` ON (
+                    (
+                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                    )
+                )
+            )
+        WHERE
+            (
+                (
+                    `question_answers`.`user_id` = `qr`.`user_id`
+                )
+                AND (
+                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                )
+            )
+    ) AS `score`,
+(
+        SELECT
+            ifnull(count(0), 0)
+        FROM
+            (
+                `question_answers`
+                LEFT JOIN `question_titles` ON (
+                    (
+                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                    )
+                )
+            )
+        WHERE
+            (
+                (
+                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                )
+                AND (
+                    `question_answers`.`user_id` = `qr`.`user_id`
+                )
+            )
+    ) AS `n_answer`
+FROM
+(
+SELECT
+    `users`.`id` AS `user_id`,
+    `users`.`name` AS `name`,
+    `qt`.`id` AS `topic_id`,
+    `qt`.`title` AS `title`,
+    `qt`.`set_final` AS `set_final`,
+    `qt`.`status` AS `topic_status`,
+    `qt`.`pass` AS `pass`,
+  `qt`.`random` AS `n_question` 
+FROM
+    (
+        `users`
+        JOIN `question_topics` `qt`
+    )
+WHERE 
+users.id = ".$user_id."
+)qr
+left join question_topics on qr.topic_id = question_topics.id        
+            
+            ";
+            
+			$sql .= " AND topic_status = 'approve' ORDER BY orderlist ";
             $data['topics'] = $this -> db -> query($sql) -> result();
             $data['pass_all_status'] = get_pass_all_status($user_id);
             $data['pass_final_status'] = get_pass_final_status($user_id);
@@ -362,6 +475,42 @@ class Elearnings extends Public_Controller {
 			if($pass_final_status == TRUE){
 				$user_id = $this -> session -> userdata('id');
 				$data['user'] = new User($user_id);
+                
+$sql = "SELECT
+    `users`.`id` AS `user_id`,
+    `users`.`name` AS `name`,
+    `qt`.`id` AS `topic_id`,
+    `qt`.`title` AS `topic_title`,
+    `qt`.`set_final` AS `set_final`,
+    `qt`.`status` AS `topic_status`,    
+    (
+        SELECT
+            `user_question_result`.`update_date`
+        FROM
+            `user_question_result`
+        WHERE
+            (
+                (
+                    `user_question_result`.`user_id` = `users`.`id`
+                )
+                AND (
+                    `user_question_result`.`topic_id` = `qt`.`id`
+                )
+            )
+    ) AS `update_date`,
+    `qt`.`pass` AS `pass`    
+FROM
+    (
+        (SELECT * FROM `users` WHERE id = ".$user_id.")as users
+        JOIN `question_topics` `qt`
+    )
+WHERE 
+set_final = 1    
+ORDER BY
+    `users`.`id`,
+    `qt`.`orderlist`";             
+                
+                $data['questionresult'] = $this->db->query($sql)->result();
 				$this->load->view('admin/certs/diploma',$data);
 			}else{
 				set_notify('error', 'ขออภัยคุณยังไม่ผ่านแบบทดสอบหลังเรียน');
