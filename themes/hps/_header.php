@@ -37,6 +37,9 @@
 					<li>
 						<a href="contents/more/downloads">ดาวน์โหลด</a>
 					</li>
+					<li>
+						<a href="http://demo.favouritedesign.com/healthypreschool/pages/view/3">ติดต่อเรา</a>
+					</li>
 				</ul></td>
 				<td width="9" height="40" valign="top"><img src="themes/hps/images/topmenu_right.png" width="9" height="40" /></td>
 			</tr>
