@@ -3,10 +3,12 @@
 <script type="text/javascript">
 $(document).ready(function(){	
 	$("#slider").easySlider({
-		auto: false, 
+		auto: true, 
 		numeric: true,
 		numericId: 'controls',
-		continuous: true
+		continuous: true,
+		speed: 800,
+		pause: 5000
 	});
 });
 </script>
