@@ -182,53 +182,119 @@ left join question_topics on qr.topic_id = question_topics.id
         }
     }
 
-    function testing($topic_id) {
+    function testing_final($topic_id) {
         $user_id = $this -> session -> userdata('id');
         $data = '';
          $sql = "
             SELECT
-                qt.id topic_id,
-                qt.title,
-                uqr.user_id,            
+                qr.*,
+                question_topics.orderlist,
                 (
-                SELECT sum(score) FROM question_choices 
-                INNER JOIN question_answers ON question_choices.id = question_answers.choice_id 
-                LEFT JOIN question_titles ON question_answers.questionaire_id = question_titles.id 
-                WHERE 
-                    question_answers.user_id = ".$user_id." AND question_titles.topic_id = qt.id
-                )
-                score,
-                qt.pass,
-                qt.random n_question,
+                        SELECT
+                            `user_question_result`.`create_date`
+                        FROM
+                            `user_question_result`
+                        WHERE
+                            (
+                                (
+                                    `user_question_result`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `create_date`,
                 (
-                    SELECT COUNT(*) 
-                    FROM question_answers 
-                    LEFT JOIN question_titles ON question_answers.questionaire_id = question_titles.id 
-                    WHERE topic_id = qt.id and question_answers.user_id = ".$user_id."
-                )
-                n_answer,
-                qt.set_final
-            FROM
-                question_topics qt
-            LEFT JOIN (
-                SELECT
-                    *
+                        SELECT
+                            `user_question_result`.`update_date`
+                        FROM
+                            `user_question_result`
+                        WHERE
+                            (
+                                (
+                                    `user_question_result`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `update_date`,
+                (
+                        SELECT
+                            ifnull(
+                                sum(`question_choices`.`score`),
+                                0
+                            )
+                        FROM
+                            (
+                                (
+                                    `question_choices`
+                                    JOIN `question_answers` ON (
+                                        (
+                                            `question_choices`.`id` = `question_answers`.`choice_id`
+                                        )
+                                    )
+                                )
+                                LEFT JOIN `question_titles` ON (
+                                    (
+                                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                                    )
+                                )
+                            )
+                        WHERE
+                            (
+                                (
+                                    `question_answers`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `score`,
+                (
+                        SELECT
+                            ifnull(count(0), 0)
+                        FROM
+                            (
+                                `question_answers`
+                                LEFT JOIN `question_titles` ON (
+                                    (
+                                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                                    )
+                                )
+                            )
+                        WHERE
+                            (
+                                (
+                                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                                )
+                                AND (
+                                    `question_answers`.`user_id` = `qr`.`user_id`
+                                )
+                            )
+                    ) AS `n_answer`
                 FROM
-                    questionresults
-                WHERE
-                    user_id = " . $user_id . "
-            ) uqr ON qt.id = uqr.topic_id
-            WHERE 1=1 ";
-			$sql .= " AND qt.id = " . $topic_id . " 
-			AND qt.id NOT IN ( 
-			     SELECT questionaire_id 
-			     FROM question_answers 
-			     LEFT JOIN question_titles ON question_answers.questionaire_id = question_titles.id 
-			     WHERE topic_id = " . $topic_id . "  AND question_answers.user_id = ".$user_id."
-            )
-		     ORDER BY orderlist
-		";
-		//echo $sql;
+                (
+                SELECT
+                    `users`.`id` AS `user_id`,
+                    `users`.`name` AS `name`,
+                    `qt`.`id` AS `topic_id`,
+                    `qt`.`title` AS `title`,
+                    `qt`.`set_final` AS `set_final`,
+                    `qt`.`status` AS `topic_status`,
+                    `qt`.`pass` AS `pass`,
+                  `qt`.`random` AS `n_question` 
+                FROM
+                    (
+                        `users`
+                        JOIN `question_topics` `qt`
+                    )
+                WHERE 
+                users.id = ".$user_id."
+                )qr
+                left join question_topics on qr.topic_id = question_topics.id     
+        ";
+        $sql .= " WHERE topic_id = ".$topic_id." AND topic_status = 'approve' ORDER BY orderlist ";
         $data['topic'] = $this -> db -> query($sql) -> row();
         $pass_all_status = get_pass_all_status($user_id);
         $data['pass_all_status'] = get_pass_all_status($user_id);
@@ -272,6 +338,196 @@ left join question_topics on qr.topic_id = question_topics.id
         }
     }
 
+    function testing($topic_id) {
+        $user_id = $this -> session -> userdata('id');
+        $data = '';
+        $sql = "
+            SELECT
+                qr.*,
+                question_topics.orderlist,
+                (
+                        SELECT
+                            `user_question_result`.`create_date`
+                        FROM
+                            `user_question_result`
+                        WHERE
+                            (
+                                (
+                                    `user_question_result`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `create_date`,
+                (
+                        SELECT
+                            `user_question_result`.`update_date`
+                        FROM
+                            `user_question_result`
+                        WHERE
+                            (
+                                (
+                                    `user_question_result`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `update_date`,
+                (
+                        SELECT
+                            ifnull(
+                                sum(`question_choices`.`score`),
+                                0
+                            )
+                        FROM
+                            (
+                                (
+                                    `question_choices`
+                                    JOIN `question_answers` ON (
+                                        (
+                                            `question_choices`.`id` = `question_answers`.`choice_id`
+                                        )
+                                    )
+                                )
+                                LEFT JOIN `question_titles` ON (
+                                    (
+                                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                                    )
+                                )
+                            )
+                        WHERE
+                            (
+                                (
+                                    `question_answers`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `score`,
+                (
+                        SELECT
+                            ifnull(count(0), 0)
+                        FROM
+                            (
+                                `question_answers`
+                                LEFT JOIN `question_titles` ON (
+                                    (
+                                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                                    )
+                                )
+                            )
+                        WHERE
+                            (
+                                (
+                                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                                )
+                                AND (
+                                    `question_answers`.`user_id` = `qr`.`user_id`
+                                )
+                            )
+                    ) AS `n_answer`
+                FROM
+                (
+                SELECT
+                    `users`.`id` AS `user_id`,
+                    `users`.`name` AS `name`,
+                    `qt`.`id` AS `topic_id`,
+                    `qt`.`title` AS `title`,
+                    `qt`.`set_final` AS `set_final`,
+                    `qt`.`status` AS `topic_status`,
+                    `qt`.`pass` AS `pass`,
+                  `qt`.`random` AS `n_question` 
+                FROM
+                    (
+                        `users`
+                        JOIN `question_topics` `qt`
+                    )
+                WHERE 
+                users.id = ".$user_id."
+                )qr
+                left join question_topics on qr.topic_id = question_topics.id     
+        ";
+        $sql .= " WHERE topic_id = ".$topic_id." AND topic_status = 'approve' ORDER BY orderlist ";
+        $topic = $this->db->query($sql)->row();        
+        $random = $topic->n_question > 0 ? $topic->n_question : 10;
+        $question = $this->db->query("select * from question_titles WHERE topic_id = ".$topic_id." order by rand() limit ".$random)->result();
+        //echo $sql;
+        $data['topic'] = $topic;
+        $data['question'] = $question;
+        $pass_all_status = get_pass_all_status($user_id);
+        $data['pass_all_status'] = get_pass_all_status($user_id);
+        if (($data['topic'] -> set_final == 1 && $pass_all_status == TRUE) || $data['topic'] -> set_final == 0) {
+            if ($data['topic'] -> n_answer == $data['topic'] -> n_question) {
+                $this -> template -> build('testing_result', $data);
+            } else {
+                //$ext_condition = '';
+                //if($data['topic']->set_final == 1){
+                /*    $ext_category = '';
+                    $sql = "select 
+                    q_cat.id
+                    ,q_cat.`name`
+                    ,q_cat.random n_question
+                    ,(select count(*) from question_answers qa 
+                        inner join question_titles qt on qa.questionaire_id = qt.id 
+                        where 
+                        qt.topic_id = ".$topic_id." 
+                        and qa.user_id = ".$user_id." 
+                        and qt.question_category_id = q_cat.id
+                        )n_answer
+                    FROM question_categories q_cat
+                    ";
+                    $result = $this->db->query($sql)->result();
+                    foreach($result as $row){
+                        if($row->n_question > $row->n_answer){
+                            $ext_category.= $ext_category!= '' ? ",".$row->id : $row->id;
+                        }
+                    }
+                    $ext_condition = $ext_category != '' ? " AND question_category_id IN (".$ext_category.") " :  "";
+                }*/
+                //$ext_condition .= " AND id NOT IN (SELECT questionaire_id FROM question_answers WHERE user_id = ".$user_id.")";
+                //$sql = "SELECT * from question_titles WHERE topic_id = " . $topic_id .$ext_condition. " ORDER BY RAND() LIMIT 1 ";
+                //$data['question'] = $this -> db -> query($sql) -> row();
+                //$data['answers'] = $this -> db -> query("select * from question_choices WHERE questionaire_id = " . $data['question'] -> id . " ORDER BY RAND() ") -> result();
+                $this -> template -> build('testing_all', $data);
+            }
+        } else {
+            set_notify('error', '*** ผู้ทำแบบทดสอบจะต้องทำแบบทดสอบระหว่างเรียน ผ่านทั้งหมด จึงจะทำแบบทดสอบท้ายบทเรียนได้ ***');
+            redirect('elearnings/testing_index');
+        }
+    }
+
+    function testing_save_all($topic_id){
+        $user_id = $this -> session -> userdata('id');
+        $this -> db -> query("DELETE FROM question_answers WHERE user_id = " . $user_id . " AND questionaire_id IN (SELECT id from question_titles WHERE topic_id = " . $topic_id . ")");
+        foreach($_POST['question_id'] as $key){                      
+            $answer = new Answer;
+            $answer -> user_id = $this -> session -> userdata('id');
+            $answer -> questionaire_id = $key;
+            $answer -> choice_id = $_POST[$key.'_answer_id'];
+            $answer -> save();
+    
+            $uqr = new User_question_result;
+            $uqr -> where('user_id', $user_id);
+            $uqr -> where('topic_id', $topic_id) -> get();
+            $uqr -> user_id = $uqr -> user_id > 0 ? $uqr -> user_id : $user_id;
+            $uqr -> topic_id = $uqr -> topic_id > 0 ? $uqr -> topic_id : $_POST['topic_id'];
+            $uqr -> status = 3;
+            $uqr -> create_date = $uqr -> create_date > 0 ? $uqr -> create_date : date("Y-m-d H:i:s");
+            $uqr -> update_date = date("Y-m-d H:i:s");
+            $uqr -> save();                     
+        }
+        redirect('elearnings/testing_index');
+    }
+
+    function reset_final($topic_id) {
+        $user_id = $this -> session -> userdata('id');
+        $this -> db -> query("DELETE FROM question_answers WHERE user_id = " . $user_id . " AND questionaire_id IN (SELECT id from question_titles WHERE topic_id = " . $topic_id . ")");
+        redirect('elearnings/testing_final/' . $topic_id);
+    }
+    
     function reset($topic_id) {
         $user_id = $this -> session -> userdata('id');
         $this -> db -> query("DELETE FROM question_answers WHERE user_id = " . $user_id . " AND questionaire_id IN (SELECT id from question_titles WHERE topic_id = " . $topic_id . ")");
@@ -298,7 +554,7 @@ left join question_topics on qr.topic_id = question_topics.id
         $uqr -> update_date = date("Y-m-d H:i:s");
         $uqr -> save();
 
-        $sql = "
+        /*$sql = "
             SELECT
                 qt.id topic_id,
                 qt.title,
@@ -332,7 +588,117 @@ left join question_topics on qr.topic_id = question_topics.id
                     user_id = " . $user_id . "
             ) uqr ON qt.id = uqr.topic_id
             WHERE 1=1 ";
-			$sql .= " AND qt.id = " . $topic_id ;
+			$sql .= " AND qt.id = " . $topic_id ;*/
+	   $sql = "
+            SELECT
+                qr.*,
+                question_topics.orderlist,
+                (
+                        SELECT
+                            `user_question_result`.`create_date`
+                        FROM
+                            `user_question_result`
+                        WHERE
+                            (
+                                (
+                                    `user_question_result`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `create_date`,
+                (
+                        SELECT
+                            `user_question_result`.`update_date`
+                        FROM
+                            `user_question_result`
+                        WHERE
+                            (
+                                (
+                                    `user_question_result`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `update_date`,
+                (
+                        SELECT
+                            ifnull(
+                                sum(`question_choices`.`score`),
+                                0
+                            )
+                        FROM
+                            (
+                                (
+                                    `question_choices`
+                                    JOIN `question_answers` ON (
+                                        (
+                                            `question_choices`.`id` = `question_answers`.`choice_id`
+                                        )
+                                    )
+                                )
+                                LEFT JOIN `question_titles` ON (
+                                    (
+                                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                                    )
+                                )
+                            )
+                        WHERE
+                            (
+                                (
+                                    `question_answers`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `score`,
+                (
+                        SELECT
+                            ifnull(count(0), 0)
+                        FROM
+                            (
+                                `question_answers`
+                                LEFT JOIN `question_titles` ON (
+                                    (
+                                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                                    )
+                                )
+                            )
+                        WHERE
+                            (
+                                (
+                                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                                )
+                                AND (
+                                    `question_answers`.`user_id` = `qr`.`user_id`
+                                )
+                            )
+                    ) AS `n_answer`
+                FROM
+                (
+                SELECT
+                    `users`.`id` AS `user_id`,
+                    `users`.`name` AS `name`,
+                    `qt`.`id` AS `topic_id`,
+                    `qt`.`title` AS `title`,
+                    `qt`.`set_final` AS `set_final`,
+                    `qt`.`status` AS `topic_status`,
+                    `qt`.`pass` AS `pass`,
+                  `qt`.`random` AS `n_question` 
+                FROM
+                    (
+                        `users`
+                        JOIN `question_topics` `qt`
+                    )
+                WHERE 
+                users.id = ".$user_id."
+                )qr
+                left join question_topics on qr.topic_id = question_topics.id     
+        ";
+        $sql .= " WHERE topic_id = ".$topic_id." AND topic_status = 'approve' ORDER BY orderlist ";
         $topic = $this -> db -> query($sql) -> row();
         if ($topic -> n_question == $topic -> n_answer) {
             $this -> ajax_show_result($topic_id);
@@ -345,47 +711,114 @@ left join question_topics on qr.topic_id = question_topics.id
         $user_id = $this -> session -> userdata('id');
         $sql = "
             SELECT
-                qt.id topic_id,
-                qt.title,
-                uqr.user_id,            
+                qr.*,
+                question_topics.orderlist,
                 (
-                SELECT sum(score) FROM question_choices 
-                INNER JOIN question_answers ON question_choices.id = question_answers.choice_id 
-                LEFT JOIN question_titles ON question_answers.questionaire_id = question_titles.id 
-                WHERE 
-                    question_answers.user_id = ".$user_id." AND question_titles.topic_id = qt.id
-                )
-                score,
-                qt.pass,
-                qt.random n_question,
+                        SELECT
+                            `user_question_result`.`create_date`
+                        FROM
+                            `user_question_result`
+                        WHERE
+                            (
+                                (
+                                    `user_question_result`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `create_date`,
                 (
-                    SELECT COUNT(*) 
-                    FROM question_answers 
-                    LEFT JOIN question_titles ON question_answers.questionaire_id = question_titles.id 
-                    WHERE topic_id = qt.id and question_answers.user_id = ".$user_id."
-                )
-                n_answer,
-                qt.set_final
-            FROM
-                question_topics qt
-            LEFT JOIN (
-                SELECT
-                    *
+                        SELECT
+                            `user_question_result`.`update_date`
+                        FROM
+                            `user_question_result`
+                        WHERE
+                            (
+                                (
+                                    `user_question_result`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `update_date`,
+                (
+                        SELECT
+                            ifnull(
+                                sum(`question_choices`.`score`),
+                                0
+                            )
+                        FROM
+                            (
+                                (
+                                    `question_choices`
+                                    JOIN `question_answers` ON (
+                                        (
+                                            `question_choices`.`id` = `question_answers`.`choice_id`
+                                        )
+                                    )
+                                )
+                                LEFT JOIN `question_titles` ON (
+                                    (
+                                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                                    )
+                                )
+                            )
+                        WHERE
+                            (
+                                (
+                                    `question_answers`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `score`,
+                (
+                        SELECT
+                            ifnull(count(0), 0)
+                        FROM
+                            (
+                                `question_answers`
+                                LEFT JOIN `question_titles` ON (
+                                    (
+                                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                                    )
+                                )
+                            )
+                        WHERE
+                            (
+                                (
+                                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                                )
+                                AND (
+                                    `question_answers`.`user_id` = `qr`.`user_id`
+                                )
+                            )
+                    ) AS `n_answer`
                 FROM
-                    questionresults
-                WHERE
-                    user_id = " . $user_id . "
-            ) uqr ON qt.id = uqr.topic_id
-            WHERE 1=1 ";
-		    $sql .= " AND qt.id = " . $topic_id . " 
-            AND qt.id NOT IN ( 
-                 SELECT questionaire_id 
-                 FROM question_answers 
-                 LEFT JOIN question_titles ON question_answers.questionaire_id = question_titles.id 
-                 WHERE topic_id = " . $topic_id . "  AND question_answers.user_id = ".$user_id."
-            )
-             ORDER BY orderlist
+                (
+                SELECT
+                    `users`.`id` AS `user_id`,
+                    `users`.`name` AS `name`,
+                    `qt`.`id` AS `topic_id`,
+                    `qt`.`title` AS `title`,
+                    `qt`.`set_final` AS `set_final`,
+                    `qt`.`status` AS `topic_status`,
+                    `qt`.`pass` AS `pass`,
+                  `qt`.`random` AS `n_question` 
+                FROM
+                    (
+                        `users`
+                        JOIN `question_topics` `qt`
+                    )
+                WHERE 
+                users.id = ".$user_id."
+                )qr
+                left join question_topics on qr.topic_id = question_topics.id     
         ";
+        $sql .= " WHERE topic_id = ".$topic_id." AND topic_status = 'approve' ORDER BY orderlist ";
         $data['topic'] = $this -> db -> query($sql) -> row();
         $this -> load -> view('ajax_show_result', $data);
     }
@@ -395,47 +828,114 @@ left join question_topics on qr.topic_id = question_topics.id
         $data = '';
         $sql = "
             SELECT
-                qt.id topic_id,
-                qt.title,
-                uqr.user_id,            
+                qr.*,
+                question_topics.orderlist,
                 (
-                SELECT sum(score) FROM question_choices 
-                INNER JOIN question_answers ON question_choices.id = question_answers.choice_id 
-                LEFT JOIN question_titles ON question_answers.questionaire_id = question_titles.id 
-                WHERE 
-                    question_answers.user_id = ".$user_id." AND question_titles.topic_id = qt.id
-                )
-                score,
-                qt.pass,
-                qt.random n_question,
+                        SELECT
+                            `user_question_result`.`create_date`
+                        FROM
+                            `user_question_result`
+                        WHERE
+                            (
+                                (
+                                    `user_question_result`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `create_date`,
                 (
-                    SELECT COUNT(*) 
-                    FROM question_answers 
-                    LEFT JOIN question_titles ON question_answers.questionaire_id = question_titles.id 
-                    WHERE topic_id = qt.id and question_answers.user_id = ".$user_id."
-                )
-                n_answer,
-                qt.set_final
-            FROM
-                question_topics qt
-            LEFT JOIN (
-                SELECT
-                    *
+                        SELECT
+                            `user_question_result`.`update_date`
+                        FROM
+                            `user_question_result`
+                        WHERE
+                            (
+                                (
+                                    `user_question_result`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `user_question_result`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `update_date`,
+                (
+                        SELECT
+                            ifnull(
+                                sum(`question_choices`.`score`),
+                                0
+                            )
+                        FROM
+                            (
+                                (
+                                    `question_choices`
+                                    JOIN `question_answers` ON (
+                                        (
+                                            `question_choices`.`id` = `question_answers`.`choice_id`
+                                        )
+                                    )
+                                )
+                                LEFT JOIN `question_titles` ON (
+                                    (
+                                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                                    )
+                                )
+                            )
+                        WHERE
+                            (
+                                (
+                                    `question_answers`.`user_id` = `qr`.`user_id`
+                                )
+                                AND (
+                                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                                )
+                            )
+                    ) AS `score`,
+                (
+                        SELECT
+                            ifnull(count(0), 0)
+                        FROM
+                            (
+                                `question_answers`
+                                LEFT JOIN `question_titles` ON (
+                                    (
+                                        `question_answers`.`questionaire_id` = `question_titles`.`id`
+                                    )
+                                )
+                            )
+                        WHERE
+                            (
+                                (
+                                    `question_titles`.`topic_id` = `qr`.`topic_id`
+                                )
+                                AND (
+                                    `question_answers`.`user_id` = `qr`.`user_id`
+                                )
+                            )
+                    ) AS `n_answer`
                 FROM
-                    questionresults
-                WHERE
-                    user_id = " . $user_id . "
-            ) uqr ON qt.id = uqr.topic_id
-            WHERE 1=1 ";
-            $sql .= " AND qt.id = " . $topic_id . " 
-            AND qt.id NOT IN ( 
-                 SELECT questionaire_id 
-                 FROM question_answers 
-                 LEFT JOIN question_titles ON question_answers.questionaire_id = question_titles.id 
-                 WHERE topic_id = " . $topic_id . "  AND question_answers.user_id = ".$user_id."
-            )
-             ORDER BY orderlist
+                (
+                SELECT
+                    `users`.`id` AS `user_id`,
+                    `users`.`name` AS `name`,
+                    `qt`.`id` AS `topic_id`,
+                    `qt`.`title` AS `title`,
+                    `qt`.`set_final` AS `set_final`,
+                    `qt`.`status` AS `topic_status`,
+                    `qt`.`pass` AS `pass`,
+                  `qt`.`random` AS `n_question` 
+                FROM
+                    (
+                        `users`
+                        JOIN `question_topics` `qt`
+                    )
+                WHERE 
+                users.id = ".$user_id."
+                )qr
+                left join question_topics on qr.topic_id = question_topics.id     
         ";
+        $sql .= " WHERE topic_id = ".$topic_id." AND topic_status = 'approve' ORDER BY orderlist ";
         $data['topic'] = $this -> db -> query($sql) -> row();
         $ext_condition = '';
     	if($data['topic']->set_final == 1){

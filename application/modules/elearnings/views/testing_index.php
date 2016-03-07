@@ -41,17 +41,31 @@
 			echo 'รอการทดสอบ';
 		}
 		?></td>
-		<td style="text-align:center;"><?php if($topic->set_final == 0 || ($topic->set_final == 1 && $pass_all_status == TRUE)){
-		?>
-		<?php
-if($topic->n_answer == $topic->n_question && $topic->score < $topic->pass){
-		?>
-		<a href="elearnings/reset/<?php echo $topic -> topic_id; ?>" class="btn btn-small btn-danger">ทำใหม่อีกครั้ง</a><?php }else if($topic->n_answer != $topic->n_question && $topic->n_answer > 0){ ?>
-		<a href="elearnings/testing/<?php echo $topic -> topic_id; ?>" class="btn btn-small btn-info">ทำแบบทดสอบต่อ</a><?php } ?>
-		<?php if($topic->n_answer < 1){
-		?>
-		<a href="elearnings/testing/<?php echo $topic -> topic_id; ?>" class="btn btn-small btn-primary">เริ่มทำแบบทดสอบ</a><?php } ?>
-		<?php } ?></td>
+		<td style="text-align:center;">
+		<?php if($topic->set_final == 0 || ($topic->set_final == 1 && $pass_all_status == TRUE)){?>
+    		<?php if($topic->set_final==1){?>
+        		<?php if($topic->n_answer == $topic->n_question && $topic->score < $topic->pass){?>
+        		  <a href="elearnings/reset_final/<?php echo $topic -> topic_id; ?>" class="btn btn-small btn-danger">ทำใหม่อีกครั้ง</a>
+        		<?php }else if($topic->n_answer != $topic->n_question && $topic->n_answer > 0){ ?>
+        		  <a href="elearnings/testing_final/<?php echo $topic -> topic_id; ?>" class="btn btn-small btn-info">ทำแบบทดสอบต่อ</a>
+        		<?php } ?>
+        		<?php if($topic->n_answer < 1){
+        		?>
+        		  <a href="elearnings/testing_final/<?php echo $topic -> topic_id; ?>" class="btn btn-small btn-primary">เริ่มทำแบบทดสอบ</a>
+        		<?php } ?>
+    		<?php }else{ ?>
+    		    <?php if($topic->n_answer == $topic->n_question && $topic->score < $topic->pass){?>
+                  <a href="elearnings/reset/<?php echo $topic -> topic_id; ?>" class="btn btn-small btn-danger">ทำใหม่อีกครั้ง</a>
+                <?php }else if($topic->n_answer != $topic->n_question && $topic->n_answer > 0){ ?>
+                  <a href="elearnings/testing/<?php echo $topic -> topic_id; ?>" class="btn btn-small btn-info">ทำแบบทดสอบต่อ</a>
+                <?php } ?>
+                <?php if($topic->n_answer < 1){
+                ?>
+                  <a href="elearnings/testing/<?php echo $topic -> topic_id; ?>" class="btn btn-small btn-primary">เริ่มทำแบบทดสอบ</a>
+                <?php } ?>
+    		<?php } ?>
+		<?php } ?>
+		</td>
 	</tr>
 	<?php endforeach; ?>
 </table>
