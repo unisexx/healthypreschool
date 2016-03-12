@@ -466,7 +466,15 @@ WHERE 1=1 ".$condition;
 		
 		}
 		
-		$this->template->build('newreport',@$data);
+		if(@$_GET['export_type']!=''){
+			if(@$_GET['export_type']=='excel'){
+                $filename= "สรุปผลรายงานแบบคัดกรองโรค_".date("Y-m-d_H_i_s").".xls";
+                header("Content-Disposition: attachment; filename=".$filename);
+            }
+			$this->load->view('newreport',@$data);
+		}else{
+			$this->template->build('newreport',@$data);
+		}
 	}
 
 	function form3(){

@@ -1,3 +1,35 @@
+<?php if(@$_GET['export_type']=='print'):?>
+	<base href="<?php echo base_url(); ?>" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="media/js/bootstrap/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="themes/hps/style.css" type="text/css">
+    <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
+    <link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
+    <script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
+    <script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script src="http://code.highcharts.com/modules/offline-exporting.js"></script>
+    <script type="text/javascript" src="media/js/rgbcolor.js"></script>
+    <script type="text/javascript" src="media/js/canvg.js"></script>
+    <style>
+    	@media print {
+			  a[href]:after {
+			    content: " (" attr(href) ")";
+			  }
+			}
+			@media print {
+			  a[href]:after {
+			    content: none !important;
+			  }
+			}
+			#container{width:800px; height: 400px; margin: 0 auto;}
+			ul.breadcrumb,form,.btn,.add-on,.input-prepend,.hdtitle{display: none;}
+			.table{width:800px!important; margin:0 auto;}
+			body{background:none !important;}
+    </style>
+<?endif;?>
+
 <? $arrayTotalAll = array("720", "705", "1298", "2000", "1971", "3433", "2916", "835", "1189", "2776", "1069", "1230","0");?>
 
 <script type="text/javascript">
@@ -182,7 +214,7 @@ $(function(){
   <li class="active">รายงาน</li>
 </ul>
 
-<div style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</div>
+<div class="hdtitle" style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</div>
     	
 <form method="get" action="nurseries/reports/index/basic_column">
 	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
@@ -235,8 +267,14 @@ $(function(){
 <div id="container"></div>
 
 
-<a href="nurseries/reports/export_graphpage/word?type=<?=@$_GET['type']?>&year=<?=@$_GET['year']?>&area_id=<?=@$_GET['area_id']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>"><div class="btn btn-mini">word</div></a>
-<a href="nurseries/reports/export_graphpage/excel?type=<?=@$_GET['type']?>&year=<?=@$_GET['year']?>&area_id=<?=@$_GET['area_id']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>"><div class="btn btn-mini">excel</div></a>
+<!-- <a href="nurseries/reports/export_graphpage/word?type=<?=@$_GET['type']?>&year=<?=@$_GET['year']?>&area_id=<?=@$_GET['area_id']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>"><div class="btn btn-mini">word</div></a>
+<a href="nurseries/reports/export_graphpage/excel?type=<?=@$_GET['type']?>&year=<?=@$_GET['year']?>&area_id=<?=@$_GET['area_id']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>"><div class="btn btn-mini">excel</div></a> -->
+
+<div class="input-prepend pull-right">
+	<span class="add-on">ส่งออก</span>
+    <span class="btn btn-default btn-print-report">เครื่องพิมพ์</span>
+    <a href="nurseries/reports/export_graphpage/excel?type=<?=@$_GET['type']?>&year=<?=@$_GET['year']?>&area_id=<?=@$_GET['area_id']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>"><span class="btn btn-default btn-excel-report">Excel</span></a>          
+</div>
 
 
 
@@ -1020,15 +1058,15 @@ $(function(){
 			<tr>
 				<th>รวมทั้งหมด</th>
 				<?if(@$_GET['status'] == 1):?>
-				<td><?=$totalAll?></td>
+				<th><?=$totalAll?></th>
 				<?elseif(@$_GET['status'] == 2):?>
-				<td><?=$totalPass?></td>
+				<th><?=$totalPass?></th>
 				<?elseif(@$_GET['status'] == 3):?>
-				<td><?=$totalNot?></td>
+				<th><?=$totalNot?></th>
 				<?else:?>
-				<td><?=$totalAll?></td>
-				<td><?=$totalNot?></td>
-				<td><?=$totalPass?></td>
+				<th><?=$totalAll?></th>
+				<th><?=$totalNot?></th>
+				<th><?=$totalPass?></th>
 				<!-- <td>20142</td> -->
 				<?endif;?>
 			</tr>
@@ -1040,3 +1078,16 @@ $(function(){
 
 
 <?endif;?>
+
+
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+	$('.btn-print-report').click(function(){
+	    var url = 'http://<?=$_SERVER['SERVER_NAME']?><?=$_SERVER['REQUEST_URI']?>&export_type=print';
+	    window.open(url);
+	});
+});
+<?php if(@$_GET['export_type']=='print'):?>
+setTimeout("window.print();",2000);
+<?php endif;?>
+</script>

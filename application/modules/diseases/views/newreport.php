@@ -1,3 +1,37 @@
+<?php if(@$_GET['export_type']!=''):?>
+	<base href="<?php echo base_url(); ?>" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="media/js/bootstrap/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="themes/hps/style.css" type="text/css">
+    <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
+    <link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
+    <script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
+    <script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script src="http://code.highcharts.com/modules/offline-exporting.js"></script>
+    <script type="text/javascript" src="media/js/rgbcolor.js"></script>
+    <script type="text/javascript" src="media/js/canvg.js"></script>
+    <style>
+    	@media print {
+			  a[href]:after {
+			    content: " (" attr(href) ")";
+			  }
+			}
+			@media print {
+			  a[href]:after {
+			    content: none !important;
+			  }
+			}
+			#container{width:800px; height: 400px; margin: 0 auto;}
+			ul.breadcrumb,form,.btn,.add-on,.input-prepend,.hdtitle,h1{display: none !important;}
+			.table{width:800px!important; margin:0 auto;}
+			body{background:none !important;}
+    </style>
+<?endif;?>
+
+
+
 <style media="screen">
 input[type="radio"], input[type="checkbox"]{margin:-1px 0 0 0;}
 .checkbox-inline, .radio-inline {
@@ -107,13 +141,17 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 <?php $arrayMonth = array('1' => 'มกราคม', '2' => 'กุมภาพันธ์', '3' => 'มีนาคม', '4' => 'เมษายน', '5' => 'พฤษภาคม', '6' => 'มิถุนายน', '7' => 'กรกฎาคม', '8' => 'สิงหาคม', '9' => 'กันยายน', '10' => 'ตุลาคม', '11' => 'พฤศจิกายน', '12' => 'ธันวาคม',);?>
 
+<?php if(@$_GET['export_type']!='excel'):?>
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
   <li class="active"><a href="diseases/newreport">รายงานแบบคัดกรองโรค</a></li>
 </ul>
+<?endif;?>
 
 <h1>รายงานแบบคัดกรองโรค</h1>
 
+
+<?php if(@$_GET['export_type']!='excel'):?>
 <form id="search_report" method="get" action="diseases/newreport">
 	<div>
 		<span>ช่วงอายุ</span>
@@ -211,7 +249,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	<input type="hidden" value="1" name='search'>
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 </form>
-
+<?endif;?>
 
 
 
@@ -348,7 +386,15 @@ $(function(){
 	'อื่นๆ' => 'O'
 );?>
 
-<table id="datatable" class="table table-bordered">
+<?php if(@$_GET['export_type']!='excel'):?>
+<div class="input-prepend pull-right">
+	<span class="add-on">ส่งออก</span>
+    <span class="btn btn-default btn-print-report">เครื่องพิมพ์</span>
+    <span class="btn btn-default btn-excel-report">Excel</span>
+</div>
+<?endif;?>
+
+<table id="datatable" class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<thead>
 		<tr>
 			<th></th>
@@ -543,4 +589,23 @@ $(".other").live("click",function(){
 		$('.loader').hide();
 	});
 });
+</script>
+
+
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+	$('.btn-excel-report').click(function(){
+        var url = 'http://<?=$_SERVER['SERVER_NAME']?><?=$_SERVER['REQUEST_URI']?>&export_type=excel';
+        window.open(url);
+    });
+    
+	$('.btn-print-report').click(function(){
+	    var url = 'http://<?=$_SERVER['SERVER_NAME']?><?=$_SERVER['REQUEST_URI']?>&export_type=print';
+	    window.open(url);
+	});
+});
+
+<?php if(@$_GET['export_type']=='print'):?>
+setTimeout("window.print();",2000);
+<?php endif;?>
 </script>

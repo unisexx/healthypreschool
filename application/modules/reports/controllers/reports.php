@@ -44,7 +44,11 @@ class Reports extends Public_Controller {
 
 	// รายงานข้อมูลแบบคัดกรองโรค -- ภาพรวม --
 	function desease_overall(){
-		$this->template->build('desease_overall');
+		if(@$_GET['export_type']!=''){
+			$this->load->view('desease_overall');
+		}else{
+			$this->template->build('desease_overall');
+		}
 	}
 
 	function desease_overall_export(){
@@ -53,7 +57,15 @@ class Reports extends Public_Controller {
 
 	// รายงานข้อมูลแบบคัดกรองโรค -- จำแนกตามปัจจัยต่างๆ --
 	function desease_factor(){
-		$this->template->build('desease_factor');
+		if(@$_GET['export_type']!=''){
+			if(@$_GET['export_type']=='excel'){
+                $filename= "รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค_".date("Y-m-d_H_i_s").".xls";
+                header("Content-Disposition: attachment; filename=".$filename);
+            }
+			$this->load->view('desease_factor');
+		}else{
+			$this->template->build('desease_factor');
+		}
 	}
 
 	function desease_watch_number(){

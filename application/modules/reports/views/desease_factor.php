@@ -1,3 +1,32 @@
+<?php if(@$_GET['export_type']!=''):?>
+	<base href="<?php echo base_url(); ?>" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="media/js/bootstrap/css/bootstrap.min.css" type="text/css">
+	<link rel="stylesheet" type="text/css" href="media/css/font-awesome-4.2.0/css/font-awesome.min.css">
+	<link href="themes/hps/style.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="media/js/jquery-1.8.2.min.js"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <style>
+    	@media print {
+			  a[href]:after {
+			    content: " (" attr(href) ")";
+			  }
+			}
+			@media print {
+			  a[href]:after {
+			    content: none !important;
+			  }
+			}
+			#container1{width:800px; height: 400px; margin: 0 auto;}
+			ul.breadcrumb,form,.btn,.add-on,.input-prepend,.hdtitle,h1{display: none !important;}
+			.table{width:800px!important; margin:0 auto;}
+			body{background:none !important;}
+    </style>
+<?endif;?>
+
+
+
 <style media="screen">
 input[type="radio"], input[type="checkbox"]{margin:-1px 0 0 0;}
 .checkbox-inline, .radio-inline {
@@ -89,7 +118,6 @@ $(document).ready(function() {
 
 <!-- load jQuery 1.4.2 -->
 <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
-
 <link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
 <script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
 <script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
@@ -102,13 +130,16 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 <?php $arrayMonth = array('1' => 'มกราคม', '2' => 'กุมภาพันธ์', '3' => 'มีนาคม', '4' => 'เมษายน', '5' => 'พฤษภาคม', '6' => 'มิถุนายน', '7' => 'กรกฎาคม', '8' => 'สิงหาคม', '9' => 'กันยายน', '10' => 'ตุลาคม', '11' => 'พฤศจิกายน', '12' => 'ธันวาคม',);?>
 
+<?php if(@$_GET['export_type']!='excel'):?>
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
   <li class="active"><a href="reports/desease_factor">รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</a></li>
 </ul>
+<?php endif;?>
 
 <h1>รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</h1>
 
+<?php if(@$_GET['export_type']!='excel'):?>
 <form id="search_report" method="get" action="reports/desease_factor" style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
 
 	<div>
@@ -224,7 +255,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
 </form>
-
+<?endif;?>
 
 
 
@@ -1193,7 +1224,16 @@ $(function () {
 </script>
 
 <div id="container1"></div>
-<table class="table table-bordered">
+
+<?php if(@$_GET['export_type']!='excel'):?>
+<div class="input-prepend pull-right">
+	<span class="add-on">ส่งออก</span>
+    <span class="btn btn-default btn-print-report">เครื่องพิมพ์</span>
+    <span class="btn btn-default btn-excel-report">Excel</span>
+</div>
+<?endif;?>
+
+<table class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<tr>
 		<th rowspan="2">
 			อายุเด็ก
@@ -1387,7 +1427,7 @@ $(function () {
 });
 </script>
 <div id="container2"></div>
-<table class="table table-bordered">
+<table class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<tr>
 		<th rowspan="2">
 			อายุเด็ก
@@ -1679,7 +1719,7 @@ $(function () {
 </script>
 
 <div id="container3"></div>
-<table class="table table-bordered">
+<table class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<tr>
 		<th rowspan="2">
 			อายุเด็ก
@@ -1862,7 +1902,7 @@ $(function () {
 </script>
 
 <div id="container4"></div>
-<table class="table table-bordered">
+<table class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<tr>
 		<th rowspan="2">
 			โรคที่พบบ่อย
@@ -2018,7 +2058,7 @@ $(function () {
 </script>
 
 <div id="container5"></div>
-<table class="table table-bordered">
+<table class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<tr>
 		<th rowspan="2">
 			โรคที่พบบ่อย
@@ -2177,7 +2217,7 @@ $(function () {
 </script>
 
 <div id="container6"></div>
-<table class="table table-bordered">
+<table class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<tr>
 		<th rowspan="2">
 			โรคที่พบบ่อย
@@ -2354,7 +2394,7 @@ $(function () {
 </script>
 
 <div id="container7"></div>
-<table class="table table-bordered">
+<table class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<tr>
 		<th rowspan="2">
 			โรคที่พบบ่อย
@@ -2464,3 +2504,24 @@ $(function () {
 
 
 <?endif;?>
+
+
+
+
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+	$('.btn-excel-report').click(function(){
+        var url = 'http://<?=$_SERVER['SERVER_NAME']?><?=$_SERVER['REQUEST_URI']?>&export_type=excel';
+        window.open(url);
+    });
+    
+	$('.btn-print-report').click(function(){
+	    var url = 'http://<?=$_SERVER['SERVER_NAME']?><?=$_SERVER['REQUEST_URI']?>&export_type=print';
+	    window.open(url);
+	});
+});
+
+<?php if(@$_GET['export_type']=='print'):?>
+setTimeout("window.print();",2000);
+<?php endif;?>
+</script>

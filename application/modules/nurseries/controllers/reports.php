@@ -43,7 +43,14 @@ class Reports extends Public_Controller
 			}
 		}
 		if($graphtype=="basic_column"){
-			$this->template->build('report',$data);
+			
+			if(@$_GET['export_type'] == 'print'){
+				$this->load->view('report',$data);
+			}else{
+				$this->template->build('report',$data);
+			}
+			
+			// $this->template->build('report',$data);
 		}elseif($graphtype=="stacked_column"){
 			$this->template->build('report_stackcolumn',$data);
 		}

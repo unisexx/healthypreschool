@@ -1,3 +1,46 @@
+<?php if(@$_GET['export_type']!=''):?>
+	<base href="<?php echo base_url(); ?>" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="media/js/bootstrap/css/bootstrap.min.css" type="text/css">
+	<link rel="stylesheet" type="text/css" href="media/css/font-awesome-4.2.0/css/font-awesome.min.css">
+	<link href="themes/hps/style.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="media/js/jquery-1.8.2.min.js"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <style>
+    	@media print {
+			  a[href]:after {
+			    content: " (" attr(href) ")";
+			  }
+			}
+			@media print {
+			  a[href]:after {
+			    content: none !important;
+			  }
+			  input[type="radio"], input[type="checkbox"]{margin:-1px 0 0 0;}
+				.checkbox-inline, .radio-inline {
+					position: relative;
+					display: inline-block;
+					padding-left: 5px;
+					margin-bottom: 0;
+					font-weight: 400;
+					vertical-align: middle;
+					cursor: pointer;
+				}
+				tr.subheader{
+					font-weight: bold;
+    				background: #f1f1f1 !important;
+				}
+				.ppprint{display:none;}
+			}
+			#container1{width:800px; height: 400px; margin: 0 auto;}
+			ul.breadcrumb,form,.btn,.add-on,.input-prepend,.hdtitle{display: none !important;}
+			.table{width:800px!important; margin:0 auto;}
+			body{background:none !important;}
+    </style>
+<?endif;?>
+
+
 <style media="screen">
 input[type="radio"], input[type="checkbox"]{margin:-1px 0 0 0;}
 .checkbox-inline, .radio-inline {
@@ -402,10 +445,24 @@ $same_total = $same->same_1 + $same->same_2;
 ?>
 
 <br>
+
+
+<div class="input-prepend pull-right">
+	<span class="add-on">ส่งออก</span>
+    <span class="btn btn-default btn-print-report">เครื่องพิมพ์</span>
+    <a href="reports/desease_overall_export?<?=$_SERVER['QUERY_STRING']?>" target="_blank"><span class="btn btn-default btn-excel-report">Excel</span></a>
+</div>
+
+
+<?php if(@$_GET['export_type']!=''):?>
+<a href="javascript:window.print()"><span class="pull-right ppprint"><i class="fa fa-print"></i> พิมพ์</span></a>
+<?endif;?>
+
+
 <table class="table">
 	<tr>
 		<th>ข้อมูลจำนวนและร้อยละรายงานแบบคัดกรองโรค <a href="reports/desease_overall_export?<?=$_SERVER['QUERY_STRING']?>" target="_blank"><i class="fa fa-file-excel-o"></i></a></th>
-		<th>จำนวน (N=)</th>
+		<th>จำนวน (N=จำนวน)</th>
 		<th>ร้อยละ</th>
 	</tr>
 	<tr class="subheader">
@@ -1376,3 +1433,19 @@ $same_total = $same->same_1 + $same->same_2;
 
 
 <?endif;?>
+
+
+
+
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+	$('.btn-print-report').click(function(){
+	    var url = 'http://<?=$_SERVER['SERVER_NAME']?><?=$_SERVER['REQUEST_URI']?>&export_type=print';
+	    window.open(url);
+	});
+});
+
+<?php if(@$_GET['export_type']=='print'):?>
+setTimeout("window.print();",2000);
+<?php endif;?>
+</script>
