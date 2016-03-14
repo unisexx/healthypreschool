@@ -257,6 +257,67 @@ jQuery_1_4_2("input.datepicker").date_input();
 <?if(@$_GET['search']==1): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
 
 
+<?
+						
+	if(@$_GET['lowage'] != "" && @$_GET['hiage'] != ""){
+		if(@$_GET['agecondition'] == 'between'){
+			@$filter.=" ช่วงอายุระหว่าง ".$_GET['lowage']." ถึง ".$_GET['hiage']."  ปี";
+		}elseif(@$_GET['agecondition'] == 'or'){
+			@$filter.=" อายุ ".$_GET['lowage']." และ ".$_GET['hiage']." ปี";
+		}
+	}
+
+	// วันที่เริ่ม - วันที่สิ้นสุด
+	if(@$_GET['start_date'] and @$_GET['end_date']){
+		$filter .= ", ช่วงเวลาที่เกิดโรค วันที่ ".$_GET['start_date']." ถึงวันที่ ".$_GET['end_date'];
+	}
+	if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+		$filter .= ", ตั้งแต่วันที่ ".$_GET['start_date'];
+	}
+	if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+		$filter .= ", จนถึงวันที่ ".$_GET['end_date'];
+	}
+	
+	// ปีที่คัดกรอง
+	if(@$_GET['year']){
+		$filter .= ", ปีที่คัดกรอง พ.ศ. ".$_GET['year'];
+	}
+	
+	// เดือนที่คัดกรอง
+	if(@$_GET['month']){
+		$filter .= ", เดือนที่คัดกรองโรค ".$arrayMonth[$_GET['month']];
+	}
+
+	if(@$_GET['area_id']!=""){
+		@$filter.=", พื้นที่เขต สคร.".$_GET['area_id'];
+	}
+	
+	if(@$_GET['province_id']!=""){
+		@$filter.=", จังหวัด ".get_province_name($_GET['province_id']);
+	}
+	
+	if(@$_GET['amphur_id']!=""){
+		@$filter.=", อำเภอ ".get_amphur_name($_GET['amphur_id']);
+	}
+	
+	if(@$_GET['district_id']!=""){
+		@$filter.=", ตำบล ".get_district_name($_GET['district_id']);
+	}
+	
+	if(@$_GET['nursery_id']!=""){
+		@$filter.=", ".get_nursery_name($_GET['nursery_id']);
+	}
+	
+	if(@$_GET['classroom_id']!=""){
+		@$filter.=", ห้องเรียน".get_student_room_name($_GET['classroom_id']);
+	}
+	
+	if(@$filter != ""){
+		@$filter = "( ".$filter." )";
+	}
+	
+	$title_graph = "สรุปผลรายงานแบบคัดกรองโรค<br>".@$filter;
+?>
 
 <script type="text/javascript">
 $(function(){
@@ -307,7 +368,7 @@ $(function(){
                 type: 'column'
             },
             title: {
-                text: "<?=$text?>"
+                text: "<?=$title_graph?>"
             },
             xAxis: {
             	labels: {

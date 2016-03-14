@@ -438,8 +438,6 @@ WHERE 1=1 ".$condition;
 	function newreport (){
 		
 		if(@$_GET['search']==1){ //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล
-		
-			$data['text'] = "สรุปผลรายงานแบบคัดกรองโรค";
 			
 			if(isset($_GET['classroom_id']) && ($_GET['classroom_id']!="")){
 				$data['rs'] = new Classroom();

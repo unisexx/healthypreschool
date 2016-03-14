@@ -12,6 +12,17 @@ class Reports extends Public_Controller
 		
 		(@$_GET['year'])?$txt="ปีงบประมาณ ".@$_GET['year']:$txt="โดยรวมทั้งหมด";
 		
+		if(@$_GET['start_year'] and @$_GET['end_year']){
+			$txt = "ระหว่างปี พ.ศ. ".$_GET['start_year']." ถึง พ.ศ. ".$_GET['end_year'];
+		}
+		if(@$_GET['start_year'] and @empty($_GET['end_year'])){
+			$txt = "ตั้งแต่ปี พ.ศ. ".$_GET['start_year'];
+		}
+		if(@$_GET['end_year'] and @empty($_GET['start_year'])){
+			$txt = "จนถึงปี พ.ศ. ".$_GET['end_year'];
+		}
+		
+		
 		if(@$_GET['type'] == 1 ){ // สคร
 			$data['provinces'] = new V_province();
 			$data['provinces']->where('area_id = '.$_GET['area_id'])->get();
@@ -36,11 +47,14 @@ class Reports extends Public_Controller
 		}else{
 			$data['areas'] = new Area();
 			$data['areas']->order_by('id','asc')->get();
-			if(@$_GET['year']){
-				$data['text'] = "สรุปผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรคปีงบประมาณ ".$_GET['year'];
-			}else{
-				$data['text'] = "สรุปผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรคโดยรวมทั้งหมด";
-			}
+			
+			$data['text'] = "สรุปผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรค".$txt;
+			
+			// if(@$_GET['year']){
+				// $data['text'] = "สรุปผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรคปีงบประมาณ ".$_GET['year'];
+			// }else{
+				// $data['text'] = "สรุปผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรคโดยรวมทั้งหมด";
+			// }
 		}
 		if($graphtype=="basic_column"){
 			
@@ -108,6 +122,20 @@ class Reports extends Public_Controller
 			$condition .=" and v_nurseries.year = ".$_GET['year'];
 			$data['year'] = "ปี ".$_GET['year'];
 		}
+
+		if(@$_GET['start_year'] and @$_GET['end_year']){
+			$condition .= " and v_nurseries.year between ".$_GET['start_year']." and ".$_GET['end_year'];
+			$data['year'] = "ระหว่างปี ".$_GET['start_year']." ถึง ".$_GET['end_year'];
+		}
+		if(@$_GET['start_year'] and @empty($_GET['end_year'])){
+			$condition .= " and v_nurseries.year >= ".$_GET['start_year'];
+			$data['year'] = "ตั้งแต่ปี ".$_GET['start_year'];
+		}
+		if(@$_GET['end_year'] and @empty($_GET['start_year'])){
+			$condition .= " and v_nurseries.year >= ".$_GET['end_year'];
+			$data['year'] = "จนถึงปี ".$_GET['end_year'];
+		}
+		
 		if(isset($_GET['status'])){
 			$condition .=" and v_nurseries.status = ".$_GET['status'];
 		}

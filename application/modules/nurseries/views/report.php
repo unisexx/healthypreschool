@@ -275,7 +275,7 @@ $(function(){
 <div class="input-prepend pull-right">
 	<span class="add-on">ส่งออก</span>
     <span class="btn btn-default btn-print-report">เครื่องพิมพ์</span>
-    <a href="nurseries/reports/export_graphpage/excel?type=<?=@$_GET['type']?>&year=<?=@$_GET['year']?>&area_id=<?=@$_GET['area_id']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>"><span class="btn btn-default btn-excel-report">Excel</span></a>          
+    <a href="nurseries/reports/export_graphpage/excel?type=<?=@$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&area_id=<?=@$_GET['area_id']?>&province_id=<?=@$_GET['province_id']?>&amphur_id=<?=@$_GET['amphur_id']?>&district_id=<?=@$_GET['district_id']?>"><span class="btn btn-default btn-excel-report">Excel</span></a>          
 </div>
 
 
@@ -296,7 +296,7 @@ $(function(){
 	// search condition
 	$condition = "";
 	if(@$_GET['year']!=""){
-		@$condition.=" and v_nurseries.year = ".$_GET['year'];
+		@$condition.=" and v_nurseries.year = ".@$_GET['year'];
 	}
 	// ปีที่เริ่ม - ปีที่สิ้นสุด
 	if(@$_GET['start_year'] and @$_GET['end_year']){
@@ -306,7 +306,7 @@ $(function(){
 		$condition .= " and v_nurseries.year >= ".$_GET['start_year'];
 	}
 	if(@$_GET['end_year'] and @empty($_GET['start_year'])){
-		$condition .= " and v_nurseries.year >= ".$_GET['end_year'];
+		$condition .= " and v_nurseries.year <= ".$_GET['end_year'];
 	}
 ?>
 
@@ -727,18 +727,18 @@ $(function(){
 				?>
 			<tr>
 				<th>
-					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=2&province_id=<?=$province->id?>&status=<?=@$_GET['status']?>"><?=$province->name?></a>
+					<a href="nurseries/reports/index/basic_column?year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&type=2&province_id=<?=$province->id?>&status=<?=@$_GET['status']?>"><?=$province->name?></a>
 				</th>
 				<?if(@$_GET['status'] == 1):?>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>"><?=$all?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>"><?=$all?></a></td>
 				<?elseif(@$_GET['status'] == 2):?>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=1"><?=$pass?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=1"><?=$pass?></a></td>
 				<?elseif(@$_GET['status'] == 3):?>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=0"><?=$not?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=0"><?=$not?></a></td>
 				<?else:?>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>"><?=$all?></a></td>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=0"><?=$not?></a></td>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=1"><?=$pass?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>"><?=$all?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=0"><?=$not?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&area_id=<?=$_GET['area_id']?>&province_id=<?=$province->id?>&status=1"><?=$pass?></a></td>
 				<?endif;?>
 			</tr>
 			
@@ -824,18 +824,18 @@ $(function(){
 				?>
 			<tr>
 				<th>
-					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=3&amphur_id=<?=$amphur->id?>&status=<?=@$_GET['status']?>"><?=$amphur->amphur_name?></a>
+					<a href="nurseries/reports/index/basic_column?year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&type=3&amphur_id=<?=$amphur->id?>&status=<?=@$_GET['status']?>"><?=$amphur->amphur_name?></a>
 				</th>
 				<?if(@$_GET['status'] == 1):?>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>"><?=$all?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>"><?=$all?></a></td>
 				<?elseif(@$_GET['status'] == 2):?>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=1"><?=$pass?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=1"><?=$pass?></a></td>
 				<?elseif(@$_GET['status'] == 3):?>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=0"><?=$not?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=0"><?=$not?></a></td>
 				<?else:?>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>"><?=$all?></a></td>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=0"><?=$not?></a></td>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=1"><?=$pass?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>"><?=$all?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=0"><?=$not?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&province_id=<?=$_GET['province_id']?>&amphur_id=<?=$amphur->id?>&status=1"><?=$pass?></a></td>
 				<?endif;?>
 			</tr>
 				<?php
@@ -920,18 +920,18 @@ $(function(){
 				?>
 			<tr>
 				<th>
-					<a href="nurseries/reports/index/basic_column?year=<?=$_GET['year']?>&type=4&district_id=<?=$district->id?>&status=<?=@$_GET['status']?>"><?=$district->district_name?></a>
+					<a href="nurseries/reports/index/basic_column?year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&type=4&district_id=<?=$district->id?>&status=<?=@$_GET['status']?>"><?=$district->district_name?></a>
 				</th>
 				<?if(@$_GET['status'] == 1):?>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>"><?=$all?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>"><?=$all?></a></td>
 				<?elseif(@$_GET['status'] == 2):?>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=1"><?=$pass?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=1"><?=$pass?></a></td>
 				<?elseif(@$_GET['status'] == 3):?>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=0"><?=$not?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=0"><?=$not?></a></td>
 				<?else:?>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>"><?=$all?></a></td>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=0"><?=$not?></a></td>
-				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=$_GET['year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=1"><?=$pass?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>"><?=$all?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=0"><?=$not?></a></td>
+				<td><a href="nurseries/reports/detail?type=<?=$_GET['type']?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&amphur_id=<?=$_GET['amphur_id']?>&district_id=<?=$district->id?>&status=1"><?=$pass?></a></td>
 				<?endif;?>
 			</tr>
 				<?php
@@ -1049,15 +1049,15 @@ $(function(){
 			<tr>
 				<th><a href="nurseries/reports/index/basic_column?year=&type=1&area_id=<?=$area->id?>&status=<?=@$_GET['status']?>"><?=$area->area_name?></a></th>
 				<?if(@$_GET['status'] == 1):?>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"><?=$nursery->nursery_all?></a></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>"><?=$nursery->nursery_all?></a></td>
 				<?elseif(@$_GET['status'] == 2):?>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=1><?=$nursery->nursery_pass?></a></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&status=1><?=$nursery->nursery_pass?></a></td>
 				<?elseif(@$_GET['status'] == 3):?>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"&status=0><?=$nursery->nursery_not?></a></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>&status=0><?=$nursery->nursery_not?></a></td>
 				<?else:?>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>"><?=$nursery->nursery_all?></a></td>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=0&year=<?=@$_GET['year']?>"><?=$nursery->nursery_not?></a></td>
-				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=1&year=<?=@$_GET['year']?>"><?=$nursery->nursery_pass?></a></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>"><?=$nursery->nursery_all?></a></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=0&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>"><?=$nursery->nursery_not?></a></td>
+				<td><a href="nurseries/reports/detail?area_id=<?=$area->id?>&status=1&year=<?=@$_GET['year']?>&start_year=<?=@$_GET['start_year']?>&end_year=<?=@$_GET['end_year']?>"><?=$nursery->nursery_pass?></a></td>
 				<!-- <td><?=$arrayTotalAll[$key]?></td> -->
 				<?endif;?>
 			</tr>

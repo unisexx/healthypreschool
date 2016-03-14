@@ -18,7 +18,7 @@
 			    content: none !important;
 			  }
 			}
-			#container1{width:800px; height: 400px; margin: 0 auto;}
+			#container1,#container2,#container3,#container4,#container5,#container6,#container7{width:800px; height: 400px; margin: 0 auto;}
 			ul.breadcrumb,form,.btn,.add-on,.input-prepend,.hdtitle,h1{display: none !important;}
 			.table{width:800px!important; margin:0 auto;}
 			body{background:none !important;}
@@ -133,11 +133,11 @@ jQuery_1_4_2("input.datepicker").date_input();
 <?php if(@$_GET['export_type']!='excel'):?>
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active"><a href="reports/desease_factor">รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</a></li>
+  <li class="active"><a href="reports/desease_factor">รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค วิเคราะห์ตามปัจจัยต่างๆ</a></li>
 </ul>
 <?php endif;?>
 
-<h1>รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค</h1>
+<h1>รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก แจกแจงข้อมูลรายงานแบบคัดกรองโรค วิเคราะห์ตามปัจจัยต่างๆ</h1>
 
 <?php if(@$_GET['export_type']!='excel'):?>
 <form id="search_report" method="get" action="reports/desease_factor" style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
@@ -265,7 +265,59 @@ jQuery_1_4_2("input.datepicker").date_input();
 
 <?if(!empty($_GET)): //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล?>
 
+<?
+	$filter = "";
+	
+	// วันที่เริ่ม - วันที่สิ้นสุด
+	if(@$_GET['start_date'] and @$_GET['end_date']){
+		$filter .= ", ช่วงเวลาที่เกิดโรค วันที่ ".$_GET['start_date']." ถึงวันที่ ".$_GET['end_date'];
+	}
+	if(@$_GET['start_date'] and @empty($_GET['end_date'])){
+		$filter .= ", ตั้งแต่วันที่ ".$_GET['start_date'];
+	}
+	if(@$_GET['end_date'] and @empty($_GET['start_date'])){
+		$filter .= ", จนถึงวันที่ ".$_GET['end_date'];
+	}
+	
+	// ปีที่คัดกรอง
+	if(@$_GET['year']){
+		$filter .= ", ปีที่สัมผัสโรค พ.ศ. ".$_GET['year'];
+	}
+	
+	// เดือนที่คัดกรอง
+	if(@$_GET['month']){
+		$filter .= ", เดือนที่สัมผัสโรค ".$arrayMonth[$_GET['month']];
+	}
 
+	if(@$_GET['area_id']!=""){
+		@$filter.=", พื้นที่เขต สคร.".$_GET['area_id'];
+	}
+	
+	if(@$_GET['province_id']!=""){
+		@$filter.=", จังหวัด ".get_province_name($_GET['province_id']);
+	}
+	
+	if(@$_GET['amphur_id']!=""){
+		@$filter.=", อำเภอ ".get_amphur_name($_GET['amphur_id']);
+	}
+	
+	if(@$_GET['district_id']!=""){
+		@$filter.=", ตำบล ".get_district_name($_GET['district_id']);
+	}
+	
+	if(@$_GET['nursery_id']!=""){
+		@$filter.=", ".get_nursery_name($_GET['nursery_id']);
+	}
+	
+	if(@$_GET['classroom_id']!=""){
+		@$filter.=", ห้องเรียน".get_student_room_name($_GET['classroom_id']);
+	}
+	
+	if(@$filter != ""){
+		@$filter = "<br>( ".substr($filter,2)." )";
+	}
+	
+?>
 
 <style>
 	tr.subheader{font-weight:bold;background:#f1f1f1;}
@@ -1186,7 +1238,7 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามอายุ และเพศ'
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามอายุ และเพศ<?=@$filter?>'
         },
         xAxis: {
             categories: ['ต่ำกว่า 1 ปี', '1 ปี', '2 ปี', '3 ปี', '4 ปี','5 ปี', '6 ปี', '7 ปี']
@@ -1378,7 +1430,7 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามอายุ และโรค'
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามอายุ และโรค<?=@$filter?>'
         },
         xAxis: {
             categories: ['ต่ำกว่า 1 ปี', '1 ปี', '2 ปี', '3 ปี', '4 ปี','5 ปี', '6 ปี', '7 ปี']
@@ -1427,6 +1479,15 @@ $(function () {
 });
 </script>
 <div id="container2"></div>
+
+<?php if(@$_GET['export_type']!='excel'):?>
+<div class="input-prepend pull-right">
+	<span class="add-on">ส่งออก</span>
+    <span class="btn btn-default btn-print-report">เครื่องพิมพ์</span>
+    <span class="btn btn-default btn-excel-report">Excel</span>
+</div>
+<?endif;?>
+
 <table class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<tr>
 		<th rowspan="2">
@@ -1681,7 +1742,7 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามอายุ และสถานะเด็กป่วย'
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามอายุ และสถานะเด็กป่วย<?=@$filter?>'
         },
         xAxis: {
             categories: ['ต่ำกว่า 1 ปี', '1 ปี', '2 ปี', '3 ปี', '4 ปี','5 ปี', '6 ปี', '7 ปี']
@@ -1719,6 +1780,16 @@ $(function () {
 </script>
 
 <div id="container3"></div>
+
+<?php if(@$_GET['export_type']!='excel'):?>
+<div class="input-prepend pull-right">
+	<span class="add-on">ส่งออก</span>
+    <span class="btn btn-default btn-print-report">เครื่องพิมพ์</span>
+    <span class="btn btn-default btn-excel-report">Excel</span>
+</div>
+<?endif;?>
+
+
 <table class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<tr>
 		<th rowspan="2">
@@ -1864,7 +1935,7 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามโรค และเพศ'
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามโรค และเพศ<?=@$filter?>'
         },
         xAxis: {
             categories: ['หวัด', 'มือ เท้า ปาก', 'อุจจาระร่วง', 'ไข้', 'ไข้ออกผื่น','อื่นๆ']
@@ -1902,6 +1973,16 @@ $(function () {
 </script>
 
 <div id="container4"></div>
+
+<?php if(@$_GET['export_type']!='excel'):?>
+<div class="input-prepend pull-right">
+	<span class="add-on">ส่งออก</span>
+    <span class="btn btn-default btn-print-report">เครื่องพิมพ์</span>
+    <span class="btn btn-default btn-excel-report">Excel</span>
+</div>
+<?endif;?>
+
+
 <table class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<tr>
 		<th rowspan="2">
@@ -2020,7 +2101,7 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามโรค และสถานะเด็กป่วย'
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามโรค และสถานะเด็กป่วย<?=@$filter?>'
         },
         xAxis: {
             categories: ['หวัด', 'มือ เท้า ปาก', 'อุจจาระร่วง', 'ไข้', 'ไข้ออกผื่น','อื่นๆ']
@@ -2058,6 +2139,16 @@ $(function () {
 </script>
 
 <div id="container5"></div>
+
+<?php if(@$_GET['export_type']!='excel'):?>
+<div class="input-prepend pull-right">
+	<span class="add-on">ส่งออก</span>
+    <span class="btn btn-default btn-print-report">เครื่องพิมพ์</span>
+    <span class="btn btn-default btn-excel-report">Excel</span>
+</div>
+<?endif;?>
+
+
 <table class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<tr>
 		<th rowspan="2">
@@ -2176,7 +2267,7 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามโรค และการแยกเด็กป่วย'
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามโรค และการแยกเด็กป่วย<?=@$filter?>'
         },
         xAxis: {
             categories: ['หวัด', 'มือ เท้า ปาก', 'อุจจาระร่วง', 'ไข้', 'ไข้ออกผื่น','อื่นๆ']
@@ -2217,6 +2308,16 @@ $(function () {
 </script>
 
 <div id="container6"></div>
+
+<?php if(@$_GET['export_type']!='excel'):?>
+<div class="input-prepend pull-right">
+	<span class="add-on">ส่งออก</span>
+    <span class="btn btn-default btn-print-report">เครื่องพิมพ์</span>
+    <span class="btn btn-default btn-excel-report">Excel</span>
+</div>
+<?endif;?>
+
+
 <table class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<tr>
 		<th rowspan="2">
@@ -2356,7 +2457,7 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามโรค และกรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน'
+            text: 'ตารางแสดงจำนวนเด็กที่ป่วยในศูนย์เด็กเล็กปลอดโรค แจกแจงตามโรค และกรณีมีคนที่บ้านป่วยเป็นโรคเดียวกัน<?=@$filter?>'
         },
         xAxis: {
             categories: ['หวัด', 'มือ เท้า ปาก', 'อุจจาระร่วง', 'ไข้', 'ไข้ออกผื่น','อื่นๆ']
@@ -2394,6 +2495,16 @@ $(function () {
 </script>
 
 <div id="container7"></div>
+
+<?php if(@$_GET['export_type']!='excel'):?>
+<div class="input-prepend pull-right">
+	<span class="add-on">ส่งออก</span>
+    <span class="btn btn-default btn-print-report">เครื่องพิมพ์</span>
+    <span class="btn btn-default btn-excel-report">Excel</span>
+</div>
+<?endif;?>
+
+
 <table class="table table-bordered" <?php if(@$_GET['export_type']=='excel')echo 'border="1" cellpadding="5" cellspacing="0"'?>>
 	<tr>
 		<th rowspan="2">
