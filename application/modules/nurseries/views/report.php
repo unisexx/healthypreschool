@@ -218,7 +218,9 @@ $(function(){
     	
 <form method="get" action="nurseries/reports/index/basic_column">
 	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-	<?=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558','2559'=>'2559'),@$_GET['year'],'','--- เลือกปี ---');?>
+	<?// =form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558','2559'=>'2559'),@$_GET['year'],'','--- เลือกปี ---');?>
+	<?=form_dropdown('start_year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558','2559'=>'2559'),@$_GET['start_year'],'','--- ปีที่เริ่ม ---');?>
+	<?=form_dropdown('end_year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558','2559'=>'2559'),@$_GET['end_year'],'','--- ปีที่สิ้นสุด ---');?>
 		
 	<?=form_dropdown('type',array('1'=>'สคร.','2'=>'จังหวัด','3'=>'อำเภอ','4'=>'ตำบล'),@$_GET['type'],'','--- แยกตาม ---');?>
 	
@@ -295,6 +297,16 @@ $(function(){
 	$condition = "";
 	if(@$_GET['year']!=""){
 		@$condition.=" and v_nurseries.year = ".$_GET['year'];
+	}
+	// ปีที่เริ่ม - ปีที่สิ้นสุด
+	if(@$_GET['start_year'] and @$_GET['end_year']){
+		$condition .= " and v_nurseries.year between ".$_GET['start_year']." and ".$_GET['end_year'];
+	}
+	if(@$_GET['start_year'] and @empty($_GET['end_year'])){
+		$condition .= " and v_nurseries.year >= ".$_GET['start_year'];
+	}
+	if(@$_GET['end_year'] and @empty($_GET['start_year'])){
+		$condition .= " and v_nurseries.year >= ".$_GET['end_year'];
 	}
 ?>
 
