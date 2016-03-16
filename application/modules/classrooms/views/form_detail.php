@@ -2,7 +2,7 @@
 .form-horizontal .control-label {width:170px !important;}
 .date_selector{top:150px !important;left:400px !important;}
 </style>
-<script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
+<!-- <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
 <link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
 <script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
 <script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
@@ -11,7 +11,9 @@ var jQuery_1_4_2 = $.noConflict(true);
 $(document).ready(function(){
 // jQuery_1_4_2("input.datepicker").date_input(); 
 });
-</script>
+</script> -->
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>  
+<script src="media/js/jqueryui_datepicker_thai.js"></script>  
 
 
 <script>
@@ -185,9 +187,29 @@ $(document).ready(function(){
 	
 	//------------------- Children Form ---------------------
 	$('.addChildrenForm').click(function(){
-		var ChildrenForm = $("#childrenFormBlock").clone();
-		$("#childrenData").html(ChildrenForm);
-		jQuery_1_4_2("input.datepicker").date_input();
+		// var ChildrenForm = $("#childrenFormBlock").clone();
+		// $("#childrenData").html(ChildrenForm);
+		// jQuery_1_4_2("input.datepicker").date_input();
+		
+		//clear form input
+		$(':input','#childrenform')
+		  .removeAttr('checked')
+		  .removeAttr('selected')
+		  .not(':button, :submit, :reset, :hidden, :radio, :checkbox')
+		  .val('');
+		
+		$("#childrenData").html("");
+		$('#childrenForm').show();
+		
+		$("#dateInput3").datepicker({  
+	        dateFormat: 'dd-mm-yy',  
+	        // showOn: "button",
+            // buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+            // buttonImageOnly: true,
+	        changeMonth: true,  
+	        changeYear: true  
+	    });       
+    
 	});
 });
 </script>
@@ -213,6 +235,81 @@ $(document).ready(function(){
 	  <button type="button" class="btn btn-primary addChildrenForm">เพิ่มรายชื่อเด็กในระบบ</button>
 	</form>
   	<div id="childrenData"></div>
+  	<div id="childrenForm" style="display: none;">
+  		<div id="childrenFormBlock">
+				<script type="text/javascript">
+				$(function(){
+					 $.validator.addMethod("DateFormat", function(value,element) {
+				    	return value.match(/^[0-9]{1,2}-[0-9]{1,2}-[0-9]{4}$/);
+				        },
+				            "กรุณาใส่วันที่ตามตัวอย่างที่กำหนด วว-ดด-ปปปป"
+				        );
+				        
+				    $("#childrenform").validate({
+					    rules: 
+					    {
+					    	name: { required: true,remote: "ajax/check_children_name"},
+					    	birth_date: { required: true , DateFormat: true}
+					    },
+					    messages:
+					    {
+					    	name: { required: "กรุณากรอกชื่อ - นามสกุล",remote: "รายชื่อนี้มีในระบบแล้ว"},
+					    	birth_date: { required: "กรุณาระบุวันเกิด"}
+					    },
+				         submitHandler: function (form) {
+				             // alert('valid form submission'); // for demo
+				             $.post('classrooms/ajax_children_save',$("#childrenform").serialize(),function(data){
+								if(data != ""){
+									alert("บันทึกข้อมูลสำเร็จ");
+									$.get('home/ajax_get_children',{
+										'name' : data
+									},function(data){
+										$('#childrenData').html(data);
+										$('#childrenForm').css('display','none');
+									});
+								}
+								return false;
+							});
+				         }
+					});
+				});
+				</script>
+				
+				<div class="row">
+					<div class="span12" style="height: 400px;">
+						<form id="childrenform" action="javascript:return(false);" method="post" class="form-horizontal">
+							<div class="control-group">
+						        <label class="control-label">คำนำหน้า<span class="TxtRed">*</span></label>
+						        <div class="controls">
+						          <select name="title">
+						          	<option value="ด.ช." <?=(@$child->title == 'ด.ช.')?'selected':'';?>>ด.ช.</option>
+						          	<option value="ด.ญ." <?=(@$child->title == 'ด.ญ.')?'selected':'';?>>ด.ญ.</option>
+						          </select>
+						        </div>
+						    </div>
+						    <div class="control-group">
+						        <label class="control-label">ชื่อ - นามสกุลเด็ก<span class="TxtRed">*</span></label>
+						        <div class="controls">
+						          <input class="input-xlarge" type="text" name="name" value="<?=@$child->child_name?>">
+						        </div>
+						    </div>
+						    <div class="control-group">
+							    <label class="control-label">วันเกิด<span class="TxtRed">*</span></label>
+							    <div class="controls">
+							      <input type="text" id="dateInput3" name="birth_date" value="<?php echo @DB2Date($child->birth_date)?>" placeholder="วว-ดด-ปปปป"/> (ตัวอย่าง : 01-09-2558)
+							    </div>
+							</div>
+						    <div class="control-group">
+				                <div class="controls">
+				                  <input type="hidden" name="create_by_user_id" value="<?=user_login()->id?>">
+				                  <input type="submit" class="btn btn-small btn-info btnChildrenSubmitButton" value="บันทึก">
+				                </div>
+				            </div>
+						</form>
+					</div>
+				</div>
+				</div>
+  	</div>
   </div>
 </div>
 
@@ -331,83 +428,5 @@ $(function(){
 			</form>
 		</div>
 	</div>
-</div>
-</div>
-
-
-
-<!-- Children Form -->
-<div style="display: none;">
-<div id="childrenFormBlock">
-<script type="text/javascript">
-$(function(){
-	 $.validator.addMethod("DateFormat", function(value,element) {
-    	return value.match(/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/);
-        },
-            "กรุณาใส่วันที่ตามตัวอย่างที่กำหนด วว/ดด/ปปปป"
-        );
-        
-    $("#childrenform").validate({
-	    rules: 
-	    {
-	    	name: { required: true},
-	    	birth_date: { required: true , DateFormat: true}
-	    },
-	    messages:
-	    {
-	    	name: { required: "กรุณากรอกชื่อ - นามสกุล"},
-	    	birth_date: { required: "กรุณาระบุวันเกิด"}
-	    },
-         submitHandler: function (form) {
-             // alert('valid form submission'); // for demo
-             $.post('classrooms/ajax_children_save',$("#childrenform").serialize(),function(data){
-				if(data != ""){
-					alert("บันทึกข้อมูลสำเร็จ");
-					$.get('home/ajax_get_children',{
-						'name' : data
-					},function(data){
-						$('#childrenData').html(data);
-					});
-				}
-				return false;
-			});
-         }
-	});
-});
-</script>
-
-<div class="row">
-	<div class="span12" style="height: 400px;">
-		<form id="childrenform" action="javascript:return(false);" method="post" class="form-horizontal">
-			<div class="control-group">
-		        <label class="control-label">คำนำหน้า<span class="TxtRed">*</span></label>
-		        <div class="controls">
-		          <select name="title">
-		          	<option value="ด.ช." <?=(@$child->title == 'ด.ช.')?'selected':'';?>>ด.ช.</option>
-		          	<option value="ด.ญ." <?=(@$child->title == 'ด.ญ.')?'selected':'';?>>ด.ญ.</option>
-		          </select>
-		        </div>
-		    </div>
-		    <div class="control-group">
-		        <label class="control-label">ชื่อ - นามสกุลเด็ก<span class="TxtRed">*</span></label>
-		        <div class="controls">
-		          <input class="input-xlarge" type="text" name="name" value="<?=@$child->child_name?>">
-		        </div>
-		    </div>
-		    <div class="control-group">
-			    <label class="control-label">วันเกิด<span class="TxtRed">*</span></label>
-			    <div class="controls">
-			      <input type="text" name="birth_date" value="<?php echo @DB2Date($child->birth_date)?>" class="datepicker" placeholder="วว/ดด/ปปปป"/> (ตัวอย่าง : 01/09/2558)
-			    </div>
-			</div>
-		    <div class="control-group">
-                <div class="controls">
-                  <input type="hidden" name="create_by_user_id" value="<?=user_login()->id?>">
-                  <input type="submit" class="btn btn-small btn-info btnChildrenSubmitButton" value="บันทึก">
-                </div>
-            </div>
-		</form>
-	</div>
-</div>
 </div>
 </div>

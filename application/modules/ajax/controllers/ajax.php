@@ -119,5 +119,12 @@ function get_other_disease_detail(){
 	}
 }
 
+function check_children_name()
+{
+	$rs = new Children();
+	$rs = $rs->where('name = "'.$_GET['name'].'"')->get()->result_count();
+	echo ($rs > 0)?"false":"true";
+}
+	
 }
 ?>
