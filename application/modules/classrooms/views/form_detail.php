@@ -1,17 +1,17 @@
 <style type="text/css">
 .form-horizontal .control-label {width:170px !important;}
-/*.date_selector{top:150px !important;left:420px !important;}*/
+.date_selector{top:150px !important;left:400px !important;}
 </style>
-<!-- <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
 <link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
 <script type="text/javascript" src="media/js/date_input/jquery.date_input.min.js"></script>
 <script type="text/javascript" src="media/js/date_input/jquery.date_input.th_TH.js"></script>
 <script type="text/javascript">
 var jQuery_1_4_2 = $.noConflict(true);
 $(document).ready(function(){
-jQuery_1_4_2("input.datepicker").date_input(); 
+// jQuery_1_4_2("input.datepicker").date_input(); 
 });
-</script> -->
+</script>
 
 
 <script>
@@ -187,7 +187,7 @@ $(document).ready(function(){
 	$('.addChildrenForm').click(function(){
 		var ChildrenForm = $("#childrenFormBlock").clone();
 		$("#childrenData").html(ChildrenForm);
-		// jQuery_1_4_2("input.datepicker").date_input();
+		jQuery_1_4_2("input.datepicker").date_input();
 	});
 });
 </script>
@@ -375,6 +375,7 @@ $(function(){
 	});
 });
 </script>
+
 <div class="row">
 	<div class="span12" style="height: 400px;">
 		<form id="childrenform" action="javascript:return(false);" method="post" class="form-horizontal">
