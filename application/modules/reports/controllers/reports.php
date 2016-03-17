@@ -133,5 +133,40 @@ class Reports extends Public_Controller {
         $data = '';
         $this->load->view('desease_watch_symptom_table_default',$data);
     }
+    
+    function elearning_result(){
+        $start_date = @$_GET['start_date']!='' ? @$_GET['start_date'] : '';
+        $end_date = @$_GET['end_date']!='' ? @$_GET['end_date'] : '';
+        if($start_date!='' && $end_date != ''){
+            $time_condition = " AND date(start_date) BETWEEN '".Date2DB($start_date)."' AND '".Date2DB($end_date)."' ";
+        }else if($start_date!='' && $end_date==''){
+            $time_condition = " AND date(start_date) >= '".Date2DB($start_date)."' ";
+        }else if($start_date=='' && $end_date!=''){
+            $time_condition = " AND date(start_date) <= '".Date2DB($start_date)."' ";
+        }else{
+            $time_condition = '';
+        } 
+        $data['time_condition'] = $time_condition;
+        
+        $list_condition = "";
+        //$list_condition.= @$_GET['desease']!='' ? " AND desease = ".$_GET['desease'] : '';
+        //$list_condition.= @$_GET['place_type']!='' ? " AND place_type = ".$_GET['place_type'] : '';
+        //$list_condition.= $time_condition;
+        //$data['list_condition'] = $list_condition;
+        if(@$_GET['export_type']!=''){
+            if(@$_GET['export_type']=='excel'){
+                $filename= "รายงานผลการทดสอบ E-Learning ศูนย์เด็กเล็กและโรงเรียนอนุบาลคุณภาพปลอดโรค".date("Y-m-d_H_i_s").".xls";
+                header("Content-Disposition: attachment; filename=".$filename);
+            }
+            $this->load->view('elearning',$data);
+        }else{
+            $this->template->build('elearning',$data);    
+        }
+    }
+
+    function elearning_table_default(){
+        $data = '';
+        $this->load->view('elearning_table_default',$data);
+    }
 }
 ?>
