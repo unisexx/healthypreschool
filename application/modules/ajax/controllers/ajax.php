@@ -125,6 +125,13 @@ function check_children_name()
 	$rs = $rs->where('name = "'.$_GET['name'].'"')->get()->result_count();
 	echo ($rs > 0)?"false":"true";
 }
-	
+
+function ajax_get_teacher_detail(){
+	if($_GET){
+		$rs = new User($_GET['id']);
+		echo '<tr><td>'.$rs->name.'</td><td>'.$rs->sex.'</td><td>'.$rs->position.'</td><td>'.$rs->phone.'</td><td>'.$rs->email.'</td><td><input type="hidden" name="teacherID[]" value="'.$rs->id.'"><button class="btn btn-mini btn-danger delButton">ลบ</button></td></tr>';
+	}
+}
+
 }
 ?>
