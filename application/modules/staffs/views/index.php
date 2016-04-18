@@ -124,7 +124,14 @@ $(document).ready(function(){
 	        			<a href="teachers?nursery_id=<?=$user->nursery_id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a>
 	        			<!-- <a href="teachers/list_guest/<?=$user->nursery_id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a> -->
 	        			<?
-	        				$rs = $this->db->query("SELECT COUNT(id) total FROM users where user_type_id = 10 and nursery_id = ".$user->nursery_id)->row_array();
+	        				// $rs = $this->db->query("SELECT COUNT(id) total FROM users where user_type_id = 10 and nursery_id = ".$user->nursery_id)->row_array();
+							$rs = $this->db->query("SELECT
+																count(classroom_teachers.id) total
+																FROM
+																classrooms
+																INNER JOIN classroom_teachers ON classrooms.id = classroom_teachers.classroom_id
+																WHERE
+																classrooms.nursery_id = ".$user->nursery_id)->row_array();
 							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
 	        			?>
 	        		</li>

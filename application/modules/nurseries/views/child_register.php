@@ -211,11 +211,11 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        		<span style="color:teal">
 	        		<?if($nursery->approve_year != 0):?>
 	        			ผ่านเกณฑ์ <br>(พ.ศ. <?=$nursery->approve_year?>)<br>
-	        			<span style="color:#d14;">หมดอายุปี <?=$nursery->approve_year + 3?></span>
+	        			<span style="color:#d14;">หมดอายุปี <?=$nursery->approve_year + 2?></span>
 	        		<?else:?>
 	        		<a href="assessments/preview/<?=$nursery->id?>" target="_blank">
 	        			ผ่านเกณฑ์ <br>(<?=$nursery->assessments_total?> คะแนน)<br>
-	        			<span style="color:#d14;">หมดอายุปี <?=date("Y", strtotime($nursery->approve_date)) + 546;?></span>
+	        			<span style="color:#d14;">หมดอายุปี <?=date("Y", strtotime($nursery->approve_date)) + 545;?></span>
 	        		</a>
 	        		<?endif;?>
 	        		</span>
