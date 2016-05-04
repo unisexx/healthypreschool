@@ -82,16 +82,27 @@ $(document).ready(function(){
 		    <div style="float:right; padding:10px 0;"><a href="#teacherModal" role="button" data-toggle="modal"><div class="btn btn-info btn-small">เพิ่มครูประจำชั้นในห้องเรียน</div></a></div>
 		    <table id="teacherTable" class="table table-bordered table-striped">
 		    	<tr>
-			    	<th>ครูประจำชั้น</th>
+			    	<th>ชื่อครูประจำชั้น</th>
+			    	<th>เพศ</th>
+			    	<th>ตำแหน่ง</th>
+			    	<th>เบอร์ติดต่อ</th>
+			    	<th>อีเมล์</th>
 			    	<th class="span1">จัดการ</th>
 			    </tr>
 			    <?if(isset($teachers)):?>
 			    <?foreach($teachers as $row):?>
 			    <tr>
-			    	<td><?=$row->user->name?></td>
+			    	<td>
+			    		<!-- <a href="#viewteacherModal" role="button" data-toggle="modal" class="viewTeacherDetail"><?=$row->user->name?></a> -->
+			    		<?=$row->user->name?>
+			    	</td>
+			    	<td><?=$row->user->sex?></td>
+			    	<td><?=$row->user->position?></td>
+			    	<td><?=$row->user->phone?></td>
+			    	<td><?=$row->user->email?></td>
 			    	<td>
 			    		<input class="teacher_detail_id" type="hidden" name="classroom_teacher_detail_id[]" value="<?=$row->id?>">
-			    		<input type="hidden" name="teacherID[]" value="<?=$row->user_id?>">
+			    		<input class="user_id" type="hidden" name="teacherID[]" value="<?=$row->user_id?>">
 			    		<button class="btn btn-mini btn-danger deleteTeacher">ลบ</button>
 			    	</td>
 			    </tr>
@@ -159,8 +170,14 @@ $(document).ready(function(){
 	
 	$('.selectTeacher').live("click",function(){
 		var teacherID = $(this).closest('td').find('input[name=teacherId]').val();
-		var teacherName = $(this).closest('td').find('input[name=teacherName]').val();
-		$('#teacherTable tr:last').after('<tr><td>'+teacherName+'</td><td><input type="hidden" name="teacherID[]" value="'+teacherID+'"><button class="btn btn-mini btn-danger delButton">ลบ</button></td></tr>');
+		// var teacherName = $(this).closest('td').find('input[name=teacherName]').val();
+		// $('#teacherTable tr:last').after('<tr><td>'+teacherName+'</td><td><input type="hidden" name="teacherID[]" value="'+teacherID+'"><button class="btn btn-mini btn-danger delButton">ลบ</button></td></tr>');
+		
+		$.get('ajax/ajax_get_teacher_detail',{
+			'id' : teacherID
+		},function(data){
+			$('#teacherTable tr:last').after(data);
+		});
 	});
 	
 	//------------------- Children ---------------------
@@ -169,6 +186,7 @@ $(document).ready(function(){
 			'name' : $(this).prev('input[name=search]').val()
 		},function(data){
 			$('#childrenData').html(data);
+			$('#childrenForm').hide();
 		});
 	});
 	
@@ -208,8 +226,16 @@ $(document).ready(function(){
             // buttonImageOnly: true,
 	        changeMonth: true,  
 	        changeYear: true  
-	    });       
-    
+	    });
+	});
+	
+	//------------------ Teacher Detail --------------------
+	$('.viewTeacherDetail').live("click",function(){
+		$.get('ajax/ajax_get_teacher_detail',{
+			'id' : $(this).closest('tr').find('.user_id').val()
+		},function(data){
+			$('#teacherdetailData').html(data);
+		});
 	});
 });
 </script>
@@ -429,4 +455,21 @@ $(function(){
 		</div>
 	</div>
 </div>
+</div>
+
+<!-- View Teacher -->
+<div id="viewteacherModal" class="modal large hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	    <h3>ประวัติครู/ผู้ดูแลเด็ก</h3>
+	  </div>
+	  <div class="modal-body">
+	  	<div id="teacherdetailData">
+	  		
+	  	</div>
+	  </div>
+	  <!-- <div class="modal-footer">
+	    <a href="#" class="btn">Close</a>
+	    <a href="#" class="btn btn-primary">Save changes</a>
+	  </div> -->
 </div>
