@@ -437,81 +437,6 @@ WHERE
 
 function get_elearning_pass_count($condition=FALSE){
   $CI = &get_instance();
-  $sql = "
-SELECT
-    count(*)nresult
-FROM
-    (
-        SELECT
-            users.*, `qt`.`id` AS `topic_id`,
-            `qt`.`title` AS `topic_title`,
-            `qt`.`set_final` AS `set_final`,
-            `qt`.`status` AS `topic_status`,
-            `qt`.`pass` AS `pass`,
-            (
-                SELECT
-                    ifnull(count(0), 0)
-                FROM
-                    (
-                        `question_answers`
-                        LEFT JOIN `question_titles` ON (
-                            (
-                                `question_answers`.`questionaire_id` = `question_titles`.`id`
-                            )
-                        )
-                    )
-                WHERE
-                    (
-                        (
-                            `question_titles`.`topic_id` = `qt`.`id`
-                        )
-                        AND (
-                            `question_answers`.`user_id` = `users`.`id`
-                        )
-                    )
-            ) AS `n_answer`,
-            (
-                SELECT
-                    sum(`question_choices`.`score`)
-                FROM
-                    (
-                        (
-                            `question_choices`
-                            JOIN `question_answers` ON (
-                                (
-                                    `question_choices`.`id` = `question_answers`.`choice_id`
-                                )
-                            )
-                        )
-                        LEFT JOIN `question_titles` ON (
-                            (
-                                `question_answers`.`questionaire_id` = `question_titles`.`id`
-                            )
-                        )
-                    )
-                WHERE
-                    (
-                        (
-                            `question_answers`.`user_id` = `users`.`id`
-                        )
-                        AND (
-                            `question_titles`.`topic_id` = `qt`.`id`
-                        )
-                    )
-            ) AS `score`,
-            `qt`.`random` AS `n_question`
-        FROM
-            (
-                `users`
-                JOIN `question_topics` `qt`
-            )
-        WHERE
-            set_final = 1
-    ) a
-WHERE
-    n_answer > 0
-    AND score >= pass
-         ";
 
      $sql = "SELECT
     count(*)nresult
@@ -586,6 +511,30 @@ FROM
 WHERE
     n_answer > 0
 AND score >= pass".$condition;
+$sql = "SELECT
+	count(*) nresult
+FROM
+	(
+		SELECT
+			users.*, `qt`.`id` AS `topic_id`,
+			`qt`.`title` AS `topic_title`,
+			`qt`.`set_final` AS `set_final`,
+			`qt`.`status` AS `topic_status`,
+			`qt`.`pass` AS `pass`,					
+			`qt`.`random` AS `n_question`
+		FROM
+			(
+				`v_users` AS users
+				JOIN `question_topics` `qt`
+			)
+		WHERE
+			set_final = 1
+	) a
+LEFT JOIN user_question_result uqr ON a.id = uqr.user_id
+AND a.topic_id = uqr.topic_id
+WHERE
+	n_user_answer > 0
+AND n_user_score >= pass".$condition;
     $result = $CI -> db -> query($sql)->result();
     return @$result[0]->nresult;  
 }   

@@ -4,9 +4,11 @@ function login($email,$password)
 {
 	$CI =& get_instance();
 	$user = new User();
-	$user->where(array('email'=>$email,'password'=>$password))->get();
+	$user->where("email ='".$email."' AND password='".$password."' ")->get();
+    //$user->check_last_query();
 	if($user->exists())
 	{
+	    //echo $user->id;
 		$CI->session->set_userdata('id',$user->id);
 		$CI->session->set_userdata('level',$user->level_id);
 		$CI->session->set_userdata('user_type',$user->user_type_id);

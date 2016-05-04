@@ -52,6 +52,7 @@ $percent = $topic -> n_answer < 1 || $topic -> n_question < 1 ? 0 : $topic -> n_
 <?php endforeach;?>
 <br>
 <div style="margin:0 auto;" align="center">
+    <input type="hidden" name="topic_id" value="<?php echo $topic->topic_id;?>">
     <input type="submit" id="btn_save" class='btn btn-primary' value="ยืนยันคำตอบ">
     <a href="elearnings/testing_index" onclick="return confirm('กลับไปหน้ารายการทดสอบ?')" class="btn btn-default">ย้อนกลับ</a>
 </div>
