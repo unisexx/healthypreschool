@@ -473,7 +473,7 @@
 								      </ul>
 								    </li>
 										<?endif;?>
-										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10,11))):?>
+										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10,11,12))):?>
 								    <li><a href="#">E-learning</a>
 								      <ul>
 								        <li><a href="pages/view/1">คำแนะนำ</a></li>

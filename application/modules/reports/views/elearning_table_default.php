@@ -1,3 +1,9 @@
+<style>
+    #exam_list{
+        width: 1000px;         
+        margin-left:  -500px !important; 
+    }
+</style>
 <?php
     $parameter = GetCurrentUrlGetParameter();
     $xAxis='';
@@ -6,10 +12,14 @@
     $series_idx = 0;
     $no=0;         
     @$series[1]['data'] = '';@$series[2]['data'] = ''; @$series[3]['data'] = '';
+    $head_url = 'reports/elearning_result?';
+    $head_main_param = 'user_type='.$_GET['user_type'].'&range_type='.@$_GET['range_type'].'&report_start_year='.@$_GET['report_start_year']
+                .'&report_end_year='.@$_GET['report_end_year'].'&report_month_year='.@$_GET['report_month_year']
+                .'&start_date='.@$_GET['start_date'].'&end_date='.@$_GET['end_date'];
     if(@$_GET['area_id']=='' && @$_GET['province_id']==''){
         $condition_mode = 'area';
         $sql = " SELECT id,area_name FROM areas ORDER BY id ";
-        $area_data = $this -> db -> query($sql)->result();
+        $area_data = $this -> db -> query($sql)->result();        
     }else if(@$_GET['area_id']!='' && @$_GET['province_id']==''){
         $condition_mode = 'province';
         $sql = ' SELECT id,name area_name FROM v_provinces WHERE area_id = '.$_GET['area_id'].' ORDER BY area_name ';
@@ -24,7 +34,7 @@
         $area_data = $this -> db -> query($sql)->result();
     }else if(@$_GET['district_id']!=''){
         $condition_mode = 'nursery';
-        $sql = ' SELECT id,district_name area_name FROM v_nureseries WHERE district_id = '.$_GET['district_id'].' ORDER BY area_name ';
+        $sql = ' SELECT id,name area_name FROM v_nurseries WHERE district_id = '.$_GET['district_id'].' ORDER BY area_name ';
         $area_data = $this -> db -> query($sql)->result();
     }
 
@@ -60,7 +70,8 @@
             }
             break;
     }
-    $list_condition.= $time_condition; 
+    $list_condition.= $time_condition;
+    $g_total_rec=0;$g_rec=0;$g_nopass_rec=0;       
 ?>
 <?php if(@$_GET['export_type']==''):?>
   <div style="float:left;text-align:right;width:100%;padding-top:10px;padding-bottom: 10px;">
@@ -113,18 +124,23 @@
             <th>
                                              จำนวนผู้ไม่ผ่านแบบทดสอบ
             </th>
+            <th>
+                                            รายชื่อ
+            </th>
         </tr>        
     </thead>
     <tbody>
         <?php 
+        $head_total_param = '';
         if(@$condition_mode=='province'){
             $no++;
             $list_condition = @$_GET['user_type']!='' ? ' AND user_type_id = '.$_GET['user_type'] : '';
             $list_condition .= " AND area_id = ".$_GET['area_id'].' AND province_id = 0'.$list_condition.$time_condition; 
+            $head_url_param = "&area_id=".@$_GET['area_id'].'&province_id=0';
         ?>
         <tr>
             <td style="width:250px !important;text-align:left;">
-                <?php echo $no;?>.<?php echo 'ประจำเขต (ไม่ได้ระบุจังหวัด)';?>
+                <?php echo $no;?>.<?php echo ' ประจำเขต (ไม่ได้ระบุจังหวัด)';?>
                 <?php
                 $xAxis .= $xAxis == '' ? "'ประจำเขต (ไม่ได้ระบุจังหวัด)'" : ",'ประจำเขต (ไม่ได้ระบุจังหวัด)'";
                 $line_chart_category .= $line_chart_category == '' ? "'ประจำเขต (ไม่ได้ระบุจังหวัด)'" : ",'ประจำเขต (ไม่ได้ระบุจังหวัด)'";
@@ -154,18 +170,24 @@
                     $series[3]['data'].= number_format($n_nopass_rec,0);
                 ?>
             </td>
-        </tr>            
+            <td style="text-align:center;">
+                <input type="hidden" id="hd_row_param" name="hd_row_param" value="<?php echo @$head_main_param.@$head_url_param;?>">                
+                <a href="#exam_list" class="btn btn-info btn_exam_list" data-toggle="modal"><i class="fa fa-users"></i></a>
+            </td>
+        </tr>     
+        <?php $g_total_rec+=$n_total_rec;$g_rec+=$n_rec;$g_nopass_rec+=$n_nopass_rec;?>       
         <?php } ?>  
         <?php 
         if(@$condition_mode=='amphur'){
             $no++;
             $list_condition = @$_GET['user_type']!='' ? ' AND user_type_id = '.$_GET['user_type'] : '';
-            $list_condition .= " AND province_id = ".$_GET['province_id'].' AND amphur_id = 0'.$list_condition.$time_condition; 
+            $list_condition .= " AND province_id = ".$_GET['province_id'].' AND amphur_id = 0'.$list_condition.$time_condition;
+            $head_url_param = "&province_id=".@$_GET['province_id']."&amphur_id=0"; 
         ?>
         <tr>
             <td style="width:250px !important;text-align:left;">
                 <?php
-                $col_title = 'ประจำจังหวัด (ไม่ได้ระบุอำเภอ)'; 
+                $col_title = ' ประจำจังหวัด (ไม่ได้ระบุอำเภอ)'; 
                 echo $no.$col_title;
                 $xAxis .= $xAxis == '' ? "'".$col_title."'" : ",'".$col_title."'";
                 $line_chart_category .= $line_chart_category == '' ? "'".$col_title."'" : ",'".$col_title."'";
@@ -195,18 +217,26 @@
                     $series[3]['data'].= number_format($n_nopass_rec,0);
                 ?>
             </td>
+            <td style="text-align:center;">
+                <input type="hidden" id="hd_row_param" name="hd_row_param" value="<?php echo $head_main_param.@$head_url_param;?>">
+                <a href="#exam_list" class="btn btn-info btn_exam_list" data-toggle="modal">
+                    <i class="fa fa-users"></i>
+                </a>
+            </td>
         </tr>            
+        <?php $g_total_rec+=$n_total_rec;$g_rec+=$n_rec;$g_nopass_rec+=$n_nopass_rec;?>
         <?php } ?>   
         <?php 
         if(@$condition_mode=='district'){
             $no++;
             $list_condition = @$_GET['user_type']!='' ? ' AND user_type_id = '.$_GET['user_type'] : '';
-            $list_condition .= " AND amphur_id = ".$_GET['amphur_id'].' AND district_id = 0'.$list_condition.$time_condition; 
+            $list_condition .= " AND amphur_id = ".$_GET['amphur_id'].' AND district_id = 0'.$list_condition.$time_condition;
+            $head_url_param = "&amphur_id=".@$_GET['amphur_id']."&district_id=0"; 
         ?>
         <tr>
             <td style="width:250px !important;text-align:left;">
                 <?php
-                $col_title = 'ประจำอำเภอ (ไม่ได้ระบุตำบล)'; 
+                $col_title = '. ประจำอำเภอ (ไม่ได้ระบุตำบล)'; 
                 echo $no.$col_title;
                 $xAxis .= $xAxis == '' ? "'".$col_title."'" : ",'".$col_title."'";
                 $line_chart_category .= $line_chart_category == '' ? "'".$col_title."'" : ",'".$col_title."'";
@@ -236,7 +266,14 @@
                     $series[3]['data'].= number_format($n_nopass_rec,0);
                 ?>
             </td>
-        </tr>            
+            <td style="text-align:center;">
+                <input type="hidden" id="hd_row_param" name="hd_row_param" value="<?php echo $head_main_param.@$head_url_param;?>">
+                <a href="#exam_list" class="btn btn-info btn_exam_list" data-toggle="modal">
+                    <i class="fa fa-users"></i>
+                </a>
+            </td>
+        </tr>     
+        <?php $g_total_rec+=$n_total_rec;$g_rec+=$n_rec;$g_nopass_rec+=$n_nopass_rec;?>       
         <?php } ?>               
         <?php        
         foreach($area_data as $item):
@@ -245,18 +282,23 @@
             switch($condition_mode){
                 case 'area':
                     $list_condition =' AND area_id = '.$item->id;
+                    $head_url_param = '&area_id='.$item->id;
                 break;
                 case 'province':
                     $list_condition =' AND province_id = '.$item->id;
+                    $head_url_param = '&province_id='.$item->id;
                 break;
                 case 'amphur':
                     $list_condition =' AND amphur_id = '.$item->id;
+                    $head_url_param = '&province_id='.@$_GET['province_id'].'&amphur_id='.$item->id;
                 break;
                 case 'district':
                     $list_condition =' AND district_id = '.$item->id;
+                    $head_url_param = '&province_id='.@$_GET['province_id'].'&amphur_id='.@$_GET['amphur_id'].'&district_id='.$item->id;
                 break;
                 case 'nursery':
                     $list_condition =' AND nursery_id = '.$item->id;
+                    $head_url_param = '&province_id='.@$_GET['province_id'].'&amphur_id='.@$_GET['amphur_id'].'&district_id='.@$_GET['district_id'].'&nursery_id='.$item->id;
                 break;
             }
                 $list_condition.= @$_GET['user_type']!='' ? ' AND user_type_id = '.$_GET['user_type'] : '';
@@ -264,7 +306,8 @@
         ?>        
         <tr>
             <td style="width:250px !important;text-align:left;">
-                <?php echo $no;?>.<?php echo $item->area_name;?>
+                <?php echo $no;?>.
+                <?php echo $head_name = @$head_url_param!=''? '<a href="'.@$head_url.$head_main_param.@$head_url_param.'">'.$item->area_name.'</a>' : $item->area_name;?>                
                 <?php
                 $xAxis .= $xAxis == '' ? "'".$item->area_name."'" : ",'".$item->area_name."'";
                 $line_chart_category .= $line_chart_category == '' ? "'".$item->area_name."'" : ",'".$item->area_name."'";
@@ -294,11 +337,53 @@
                     $series[3]['data'].= number_format($n_nopass_rec,0);
                 ?>
             </td>
+            <td style="text-align:center;">
+                <input type="hidden" id="hd_row_param" name="hd_row_param" value="<?php echo $head_main_param.@$head_url_param;?>">
+                <a href="#exam_list" class="btn btn-info btn_exam_list" data-toggle="modal">
+                    <i class="fa fa-users"></i>
+                </a>
+            </td>
         </tr>
+        <?php $g_total_rec+=$n_total_rec;$g_rec+=$n_rec;$g_nopass_rec+=$n_nopass_rec;?>
         <?php endforeach;?>
+        <tr style="background:#F4F4F4;font-weight:bold;">
+            <td style="text-align:left;">รวม</td>
+            <td>
+                <?php echo number_format($g_total_rec,0);?>
+            </td>
+            <td>
+                <?php echo number_format($g_rec,0);?>
+            </td>
+            <td>                
+                <?php echo number_format($g_nopass_rec,0);?>
+            </td>
+            <td style="text-align:center;">
+                <input type="hidden" id="hd_row_param" name="hd_row_param" value="<?php echo $head_main_param.@$head_total_param;?>">
+                <a href="#exam_list" class="btn btn-info btn_exam_list" data-toggle="modal">
+                    <i class="fa fa-users"></i>
+                </a>
+            </td>
+        </tr>
     </tbody>
 </table>
 </div>
+</div>
+<!-- Modal -->
+<div id="exam_list" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true" style='height:auto;'>
+      <div class="modal-dialog modal-lg">
+            <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  <h3 id="myModalLabel">รายชื่อผู้เข้าทดสอบ E-Learning ศูนย์เด็กเล็กและโรงเรียนอนุบาลคุณภาพปลอดโรค</h3>
+            </div>
+            <div class="modal-body">
+                  <p>Loading....</p>
+            </div>
+            <div class="modal-footer">
+                  <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                  <!-- <button class="btn btn-primary">Save changes</button> -->
+            </div>
+      </div>
+
 </div>
 <script type="text/javascript">
 function show_chart(chart_type){
@@ -318,6 +403,14 @@ function show_chart(chart_type){
         }
     }
 $(function(){
+    
+    $('.btn_exam_list').on('click', function() {
+        var url_param = $(this).closest('td').find('#hd_row_param').val();        
+        $.get('reports/ajax_user_exam_list?'+url_param, function(data) {
+            $('#exam_list').find('div.modal-body').html(data);
+        });
+    });
+    
     <?php if(@$_GET['export_type']==''){?>
         $("#line-chart").hide();
         $("#stack-chart").hide();

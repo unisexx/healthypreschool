@@ -36,7 +36,7 @@ class Contents extends Public_Controller
 	
 	function inc_home_newsletter(){
 		$data['contents'] = new Content();
-		$data['contents']->where("module = 'newsletters'")->order_by('id','desc')->get(7);
+		$data['contents']->where("module = 'newsletters'")->order_by('id','desc')->get(4);
 		$this->load->view('inc_home_newsletter',$data);
 	}
 	

@@ -168,5 +168,78 @@ class Reports extends Public_Controller {
         $data = '';
         $this->load->view('elearning_table_default',$data);
     }
+    
+    function ajax_user_exam_list(){
+    $start_date = @$_GET['start_date']!='' ? @$_GET['start_date'] : '';
+    $end_date = @$_GET['end_date']!='' ? @$_GET['end_date'] : '';
+    
+    $list_condition = " WHERE 1=1 ";
+    $list_condition.= @$_GET['user_type']!='' ? ' AND user_type_id = '.$_GET['user_type'] : ''; 
+    $list_condition.= @$_GET['area_id']!='' ? " AND v_users.area_id = ".$_GET['area_id'] : '';       
+    $list_condition.= @$_GET['province_id']!='' ? " AND v_users.province_id = ".@$_GET['province_id'] : '';
+    $list_condition.= @$_GET['amphur_id']!=''  ? " AND v_users.amphur_id = ".@$_GET['amphur_id'] : '';
+    $list_condition.= @$_GET['district_id']!='' ? " AND v_users.district_id = ".@$_GET['district_id'] : '';
+    $list_condition.= @$_GET['nursery_id']!='' ? " AND v_users.nursery_id = ".@$_GET['nursery_id'] : '';
+    
+    $time_condition = '';
+    switch (@$_GET['range_type']) {
+        case 'year':
+            $start_year = @$_GET['report_end_year']!='' ? @$_GET['report_end_year'] : date("Y");
+            $end_year =   @$_GET['report_start_year']!='' ? @$_GET['report_start_year'] : $start_year-5;
+            $time_condition = " AND (year(update_date) between ".$end_year." AND ".$start_year.")";
+            
+            break;
+        case'month_year':
+        break; 
+        default:
+            if($start_date!='' && $end_date != ''){
+                $time_condition = " AND date(update_date) BETWEEN '".Date2DB($start_date)."' AND '".Date2DB($end_date)."' ";
+            }else if($start_date!='' && $end_date==''){
+                $time_condition = " AND date(update_date) >= '".Date2DB($start_date)."' ";
+            }else if($start_date=='' && $end_date!=''){
+                $time_condition = " AND date(update_date) <= '".Date2DB($start_date)."' ";
+            }else{
+                $time_condition = '';
+            }
+            break;
+    }
+    $list_condition.= $time_condition;
+        
+        
+        $sql = '
+            select 
+            user_exam.*,
+            v_users.name,
+            v_users.user_type_id,
+            v_users.area_id,
+            v_users.province_id,
+            v_users.amphur_id,
+            v_users.district_id,
+            v_users.nursery_id,
+            provinces.name province_name,
+            amphures.amphur_name,
+            districts.district_name,
+            nurseries.`name` nursery_name,
+            user_types.`name` user_type_name
+            from(
+            select 
+            uqr.*, qt.pass
+            from user_question_result uqr
+            left join question_topics qt on uqr.topic_id = qt.id
+            WHERE
+            set_final = 1
+            )user_exam
+            left join v_users on user_exam.user_id = v_users.id
+            left join provinces on province_id = provinces.id
+            left join amphures on v_users.amphur_id = amphures.id
+            left join districts on v_users.district_id = districts.id
+            left join nurseries on v_users.nursery_id = nurseries.id
+            left join user_types on v_users.user_type_id = user_types.id       
+        ';
+        $sql=$sql.$list_condition;
+        //echo $sql;
+        $data['result'] = $this->db->query($sql)->result();
+        $this->load->view('ajax_exam_user',$data);
+    }
 }
 ?>

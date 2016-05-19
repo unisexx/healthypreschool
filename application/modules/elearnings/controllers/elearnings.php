@@ -834,11 +834,11 @@ ORDER BY
                 $this -> load -> view('admin/certs/diploma', $data);
             } else {
                 set_notify('error', 'ขออภัยคุณยังไม่ผ่านแบบทดสอบหลังเรียน');
-                redirect('elearnings/contents');
+                redirect('pages/view/1');
             }
         } else {
             set_notify('error', 'กรุณาล้อกอินเข้าสู่ระบบ');
-            redirect('elearnings/contents');
+            redirect('pages/view/1');
         }
     }
 

@@ -98,8 +98,9 @@
         	<h5 style="margin:0 0 0 10px;" ><u>ลงทะเบียน</u></h5>
         	<div class="menuleft">
 	         <ul>
+	             <li><a href="users/register_person">บุคคลทั่วไป</a></li>
 	            <li><a href="users/register">เจ้าหน้าที่สาธารณะสุข</a></li>
-	            <li><a href="users/register_center">เจ้าหน้าที่ศูนย์เด็กเล็ก</a></li>
+	            <li><a href="users/register_center">เจ้าหน้าที่ศูนย์เด็กเล็ก</a></li>	            
 	            <li><a href="users/register_center_school">เจ้าหน้าที่ครูโรงเรียนอนุบาล</a></li>
 	         </ul>
 	         </div>
@@ -117,6 +118,16 @@
 	            <li><a href="elearnings/testing_index">แบบทดสอบ</a></li>
 	         </ul>
 	         </div>
+	         <div style="width:230px!important;margin:0 auto!important;">
+	             <a href="elearnings/cert" target="_blank">
+	               <img src="media/images/btn_cert_menu.png" border="0" width="230">
+	             </a>
+	         </div>
+	         <div style="width:230px!important;margin:0 auto!important;padding-top:8px;">
+                 <a href="#" onclick="return false;" target="_blank">
+                   <img src="media/images/btn_school_cert_menu.png" border="0" width="230">
+                 </a>
+             </div>
 	         <div class="elearning menuleft" style="background: #fff2bf;width: 89%;margin: 0 auto;margin-top: 10px;border: 2px dashed #000000;">
 	             <ul>
 	                 <li><b>ข้อมูลสถิติ E-Learning</b></li>
@@ -124,11 +135,11 @@
 	                 <li>จำนวนผู้ผ่านแบบทดสอบ : <?php echo number_format(get_elearning_pass_count(),0);?> คน</li>
 	             </ul>
 	         </div>
-	         <hr style="margin-bottom:-1px;">
+	         <hr style="margin-bottom:-1px;">	        
         </td>
       </tr>
       <tr>
-        <td background="themes/hps/images/bg_col1.png">
+        <td background="themes/hps/images/bg_col1.png" >
         <div class="menuleft">
          <ul>
             <li><a href="contents/view/histories/25">ความเป็นมาศูนย์เด็กเล็กปลอดโรค</a></li>

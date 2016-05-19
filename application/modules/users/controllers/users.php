@@ -10,6 +10,38 @@ class Users extends Public_Controller{
         $this->template->build('register');
     }
 	
+    function register_person(){
+        $data = '';
+        $this->template->build('register_person_form',$data);
+    }
+
+    function signup_person($id=false){
+        if($_POST)
+        {
+            $captcha = $this->session->userdata('captcha');
+            if(($_POST['captcha'] == $captcha) && !empty($captcha)){
+                $user = new User($id);
+                $_POST['user_type_id'] = 12;
+                $result = $this->db->query("select * from area_provinces where province_id = ".$_POST['province_id'])->result();
+                $result = $result[0];                
+                $_POST['area_id'] = $result->area_id;
+                $_POST['province_id'] = $result->province_id;
+                $_POST['area_province_id'] = $result->area_province_id;                
+                $_POST['m_status'] = "active";
+                $user->from_array($_POST);
+                $user->save();
+                $mailuser = new User();
+                $mailuser->order_by('id','desc')->get(1);
+                $this->send_mail2($mailuser);
+                set_notify('success', 'สมัครสมาชิกเรียบร้อย');                                  
+            }else{
+                set_notify('error','กรอกรหัสไม่ถูกต้อง');
+                redirect($_SERVER['HTTP_REFERER']);
+            }
+            redirect('home');
+        }
+    }
+
 	function register_center(){ // เจ้าหน้าที่ศูนย์เด็กเล็ก
 		$condition = " 1=1 ";
 		if(@$_GET['name']) $condition .= ' and nurseries.name like "%'.$_GET['name'].'%"';
