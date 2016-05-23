@@ -4,9 +4,9 @@
 		<table class="form">
 			<tr>
 				<td>
-					<?=form_dropdown('topic_id',get_option('id','title','question_topics where status = "approve"'),@$_GET['topic_id'],'','--- เลือกแบบทดสอบ ---');?>
-					<?=form_dropdown('status',array('1'=>'ไม่ผ่าน','2'=>'ผ่าน'),@$_GET['status'],'','--- เลือกสถานะการทดสอบ ---');?>
-					<?=form_dropdown('date_status',array('1'=>'เริ่มทำแบบทดสอบ','2'=>'ทำแบบทดสอบเสร็จ'),@$_GET['date_status'],'','--- เลือกช่วงเวลา ---');?>
+					<?php echo form_dropdown('topic_id',get_option('id','title','question_topics where status = "approve" order by orderlist'),@$_GET['topic_id'],'','--- เลือกแบบทดสอบ ---');?>
+					<?php echo form_dropdown('status',array('1'=>'ไม่ผ่าน','2'=>'ผ่าน'),@$_GET['status'],'','--- เลือกสถานะการทดสอบ ---');?>
+					<?php //echo form_dropdown('date_status',array('1'=>'เริ่มทำแบบทดสอบ','2'=>'ทำแบบทดสอบเสร็จ'),@$_GET['date_status'],'','--- เลือกช่วงเวลา ---');?>
 					<input type="text" name="start_date" value="<?=@$_GET['date_status'] ? @$_GET['start_date'] : "" ;?>" class="datepicker" />
 					<input type="text" name="end_date" value="<?=@$_GET['date_status'] ? @$_GET['end_date'] : "" ;?>" class="datepicker" />
 				</td>
@@ -17,7 +17,7 @@
 					<input type="text" name="search" value="<?=@$_GET['search']?>" placeholder="ชื่อ">
 					
 				<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
-					<?=form_dropdown('user_type_id',array('6'=>'เจ้าหน้าที่ประจำเขต','7'=>'เจ้าหน้าที่ประจำจังหวัด','8'=>'เจ้าหน้าที่ประจำอำเภอ','9'=>'เจ้าหน้าที่ศูนย์','10'=>'เจ้าหน้าที่ครู / ผู้ดูแลเด็ก'),@$_GET['user_type_id'],'class="input-xlarge"','--- เลือกประเภท ---');?>
+					<?=form_dropdown('user_type_id',get_option('id','name','user_types'),@$_GET['user_type_id'],'class="input-xlarge"','--- เลือกประเภท ---');?>
 				<?php endif;?>
 				</td>
 			</tr>
@@ -60,26 +60,48 @@
 	</form>
 </div>
 
-<?php echo $reports->pagination()?>
+
 <table class="table table-striped">
 	<tr>
+		<th>ลำดับ</th>
+		<th>USERID</th>
 		<th>ชื่อ</th>
+		<th>ประเภทผู้ใช้</th>
+		<th>เขตสคร.</th>
+		<th>จังหวัด</th>
+		<th>อำเภอ</th>
+		<th>ตำบล</th>
+		<th>ศูนย์เด็กเล็ก/โรงเรียนอนุบาล</th>
 		<th>แบบทดสอบ</th>
 		<th>ผ่านเกณฑ์</th>
 		<th>ทำได้</th>
 		<th>สถานะ</th>
+		<th>วันที่ทำ</th>
 	</tr>
-	<?foreach($reports as $row):?>
+	<?
+	$i=0;
+	foreach($reports as $row):
+	$i++;
+	?>
 	<tr>
+	    <td><?php echo $i;?></td>
+	    <td><?php echo $row->user_id;?></td>
 		<td><?=$row->name?></td>
+		<td><?=$row->user_type_name?></td>
+		<td><?=$row->area_name?></td>
+		<td><?=$row->province_name?></td>
+		<td><?=$row->amphur_name?></td>
+		<td><?=$row->district_name?></td>
+		<td><?=$row->nursery_name?></td>
 		<td><?=$row->topic_title?></td>
 		<td><?=$row->pass?></td>
-		<td><?=$row->score?></td>
-		<td><?=$row->score >= $row->pass ? "ผ่าน" : "ไม่ผ่าน";?></td>
+		<td><?=$row->n_user_score?></td>
+		<td><?=$row->n_user_score >= $row->pass ? "ผ่าน" : "ไม่ผ่าน";?></td>
+		<td><?=mysql_to_th($row->update_date,'S',TRUE);?></td>
 	</tr>
 	<?endforeach;?>
 </table>
-<?php echo $reports->pagination()?>
+<?php //echo $reports->pagination()?>
 
 <script type="text/javascript">
 $(document).ready(function(){

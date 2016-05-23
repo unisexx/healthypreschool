@@ -119,15 +119,44 @@
 	         </ul>
 	         </div>
 	         <div style="width:230px!important;margin:0 auto!important;">
-	             <a href="elearnings/cert" target="_blank">
+	             <a href="elearnings/cert" target="_blank" <?php if(!is_login()):?>onclick="alert('กรุณาล้อกอินเข้าสู่ระบบ');return false;"<?php endif;?>>
 	               <img src="media/images/btn_cert_menu.png" border="0" width="230">
 	             </a>
 	         </div>
+	         <?php 
+	         if(!is_login()){
+                $evt_onclick = "onclick=\"alert('กรุณาล้อกอินเข้าสู่ระบบ');return false;\"";
+             }else{
+                 $user_type = user_login()->user_type_id;
+                 if($user_type == 12){
+                     $evt_onclick = "onclick=\"alert('บุคคลทั่วไปไม่สามารถใช้งานได้');return false;\"";
+                 }else{
+                     $evt_onclick = '';
+                 }
+             }
+             ?>
 	         <div style="width:230px!important;margin:0 auto!important;padding-top:8px;">
-                 <a href="nurseries/cert" target="_blank">
+                 <a href="nurseries/cert" target="_blank" <?php echo @$evt_onclick;?>>
                    <img src="media/images/btn_school_cert_menu.png" border="0" width="230">
                  </a>
              </div>
+             <?php 
+             if(!is_login()){
+                $evt_onclick = "onclick=\"alert('กรุณาล้อกอินเข้าสู่ระบบ');return false;\"";
+             }else{
+                 $user_type = user_login()->user_type_id;
+                 if($user_type == 12){
+                     $evt_onclick = "onclick=\"alert('บุคคลทั่วไปไม่สามารถใช้งานได้');return false;\"";
+                 }else{
+                     $evt_onclick = '';
+                 }
+             }
+             ?>
+             <div style="width:230px!important;margin:0 auto!important;padding-top:8px;"  >
+                 <a href="desease_watch/form" target="_blank" <?php echo @$evt_onclick;?>>
+                   <img src="media/images/btn_des_event_menu.png" border="0" width="230">
+                 </a>
+             </div>             
 	         <div class="elearning menuleft" style="background: #fff2bf;width: 89%;margin: 0 auto;margin-top: 10px;border: 2px dashed #000000;">
 	             <ul>
 	                 <li><b>ข้อมูลสถิติ E-Learning</b></li>
