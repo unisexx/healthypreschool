@@ -52,7 +52,7 @@ class Searchs extends Public_Controller
 		}
 		
 		$province = new Province($_POST['province_id']);
-		echo "<br><input type='hidden' name='area_id' value='".$province->area_id."'>";
+		echo "<input type='hidden' name='area_id' value='".$province->area_id."'>";
 	}
 	
 	function get_district(){

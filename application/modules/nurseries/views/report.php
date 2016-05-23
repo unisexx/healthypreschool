@@ -206,6 +206,30 @@ $(function(){
 			return false;
 		}
 	});
+	
+		
+	if(<?=@$_GET['search_type']?> == 1){
+		$('select[name=three_year]').show();
+		$('select[name=start_year],select[name=end_year]').hide();
+	}else if(<?=@$_GET['search_type']?> == 2){
+		$('select[name=three_year]').hide();
+		$('select[name=start_year],select[name=end_year]').show();
+	}else{
+		$('select[name=start_year],select[name=end_year]').hide();
+	}
+	
+	$('select[name=start_year],select[name=end_year]').hide();
+	
+	$('select[name=search_type]').change(function(){
+		var searchType = $(this).val();
+		if(searchType == 1){
+			$('select[name=three_year]').show();
+			$('select[name=start_year],select[name=end_year]').hide();
+		}else{
+			$('select[name=three_year]').hide();
+			$('select[name=start_year],select[name=end_year]').show();
+		}
+	});
 });
 </script>
 <ul class="breadcrumb">
@@ -216,34 +240,41 @@ $(function(){
 
 <div class="hdtitle" style="font-size:14px; font-weight:700; padding-bottom:10px; color:#3C3">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</div>
     	
-<form method="get" action="nurseries/reports/index/basic_column">
-	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-	<?// =form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558','2559'=>'2559'),@$_GET['year'],'','--- เลือกปี ---');?>
-	<?=form_dropdown('start_year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558','2559'=>'2559'),@$_GET['start_year'],'','--- ปีที่เริ่ม ---');?>
-	<?=form_dropdown('end_year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558','2559'=>'2559'),@$_GET['end_year'],'','--- ปีที่สิ้นสุด ---');?>
+<form id="search_report" method="get" action="nurseries/reports/index/basic_column">
+	<div>
+		<span>ประเภทการค้นหา</span>
+		<?=form_dropdown('search_type',array('1'=>'ค้นหาย้อนหลัง 3 ปี','2'=>'ค้นหาระหว่างปี'),@$_GET['search_type'],'');?>
 		
-	<?=form_dropdown('type',array('1'=>'สคร.','2'=>'จังหวัด','3'=>'อำเภอ','4'=>'ตำบล'),@$_GET['type'],'','--- แยกตาม ---');?>
-	
-	<span id="area" <?=(@$_GET['area_id'] == "")?'style="display:none;"':'';?>>
-	<?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12','13'=>'สคร.13'),@$_GET['area_id'],'','--- เลือกสคร. ---');?>
-	</span>
-	
-	<span id="province" <?=(@$_GET['province_id'] == "")?'style="display:none;"':'';?>>
-	<?php echo form_dropdown('province_id',get_option('id','name','provinces','order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
-	</span>
-   	
-	<span id="amphur" <?=(@$_GET['amphur_id'] == "")?'style="display:none;"':'';?>>
-		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
-	</span>
-	
-	<span id="district" <?=(@$_GET['district_id'] == "")?'style="display:none;"':'';?>>
-		<?=form_dropdown('district_id',get_option('id','district_name','districts','order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
-	</span>
+		<?=form_dropdown('three_year',array('2559'=>'2559'),@$_GET['start_year'],'');?>
+		<?=form_dropdown('start_year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558','2559'=>'2559'),@$_GET['start_year'],'','--- ปีที่เริ่ม ---');?>
+		<?=form_dropdown('end_year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558','2559'=>'2559'),@$_GET['end_year'],'','--- ปีที่สิ้นสุด ---');?>
+	</div>
+	<div>
+		<span>แยกตาม</span>
+		<?=form_dropdown('type',array('1'=>'สคร.','2'=>'จังหวัด','3'=>'อำเภอ','4'=>'ตำบล'),@$_GET['type'],'','--- แยกตาม ---');?>
+	</div>
+	<div>
+		<span>เลือก</span>
+		<span id="area" <?=(@$_GET['area_id'] == "")?'style="display:none;"':'';?>>
+		<?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12','13'=>'สคร.13'),@$_GET['area_id'],'','--- เลือกสคร. ---');?>
+		</span>
+		
+		<span id="province" <?=(@$_GET['province_id'] == "")?'style="display:none;"':'';?>>
+		<?php echo form_dropdown('province_id',get_option('id','name','provinces','order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
+		</span>
+	   	
+		<span id="amphur" <?=(@$_GET['amphur_id'] == "")?'style="display:none;"':'';?>>
+			<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
+		</span>
+		
+		<span id="district" <?=(@$_GET['district_id'] == "")?'style="display:none;"':'';?>>
+			<?=form_dropdown('district_id',get_option('id','district_name','districts','order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
+		</span>
+	</div>
 	
 	<?//=form_dropdown('status',array('1'=>'เข้าร่วม','2'=>'ผ่านเกณฑ์','3'=>'รอประเมิน'),@$_GET['status'],'','--- สถานะ ---');?>
 	<input type="hidden" name="search" value="1">
 	<input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
-	</div>
 </form>
 
 
@@ -298,15 +329,26 @@ $(function(){
 	if(@$_GET['year']!=""){
 		@$condition.=" and v_nurseries.year = ".@$_GET['year'];
 	}
-	// ปีที่เริ่ม - ปีที่สิ้นสุด
-	if(@$_GET['start_year'] and @$_GET['end_year']){
-		$condition .= " and v_nurseries.year between ".$_GET['start_year']." and ".$_GET['end_year'];
-	}
-	if(@$_GET['start_year'] and @empty($_GET['end_year'])){
-		$condition .= " and v_nurseries.year >= ".$_GET['start_year'];
-	}
-	if(@$_GET['end_year'] and @empty($_GET['start_year'])){
-		$condition .= " and v_nurseries.year <= ".$_GET['end_year'];
+	
+	if(@$_GET['search_type'] == 1){ // ค้นหาย้อนหลัง 3 ปี
+	
+		if(@$_GET['three_year']){
+			$condition .= " and v_nurseries.year between ".($_GET['three_year'] - 2)." and ".$_GET['three_year'];
+		}
+		
+	}elseif(@$_GET['search_type'] == 2){ // ค้นหาระหว่างปี
+	
+		// ปีที่เริ่ม - ปีที่สิ้นสุด
+		if(@$_GET['start_year'] and @$_GET['end_year']){
+			$condition .= " and v_nurseries.year between ".$_GET['start_year']." and ".$_GET['end_year'];
+		}
+		if(@$_GET['start_year'] and @empty($_GET['end_year'])){
+			$condition .= " and v_nurseries.year >= ".$_GET['start_year'];
+		}
+		if(@$_GET['end_year'] and @empty($_GET['start_year'])){
+			$condition .= " and v_nurseries.year <= ".$_GET['end_year'];
+		}
+		
 	}
 ?>
 
