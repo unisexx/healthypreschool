@@ -12,14 +12,24 @@ class Reports extends Public_Controller
 		
 		(@$_GET['year'])?$txt="ปีงบประมาณ ".@$_GET['year']:$txt="โดยรวมทั้งหมด";
 		
-		if(@$_GET['start_year'] and @$_GET['end_year']){
+		if(@$_GET['search_type'] == 1){ //ย้อนหลัง 3 ปี
+			
+			if(@$_GET['three_year']){
+			$txt = "ตั้งแต่ปี พ.ศ. ".($_GET['three_year']-2)." ถึง พ.ศ. ".$_GET['three_year'];
+			}
+			
+		}elseif(@$_GET['search_type'] == 2){ // ระหว่างปี
+			
+			if(@$_GET['start_year'] and @$_GET['end_year']){
 			$txt = "ระหว่างปี พ.ศ. ".$_GET['start_year']." ถึง พ.ศ. ".$_GET['end_year'];
-		}
-		if(@$_GET['start_year'] and @empty($_GET['end_year'])){
-			$txt = "ตั้งแต่ปี พ.ศ. ".$_GET['start_year'];
-		}
-		if(@$_GET['end_year'] and @empty($_GET['start_year'])){
-			$txt = "จนถึงปี พ.ศ. ".$_GET['end_year'];
+			}
+			if(@$_GET['start_year'] and @empty($_GET['end_year'])){
+				$txt = "ตั้งแต่ปี พ.ศ. ".$_GET['start_year'];
+			}
+			if(@$_GET['end_year'] and @empty($_GET['start_year'])){
+				$txt = "จนถึงปี พ.ศ. ".$_GET['end_year'];
+			}
+			
 		}
 		
 		

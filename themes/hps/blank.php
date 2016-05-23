@@ -497,7 +497,7 @@
 												<!-- <li><a href="nurseries/reports/index/basic_column">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li> -->
 												<li class="main_menu_nolink"><a href="javascript:void(0)">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li>
 												<!-- <li class="sub_menu"><a class="sub_menu" href="reports/nursery_register">- สรุปผลการสมัครเข้าร่วมโครงการฯ</a></li> -->
-												<li class="sub_menu"><a class="sub_menu" href="nurseries/reports/index/basic_column">- สรุปผลการสมัครเข้าร่วมโครงการฯ</a></li>
+												<li class="sub_menu"><a class="sub_menu" href="nurseries/reports/index/basic_column?search_type=1&three_year=<?php echo date("Y")+543; ?>">- สรุปผลการสมัครเข้าร่วมโครงการฯ</a></li>
 												<li class="sub_menu"><a class="sub_menu" href="nurseries/estimate">- รายละเอียดการประเมินผลโครงการฯ</a></li>
 												<?endif;?>
 												<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10,11))):?>

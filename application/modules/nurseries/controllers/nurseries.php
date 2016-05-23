@@ -185,7 +185,9 @@ class Nurseries extends Public_Controller
 						redirect($_SERVER['HTTP_REFERER']);
 					}
 				}
-
+				
+				$_POST['area_province_id'] = get_area_province_id(9,$_POST['province_id']);
+				
 				$_POST['user_id'] = $this->session->userdata('id'); // ไอดีเจ้าหน้าที่ที่แอด nursery
 				//$_POST['area_id'] = login_data('nursery');
 				$nursery = new Nursery($id);
