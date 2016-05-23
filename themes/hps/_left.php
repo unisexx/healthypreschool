@@ -124,7 +124,7 @@
 	             </a>
 	         </div>
 	         <div style="width:230px!important;margin:0 auto!important;padding-top:8px;">
-                 <a href="#" onclick="return false;" target="_blank">
+                 <a href="nurseries/cert" target="_blank">
                    <img src="media/images/btn_school_cert_menu.png" border="0" width="230">
                  </a>
              </div>

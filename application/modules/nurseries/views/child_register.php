@@ -219,6 +219,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        		</a>
 	        		<?endif;?>
 	        		</span>
+	        		<div><a href="nurseries/cert/index/<?=$nursery->id?>" target="_blank">พิมพ์ใบประกาศ</a></div>
 	        	<?endif;?>
 	        </td>
 	        <td><?=mysql_to_th($nursery->approve_date)?></td>

@@ -1,0 +1,23 @@
+@font-face {
+  font-family: '2005_iannnnnGMO';  src: url('../fonts/2005_iannnnnGMO.eot') format('eot');
+  src: url('../fonts/2005_iannnnnGMO.eot?#iefix') format('embedded-opentype'), 
+  url('../fonts/2005_iannnnnGMO.woff') format('woff'), 
+  url('../fonts/2005_iannnnnGMO.ttf') format('truetype'), 
+  url('../fonts/2005_iannnnnGMO.svg#dbJariyathamXbd') format('svg');
+}
+
+.2005_iannnnnGMO {  font-family: '2005_iannnnnGMO';  }
+
+
+
+#bg-diploma{width:1100px; height:770px; margin:0 auto; background-image:url(../images/bg-diploma.jpg); background-repeat:no-repeat;}
+.logo{text-align:center;  margin:0 auto; width:135px; height:135px; background-image:url(../images/logo-ddc.png);}
+.text1{  font-family: '2005_iannnnnGMO';  font-size:35px; text-align:center; }
+
+
+
+
+
+
+
+

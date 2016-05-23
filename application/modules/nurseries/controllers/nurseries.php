@@ -583,5 +583,6 @@ class Nurseries extends Public_Controller
 		}
 		redirect($_SERVER['HTTP_REFERER']);
 	}
+	
 }
 ?>
