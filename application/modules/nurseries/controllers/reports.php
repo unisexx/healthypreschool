@@ -133,20 +133,31 @@ class Reports extends Public_Controller
 			$data['year'] = "ปี ".$_GET['year'];
 		}
 
-		if(@$_GET['start_year'] and @$_GET['end_year']){
-			$condition .= " and v_nurseries.year between ".$_GET['start_year']." and ".$_GET['end_year'];
-			$data['year'] = "ระหว่างปี ".$_GET['start_year']." ถึง ".$_GET['end_year'];
-		}
-		if(@$_GET['start_year'] and @empty($_GET['end_year'])){
-			$condition .= " and v_nurseries.year >= ".$_GET['start_year'];
-			$data['year'] = "ตั้งแต่ปี ".$_GET['start_year'];
-		}
-		if(@$_GET['end_year'] and @empty($_GET['start_year'])){
-			$condition .= " and v_nurseries.year >= ".$_GET['end_year'];
-			$data['year'] = "จนถึงปี ".$_GET['end_year'];
+		if(@$_GET['search_type'] == 1){ //ย้อนหลัง 3 ปี
+			
+			if(@$_GET['three_year']){
+				$condition .= " and v_nurseries.year between ".($_GET['three_year'] - 2)." and ".$_GET['three_year'];
+				$data['year'] = "ตั้งแต่ปี พ.ศ. ".($_GET['three_year']-2)." ถึง พ.ศ. ".$_GET['three_year'];
+			}
+			
+		}elseif(@$_GET['search_type'] == 2){ // ระหว่างปี
+			
+			if(@$_GET['start_year'] and @$_GET['end_year']){
+				$condition .= " and v_nurseries.year between ".$_GET['start_year']." and ".$_GET['end_year'];
+				$data['year'] = "ระหว่างปี ".$_GET['start_year']." ถึง ".$_GET['end_year'];
+			}
+			if(@$_GET['start_year'] and @empty($_GET['end_year'])){
+				$condition .= " and v_nurseries.year >= ".$_GET['start_year'];
+				$data['year'] = "ตั้งแต่ปี ".$_GET['start_year'];
+			}
+			if(@$_GET['end_year'] and @empty($_GET['start_year'])){
+				$condition .= " and v_nurseries.year >= ".$_GET['end_year'];
+				$data['year'] = "จนถึงปี ".$_GET['end_year'];
+			}
+			
 		}
 		
-		if(isset($_GET['status'])){
+		if($_GET['status'] != ""){
 			$condition .=" and v_nurseries.status = ".$_GET['status'];
 		}
 		
