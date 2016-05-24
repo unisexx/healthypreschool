@@ -285,7 +285,7 @@ $(document).ready(function() {
                 'mode':'all'
             },function(data){
                 $("#province").html(data);
-            });
+        });
 
         $.post('ajax/get_amphur',{
                 'province_id' : '',

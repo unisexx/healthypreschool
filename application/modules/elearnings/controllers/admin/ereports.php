@@ -33,10 +33,20 @@ class Ereports extends Admin_Controller
         if(@$_GET['status']=='1')$condition.=" and n_user_score < pass ";
         if(@$_GET['status']=='2')$condition.=" and n_user_score >= pass ";
         if(@$_GET['user_type_id']!='')$condition.=" and user_type_id = ".@$_GET['user_type_id'];
+        if(@$_GET['area_id']!='')$condition.=" and v_users.area_id = ".@$_GET['area_id'];
         if(@$_GET['province_id']!='')$condition.=" and v_users.province_id = ".@$_GET['province_id'];
         if(@$_GET['amphur_id']!='')$condition.=" and v_users.amphur_id = ".@$_GET['amphur_id'];
         if(@$_GET['district_id']!='')$condition.=" and v_users.district_id = ".@$_GET['district_id'];
         if(@$_GET['search']!='')$condition.=" and v_users.name like '%".@$_GET['search']."%'";
+
+        if(@$_GET['start_date']!='' && @$_GET['end_date']!=''){
+            $condition.= " AND (update_date BETWEEN '".Date2DB($_GET['start_date'])."' AND '".Date2DB($_GET['end_date'])."')";   
+        }else if(@$_GET['start_date']!=''){
+            $condition.= " AND update_date >= '".Date2DB($_GET['start_date'])."' ";
+        }else if(@$_GET['end_date']!=''){
+            $condition.= " AND update_date <= '".Date2DB($_GET['end_date'])."' ";
+        }        
+        
         $sql = '
             select 
             user_exam.*,
