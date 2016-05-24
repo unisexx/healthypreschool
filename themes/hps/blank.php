@@ -69,6 +69,7 @@
 							        			echo ' ('.$current_user->nursery->assessment->total.' คะแนน)';
 							        		}
 							        		echo '</span>';
+											echo ' <a href="nurseries/cert" target="_blank" style="color:teal">(พิมพ์ใบประกาศ)</a>';
 								        }
 										echo '</a>';
 

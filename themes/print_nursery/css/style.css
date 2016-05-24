@@ -1,18 +1,27 @@
 @font-face {
-  font-family: '2005_iannnnnGMO';  src: url('../fonts/2005_iannnnnGMO.eot') format('eot');
-  src: url('../fonts/2005_iannnnnGMO.eot?#iefix') format('embedded-opentype'), 
-  url('../fonts/2005_iannnnnGMO.woff') format('woff'), 
-  url('../fonts/2005_iannnnnGMO.ttf') format('truetype'), 
-  url('../fonts/2005_iannnnnGMO.svg#dbJariyathamXbd') format('svg');
+  font-family: 'dbJariyathamX';  src: url('../fonts/dbJariyathamX.eot') format('eot');
+  src: url('../fonts/dbJariyathamX.eot?#iefix') format('embedded-opentype'), 
+  url('../fonts/dbJariyathamX.woff') format('woff'), 
+  url('../fonts/dbJariyathamX.ttf') format('truetype'), 
+  url('../fonts/dbJariyathamX.svg#dbJariyathamX') format('svg');
+}
+.dbJariyathamX {  font-family: 'dbJariyathamX';  }
+
+@font-face {
+  font-family: 'dbJariyathamXbd';  src: url('../fonts/dbJariyathamXbd.eot') format('eot');
+  src: url('../fonts/dbJariyathamXbd.eot?#iefix') format('embedded-opentype'), 
+  url('../fonts/dbJariyathamXbd.woff') format('woff'), 
+  url('../fonts/dbJariyathamXbd.ttf') format('truetype'), 
+  url('../fonts/dbJariyathamXbd.svg#dbJariyathamXbd') format('svg');
 }
 
-.2005_iannnnnGMO {  font-family: '2005_iannnnnGMO';  }
+.dbJariyathamXbd {  font-family: 'dbJariyathamXbd';  }
 
 
 
 #bg-diploma{width:1100px; height:770px; margin:0 auto; background-image:url(../images/bg-diploma.jpg); background-repeat:no-repeat;}
-.logo{text-align:center;  margin:0 auto; width:135px; height:135px; background-image:url(../images/logo-ddc.png);}
-.text1{  font-family: '2005_iannnnnGMO';  font-size:35px; text-align:center; }
+.logo{text-align:center;  margin:0 auto; width:150px; height:142px; background-image:url(../images/logo_dept.png);}
+.text1{  font-family: 'dbJariyathamXbd';  font-size:35px; text-align:center; }
 
 
 

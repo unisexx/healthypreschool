@@ -24,21 +24,23 @@
 <div id="bg-diploma">
 	<div style="padding-top:30px;">&nbsp;</div>
 	<div class="logo">&nbsp;</div>
-	<div class="text1">
-    	<div style="color:#009; font-size:60px; margin-top:22px;">กรมควบคุมโรค</div>
-มอบประกาศนียบัตรนี้ให้ไว้เพื่อแสดงว่า<br><br>
+	<div class="text1" style="font-size:44px;">
+    	<div style="font-size:50px; margin-top:15px;">สำนักโรคติดต่อทั่วไป กรมควบคุมโรค</div>
+ขอมอบใบสำคัญนี้ให้ไว้เพื่อแสดงว่า<br>
 
-<span style="border-bottom:1px dashed #bbb7b8;"><?=$nursery_name?></span><br><br>
+
+<span style="color:#009;font-size:50px;padding-top:20px;padding-bottom:20px;display:block;">
+				<?=$nursery_name?>
+				</span>
 
 ได้ผ่านเกณฑ์การประเมินศูนย์เด็กเล็ก<br>
 และโรงเรียนอนุบาลคุณภาพ-ปลอดโรค ประจำปี <?=$approve_year?><br>
-<br>
 
-<img src="media/images/sig.png" width="130">
+<img src="media/images/sig.png" width="130" style="margin-bottom:-17px; margin-top:30px;">
 <div style="border-bottom:1px dashed #bbb7b8; width:300px; margin:-25px auto 0;">&nbsp;</div>
-<div style=" font-size:40px;">
+<div style=" font-size:30px;">
 	(นายอำนวย  กาจีนะ)<br>
-<span style="font-size:32px;">อธิบดีกรมควบคุมโรค</span></div>
+<span style="font-size:30px;">อธิบดีกรมควบคุมโรค</span></div>
 
 <div style="margin-left:60px; margin-top:-5px;font-size:26px; float:left;">ประกาศนียบัตรนี้มีผลรับรองถึงปี <?=$expired?></div>
 
@@ -48,7 +50,7 @@
 
 
 <script>
-	window.print();
+window.print();
 </script>
 
 </body>

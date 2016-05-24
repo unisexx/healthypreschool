@@ -186,11 +186,11 @@
       <tr>
         <td background="themes/hps/images/bg_col1.png">&nbsp;</td>
       </tr>
-      <tr>
+      <!-- <tr>
         <td background="themes/hps/images/bg_col1.png">&nbsp;&nbsp;<img src="themes/hps/images/title_calendar.png" width="176" height="29" /><br>
 			<?php echo modules::run('calendars/inc_home'); ?>
         </td>
-      </tr>
+      </tr> -->
       <tr>
         <td background="themes/hps/images/bg_col1.png">
         <div id="banner">
