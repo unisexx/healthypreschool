@@ -253,12 +253,19 @@ class Users extends Public_Controller{
 			if($nurseries->exists())
 			{
 				echo "<div style='border:1px dashed #888; padding:7px; margin-bottom:10px;'>";
-				echo "พบศูนย์เด็กเล็กที่มีชื่อตรงกันอยู่ ".$nurseries->result_count()." ศูนย์";
+				echo "<div style='text-decoration:underline;font-weight:bold;margin-bottom:10px;'>พบศูนย์เด็กเล็กที่มีชื่อตรงกันอยู่ ".$nurseries->result_count()." ศูนย์</div>";
 				echo "<ul>";
 				foreach($nurseries as $row){
-				echo "<li>".$row->nursery_category->title.$row->name.' ตำบล'.$row->district->district_name.' อำเภอ'.$row->amphur->amphur_name.' จังหวัด'.$row->province->name."<a href='users/register_center/".$row->id."'>ลงทะเบียน</a></li>";
+				echo "<li>- ".$row->nursery_category->title.$row->name.' ตำบล'.$row->district->district_name.' อำเภอ'.$row->amphur->amphur_name.' จังหวัด'.$row->province->name;
+				if($row->user->where("user_type_id = 9")->get()->exists()){
+					echo "<span style='color:#CC181E;'>[มีเจ้าหน้าที่ศูนย์แล้ว]</span>";
+				}else{
+					echo "<a href='users/register_center_form/".$row->id."'>[ลงทะเบียนเจ้าหน้าที่ศูนย์]</a>";
+				}
+				echo"</li>";
 				}
 				echo "</ul>";
+				echo "<div>***หมายเหตุ : หากมีศูนย์เด็กเล็กของท่านอยู่ในระบบแล้ว ให้กดปุ่ม [ลงทะเบียนเจ้าหน้าที่ศูนย์] หรือ ติดต่อเจ้าหน้าที่</div>";
 				echo "</div>";
 			}
 		}

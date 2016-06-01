@@ -433,7 +433,7 @@
 									<nav>
 								  <ul class="nav">
 										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10,11))):?>
-										<li><a href="#">บริหารจัดการศูนย์เด็กเล็ก / โรงเรียนอนุบาล</a>
+										<li><a href="javascript:void(0)" onclick="return false;">บริหารจัดการศูนย์เด็กเล็ก / โรงเรียนอนุบาล</a>
 											<ul>
 												<?if (in_array($current_user->user_type_id, array(1,6,7,8))):?>
 												<li><a href="nurseries/register">ตรวจสอบรายชื่อศูนย์เด็กเล็ก</a></li>
@@ -456,7 +456,7 @@
 										</li>
 										<?endif;?>
 										<?if (in_array($current_user->user_type_id, array(1,6,7,8))):?>
-										<li><a href="#">เจ้าหน้าที่</a>
+										<li><a href="javascript:void(0)" onclick="return false;">เจ้าหน้าที่</a>
 											<ul>
 												<?if (in_array($current_user->user_type_id, array(1,6,7))):?>
 												<li><a href="officers">ตรวจสอบรายชื่อเจ้าหน้าที่สาธารณสุข</a></li>
@@ -468,14 +468,14 @@
 										</li>
 										<?endif;?>
 										<?if (in_array($current_user->user_type_id, array(9,10,11))):?>
-								    <li><a href="#">แบบคัดกรองโรค</a>
+								    <li><a href="javascript:void(0)" onclick="return false;">แบบคัดกรองโรค</a>
 								      <ul>
 								        <li><a href="diseases">ตรวจสอบรายการแบบคัดกรองโรค</a></li>
 								      </ul>
 								    </li>
 										<?endif;?>
 										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10,11,12))):?>
-								    <li><a href="#">E-learning</a>
+								    <li><a href="javascript:void(0)" onclick="return false;">E-learning</a>
 								      <ul>
 								        <li><a href="pages/view/1">คำแนะนำ</a></li>
 								        <li><a href="elearnings/learns">บทเรียน</a></li>
@@ -484,7 +484,7 @@
 								    </li>
 										<?endif;?>
 										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10,11))):?>
-								    <li><a href="#" onclick="return false;">ระบบเฝ้าระวังโรคติดต่อในเด็ก</a>
+								    <li><a href="javascript:void(0)" onclick="return false;">ระบบเฝ้าระวังโรคติดต่อในเด็ก</a>
 											<ul>
 												<li><a href="desease_watch/form">บันทึกเหตุการณ์เฝ้าระวังโรคติดต่อ</a></li>
 												<li><a href="desease_watch/index">ตรวจสอบข้อมูลเหตุการณ์เฝ้าระวังโรคติดต่อ</a></li>
@@ -492,7 +492,7 @@
 										</li>
 										<?endif;?>
 										<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10,11))):?>
-										<li><a href="#">รายงาน</a>
+										<li><a href="javascript:void(0)" onclick="return false;">รายงาน</a>
 											<ul>
 												<?if (in_array($current_user->user_type_id, array(1,6,7,8))):?>
 												<!-- <li><a href="nurseries/reports/index/basic_column">รายงานการสมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a></li> -->
@@ -503,9 +503,9 @@
 												<?endif;?>
 												<?if (in_array($current_user->user_type_id, array(1,6,7,8,9,10,11))):?>
 												<li class="main_menu_nolink"><a href="javascript:void(0)">รายงานแบบคัดกรองโรค</a></li>
-												<li class="sub_menu"><a class="sub_menu" href="diseases/newreport">- สรุปผลรายงานแบบคัดกรองโรค</a></li>
-												<li class="sub_menu"><a class="sub_menu" href="reports/desease_overall">- รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก</a></li>
-												<li class="sub_menu"><a class="sub_menu" href="reports/desease_factor">- รายงานข้อมูลวิเคราะห์ตามปัจจัยต่างๆ</a></li>
+												<li class="sub_menu"><a class="sub_menu" href="diseases/newreport?lowage=0&agecondition=between&hiage=7&start_date=&end_date=&year=&month=&area_id=&province_id=&search=1">- สรุปผลรายงานแบบคัดกรองโรค</a></li>
+												<li class="sub_menu"><a class="sub_menu" href="reports/desease_overall?start_date=&end_date=&year=&month=&area_id=&province_id=&search=1">- รายงานจำนวนและร้อยละของศูนย์เด็กเล็ก</a></li>
+												<li class="sub_menu"><a class="sub_menu" href="reports/desease_factor?main_factor=age&second_factor=sex&start_date=&end_date=&year=&month=&area_id=&province_id=">- รายงานข้อมูลวิเคราะห์ตามปัจจัยต่างๆ</a></li>
 												<!-- <li><a href="surveillances/index">รายงานการเฝ้าระวังโรค</a></li> -->
 												<li class="main_menu_nolink"><a href="javascript:void(0)" onclick="return false;">รายงานข้อมูลเหตุการณ์การเฝ้าระวังโรค</a></li>
 												<li class="sub_menu"><a class="sub_menu" href="reports/desease_watch_number">- รายงานจำนวนเหตุการณ์การเฝ้าระวังโรค</a></li>

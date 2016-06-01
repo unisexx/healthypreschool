@@ -18,11 +18,37 @@ $(document).ready(function(){
 			});
 	});
 	
+	jQuery.validator.addMethod("chknursery", function(value, element) {
+	    
+	    var name = $('input[name=name]').val();
+		var province_name = $('select[name="province_id"] option:selected').text();
+		var amphur_name = $('select[name="province_id"] option:selected').text();
+		var district_name = $('select[name="district_id"] option:selected').text();
+		var check_result;
+		$.get('nurseries/check_name',{
+			'name' : $('input[name=name]').val(),
+			'district_id' : value
+		},function(data){
+			check_result = data;
+		});
+		
+	    return check_result;
+	    console.log(check_result);
+	}, "มีชื่อศูนย์เด็กเล็กนี้อยู่ในระบบแล้ว");
+	
 	$("#regisform").validate({
     rules: 
     {
     	/*nursery_category_id:{required: true},*/
     	name:{required: true},
+    	number: 
+		{ 
+			required: true
+		},
+		moo:
+		{
+			required: true
+		},
     	province_id:{
         	required: true
         },
@@ -30,8 +56,33 @@ $(document).ready(function(){
         	required: true
         },
         district_id:{
+        	// chknursery: true,
         	required: true
         },
+        code:
+		{
+			required: true
+		},
+		p_title:
+		{
+			required: true
+		},
+		p_name:
+		{
+			required: true
+		},
+		p_surname:
+		{
+			required: true
+		},
+		p_tel:
+		{
+			required: true
+		},
+		p_email:
+		{
+			required: true
+		},
         email: 
         { 
             required: true,
@@ -57,6 +108,14 @@ $(document).ready(function(){
     {
     	/*nursery_category_id:{required: "กรุณาเลือกคำนำหน้าชื่อ"},*/
     	name:{required: "กรุณากรอกชื่อศูนย์เด็กเล็ก"},
+    	number:
+		{
+			required: "กรุณากรอกเลขที่ค่ะ"
+		},
+		moo:
+		{
+			required: "กรุณากรอกหมู่ค่ะ"
+		},
     	province_id: 
         { 
             required: "กรุณาเลือกจังหวัด"
@@ -69,6 +128,30 @@ $(document).ready(function(){
         { 
             required: "กรุณาเลือกตำบล"
         },
+        code:
+		{
+			required: "กรุณากรอกรหัสไปรษณีย์ค่ะ"
+		},
+		p_title:
+		{
+			required: "กรุณากรอกคำนำหน้าค่ะ"
+		},
+		p_name:
+		{
+			required: "กรุณากรอกชื่อค่ะ"
+		},
+		p_surname:
+		{
+			required: "กรุณากรอกนามสกุลค่ะ"
+		},
+		p_tel:
+		{
+			required: "กรุณากรอกโทรศัพท์ค่ะ"
+		},
+		p_email:
+		{
+			required: "กรุณากรอกอีเมล์ค่ะ"
+		},
         email: 
         { 
             required: "กรุณากรอกอีเมล์",
@@ -101,18 +184,14 @@ $(document).ready(function(){
 	    // timer = setTimeout(callback, ms);
 	  // };
 	// })();
-// 	
-	// $('input[name=name]').keyup(function() {
-	    // delay(function(){
-// 	      
-			// $.get('users/check_nursery',{
-	    		// nursery_name : $('input[name=name]').val()
-	    	// },function(data){
-	    		// $('.nursery_alert').html(data);
-	    	// });
-// 	      
-	    // }, 2500 );
-	// });
+	
+	$('input[name=name]').blur(function() {
+	    $.get('users/check_nursery',{
+    		nursery_name : $('input[name=name]').val()
+    	},function(data){
+    		$('.nursery_alert').html(data);
+    	});
+	});
 	
 });
 </script>
@@ -132,7 +211,7 @@ $(document).ready(function(){
 		  <li class="active"><a href="users/register_center">เจ้าหน้าที่ศูนย์</a></li>
 		</ul> -->
 		
-		<span class='nursery_alert' style="color:#CC181E;"></span>
+		<span class='nursery_alert' style="color:#444;"></span>
 
         <form id="regisform" class="form-horizontal" method="post" action="users/signup_center/<?=$nursery->id?>">
         	
@@ -151,14 +230,14 @@ $(document).ready(function(){
             </div>
             
             <div class="control-group">
-                <label class="control-label">เลขที่</label>
+                <label class="control-label">เลขที่<span class="TxtRed">*</span></label>
                 <div class="controls">
                   <input class="input-xlarge" type="text" name="number" value="<?=$nursery->number?>" style="width:50px;">
                 </div>
             </div>
             
             <div class="control-group">
-                <label class="control-label">หมู่</label>
+                <label class="control-label">หมู่<span class="TxtRed">*</span></label>
                 <div class="controls">
                   <input class="input-xlarge" type="text" name="moo" value="<?=$nursery->moo?>" style="width:50px;">
                 </div>
@@ -185,7 +264,7 @@ $(document).ready(function(){
             </div>
             
             <div class="control-group">
-                <label class="control-label">รหัสไปรษณีย์</label>
+                <label class="control-label">รหัสไปรษณีย์<span class="TxtRed">*</span></label>
                 <div class="controls">
                   <input class="input-xlarge" type="text" name="code" value="<?=$nursery->code?>">
                 </div>
@@ -193,35 +272,35 @@ $(document).ready(function(){
             <hr>
             
              <div class="control-group">
-                <label class="control-label">คำนำหน้า</label>
+                <label class="control-label">คำนำหน้า<span class="TxtRed">*</span></label>
                 <div class="controls">
                   <?php echo form_dropdown('p_title',array('นาย'=>'นาย','นาง'=>'นาง','นางสาว'=>'นางสาว'),@$nursery->p_title,'','--- เลือกคำนำหน้า ---');?>
                 </div>
             </div>
             
             <div class="control-group">
-                <label class="control-label">ชื่อหัวหน้าศูนย์</label>
+                <label class="control-label">ชื่อหัวหน้าศูนย์<span class="TxtRed">*</span></label>
                 <div class="controls">
                   <input class="input-xlarge" type="text" name="p_name" value="<?=$nursery->p_name?>">
                 </div>
             </div>
             
             <div class="control-group">
-                <label class="control-label">นามสกุล</label>
+                <label class="control-label">นามสกุล<span class="TxtRed">*</span></label>
                 <div class="controls">
                   <input class="input-xlarge" type="text" name="p_surname" value="<?=$nursery->p_surname?>">
                 </div>
             </div>
             
             <div class="control-group">
-                <label class="control-label">อีเมล์</label>
+                <label class="control-label">อีเมล์<span class="TxtRed">*</span></label>
                 <div class="controls">
                   <input class="input-xlarge" type="text" name="p_email" value="<?=$nursery->p_email?>">
                 </div>
             </div>
             
             <div class="control-group">
-                <label class="control-label">เบอร์ติดต่อ</label>
+                <label class="control-label">เบอร์ติดต่อ<span class="TxtRed">*</span></label>
                 <div class="controls">
                   <input class="input-xlarge" type="text" name="p_tel" value="<?=$nursery->p_tel?>">
                 </div>

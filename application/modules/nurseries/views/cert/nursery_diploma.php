@@ -42,7 +42,7 @@
 	(นายอำนวย  กาจีนะ)<br>
 <span style="font-size:30px;">อธิบดีกรมควบคุมโรค</span></div>
 
-<div style="margin-left:60px; margin-top:-5px;font-size:26px; float:left;">ประกาศนียบัตรนี้มีผลรับรองถึงปี <?=$expired?></div>
+<div style="margin-left:110px; margin-top:-5px;font-size:26px; float:left;">ประกาศนียบัตรนี้มีผลรับรองถึงปี <?=$expired?></div>
 
 </div>
 

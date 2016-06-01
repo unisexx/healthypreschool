@@ -66,9 +66,29 @@ class Classrooms extends Public_Controller{
 	
 	function delete($id=false){
 		if($id){
-			$classroom = new Classroom($id);
-			$classroom->delete();
-			set_notify('success', 'ลบข้อมูลเรียบร้อย');
+			// เช็กว่ามีครูหรือนักเรียนอยู่ในห้องหรือไม่ ถ้ามี ไม่ให้ลบ
+			$children = $this->db->query("SELECT
+														count(classroom_childrens.id) total
+														FROM
+														classrooms
+														INNER JOIN classroom_childrens ON classroom_childrens.classroom_id = classrooms.id
+														WHERE classrooms.id = ".$id)->row_array();
+			
+			$teacher = $this->db->query("SELECT
+												count(classroom_teachers.id) total
+												FROM
+												classrooms
+												INNER JOIN classroom_teachers ON classroom_teachers.classroom_id = classrooms.id
+												WHERE classrooms.id = ".$id)->row_array();
+												
+			if($children['total'] == 0 and $teacher['total'] == 0){
+				$classroom = new Classroom($id);
+				$classroom->delete();
+				set_notify('success', 'ลบข้อมูลเรียบร้อย');	
+			}else{
+				set_notify('error', 'ไม่สามารถลบได้ เนื่องจากมีรายชื่อครูหรือเด็กอยู่ในห้องเรียน');
+			}
+			
 		}
 		redirect($_SERVER['HTTP_REFERER']);
 	}

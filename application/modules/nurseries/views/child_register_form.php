@@ -174,21 +174,21 @@ $(document).ready(function(){
 	});
 	
 	$(".btn").click(function(){
-		var name = $('input[name=name]').val();
-		var province_name = $('select[name="province_id"] option:selected').text();
-		var amphur_name = $('select[name="province_id"] option:selected').text();
-		var district_name = $('select[name="district_id"] option:selected').text();
-		
-		$.get('nurseries/check_name',{
-			'name' : $('input[name=name]').val(),
-			'district_id' : $('select[name=district_id]').val()
-		},function(data){
-			if(data == "false"){
-				alert("มีชื่อศูนย์เด็กเล็ก"+name+"\nจังหวัด"+province_name+"\nอำเภอ"+amphur_name+"\nตำบล"+district_name+"\nอยู่ในระบบแล้ว");
-			}else{
+		// var name = $('input[name=name]').val();
+		// var province_name = $('select[name="province_id"] option:selected').text();
+		// var amphur_name = $('select[name="province_id"] option:selected').text();
+		// var district_name = $('select[name="district_id"] option:selected').text();
+// 		
+		// $.get('nurseries/check_name',{
+			// 'name' : $('input[name=name]').val(),
+			// 'district_id' : $('select[name=district_id]').val()
+		// },function(data){
+			// if(data == "false"){
+				// alert("มีชื่อศูนย์เด็กเล็ก"+name+"\nจังหวัด"+province_name+"\nอำเภอ"+amphur_name+"\nตำบล"+district_name+"\nอยู่ในระบบแล้ว");
+			// }else{
 				$("#frmnursery").submit();
-			}
-		});
+			// }
+		// });
 	});
 	
 });

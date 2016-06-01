@@ -155,7 +155,12 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        		<li>
 	        			<a href="childrens?nursery_id=<?=$nursery->id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a>
 	        			<?
-	        				$rs = $this->db->query("SELECT COUNT(id) total FROM classroom_details where nursery_id = ".$nursery->id)->row_array();
+	        				$rs = $this->db->query("SELECT
+																count(classroom_childrens.id) total
+																FROM
+																classrooms
+																INNER JOIN classroom_childrens ON classroom_childrens.classroom_id = classrooms.id
+																WHERE classrooms.nursery_id = ".$nursery->id)->row_array();
 							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
 	        			?>
 	        		</li>
@@ -169,7 +174,12 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        		<li>
 	        			<a href="teachers?nursery_id=<?=$nursery->id?>" target="_blank">รายชื่อครู/เจ้าหน้าที่</a>
 	        			<?
-	        				$rs = $this->db->query("SELECT COUNT(id) total FROM users where user_type_id = 10 and nursery_id = ".$nursery->id)->row_array();
+	        				$rs = $this->db->query("SELECT
+																count(classroom_teachers.id) total
+																FROM
+																classrooms
+																INNER JOIN classroom_teachers ON classroom_teachers.classroom_id = classrooms.id
+																WHERE classrooms.nursery_id = ".$nursery->id)->row_array();
 							echo '<span style="color:#666666;">('.$rs['total'].')</span>';
 	        			?>
 	        		</li>
