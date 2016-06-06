@@ -5,6 +5,12 @@ class Assessments extends Public_Controller{
         parent::__construct();
     }
 	
+	function index(){
+		$data['assessments'] = new Assessment();
+		$data['assessments']->where('nursey_id = '.user_login()->nursery_id)->get();
+		$this->template->build('index',$data);
+	}
+	
 	function form(){
 		//$this->template->set_layout('disease');
 		$this->template->set_layout('blank');
