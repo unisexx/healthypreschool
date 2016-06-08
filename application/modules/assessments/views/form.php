@@ -92,13 +92,40 @@ function estimate(){
 <p class="title"><strong>คำชี้แจง</strong> ให้ผู้ประเมินสอบถามครูและผู้ดูแลเด็กในการดำเนินงานป้องกันควบคุมโรค ภายในระยะเวลา 1 ปีที่ผ่านมา และตรวจสอบเอกสาร/หลักฐานในการดำเนินงาน ตามหัวข้อการประเมินที่กำหนดให้</p>
 
 
-<form method="post" action="assessments/save" enctype="multipart/form-data">
+<form method="post" action="assessments/save/<?=$assessment->id?>" enctype="multipart/form-data">
+
 <table width="98%" border="0" align="center" cellpadding="0"  class="table1">
   <tr  bgcolor="#cce5fe">
     <td align="center"><strong>ที่</strong></td>
     <td align="center"><strong>หัวข้อการประเมิน</strong></td>
     <td align="center"><strong>คะแนนที่ได้</strong></td>
     <td align="center"><strong>หมายเหตุ/ เหตุผลที่ไม่ผ่าน</strong></td>
+  </tr>
+  <tr>
+  	<td></td>
+  	<td align="center">ปีที่ทำการประเมิน</td>
+  	<td>-</td>
+  	<td>
+  		<?
+  			$starting_year  = 2557;
+			$ending_year = (date('Y')+543);
+			$sql = "SELECT approve_year from assessments where nursery_id = 12037";
+			$approve_year = $this->db->query($sql)->row_array();
+  		?>
+  		<?//=print_r($approve_year);?>
+  		<select name="approve_year">
+  			<?
+  				for($starting_year; $starting_year <= $ending_year; $starting_year++) {
+  					if(!in_array($starting_year, $approve_year)){
+				    	echo '<option value="'.$starting_year.'"';
+						echo $assessment->approve_year == $starting_year ? 'selected' : '';
+			     		echo ' >'.$starting_year.'</option>';	
+				    }
+			 	}
+  			?>
+  		</select>
+  	</td>
+  	<td></td>
   </tr>
   <tr>
     <td valign="top" bgcolor="#F5F5F5">1.</td>
@@ -459,9 +486,8 @@ function estimate(){
   </tr>
 </table>
 
-<?=form_referer();?>
 <input type="hidden" name="total" value="<?=$assessment->total?>">
-<input type="hidden" name="id" value="<?=$assessment->id?>">
-<input type="hidden" name="nursery_id" value="<?=@$_GET['nursery_id']?>">
+<input type="hidden" name="nursery_id" value="<?=@$nursery->id?>">
+<input type="hidden" name="approve_type" value="2">
 <div style="text-align: center; padding:5px;"><input type="submit" value=" บันทึก "></div>
 </form>

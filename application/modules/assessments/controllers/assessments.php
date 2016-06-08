@@ -6,24 +6,36 @@ class Assessments extends Public_Controller{
     }
 	
 	function index(){
+		$data['nursery_id'] = user_login()->nursery_id;
 		$data['assessments'] = new Assessment();
-		$data['assessments']->where('nursey_id = '.user_login()->nursery_id)->get();
+		$data['assessments']->where('nursery_id = '.$data['nursery_id'])->get();
 		$this->template->build('index',$data);
 	}
 	
-	function form(){
-		//$this->template->set_layout('disease');
+	function form($id=false){
 		$this->template->set_layout('blank');
-		$data['nursery'] = new Nursery($_GET['nursery_id']);
+		$data['nursery_id'] = user_login()->nursery_id;
 		
-		$assessment = new Assessment();
-		$data['assessment'] = $assessment->where('nursery_id = '.$_GET['nursery_id'])->limit(1)->get();
+		$data['nursery'] = new Nursery($data['nursery_id']);
+		$data['assessment'] = new Assessment($id);
 		$this->template->build('form',$data);
 	}
 	
-	function save(){
+	function save($id=false){
 		if($_POST){
-			$assessment = new Assessment();
+			$assessment = new Assessment($id);
+			
+			if($id){
+				$_POST['updated_by'] = user_login()->id;
+			}else{
+				$_POST['created_by'] = user_login()->id;
+			}
+			
+			if($_POST['total'] >= 28){ 
+				$_POST['status'] = 1; //ผ่านเกณฑ์
+			}else{
+				$_POST['status'] = 2; //ไม่ผ่านเกณฑ์
+			}
 			
 			if($_FILES['files']['name'])
 			{
@@ -36,22 +48,27 @@ class Assessments extends Public_Controller{
 	        $assessment->from_array($_POST);
 	        $assessment->save();	
 			
-			// อัพเดท status
-			$nursery = new Nursery($_POST['nursery_id']);
-			if($_POST['total'] >= 28){ //ผ่านเกณฑ์
-				$nursery->status = 1;
-			}else{
-				$nursery->status = 0;
-			}
-			
-			$nursery->approve_date = date("Y-m-d H:i:s");
-			$nursery->approve_user_id = user_login()->id;
-			$nursery->approve_type = 2; // 1 = แบบประเมินแบบเก่า, 2 = แบบประเมิน 35 ข้อ
-			$nursery->save();
+			/*** อัพเดท status ล่าสุด ที่ table nursery ***/
+			// ทำการเช็กก่อนว่า ปีที่ทำการประเมินเป้นปีล่าสุดหรือยัง ถ้าไม่ล่าสุด ไม่ต้องอัพเดท
+			// $sql = "SELECT approve_year from nurseries where nursery_id = ".$_POST['nursery_id'];
+			// $approve_year = $this->db->query($sql)->row_array();
+			// if($_POST['approve_year'] > $approve_year['approve_year']){ // ถ้าเป็นปีล่าสุด ให้ทำการอัพเดท table nursery
+// 				
+				// $nursery = new Nursery($_POST['nursery_id']);
+				// if($_POST['total'] >= 28){
+					// $nursery->status = 1; //ผ่านเกณฑ์
+				// }else{
+					// $nursery->status = 2; //ไม่ผ่านเกณฑ์
+				// }
+// 				
+				// $nursery->approve_year = $_POST['approve_year'];
+				// $nursery->save();
+// 				
+			// }
 			
 			set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
 		}
-		redirect($_POST['referer']);
+		redirect('assessments/index');
 	}
 	
 	function preview($nursery_id = false){

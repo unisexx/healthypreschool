@@ -1,30 +1,33 @@
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li class="active">แบบคัดกรองโรค</li>
+  <li class="active">ประเมินผล</li>
 </ul>
 
-<h1>แบบคัดกรองโรค</h1>
+<h1>การประเมินผล <?=get_nursery_name($nursery_id);?></h1>
 
-<div style="float:right; padding:10px 0;"><a href="diseases/form?nursery_id=<?=user_login()->nursery_id?>&classroom_id=<?=@$_GET['classroom_id']?>&month=<?=date("m")?>&year=<?=date("Y")+543?>"><div class="btn">เพิ่มรายการ</div></a></div>
-<table class="table">
+<div style="float:right; padding:10px 0;"><a href="assessments/form"><div class="btn btn-primary">ทำแบบประเมิน</div></a></div>
+  
+<table class="table table-striped table-bordered">
 	<tr>
-		<th>ลำดับ</th>
-		<th>ประจำเดือน / ปี	</th>
-		<th>ห้องเรียน / ชั้นเรียน</th>
-		<th>ชื่อศูนย์</th>
-		<th>จัดการ</th>
+		<th class="span1">ลำดับ</td>
+		<th>ปีที่ประเมิน</th>
+		<th>สถานะการประเมิน</th>
+		<th>รูปแบบการประเมิน</th>
+		<th>ปีที่หมดอายุ</th>
 	</tr>
-	<?foreach($classes as $key=>$class):?>
+	<?foreach($assessments as $key=>$assessment):?>
 	<tr>
-		<td><?=($key+1)+$classes->paged->current_row?></td>
-		<td><?=$class->room_name?></td>
-		<td><?=$class->user->name?></td>
-		<td><?=$class->classroom_detail->count()?></td>
+		<td><?=$key+1?></td>
+		<td><?=$assessment->approve_year?></td>
+		<td><?=get_assessment_status($assessment->status)?></td>
+		<td><?=get_assessment_approve_type($assessment->approve_type,$assessment->approve_user_id,$assessment->total,$assessment->id)?></td>
 		<td>
-			<a href="classrooms/form/<?=$class->id?>" class='btn btn-mini btn-info'>แก้ไข</a>
-	        <a href="classrooms/delete/<?=$class->id?>" class="btn btn-mini btn-danger" onclick="return(confirm('ยืนยันการลบข้อมูล'))">ลบ</a>
+			<?
+				if($assessment->status == 1){ // ถ้าผ่านเกณฑ์
+					echo ($assessment->approve_year)+2;
+				}
+			?>
 		</td>
 	</tr>
 	<?endforeach;?>
 </table>
-<?=$classes->pagination();?>

@@ -311,4 +311,18 @@ function thainumDigit($num){
 function convert_2_percent($number,$total){
 	return @number_format(($number / $total) * 100,2);
 }
+
+function get_assessment_status($id){
+	$statusArray = array(0 => 'รอการประเมิน', 1 => 'ผ่านเกณฑ์', 2 => "ไม่ผ่านเกณฑ์");
+	return $statusArray[$id];
+}
+
+function get_assessment_approve_type($status_id,$approve_user_id=false,$total=false,$assessment_id=false){
+	$statusArray = array(1 => 'โดยเจ้าหน้าที่', 2 => "แบบประเมิน 35 ข้อ");
+	if($approve_user_id){
+		return $statusArray[$status_id]." (".get_user_name($approve_user_id).")";
+	}else{
+		return "<a href='assessments/form/".$assessment_id."'>".$statusArray[$status_id]."</a> (".$total." คะแนน)";	
+	}
+}
 ?>

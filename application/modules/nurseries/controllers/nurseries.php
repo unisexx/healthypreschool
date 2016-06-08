@@ -130,7 +130,7 @@ class Nurseries extends Public_Controller
 							LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 							LEFT JOIN districts ON v_nurseries.district_id = districts.id
 							LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-							WHERE ".$condition." and STATUS = 1
+							WHERE ".$condition." and v_nurseries.STATUS = 1
 						) pass,
 						(
 							SELECT
@@ -141,7 +141,7 @@ class Nurseries extends Public_Controller
 							LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 							LEFT JOIN districts ON v_nurseries.district_id = districts.id
 							LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-							WHERE ".$condition." and STATUS = 0 and v_nurseries.approve_type = 2
+							WHERE ".$condition." and v_nurseries.STATUS = 0 and v_nurseries.approve_type = 2
 						) not_pass,
 						(
 							SELECT
@@ -412,7 +412,7 @@ class Nurseries extends Public_Controller
 							LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 							LEFT JOIN districts ON v_nurseries.district_id = districts.id
 							LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-							WHERE ".$condition2." and STATUS = 1
+							WHERE ".$condition2." and v_nurseries.STATUS = 1
 						) pass,
 						(
 							SELECT
@@ -423,7 +423,7 @@ class Nurseries extends Public_Controller
 							LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 							LEFT JOIN districts ON v_nurseries.district_id = districts.id
 							LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-							WHERE ".$condition2." and STATUS >= 0 and assessments.total < 28
+							WHERE ".$condition2." and v_nurseries.STATUS >= 0 and assessments.total < 28
 						) not_pass,
 						(
 							SELECT
