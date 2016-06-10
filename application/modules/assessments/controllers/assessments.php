@@ -6,6 +6,7 @@ class Assessments extends Public_Controller{
     }
 	
 	function index(){
+		$this->template->set_layout('blank');
 		$data['nursery_id'] = user_login()->nursery_id;
 		$data['assessments'] = new Assessment();
 		$data['assessments']->where('nursery_id = '.$data['nursery_id'])->get();

@@ -83,8 +83,9 @@ function estimate(){
 
 <ul class="breadcrumb">
   <li><a href="home">หน้าแรก</a> <span class="divider">/</span></li>
-  <li><a href="nurseries">ศูนย์เด็กเล็กปลอดโรค</a> <span class="divider">/</span></li>
-  <li><a href="nurseries/register">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a> <span class="divider">/</span></li>
+  <li><a href="assessments">ประเมินผล</a> <span class="divider">/</span></li>
+  <!-- <li><a href="nurseries">ศูนย์เด็กเล็กปลอดโรค</a> <span class="divider">/</span></li>
+  <li><a href="nurseries/register">สมัครเข้าร่วมโครงการศูนย์เด็กเล็กปลอดโรค</a> <span class="divider">/</span></li> -->
   <li class="active">แบบประเมิน 35 ข้อ (<?=$nursery->nursery_category->title?><?=$nursery->name?>)</li>
 </ul>
 
@@ -106,24 +107,30 @@ function estimate(){
   	<td align="center">ปีที่ทำการประเมิน</td>
   	<td>-</td>
   	<td>
-  		<?
-  			$starting_year  = 2557;
-			$ending_year = (date('Y')+543);
-			$sql = "SELECT approve_year from assessments where nursery_id = 12037";
-			$approve_year = $this->db->query($sql)->row_array();
-  		?>
-  		<?//=print_r($approve_year);?>
-  		<select name="approve_year">
-  			<?
-  				for($starting_year; $starting_year <= $ending_year; $starting_year++) {
-  					if(!in_array($starting_year, $approve_year)){
-				    	echo '<option value="'.$starting_year.'"';
-						echo $assessment->approve_year == $starting_year ? 'selected' : '';
-			     		echo ' >'.$starting_year.'</option>';	
-				    }
-			 	}
-  			?>
-  		</select>
+  		<?if($assessment->id == ""):?>
+	  		<?
+	  			$starting_year  = 2557;
+				$ending_year = (date('Y')+543);
+				$sql = "SELECT approve_year from assessments where nursery_id = ".$nursery->id;
+				$approve_years = $this->db->query($sql)->result_array();
+				foreach($approve_years as $approve_years){
+					$approve_year_array[] = $approve_years['approve_year'];
+				}
+	  		?>
+	  		<select name="approve_year">
+	  			<?
+	  				for($starting_year; $starting_year <= $ending_year; $starting_year++) {
+	  					if(!in_array($starting_year, $approve_year_array)){
+					    	echo '<option value="'.$starting_year.'"';
+							echo $assessment->approve_year == $starting_year ? 'selected' : '';
+				     		echo ' >'.$starting_year.'</option>';	
+					    }
+				 	}
+	  			?>
+	  		</select>
+	  	<?else:?>
+	  		<input type="text" name="approve_year" value="<?=$assessment->approve_year?>" readonly='readonly'>
+	  	<?endif;?>
   	</td>
   	<td></td>
   </tr>

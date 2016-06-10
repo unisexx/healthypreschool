@@ -52,27 +52,49 @@
 				                    }elseif($current_user->user_type_id == 9 or $current_user->user_type_id == 10 or $current_user->user_type_id == 11){
 
 				                    	echo '('.$current_user->nursery->name.')';
-										echo '<br><b>สถานะ : </b>';
+										echo '<br><b>สถานะการประเมิน : </b>';
 
-										echo '<a href="assessments/preview/'.$current_user->nursery_id.'">';
-										if($current_user->nursery->status == 0){
-							        		if($current_user->nursery->assessment->total != 0){
-							        			echo '<span style="color:#D14">ไม่ผ่านเกณฑ์ ('.$current_user->nursery->assessment->total.' คะแนน)</span>';
-							        		}else{
-							        			echo 'รอการประเมิน';
-							        		}
-								       }else{
-							        		echo '<span style="color:teal">ผ่านเกณฑ์';
-							        		if($current_user->nursery->approve_year != 0){
-							        			echo ' (พ.ศ. '.$current_user->nursery->approve_year.')';
-							        		}else{
-							        			echo ' ('.$current_user->nursery->assessment->total.' คะแนน)';
-							        		}
-							        		echo '</span>';
-											echo ' <a href="nurseries/cert" target="_blank" style="color:teal">(พิมพ์ใบประกาศ)</a>';
-								        }
-										echo '</a>';
-
+										// echo '<a href="assessments/preview/'.$current_user->nursery_id.'">';
+										// if($current_user->nursery->status == 0){
+							        		// if($current_user->nursery->assessment->total != 0){
+							        			// echo '<span style="color:#D14">ไม่ผ่านเกณฑ์ ('.$current_user->nursery->assessment->total.' คะแนน)</span>';
+							        		// }else{
+							        			// echo 'รอการประเมิน';
+							        		// }
+								       // }else{
+							        		// echo '<span style="color:teal">ผ่านเกณฑ์';
+							        		// if($current_user->nursery->approve_year != 0){
+							        			// echo ' (พ.ศ. '.$current_user->nursery->approve_year.')';
+							        		// }else{
+							        			// echo ' ('.$current_user->nursery->assessment->total.' คะแนน)';
+							        		// }
+							        		// echo '</span>';
+											// echo ' <a href="nurseries/cert" target="_blank" style="color:teal">(พิมพ์ใบประกาศ)</a>';
+								        // }
+										// echo '</a>';
+										
+										$sql = "SELECT
+														id, `status`, approve_year, approve_type, approve_user_id, total
+													FROM
+														assessments
+													WHERE
+														nursery_id = ".$current_user->nursery->id."
+													AND approve_year = (
+														SELECT
+															max(approve_year)
+														FROM
+															assessments
+														WHERE
+															nursery_id = ".$current_user->nursery->id."
+													)";
+										$assessment = $this->db->query($sql)->row();
+										echo get_assessment_status($assessment->status);
+										echo ' | ';
+										echo '<b>ปีที่ประเมินล่าสุด : </b>';
+										echo $assessment->approve_year;
+										echo ' | ';
+										echo '<b>รูปแบบการประเมิน : </b>';
+										echo get_assessment_approve_type($assessment->approve_type,$assessment->approve_user_id,$assessment->total,$assessment->id);
 				                    }
 				                ?>
 
