@@ -46,7 +46,7 @@
 	    </table>
 	</fieldset>
 	
-	<fieldset style="border:1px dashed #ccc; padding:10px;">
+	<!-- <fieldset style="border:1px dashed #ccc; padding:10px;">
 	        <legend style="color:#01a8d2 !important; padding:0 5px; font-size:14px; font-weight:700; color:#666; margin:0px; border-bottom: none !important;">ผลการประเมิน</legend>
         <table class="table table-condensed">
         	<tr>
@@ -84,6 +84,34 @@
 				</td>
 			</tr>
 	    </table>
+	</fieldset> -->
+	
+	<fieldset style="border:1px dashed #ccc; padding:10px;">
+	        <legend style="color:#01a8d2 !important; padding:0 5px; font-size:14px; font-weight:700; color:#666; margin:0px; border-bottom: none !important;">ผลการประเมิน</legend>
+        	<table class="table table-striped table-bordered">
+			<tr>
+				<th class="span1">ลำดับ</td>
+				<th>ปีที่ประเมิน</th>
+				<th>สถานะการประเมิน</th>
+				<th>รูปแบบการประเมิน</th>
+				<th>ปีที่หมดอายุ</th>
+			</tr>
+			<?foreach($assessments as $key=>$assessment):?>
+			<tr>
+				<td><?=$key+1?></td>
+				<td><?=$assessment->approve_year?></td>
+				<td><?=get_assessment_status($assessment->status)?></td>
+				<td><?=get_assessment_approve_type_2($assessment->approve_type,$assessment->approve_user_id,$assessment->total,$assessment->id)?></td>
+				<td>
+					<?
+						if($assessment->status == 1){ // ถ้าผ่านเกณฑ์
+							echo ($assessment->approve_year)+2;
+						}
+					?>
+				</td>
+			</tr>
+			<?endforeach;?>
+		</table>
 	</fieldset>
   </div>
 </form>

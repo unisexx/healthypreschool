@@ -95,6 +95,8 @@
 										echo ' | ';
 										echo '<b>รูปแบบการประเมิน : </b>';
 										echo get_assessment_approve_type($assessment->approve_type,$assessment->approve_user_id,$assessment->total,$assessment->id);
+										echo '<br>';
+										echo '<a href="assessments">ประวัติการประเมินผล</a>';
 				                    }
 				                ?>
 

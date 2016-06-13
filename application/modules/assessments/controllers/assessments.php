@@ -26,6 +26,8 @@ class Assessments extends Public_Controller{
 		if($_POST){
 			$assessment = new Assessment($id);
 			
+			$_POST['approve_user_id'] = user_login()->id;
+			
 			if($id){
 				$_POST['updated_by'] = user_login()->id;
 			}else{
@@ -49,23 +51,8 @@ class Assessments extends Public_Controller{
 	        $assessment->from_array($_POST);
 	        $assessment->save();	
 			
-			/*** อัพเดท status ล่าสุด ที่ table nursery ***/
-			// ทำการเช็กก่อนว่า ปีที่ทำการประเมินเป้นปีล่าสุดหรือยัง ถ้าไม่ล่าสุด ไม่ต้องอัพเดท
-			// $sql = "SELECT approve_year from nurseries where nursery_id = ".$_POST['nursery_id'];
-			// $approve_year = $this->db->query($sql)->row_array();
-			// if($_POST['approve_year'] > $approve_year['approve_year']){ // ถ้าเป็นปีล่าสุด ให้ทำการอัพเดท table nursery
-// 				
-				// $nursery = new Nursery($_POST['nursery_id']);
-				// if($_POST['total'] >= 28){
-					// $nursery->status = 1; //ผ่านเกณฑ์
-				// }else{
-					// $nursery->status = 2; //ไม่ผ่านเกณฑ์
-				// }
-// 				
-				// $nursery->approve_year = $_POST['approve_year'];
-				// $nursery->save();
-// 				
-			// }
+			/*** อัพเดท status ของ approve_year ล่าสุด ที่ table nursery ***/
+			update_last_assessment_status($_POST['nursery_id']);
 			
 			set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
 		}

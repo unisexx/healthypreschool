@@ -555,6 +555,9 @@ class Nurseries extends Public_Controller
 	function get_nursery_data(){
 		if($_GET){
 			$data['nursery'] = new V_nursery($_GET['id']);
+			
+			$data['assessments'] = new Assessment();
+			$data['assessments']->where('nursery_id = '.$data['nursery']->id)->get();
 			$this->load->view('child_estimate_form',$data);
 		}
 	}

@@ -1,4 +1,8 @@
 <style>
+	.modal.large {
+	    width: 80%; /* respsonsive width */
+	    margin-left:-40%; /* width/2) */ 
+	}
 	.modal-body{max-height:665px !important;}
 	.table-condensed th, .table-condensed th a {
 	    background-color: #f1f1f1 !important;
@@ -230,7 +234,7 @@ $(document).ready(function(){
 	</div>
 
 <!-- Modal -->
-<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="myModal" class="modal large hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-body" style="height: 500px;">
   	<div>&nbsp;<img class="loader" src="media/images/ajax-loader.gif"></div>
   	<div class="modal-body-form"></div>

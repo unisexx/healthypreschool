@@ -319,10 +319,49 @@ function get_assessment_status($id){
 
 function get_assessment_approve_type($status_id,$approve_user_id=false,$total=false,$assessment_id=false){
 	$statusArray = array(1 => 'โดยเจ้าหน้าที่', 2 => "แบบประเมิน 35 ข้อ");
-	if($approve_user_id){
+	if($status_id == 1){
 		return $statusArray[$status_id]." (".get_user_name($approve_user_id).")";
 	}else{
 		return "<a href='assessments/form/".$assessment_id."'>".$statusArray[$status_id]."</a> (".$total." คะแนน)";	
 	}
+}
+
+function get_assessment_approve_type_2($status_id,$approve_user_id=false,$total=false,$assessment_id=false){
+	$statusArray = array(1 => 'โดยเจ้าหน้าที่', 2 => "แบบประเมิน 35 ข้อ");
+	if($approve_user_id){
+		return $statusArray[$status_id]." (".get_user_name($approve_user_id).")";
+	}else{
+		return $statusArray[$status_id]." (".$total." คะแนน)";	
+	}
+}
+
+// อัพเดทสถานะการประเมินล่าสุดลงใน table nursery
+function update_last_assessment_status($nursery_id){
+	$CI =& get_instance();
+	$sql = "SELECT
+				id, `status`, approve_year, approve_type, approve_user_id, total
+			FROM
+				assessments
+			WHERE
+				nursery_id = ".$nursery_id."
+			AND approve_year = (
+				SELECT
+					max(approve_year)
+				FROM
+					assessments
+				WHERE
+					nursery_id = ".$nursery_id."
+			)";
+	$a = $CI->db->query($sql)->row();
+	
+	$data['assessment_approve_year'] = $a->approve_year;
+	$data['assessment_status'] = $a->status;
+	$data['assessment_approve_type'] = $a->approve_type;
+	$data['assessment_approve_user_id'] = $a->approve_user_id;
+	$data['assessment_total'] = $a->total;
+	
+	$n = new Nursery($nursery_id);
+	$n->from_array($data);
+    $n->save();	
 }
 ?>
