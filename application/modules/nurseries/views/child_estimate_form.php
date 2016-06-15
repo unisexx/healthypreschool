@@ -101,7 +101,7 @@
 				<td><?=$key+1?></td>
 				<td><?=$assessment->approve_year?></td>
 				<td><?=get_assessment_status($assessment->status)?></td>
-				<td><?=get_assessment_approve_type_2($assessment->approve_type,$assessment->approve_user_id,$assessment->total,$assessment->id)?></td>
+				<td><?=get_assessment_approve_type_2($assessment->status,$assessment->approve_type,$assessment->approve_user_id,$assessment->total,$assessment->id)?></td>
 				<td>
 					<?
 						if($assessment->status == 1){ // ถ้าผ่านเกณฑ์

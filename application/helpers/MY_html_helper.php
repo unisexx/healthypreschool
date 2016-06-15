@@ -322,16 +322,18 @@ function get_assessment_approve_type($status_id,$approve_user_id=false,$total=fa
 	if($status_id == 1){
 		return $statusArray[$status_id]." (".get_user_name($approve_user_id).")";
 	}else{
-		return "<a href='assessments/form/".$assessment_id."'>".$statusArray[$status_id]."</a> (".$total." คะแนน)";	
+		return "<a href='assessments/form/".$assessment_id."'>".$statusArray[$status_id]."</a> (".$total." คะแนน) (".get_user_name($approve_user_id).")";
 	}
 }
 
-function get_assessment_approve_type_2($status_id,$approve_user_id=false,$total=false,$assessment_id=false){
-	$statusArray = array(1 => 'โดยเจ้าหน้าที่', 2 => "แบบประเมิน 35 ข้อ");
-	if($approve_user_id){
-		return $statusArray[$status_id]." (".get_user_name($approve_user_id).")";
-	}else{
-		return $statusArray[$status_id]." (".$total." คะแนน)";	
+function get_assessment_approve_type_2($status,$approve_type,$approve_user_id=false,$total=false,$assessment_id=false){
+	if($status != 0){ // ถ้าไม่ใช่สถานะรอการประเมิน
+		$typeArray = array(1 => 'โดยเจ้าหน้าที่', 2 => "แบบประเมิน 35 ข้อ");
+		if($approve_type == 1){
+			return $typeArray[$approve_type]." (".get_user_name($approve_user_id).")";
+		}elseif($approve_type == 2){
+			return $typeArray[$approve_type]." (".$total." คะแนน) (".get_user_name($approve_user_id).")";
+		}	
 	}
 }
 

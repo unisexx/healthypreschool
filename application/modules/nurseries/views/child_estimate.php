@@ -83,50 +83,19 @@ $(document).ready(function(){
 
     <form method="get" action="">
     	<div style="padding:10px; border:1px solid #ccc; margin-bottom:10px;">
-
 		<?=form_dropdown('nursery_type',array('1'=>'ศูนย์เด็กเล็ก','2'=>'โรงเรียนอนุบาล'),@$_GET['nursery_type']);?>
-    	<?//=form_dropdown('nursery_category_id',get_option('id','title','nursery_categories'),@$_GET['nursery_category_id'],'','--- เลือกคำนำหน้า ---');?>
     	<input name="name" type="text" value="<?=@$_GET['name']?>" placeholder="ชื่อศูนย์เด็กเล็ก" style="width:280px;" />
     	<?php get_area_dropdown(@$_GET['area_id']);?>
     	<span id="province">
     		<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
     	</span>
-    	<!--
-		<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกจังหวัด?>
-       		<?php echo form_dropdown('province_id',get_option('id','name','provinces order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
-       	<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร.?>
-       		<?php echo form_dropdown('province_id',get_option('id','name','provinces','where area_id = '.user_login()->area_id.' order by name asc'),@$_GET['province_id'],'','--- เลือกจังหวัด ---') ?>
-       	<?php endif;?>
-       -->
-
     	  <span id="amphur">
     	  	<?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
-    	  	<!--
-    	  	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกอำเภอ?>
-				<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
-			<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร.?>
-				<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id in (select id from provinces where area_id = '.user_login()->area_id.') order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
-			<?php elseif(user_login()->user_type_id == 7): //เจ้าหน้าที่จังหวัด?>
-                    <?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures','where province_id = '.user_login()->province_id.' order by amphur_name asc'),@$_GET['amphur_id'],'','--- เลือกอำเภอ ---');?>
-                <?php endif;?>
-           -->
     	  </span>
 
     	  <span id="district">
     	  	<?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
-    	  	<!--
-    	  	<?php if(user_login()->user_type_id == 1): //แอดมินเห็นทุกตำบล?>
-				<?=form_dropdown('district_id',get_option('id','district_name','districts order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
-			<?php elseif(user_login()->user_type_id == 6): //เจ้าหน้าที่ประจำศูนย์ สคร.?>
-				<?=form_dropdown('district_id',get_option('id','district_name','districts','where province_id in (select id from provinces where area_id = '.user_login()->area_id.') order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
-			<?php elseif(user_login()->user_type_id == 7): //เจ้าหน้าที่จังหวัด?>
-                <?=form_dropdown('district_id',get_option('id','district_name','districts','where province_id = '.user_login()->province_id.' order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
-                <?php elseif(user_login()->user_type_id == 8): //เจ้าหน้าที่อำเภอ?>
-                    <?=form_dropdown('district_id',get_option('id','district_name','districts','where amphur_id = '.user_login()->amphur_id.' order by district_name asc'),@$_GET['district_id'],'','--- เลือกตำบล ---');?>
-                <?php endif;?>
-           -->
     	  </span>
-    	  <?//=form_dropdown('year',array('2554'=>'2554','2555'=>'2555','2556'=>'2556','2557'=>'2557','2558'=>'2558'),@$_GET['year'],'','--- เลือกปีที่เข้าร่วม ---');?>
 			<select name="year">
 			<option value="">--- เลือกปีที่เข้าร่วม ---</option>
 		    <?php
@@ -136,7 +105,7 @@ $(document).ready(function(){
 			    }
 		    ?>
 			</select>
-    	  <?=form_dropdown('status',array('3'=>'รอการประเมิน','1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์'),@$_GET['status'],'','');?>
+    	  <?=form_dropdown('status',array('0'=>'รอการประเมิน','1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์'),@$_GET['status'],'','');?>
     	  <input type="hidden" name="search" value="1">
   	      <input class="btn btn-primary" type="submit" value=" ค้นหา " style="margin-bottom: 10px;">
     	</div>
@@ -150,7 +119,7 @@ $(document).ready(function(){
 
 
 	<ul class="nav nav-tabs home-nav-tabs estimate-tab">
-		<li <?=@$_GET['status']==3 ?"class='active'" : "" ;?>><a href="nurseries/estimate?<?=@$_SERVER['QUERY_STRING']?>&status=3&page=1">รอการประเมิน <span class="badge"><?=@$count['wait']?></span></a></li>
+		<li <?=@$_GET['status']==0 ?"class='active'" : "" ;?>><a href="nurseries/estimate?<?=@$_SERVER['QUERY_STRING']?>&status=0&page=1">รอการประเมิน <span class="badge"><?=@$count['wait']?></span></a></li>
 		<li <?=@$_GET['status']==1 ?"class='active'" : "" ;?>><a href="nurseries/estimate?<?=@$_SERVER['QUERY_STRING']?>&status=1&page=1">ผ่านเกณฑ์ <span class="badge badge-success"><?=@$count['pass']?></span></a></li>
 		<li <?=@$_GET['status']==2 ?"class='active'" : "" ;?>><a href="nurseries/estimate?<?=@$_SERVER['QUERY_STRING']?>&status=2&page=1">ไม่ผ่านเกณฑ์ <span class="badge badge-important"><?=@$count['not_pass']?></a></li>
 	</ul>
@@ -159,73 +128,31 @@ $(document).ready(function(){
         <tr>
 	        <th>ลำดับ</th>
 	        <th>ชื่อศุนย์เด็กเล็ก</th>
-	        <th>จังหวัด</th>
 	        <th>ที่อยู่</th>
 	        <th>ปีที่เข้าร่วม</th>
+	        <?if(@$_GET['status']!=0):?>
+	        <th>รูปแบบการประเมิน</th>
 	        <?if(@$_GET['status']==1):?>
 	        <th>หมดอายุ</th>
 	        <?endif;?>
-	        <th>หัวหน้าศูนย์</th>
-	        <th>วันที่ประเมิน</th>
-	        <th>ผู้ประเมิน</th>
-	        <?php if($this->uri->segment(3) == 1): //ถ้าเป็นแทบประเมินผล ให้แสดงผลการประเมิน?>
-	        	<th width="65">ประเมินผล</th>
-	        <?php else:?>
-	        	<th width="65">จัดการ</th>
-	        <?php endif;?>
+	        <?endif;?>
+	        <th width="65">จัดการ</th>
         </tr>
         <?php foreach($nurseries as $key=>$nursery):?>
         	<tr>
 	        <td><?$_GET['page'] = (@$_GET['page'] == "")?"1":@$_GET['page'];?><?=($key+1)+(20 * (@$_GET['page'] - 1));?></td>
-	        <td><?//=$nursery->nursery_category->title?><?=$nursery->name?></td>
-	        <td>จ.<?=$nursery->province_name?></td>
-	        <td>อ.<?=$nursery->amphur_name?><br>ต.<?=$nursery->district_name?></td>
+	        <td><?=$nursery->name?></td>
+	        <td>จ.<?=$nursery->province_name?><br>อ.<?=$nursery->amphur_name?><br>ต.<?=$nursery->district_name?></td>
 	        <td><?=$nursery->year?></td>
+	        <?if(@$_GET['status']!=0):?>
+	        <td><?=get_assessment_approve_type_2($nursery->assessment_status,$nursery->assessment_approve_type,$nursery->assessment_approve_user_id,$nursery->assessment_total)?></td>
 	        <?if(@$_GET['status']==1):?>
-	        <td>
-	        	<?if($nursery->status == 1){echo $nursery->approve_year + 2;}?>
-	        </td>
+	        <td><?=($nursery->assessment_approve_year)+2?></td>
+	        <?endif;?>
 	        <?endif;?>
 	        <td>
-	        	<?php if($nursery->p_title == "นาย"):?>
-	        		<img class="icon-boy" src="themes/hps/images/boy.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_other?><?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
-	        	<?php else:?>
-	        		<img class="icon-girl" src="themes/hps/images/girl.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_other?><?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
-	        	<?php endif;?>
-	        </td>
-	        <td><?=mysql_to_th($nursery->approve_date)?></td>
-	        <td><?=get_user_name($nursery->approve_user_id)?></td>
-	        <td>
-	        <?php if($this->uri->segment(3) == 1): //ถ้าเป็นแทบประเมินผล ให้แสดงผลการประเมิน?>
-	        	<?if($nursery->status == 0):?>
-	        		<?if($nursery->assessment->total != 0):?>
-	        			<a href="assessments/preview/<?=$nursery->id?>" target="_blank">
-	        			<span style="color:#D14">ไม่ผ่านเกณฑ์ <br>(<?=$nursery->assessment->total?> คะแนน)</span>
-	        			</a>
-	        		<?else:?>
-	        			รอการประเมิน
-	        		<?endif;?>
-	        	<?else:?>
-	        		<span style="color:teal">
-	        		<?if($nursery->approve_year != 0):?>
-	        			ผ่านเกณฑ์ <br>(พ.ศ. <?=$nursery->approve_year?>)<br>
-	        			<span style="color:#d14;">หมดอายุปี <?=$nursery->approve_year + 2?></span>
-	        		<?else:?>
-	        		<a href="assessments/preview/<?=$nursery->id?>" target="_blank">
-	        			ผ่านเกณฑ์ <br>(<?=$nursery->assessment->total?> คะแนน)<br>
-	        			<span style="color:#d14;">หมดอายุปี <?=date("Y", strtotime($nursery->approve_date)) + 546;?></span>
-	        		</a>
-	        		<?endif;?>
-	        		</span>
-	        	<?endif;?>
-	        <?php else:?>
-		        	<input type="hidden" name="id" value="<?=$nursery->id?>">
-		        	<?if(@$_GET['status']==1):?>
-		        		<a href="#myModal" role="button" data-toggle="modal" class='btn btn-mini btn-estimate btn-success'>รายละเอียด</a>
-		        	<?else:?>
-		        		<a href="#myModal" role="button" data-toggle="modal" class='btn btn-mini btn-estimate btn-info'>ประเมินผล</a>
-		        	<?endif;?>
-	        <?php endif;?>
+	        	<input type="hidden" name="id" value="<?=$nursery->id?>">
+		        <a href="#myModal" role="button" data-toggle="modal" class='btn btn-mini btn-estimate btn-info'>ประเมินผล</a>
 	        </td>
 		</tr>
 		<?php endforeach;?>

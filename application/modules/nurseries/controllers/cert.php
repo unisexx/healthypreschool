@@ -18,15 +18,9 @@ class Cert extends Public_Controller
 				}
 				
 				$nursery = new Nursery($nursery_id);
-				if($nursery->approve_year != 0){ 
-					$data['nursery_name'] = $nursery->name;
-					$data['approve_year'] = thainumDigit($nursery->approve_year,"F");
-					$data['expired'] = thainumDigit(($nursery->approve_year)+2,"F");
-				}else{ //ผ่านเกณฑ์โดยการทำแบบทดสอบ 35 ข้อ
-					$data['nursery_name'] = $nursery->name;
-					$data['approve_year'] = thainumDigit(date("Y", strtotime($nursery->approve_date)) + 543,"F");
-					$data['expired'] = thainumDigit((date("Y", strtotime($nursery->approve_date)) + 543)+2,"F");
-				}
+				$data['nursery_name'] = $nursery->name;
+				$data['approve_year'] = thainumDigit($nursery->assessment_approve_year,"F");
+				$data['expired'] = thainumDigit(($nursery->assessment_approve_year)+2,"F");
 				$this->load->view('cert/nursery_diploma', $data);
 				
 			}else{ // เจ้าหน้าที่ศูนย์, เจ้าหน้าที่ครู ผู้ดูแลเด็ก
@@ -37,16 +31,9 @@ class Cert extends Public_Controller
 	            	redirect('home');
 				}else{
 					
-					if($user->nursery->approve_year != 0){
-						$data['nursery_name'] = $user->nursery->name;
-						$data['approve_year'] = thainumDigit($user->nursery->approve_year,"F");
-						$data['expired'] = thainumDigit(($user->nursery->approve_year)+2,"F");
-					}else{ //ผ่านเกณฑ์โดยการทำแบบทดสอบ 35 ข้อ
-						$data['nursery_name'] = $user->nursery->name;
-						$data['approve_year'] = thainumDigit(date("Y", strtotime($user->nursery->approve_date)) + 543,"F");
-						$data['expired'] = thainumDigit((date("Y", strtotime($user->nursery->approve_date)) + 543)+2,"F");
-					}
-					
+					$data['nursery_name'] = $user->nursery->name;
+					$data['approve_year'] = thainumDigit($user->nursery->assessment_approve_year,"F");
+					$data['expired'] = thainumDigit(($user->nursery->assessment_approve_year)+2,"F");
 					$this->load->view('cert/nursery_diploma', $data);
 				}	
 				

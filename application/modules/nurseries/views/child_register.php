@@ -95,7 +95,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 				    }
 			    ?>
 			</select>
-	    	  <?=form_dropdown('status',array('1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์','3'=>'รอการประเมิน','0'=>'เข้าร่วมโครงการ','4'=>'หมดอายุแล้ว'),@$_GET['status'],'','--- เลือกสถานะ ---');?><br>
+	    	  <?=form_dropdown('status',array('1'=>'ผ่านเกณฑ์','2'=>'ไม่ผ่านเกณฑ์','3'=>'รอการประเมิน','4'=>'เข้าร่วมโครงการ','5'=>'หมดอายุแล้ว'),@$_GET['status'],'','--- เลือกสถานะ ---');?><br>
 	    	  วันที่เริ่ม <input type="text" name="start_date" value="<?=@$_GET['start_date']?>" class="datepicker" style="width:75px;" />
 	    	  วันที่สิ้นสุด <input type="text" name="end_date" value="<?=@$_GET['end_date']?>" class="datepicker" style="width:75px;"/>
 	    	  <input type="hidden" name="search" value="1">
@@ -112,7 +112,7 @@ jQuery_1_4_2("input.datepicker").date_input();
         <div style="margin-bottom: 10px;">
         	ผ่านเกณฑ์<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=1"> <span class="badge badge-success"><?=$count['pass']?></span></a>
         	ไม่ผ่านเกณฑ์<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=2"> <span class="badge badge-important"><?=$count['not_pass']?></span></a>
-        	รอการประเมิน<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=3"> <span class="badge"><?=($count['total'])-($count['pass']+$count['not_pass'])?></span></a>
+        	รอการประเมิน<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=3"> <span class="badge"><?=$count['wait']?></span></a>
         	เข้าร่วมโครงการ<a href="nurseries/register?<?=@$_SERVER['QUERY_STRING']?>&status=0"> <span class="badge badge-info"><?=$count['total']?></span></a>
 
         </div>
@@ -135,14 +135,15 @@ jQuery_1_4_2("input.datepicker").date_input();
         <tr>
 	        <th>ลำดับ</th>
 	        <th>ชื่อศุนย์พัฒนาเด็กเล็ก<br>(ไอดีศูนย์เด็กเล็ก)</th>
-	        <th>จังหวัด</th>
+	        <!-- <th>จังหวัด</th> -->
 	        <th>ที่อยู่</th>
 	        <!-- <th>ปีที่เข้าร่วม</th> -->
-	        <th>หัวหน้าศูนย์</th>
+	        <!-- <th>หัวหน้าศูนย์</th> -->
 	        <th>วันที่ลงทะเบียน</th>
 	        <th>ผลการประเมิน</th>
-	        <th>วันที่ประเมิน</th>
-	        <th>ผู้ประเมิน</th>
+	        <th>รูปแบบการประเมิน</th>
+	        <!-- <th>วันที่ประเมิน</th>
+	        <th>ผู้ประเมิน</th> -->
 	        <th width="77">จัดการ</th>
         </tr>
         <?php foreach($nurseries as $key=>$nursery):?>
@@ -188,16 +189,16 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        		<li><a href="assessments/preview/<?=$nursery->id?>" target="_blank">รายงานแบบประเมินสมัครเข้าร่วมโครงการ</a></li>
 	        	</ul>
 	        </td>
-	        <td>จ.<?=$nursery->province_name?></td>
-	        <td>อ.<?=$nursery->amphur_name?><br>ต.<?=$nursery->district_name?> </td>
+	        <!-- <td>จ.<?=$nursery->province_name?></td> -->
+	        <td>จ.<?=$nursery->province_name?><br>อ.<?=$nursery->amphur_name?><br>ต.<?=$nursery->district_name?> </td>
 	        <!-- <td><?=$nursery->year?></td> -->
-	        <td>
+	        <!-- <td>
 	        	<?php if($nursery->p_title == "นาย"):?>
 	        		<img class="icon-boy" src="themes/hps/images/boy.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
 	        	<?php else:?>
 	        		<img class="icon-girl" src="themes/hps/images/girl.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
 	        	<?php endif;?>
-	        </td>
+	        </td> -->
 	        <td nowrap="nowrap">
 	        	<?=mysql_to_th($nursery->created,'S',TRUE)?> น.
 	        	<?
@@ -206,7 +207,7 @@ jQuery_1_4_2("input.datepicker").date_input();
 					}
 	        	?>
 	        </td>
-	        <td nowrap="nowrap">
+	        <!-- <td nowrap="nowrap">
 	        	<?//=($nursery->status == 0)?"รอการประเมิน":"ผ่านเกณฑ์ <br>(พ.ศ. ".$nursery->approve_year.")";?>
 
 	        	<?if($nursery->status == 0):?>
@@ -219,21 +220,28 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        		<?endif;?>
 	        	<?else:?>
 	        		<span style="color:teal">
-	        		<?if($nursery->approve_year != 0):?>
-	        			ผ่านเกณฑ์ <br>(พ.ศ. <?=$nursery->approve_year?>)<br>
-	        			<span style="color:#d14;">หมดอายุปี <?=$nursery->approve_year + 2?></span>
+	        		<?if($nursery->assessment_approve_year != 0):?>
+	        			ผ่านเกณฑ์ <br>(พ.ศ. <?=$nursery->assessment_approve_year?>)<br>
+	        			<span style="color:#d14;">หมดอายุปี <?=$nursery->assessment_approve_year + 2?></span>
 	        		<?else:?>
 	        		<a href="assessments/preview/<?=$nursery->id?>" target="_blank">
 	        			ผ่านเกณฑ์ <br>(<?=$nursery->assessments_total?> คะแนน)<br>
-	        			<span style="color:#d14;">หมดอายุปี <?=date("Y", strtotime($nursery->approve_date)) + 545;?></span>
+	        			<span style="color:#d14;">หมดอายุปี <?=date("Y", strtotime($nursery->assessment_approve_date)) + 545;?></span>
 	        		</a>
 	        		<?endif;?>
 	        		</span>
 	        		<div><a href="nurseries/cert/index/<?=$nursery->id?>" target="_blank">พิมพ์ใบประกาศ</a></div>
 	        	<?endif;?>
 	        </td>
-	        <td><?=mysql_to_th($nursery->approve_date)?></td>
-	        <td><?=get_user_name($nursery->approve_user_id)?></td>
+	        <td><?=mysql_to_th($nursery->assessment_approve_date)?></td>
+	        <td><?=get_user_name($nursery->assessment_approve_user_id)?></td> -->
+	        <td>
+	        	<?=get_assessment_status($nursery->assessment_status)?>
+	        	<?if($nursery->assessment_status == 1):?>
+	        		<div><a href="nurseries/cert/index/<?=$nursery->id?>" target="_blank">พิมพ์ใบประกาศ</a></div>
+	        	<?endif;?>
+	        </td>
+	        <td><?=get_assessment_approve_type_2($nursery->assessment_status,$nursery->assessment_approve_type,$nursery->assessment_approve_user_id,$nursery->assessment_total)?></td>
 	        <td>
 	        	<!-- <a href="assessments/form?nursery_id=<?=$nursery->id?>" class='btn btn-mini' style="width:59px;">ประเมินผลแบบ 35 ข้อ</a> -->
 	        	<a href="nurseries/register_form/<?=$nursery->id?>" class='btn btn-mini btn-info'>แก้ไข</a>

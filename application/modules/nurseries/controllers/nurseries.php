@@ -66,27 +66,24 @@ class Nurseries extends Public_Controller
 	
 				$condition .= " and v_nurseries.created >= ".$end_date;
 			}
+			
+			$condition2 = $condition;
 	
 			switch (@$_GET['status']) {
 			    case 1: // ผ่านเกณฑ์
-			        // $data['nurseries']->where("status = 1");
-					$condition .= " and v_nurseries.status >= 1 ";
+					$condition .= " and v_nurseries.assessment_status = 1 ";
 			        break;
 			    case 2: // ไม่ผ่านเกณฑ์ (ประเมินแล้วแต่ไม่ผ่าน)
-			        // $data['nurseries']->where("status = 0")->where_related_assessment('total < 28');
-					$condition .= " and v_nurseries.status >= 0 and assessments.total < 28 ";
+					$condition .= " and v_nurseries.assessment_status = 2 ";
 			        break;
 				case 3: // รอการประเมิน
-			        // $data['nurseries']->where("status = 0")->where_related_assessment('total IS NULL');
-			        $condition .= " and v_nurseries.status >= 0 and assessments.total IS NULL ";
+			        $condition .= " and v_nurseries.assessment_status = 0";
 			        break;
-				case 4: // หมดอายุ ระบบเก่า
-			        // $data['nurseries']->where("status = 1 and approve_type = 1 and approve_year < ".(date("Y")+540));
-					$condition .= " and v_nurseries.status >= 1 and v_nurseries.approve_type = 1 and v_nurseries.approve_year < ".(date("Y")+540);
+				case 4: // เข้าร่วมโครงการ
+					$condition .= "";
 			        break;
-				case 5: // หมดอายุ ระบบใหม่ ฟอร์ม 35 ข้อ
-			        // $data['nurseries']->where("status = 1 and approve_type = 2 and year(approve_date) < ".(date("Y")-3));
-					$condition .= " and v_nurseries.status >= 1 and v_nurseries.approve_type = 2 and year(v_nurseries.approve_date) < ".(date("Y")-3);
+				case 5: // หมดอายุแล้ว
+					$condition .= " and v_nurseries.assessment_status = 1 and v_nurseries.assessment_approve_type < ".(date("Y")+545);
 			        break;
 			}
 	
@@ -99,22 +96,23 @@ class Nurseries extends Public_Controller
 							v_nurseries.p_surname,
 							v_nurseries.created,
 							v_nurseries.user_id,
-							v_nurseries.status,
-							v_nurseries.approve_year,
-							v_nurseries.approve_date,
-							v_nurseries.approve_user_id,
+							v_nurseries.assessment_status,
+							v_nurseries.assessment_approve_type,
+							v_nurseries.assessment_approve_year,
+							v_nurseries.assessment_approve_date,
+							v_nurseries.assessment_approve_user_id,
+							v_nurseries.assessment_total,
 							area_provinces_detail.name province_name,
 							amphures.amphur_name,
-							districts.district_name,
-							assessments.total assessments_total
+							districts.district_name
 						FROM
 							v_nurseries
 						LEFT JOIN area_provinces_detail ON v_nurseries.area_province_id = area_provinces_detail.area_province_id
 						LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 						LEFT JOIN districts ON v_nurseries.district_id = districts.id
-						LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
 						WHERE ".$condition." order by v_nurseries.id desc";
-	
+			
+			// echo $sql;
 			$nursery = new Nursery();
 	        $data['nurseries'] = $nursery->sql_page($sql, 20);
 			$data['pagination'] = $nursery->sql_pagination;
@@ -129,8 +127,7 @@ class Nurseries extends Public_Controller
 							LEFT JOIN area_provinces_detail ON v_nurseries.area_province_id = area_provinces_detail.area_province_id
 							LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 							LEFT JOIN districts ON v_nurseries.district_id = districts.id
-							LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-							WHERE ".$condition." and v_nurseries.STATUS = 1
+							WHERE ".$condition2." and v_nurseries.assessment_status = 1
 						) pass,
 						(
 							SELECT
@@ -140,8 +137,7 @@ class Nurseries extends Public_Controller
 							LEFT JOIN area_provinces_detail ON v_nurseries.area_province_id = area_provinces_detail.area_province_id
 							LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 							LEFT JOIN districts ON v_nurseries.district_id = districts.id
-							LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-							WHERE ".$condition." and v_nurseries.STATUS = 0 and v_nurseries.approve_type = 2
+							WHERE ".$condition2." and v_nurseries.assessment_status = 2
 						) not_pass,
 						(
 							SELECT
@@ -151,8 +147,17 @@ class Nurseries extends Public_Controller
 							LEFT JOIN area_provinces_detail ON v_nurseries.area_province_id = area_provinces_detail.area_province_id
 							LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 							LEFT JOIN districts ON v_nurseries.district_id = districts.id
-							LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-							WHERE ".$condition."
+							WHERE ".$condition2." and v_nurseries.assessment_status = 0
+						) wait,
+						(
+							SELECT
+								count(v_nurseries.id)
+							FROM
+								v_nurseries
+							LEFT JOIN area_provinces_detail ON v_nurseries.area_province_id = area_provinces_detail.area_province_id
+							LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
+							LEFT JOIN districts ON v_nurseries.district_id = districts.id
+							WHERE ".$condition2."
 						) total
 						";
 	
@@ -214,102 +219,6 @@ class Nurseries extends Public_Controller
 	function estimate(){
 		$this->template->set_layout('blank');
 
-		// $data['nurseries'] = new V_Nursery();
-		//
-		// if(@$_GET['nursery_category_id'])$data['nurseries']->where("nursery_category_id = ".$_GET['nursery_category_id']);
-		// if(@$_GET['name'])$data['nurseries']->where("name like '%".$_GET['name']."%'");
-		// if(@$_GET['province_id'])$data['nurseries']->where('province_id',$_GET['province_id']);
-		// if(@$_GET['amphur_id'])$data['nurseries']->where("amphur_id = ".$_GET['amphur_id']);
-		// if(@$_GET['district_id'])$data['nurseries']->where("district_id = ".$_GET['district_id']);
-		// if(@$_GET['year'])$data['nurseries']->where("year = ".$_GET['year']);
-		//
-		//
-		// if(user_login()->user_type_id==1){ // แอดมินเห็นทั้งหมด
-		// 	$data['pass_count']  = $data['nurseries']->get_clone();
-	  //       $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
-		//
-		// 	$data['regis_count'] = $data['nurseries']->get_clone();
-		// 	$data['regis_count']  = $data['regis_count']->where('status = 0')->get()->result_count();
-		//
-		// 	$data['nopass_count'] = $data['nurseries']->get_clone();
-		// 	$data['nopass_count'] = $data['nopass_count']->where_related_assessment('total < 28')->get()->result_count();
-		//
-		// 	if(@$_GET['status'] == 2){
-		// 		$data['nurseries']->where("status = 0")->where_related_assessment('total < 28');
-		// 	}elseif(@$_GET['status'] == 1){
-		// 		$data['nurseries']->where("status = 1");
-		// 	}else{
-		// 		$data['nurseries']->where("status = 0");
-		// 	}
-		//
-		// 	$data['nurseries']->order_by('id','desc')->get_page();
-		// }elseif(user_login()->user_type_id==6){ // เจ้าหน้าที่สคร
-		// 	$data['nurseries']->where_related_province('area_id = '.user_login()->area_id);
-		//
-		// 	$data['pass_count']  = $data['nurseries']->get_clone();
-	  //       $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
-		//
-		// 	$data['regis_count'] = $data['nurseries']->get_clone();
-		// 	$data['regis_count']  = $data['regis_count']->where('status = 0')->get()->result_count();
-		//
-		// 	$data['nopass_count'] = $data['nurseries']->get_clone();
-		// 	$data['nopass_count'] = $data['nopass_count']->where_related_assessment('total < 28')->get()->result_count();
-		//
-		// 	if(@$_GET['status'] == 2){
-		// 		$data['nurseries']->where("status = 0")->where_related_assessment('total < 28');
-		// 	}elseif(@$_GET['status'] == 1){
-		// 		$data['nurseries']->where("status = 1");
-		// 	}else{
-		// 		$data['nurseries']->where("status = 0");
-		// 	}
-		//
-		// 	$data['nurseries']->order_by('id','desc')->get_page();
-		// }elseif(user_login()->user_type_id==7){ // เจ้าหน้าที่จังหวัด
-		//
-		//     $data['nurseries']->where('province_id = '.user_login()->province_id);
-		//
-		// 	$data['pass_count']  = $data['nurseries']->get_clone();
-	  //       $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
-		//
-		// 	$data['regis_count'] = $data['nurseries']->get_clone();
-		// 	$data['regis_count']  = $data['regis_count']->where('status = 0')->get()->result_count();
-		//
-		// 	$data['nopass_count'] = $data['nurseries']->get_clone();
-		// 	$data['nopass_count'] = $data['nopass_count']->where_related_assessment('total < 28')->get()->result_count();
-		//
-		// 	if(@$_GET['status'] == 2){
-		// 		$data['nurseries']->where("status = 0")->where_related_assessment('total < 28');
-		// 	}elseif(@$_GET['status'] == 1){
-		// 		$data['nurseries']->where("status = 1");
-		// 	}else{
-		// 		$data['nurseries']->where("status = 0");
-		// 	}
-		//
-		//     $data['nurseries']->order_by('id','desc')->get_page();
-		// }elseif(user_login()->user_type_id==8){ // เจ้าหน้าที่อำเภอ
-    //         $data['nurseries']->where('amphur_id = '.user_login()->amphur_id);
-		//
-    //         $data['pass_count']  = $data['nurseries']->get_clone();
-	  //       $data['pass_count']  = $data['pass_count']->where('status = 1')->get()->result_count();
-		//
-		// 	$data['regis_count'] = $data['nurseries']->get_clone();
-		// 	$data['regis_count']  = $data['regis_count']->where('status = 0')->get()->result_count();
-		//
-		// 	$data['nopass_count'] = $data['nurseries']->get_clone();
-		// 	$data['nopass_count'] = $data['nopass_count']->where_related_assessment('total < 28')->get()->result_count();
-		//
-		// 	if(@$_GET['status'] == 2){
-		// 		$data['nurseries']->where("status = 0")->where_related_assessment('total < 28');
-		// 	}elseif(@$_GET['status'] == 1){
-		// 		$data['nurseries']->where("status = 1");
-		// 	}else{
-		// 		$data['nurseries']->where("status = 0");
-		// 	}
-		//
-    //         $data['nurseries']->order_by('id','desc')->get_page();
-    //     }
-		//
-		// $data['nurseries']->check_last_query();
 
 		if(@$_GET['search']==1){ //ถ้ามีการกดปุ่มค้นหาให้แสดงข้อมูล
 
@@ -345,28 +254,10 @@ class Nurseries extends Public_Controller
 	
 			$condition2 = $condition;
 	
-			switch (@$_GET['status']) {
-			    case 1: // ผ่านเกณฑ์
-			        // $data['nurseries']->where("status = 1");
-					$condition .= " and v_nurseries.status >= 1 ";
-			        break;
-			    case 2: // ไม่ผ่านเกณฑ์ (ประเมินแล้วแต่ไม่ผ่าน)
-			        // $data['nurseries']->where("status = 0")->where_related_assessment('total < 28');
-					$condition .= " and v_nurseries.status >= 0 and assessments.total < 28";
-			        break;
-				case 3: // รอการประเมิน
-			        // $data['nurseries']->where("status = 0")->where_related_assessment('total IS NULL');
-			        $condition .= " and v_nurseries.status = 0 and assessments.total IS NULL ";
-			        break;
-				case 4: // หมดอายุ ระบบเก่า
-			        // $data['nurseries']->where("status = 1 and approve_type = 1 and approve_year < ".(date("Y")+540));
-					$condition .= " and v_nurseries.status >= 1 and v_nurseries.approve_type = 1 and v_nurseries.approve_year < ".(date("Y")+540);
-			        break;
-				case 5: // หมดอายุ ระบบใหม่ ฟอร์ม 35 ข้อ
-			        // $data['nurseries']->where("status = 1 and approve_type = 2 and year(approve_date) < ".(date("Y")-3));
-					$condition .= " and v_nurseries.status >= 1 and v_nurseries.approve_type = 2 and year(v_nurseries.approve_date) < ".(date("Y")-3);
-			        break;
+			if(@$_GET['status'] != ""){
+				$condition .= " and v_nurseries.assessment_status = ".$_GET['status'];
 			}
+
 	
 			// ข้อมูลศูนย์เด็กเล็ก
 			$sql = "	SELECT
@@ -377,12 +268,14 @@ class Nurseries extends Public_Controller
 							v_nurseries.p_surname,
 							v_nurseries.created,
 							v_nurseries.user_id,
-							v_nurseries.status,
 							v_nurseries.year,
 							v_nurseries.p_other,
-							v_nurseries.approve_year,
-							v_nurseries.approve_date,
-							v_nurseries.approve_user_id,
+							v_nurseries.assessment_status,
+							v_nurseries.assessment_approve_type,
+							v_nurseries.assessment_approve_year,
+							v_nurseries.assessment_approve_date,
+							v_nurseries.assessment_approve_user_id,
+							v_nurseries.assessment_total,
 							area_provinces_detail.name province_name,
 							amphures.amphur_name,
 							districts.district_name
@@ -391,7 +284,6 @@ class Nurseries extends Public_Controller
 						LEFT JOIN area_provinces_detail ON v_nurseries.area_province_id = area_provinces_detail.area_province_id
 						LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 						LEFT JOIN districts ON v_nurseries.district_id = districts.id
-						LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
 						WHERE ".$condition." 
 						ORDER BY v_nurseries.id desc";
 	
@@ -411,8 +303,7 @@ class Nurseries extends Public_Controller
 							LEFT JOIN area_provinces_detail ON v_nurseries.area_province_id = area_provinces_detail.area_province_id
 							LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 							LEFT JOIN districts ON v_nurseries.district_id = districts.id
-							LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-							WHERE ".$condition2." and v_nurseries.STATUS = 1
+							WHERE ".$condition2." and v_nurseries.assessment_status = 1
 						) pass,
 						(
 							SELECT
@@ -422,8 +313,7 @@ class Nurseries extends Public_Controller
 							LEFT JOIN area_provinces_detail ON v_nurseries.area_province_id = area_provinces_detail.area_province_id
 							LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 							LEFT JOIN districts ON v_nurseries.district_id = districts.id
-							LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-							WHERE ".$condition2." and v_nurseries.STATUS >= 0 and assessments.total < 28
+							WHERE ".$condition2." and v_nurseries.assessment_status = 2
 						) not_pass,
 						(
 							SELECT
@@ -433,8 +323,7 @@ class Nurseries extends Public_Controller
 							LEFT JOIN area_provinces_detail ON v_nurseries.area_province_id = area_provinces_detail.area_province_id
 							LEFT JOIN amphures ON v_nurseries.amphur_id = amphures.id
 							LEFT JOIN districts ON v_nurseries.district_id = districts.id
-							LEFT JOIN assessments ON v_nurseries.id = assessments.nursery_id
-							WHERE ".$condition2."  and v_nurseries.status = 0 and assessments.total IS NULL 
+							WHERE ".$condition2."  and v_nurseries.assessment_status = 0
 						) wait
 						";
 	
@@ -571,15 +460,15 @@ class Nurseries extends Public_Controller
 
 	function save_status($id=false){
 		if($_POST){
-			if($_POST['approve_year'] == ""){ // ปรับสถานะเป็นรอการประเมิน
+			if($_POST['assessment_approve_year'] == ""){ // ปรับสถานะเป็นรอการประเมิน
 				$_POST['status'] = 0;
 				$this->db->query("DELETE FROM assessments WHERE nursery_id = ".$id);
 			}else{
 				$_POST['status'] = 1;
 			}
-			$_POST['approve_date'] = date("Y-m-d H:i:s");
-			$_POST['approve_user_id'] = user_login()->id;
-			$_POST['approve_type'] = 1; // 1 = แบบประเมินแบบเก่า, 2 = แบบประเมิน 35 ข้อ
+			$_POST['assessment_approve_date'] = date("Y-m-d H:i:s");
+			$_POST['assessment_approve_user_id'] = user_login()->id;
+			$_POST['assessment_approve_type'] = 1; // 1 = แบบประเมินแบบเก่า, 2 = แบบประเมิน 35 ข้อ
 
 			$nursery = new Nursery($id);
 			$nursery->from_array($_POST);
