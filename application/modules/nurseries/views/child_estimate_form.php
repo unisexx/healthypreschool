@@ -1,7 +1,7 @@
 <style>
 	table th{width:150px;}
 </style>
-<form method="post" action="nurseries/save_status/<?=$nursery->id?>" enctype="multipart/form-data">
+<!-- <form method="post" action="nurseries/save_status/<?=$nursery->id?>" enctype="multipart/form-data"> -->
   	<fieldset style="border:1px dashed #ccc; padding:10px;">
 	        <legend style="color:#01a8d2 !important; padding:0 5px; font-size:14px; font-weight:700; color:#666; margin:0px; border-bottom: none !important;">ข้อมูลศูนย์เด็กเล็ก (<?=$nursery->nursery_category->title?><?=$nursery->name?>)</legend>
 	<table class="table table-condensed">
@@ -30,20 +30,20 @@
 	
 	<fieldset style="border:1px dashed #ccc; padding:10px;">
 	        <legend style="color:#01a8d2 !important; padding:0 5px; font-size:14px; font-weight:700; color:#666; margin:0px; border-bottom: none !important;">หัวหน้าศูนย์เด็กเล็ก</legend>
-		<table class="table table-condensed">
-	         <tr>
-		      <th>ชื่อ</th>
-		      <td><?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?></td>
-		 	</tr>
-	         <tr>
-	           <th>โทรศัพท์</th>
-	           <td><?=$nursery->p_tel?></td>
-	         </tr>
-	         <tr>
-	           <th>อีเมล์</th>
-	           <td><?=$nursery->p_email?></td>
-	         </tr>
-	    </table>
+			<table class="table table-condensed">
+		         <tr>
+			      <th>ชื่อ</th>
+			      <td><?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?></td>
+			 	</tr>
+		         <tr>
+		           <th>โทรศัพท์</th>
+		           <td><?=$nursery->p_tel?></td>
+		         </tr>
+		         <tr>
+		           <th>อีเมล์</th>
+		           <td><?=$nursery->p_email?></td>
+		         </tr>
+		    </table>
 	</fieldset>
 	
 	<!-- <fieldset style="border:1px dashed #ccc; padding:10px;">
@@ -113,5 +113,45 @@
 			<?endforeach;?>
 		</table>
 	</fieldset>
+	
+	<fieldset id="assessmentForm" style="border:1px dashed #ccc; padding:10px;">
+	        <legend style="color:#01a8d2 !important; padding:0 5px; font-size:14px; font-weight:700; color:#666; margin:0px; border-bottom: none !important;">ฟอร์มประเมินผล (สำหรับเจ้าหน้าที่) *** ยังไม่เสร็จ ***</legend>
+        	<table class="table table-condensed">
+	         <tr>
+		      <th>ปีที่ทำการประเมิน</th>
+		      <td>
+		      		<select>
+		      		<?
+						for ($x = (date("Y")+543); $x >= 2557; $x--) {
+					    echo "<option value='$x'>$x</option>";
+					} 
+		      		?>
+		      		</select>
+		      </td>
+		 	</tr>
+	         <tr>
+	           <th>สถานะการประเมิน</th>
+	           <td>
+	           		<select name="status">
+	           			<option value="1">ผ่านเกณฑ์</option>
+	           			<option value="2">ไม่ผ่านเกณฑ์</option>
+	           			<option value="0">รอการประเมิน</option>
+	           		</select>
+	           </td>
+	         </tr>
+			 <tr>
+	           <th></th>
+	           <td>
+	           		<input type="button" value="บันทึก">
+	           	</td>
+	         </tr>
+	    </table>
+	</fieldset>
   </div>
-</form>
+<!-- </form> -->
+
+<script>
+$(document).ready(function(){
+	
+});
+</script>
