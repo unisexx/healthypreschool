@@ -143,6 +143,7 @@ function officerAssessmentSubmit(){
 		//echo $assessment->id;
 		
 		$a2 = new Assessment($a1->id);
+		$_GET['approve_date'] = date("Y-m-d H:i:s");
 		$a2->from_array($_GET);
 	    $a2->save();	
 		

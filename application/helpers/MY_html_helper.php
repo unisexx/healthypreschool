@@ -341,7 +341,7 @@ function get_assessment_approve_type_2($status,$approve_type,$approve_user_id=fa
 function update_last_assessment_status($nursery_id){
 	$CI =& get_instance();
 	$sql = "SELECT
-				id, `status`, approve_year, approve_type, approve_user_id, total
+				id, `status`, approve_year, approve_type, approve_user_id, approve_date, total
 			FROM
 				assessments
 			WHERE
@@ -360,6 +360,7 @@ function update_last_assessment_status($nursery_id){
 	$data['assessment_status'] = $a->status;
 	$data['assessment_approve_type'] = $a->approve_type;
 	$data['assessment_approve_user_id'] = $a->approve_user_id;
+	$data['assessment_approve_date'] = $a->approve_date;
 	$data['assessment_total'] = $a->total;
 	
 	$n = new Nursery($nursery_id);

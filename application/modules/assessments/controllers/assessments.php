@@ -27,6 +27,7 @@ class Assessments extends Public_Controller{
 			$assessment = new Assessment($id);
 			
 			$_POST['approve_user_id'] = user_login()->id;
+			$_POST['approve_date'] = date("Y-m-d H:i:s");
 			
 			if($id){
 				$_POST['updated_by'] = user_login()->id;
