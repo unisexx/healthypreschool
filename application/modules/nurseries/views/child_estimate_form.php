@@ -96,6 +96,7 @@
 				<th>รูปแบบการประเมิน</th>
 				<th>ปีที่หมดอายุ</th>
 			</tr>
+			<tbody id="assessmentData">
 			<?foreach($assessments as $key=>$assessment):?>
 			<tr>
 				<td><?=$key+1?></td>
@@ -111,16 +112,17 @@
 				</td>
 			</tr>
 			<?endforeach;?>
+			</tbody>
 		</table>
 	</fieldset>
 	
 	<fieldset id="assessmentForm" style="border:1px dashed #ccc; padding:10px;">
-	        <legend style="color:#01a8d2 !important; padding:0 5px; font-size:14px; font-weight:700; color:#666; margin:0px; border-bottom: none !important;">ฟอร์มประเมินผล (สำหรับเจ้าหน้าที่) *** ยังไม่เสร็จ ***</legend>
+	        <legend style="color:#01a8d2 !important; padding:0 5px; font-size:14px; font-weight:700; color:#666; margin:0px; border-bottom: none !important;">แบบฟอร์มประเมินผล (สำหรับเจ้าหน้าที่)</legend>
         	<table class="table table-condensed">
 	         <tr>
 		      <th>ปีที่ทำการประเมิน</th>
 		      <td>
-		      		<select>
+		      		<select name="approve_year">
 		      		<?
 						for ($x = (date("Y")+543); $x >= 2557; $x--) {
 					    echo "<option value='$x'>$x</option>";
@@ -142,7 +144,10 @@
 			 <tr>
 	           <th></th>
 	           <td>
-	           		<input type="button" value="บันทึก">
+	           		<input type="hidden" name="nursery_id" value="<?=$nursery->id?>">
+	           		<input type="hidden" name="approve_user_id" value="<?=user_login()->id?>">
+	           		<input type="hidden" name="approve_type" value="1">
+	           		<input id="submitBtn" type="button" value="บันทึก" onclick="clickOffConfirmed = confirm('ยืนยันการบันทึกข้อมูล?');">
 	           	</td>
 	         </tr>
 	    </table>
@@ -152,6 +157,26 @@
 
 <script>
 $(document).ready(function(){
-	
+	$("#submitBtn").click(function(){
+		if (!clickOffConfirmed) return false;
+		
+			var status =  $(this).closest("#assessmentForm").find("select[name=status]").val();
+			var approve_year = $(this).closest("#assessmentForm").find("select[name=approve_year]").val();
+			var nursery_id = $(this).closest("#assessmentForm").find("input[name=nursery_id]").val();
+			var approve_user_id = $(this).closest("#assessmentForm").find("input[name=approve_user_id]").val();
+			var approve_type = $(this).closest("#assessmentForm").find("input[name=approve_type]").val();
+			
+			$.get('ajax/officerAssessmentSubmit',{
+				'status' : status,
+				'approve_year' : approve_year,
+				'nursery_id' : nursery_id,
+				'approve_user_id' : approve_user_id,
+				'approve_type' : approve_type
+			},function(data){
+				$("#assessmentData").html(data);
+			});
+		
+		return true;
+	});
 });
 </script>

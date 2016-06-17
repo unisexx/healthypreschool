@@ -131,6 +131,7 @@ $(document).ready(function(){
 	        <th>ที่อยู่</th>
 	        <th>ปีที่เข้าร่วม</th>
 	        <?if(@$_GET['status']!=0):?>
+	        <th>ปีที่ประเมินล่าสุด</th>
 	        <th>รูปแบบการประเมิน</th>
 	        <?if(@$_GET['status']==1):?>
 	        <th>หมดอายุ</th>
@@ -145,6 +146,7 @@ $(document).ready(function(){
 	        <td>จ.<?=$nursery->province_name?><br>อ.<?=$nursery->amphur_name?><br>ต.<?=$nursery->district_name?></td>
 	        <td><?=$nursery->year?></td>
 	        <?if(@$_GET['status']!=0):?>
+	        <td><?=$nursery->assessment_approve_year?></td>
 	        <td><?=get_assessment_approve_type_2($nursery->assessment_status,$nursery->assessment_approve_type,$nursery->assessment_approve_user_id,$nursery->assessment_total)?></td>
 	        <?if(@$_GET['status']==1):?>
 	        <td><?=($nursery->assessment_approve_year)+2?></td>

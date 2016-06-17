@@ -133,5 +133,39 @@ function ajax_get_teacher_detail(){
 	}
 }
 
+// ประเมินผลโดยเจ้าหน้าที่
+function officerAssessmentSubmit(){
+	if($_GET){
+		// หาข้อมูลใน db ถ้ามีให้อัพเดท ถ้าไม่มีให้ insert
+		$a1 = new Assessment();
+		$a1->where('nursery_id = '.$_GET['nursery_id']);
+		$a1->where('approve_year = '.$_GET['approve_year'])->get(1);
+		//echo $assessment->id;
+		
+		$a2 = new Assessment($a1->id);
+		$a2->from_array($_GET);
+	    $a2->save();	
+		
+		$assessment = new Assessment();
+		$assessment->where('nursery_id = '.$_GET['nursery_id'])->order_by('approve_year','asc')->get();
+		foreach($assessment as $key=>$row){
+			echo "<tr>";
+			echo "<td>".($key+1)."</td>";
+			echo "<td>".$row->approve_year."</td>";
+			echo "<td>".get_assessment_status($row->status)."</td>";
+			echo "<td>".get_assessment_approve_type_2($row->status,$row->approve_type,$row->approve_user_id,$row->total,$row->id)."</td>";
+			echo "<td>";
+				if($row->status == 1){ // ถ้าผ่านเกณฑ์
+					echo (($row->approve_year)+2);
+				}
+			echo "</td>";
+			echo "</tr>";
+		}
+		
+		/*** อัพเดท status ของ approve_year ล่าสุด ที่ table nursery ***/
+		update_last_assessment_status($_GET['nursery_id']);
+	}
+}
+
 }
 ?>

@@ -446,7 +446,7 @@ class Nurseries extends Public_Controller
 			$data['nursery'] = new V_nursery($_GET['id']);
 			
 			$data['assessments'] = new Assessment();
-			$data['assessments']->where('nursery_id = '.$data['nursery']->id)->get();
+			$data['assessments']->where('nursery_id = '.$data['nursery']->id)->order_by('approve_year','asc')->get();
 			$this->load->view('child_estimate_form',$data);
 		}
 	}
