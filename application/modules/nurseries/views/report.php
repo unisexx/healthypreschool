@@ -397,7 +397,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_provinces.id = ".$province->id." ".@$condition."
-											AND v_nurseries.`status` = 1
+											AND v_nurseries.`assessment_status` = 1
 										) nursery_pass,
 										(
 											SELECT
@@ -407,7 +407,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_provinces.id = ".$province->id." ".@$condition."
-											AND v_nurseries.`status` = 0
+											AND v_nurseries.`assessment_status` = 0
 										) nursery_not
 									";
 						$nursery = new V_nursery();
@@ -472,7 +472,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_nurseries.amphur_id = ".$amphur->id." ".@$condition."
-											AND v_nurseries.`status` = 1
+											AND v_nurseries.`assessment_status` = 1
 										) nursery_pass,
 										(
 											SELECT
@@ -482,7 +482,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_nurseries.amphur_id = ".$amphur->id." ".@$condition."
-											AND v_nurseries.`status` = 0
+											AND v_nurseries.`assessment_status` = 0
 										) nursery_not
 									";
 						$nursery = new V_nursery();
@@ -547,7 +547,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_nurseries.district_id = ".$district->id." ".@$condition."
-											AND v_nurseries.`status` = 1
+											AND v_nurseries.`assessment_status` = 1
 										) nursery_pass,
 										(
 											SELECT
@@ -557,7 +557,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_nurseries.district_id = ".$district->id." ".@$condition."
-											AND v_nurseries.`status` = 0
+											AND v_nurseries.`assessment_status` = 0
 										) nursery_not
 									";
 						$nursery = new V_nursery();
@@ -657,7 +657,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_provinces.area_id = ".$area->id." ".@$condition."
-											AND v_nurseries.`status` = 1
+											AND v_nurseries.`assessment_status` = 1
 										) nursery_pass,
 										(
 											SELECT
@@ -667,7 +667,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_provinces.area_id = ".$area->id." ".@$condition."
-											AND v_nurseries.`status` = 0
+											AND v_nurseries.`assessment_status` = 0
 										) nursery_not
 									";
 						$nursery = new V_nursery();
@@ -750,7 +750,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_provinces.id = ".$province->id." ".@$condition."
-											AND v_nurseries.`status` = 1
+											AND v_nurseries.`assessment_status` = 1
 										) nursery_pass,
 										(
 											SELECT
@@ -760,7 +760,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_provinces.id = ".$province->id." ".@$condition."
-											AND v_nurseries.`status` = 0
+											AND v_nurseries.`assessment_status` = 0
 										) nursery_not
 									";
 						$nursery = new V_nursery();
@@ -847,7 +847,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_nurseries.amphur_id = ".$amphur->id." ".@$condition."
-											AND v_nurseries.`status` = 1
+											AND v_nurseries.`assessment_status` = 1
 										) nursery_pass,
 										(
 											SELECT
@@ -857,7 +857,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_nurseries.amphur_id = ".$amphur->id." ".@$condition."
-											AND v_nurseries.`status` = 0
+											AND v_nurseries.`assessment_status` = 0
 										) nursery_not
 									";
 						$nursery = new V_nursery();
@@ -943,7 +943,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_nurseries.district_id = ".$district->id." ".@$condition."
-											AND v_nurseries.`status` = 1
+											AND v_nurseries.`assessment_status` = 1
 										) nursery_pass,
 										(
 											SELECT
@@ -953,7 +953,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_nurseries.district_id = ".$district->id." ".@$condition."
-											AND v_nurseries.`status` = 0
+											AND v_nurseries.`assessment_status` = 0
 										) nursery_not
 									";
 						$nursery = new V_nursery();
@@ -1075,7 +1075,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_provinces.area_id = ".$area->id." ".@$condition."
-											AND v_nurseries.`status` = 1
+											AND v_nurseries.`assessment_status` = 1
 										) nursery_pass,
 										(
 											SELECT
@@ -1085,7 +1085,7 @@ $(function(){
 											INNER JOIN v_provinces ON v_nurseries.area_province_id = v_provinces.area_province_id
 											WHERE
 												v_provinces.area_id = ".$area->id." ".@$condition."
-											AND v_nurseries.`status` = 0
+											AND v_nurseries.`assessment_status` = 0
 										) nursery_not
 									";
 						$nursery = new V_nursery();
