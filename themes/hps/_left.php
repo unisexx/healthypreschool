@@ -136,7 +136,7 @@
              }
              ?>
 	         <div style="width:230px!important;margin:0 auto!important;padding-top:8px;">
-                 <a href="nurseries/cert" target="_blank" <?php echo @$evt_onclick;?>>
+                 <a href="assessments" target="_blank" <?php echo @$evt_onclick;?>>
                    <img src="media/images/btn_school_cert_menu.png" border="0" width="230">
                  </a>
              </div>

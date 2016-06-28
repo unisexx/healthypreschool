@@ -25,6 +25,7 @@
 			<?
 				if($assessment->status == 1){ // ถ้าผ่านเกณฑ์
 					echo ($assessment->approve_year)+2;
+					echo ' <a href="nurseries/cert/index/'.$assessment->id.'" target="_blank" style="color:teal"><i class="fa fa-print" aria-hidden="true" style="color:orange;" title="พิมพ์ใบประกาศ"></i></a>';
 				}
 			?>
 		</td>
