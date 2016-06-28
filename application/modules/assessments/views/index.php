@@ -5,8 +5,8 @@
 
 <h1>การประเมินผล <?=get_nursery_name($nursery_id);?></h1>
 
-<div style="float:right; padding:10px 0;"><a href="assessments/form"><div class="btn btn-primary">ทำแบบประเมิน</div></a></div>
-  
+<!-- <div style="float:right; padding:10px 0;"><a href="assessments/form"><div class="btn btn-primary">ทำแบบประเมิน</div></a></div> -->
+
 <table class="table table-striped table-bordered">
 	<tr>
 		<th class="span1">ลำดับ</td>
