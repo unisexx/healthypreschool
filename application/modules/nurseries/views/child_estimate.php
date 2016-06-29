@@ -3,7 +3,7 @@
 	    width: 80%; /* respsonsive width */
 	    margin-left:-40%; /* width/2) */ 
 	}
-	.modal-body{max-height:665px !important;}
+	.modal-body{max-height:80% !important;}
 	.table-condensed th, .table-condensed th a {
 	    background-color: #f1f1f1 !important;
 	    color: #000 !important;
@@ -154,7 +154,8 @@ $(document).ready(function(){
 	        <?endif;?>
 	        <td>
 	        	<input type="hidden" name="id" value="<?=$nursery->id?>">
-		        <a href="#myModal" role="button" data-toggle="modal" class='btn btn-mini btn-estimate btn-info'>ประเมินผล</a>
+		        <!-- <a href="#myModal" role="button" data-toggle="modal" class='btn btn-mini btn-estimate btn-info'>ประเมินผล</a> -->
+		        <a href="nurseries/estimate_form/<?=$nursery->id?>" target="_blank"><div class='btn btn-mini btn-estimate btn-info'>ประเมินผล</div></a>
 	        </td>
 		</tr>
 		<?php endforeach;?>
@@ -164,7 +165,7 @@ $(document).ready(function(){
 
 <!-- Modal -->
 <div id="myModal" class="modal large hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-body" style="height: 500px;">
+  <div class="modal-body">
   	<div>&nbsp;<img class="loader" src="media/images/ajax-loader.gif"></div>
   	<div class="modal-body-form"></div>
   </div>

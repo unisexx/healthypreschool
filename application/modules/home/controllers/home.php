@@ -168,11 +168,9 @@ class Home extends Public_Controller {
 				  		<th>ชื่อ</th>
 				  		<th>เพศ</th>
 				  		<th>ตำแหน่ง</th>
-				  		<th>เบอร์ติดต่อ</th>
-				  		<th>อีเมล์</th>
 				  		<th class="span1"></th>';
 			foreach($rs as $row){
-				echo '<tr><td>'.$row->name.'</td><td>'.$row->sex.'</td><td>'.$row->position.'</td><td>'.$row->phone.'</td><td>'.$row->email.'</td><td><input type="hidden" name="teacherName" value="'.$row->name.'"><input type="hidden" name="teacherId" value="'.$row->id.'"><button class="btn btn-mini btn-info selectTeacher" data-dismiss="modal" aria-hidden="true">เลือก</button></td></tr>';
+				echo '<tr><td>'.$row->name.'</td><td>'.$row->sex.'</td><td>'.$row->position.'</td><td><input type="hidden" name="teacherName" value="'.$row->name.'"><input type="hidden" name="teacherId" value="'.$row->id.'"><button class="btn btn-mini btn-info selectTeacher" data-dismiss="modal" aria-hidden="true">เลือก</button></td></tr>';
 			}
 			echo '</table>';
 		}

@@ -154,7 +154,7 @@ function officerAssessmentSubmit(){
 			echo "<td>".($key+1)."</td>";
 			echo "<td>".$row->approve_year."</td>";
 			echo "<td>".get_assessment_status($row->status)."</td>";
-			echo "<td>".get_assessment_approve_type_2($row->status,$row->approve_type,$row->approve_user_id,$row->total,$row->id)."</td>";
+			echo "<td>".get_assessment_approve_type_2($row->status,$row->approve_type,$row->approve_user_id,$row->total,$row->id,'nurseries/estimate_form/'.$_GET['nursery_id'].'/'.$row->id)."</td>";
 			echo "<td>";
 				if($row->status == 1){ // ถ้าผ่านเกณฑ์
 					echo (($row->approve_year)+2);

@@ -441,16 +441,6 @@ class Nurseries extends Public_Controller
 		echo ($nuchk > 0)?"false":"true";
 	}
 
-	function get_nursery_data(){
-		if($_GET){
-			$data['nursery'] = new V_nursery($_GET['id']);
-			
-			$data['assessments'] = new Assessment();
-			$data['assessments']->where('nursery_id = '.$data['nursery']->id)->order_by('approve_year','asc')->get();
-			$this->load->view('child_estimate_form',$data);
-		}
-	}
-
 	function get_nursery_data2(){
 		if($_GET){
 			$data['nursery'] = new Nursery($_GET['id']);
@@ -478,5 +468,94 @@ class Nurseries extends Public_Controller
 		redirect($_SERVER['HTTP_REFERER']);
 	}
 	
+	function get_nursery_data(){
+		if($_GET){
+			$data['nursery'] = new V_nursery($_GET['id']);
+			
+			$data['assessments'] = new Assessment();
+			$data['assessments']->where('nursery_id = '.$data['nursery']->id)->order_by('approve_year','asc')->get();
+			$this->load->view('child_estimate_form',$data);
+		}
+	}
+	
+	function estimate_form($nursery_id,$assessment_id=false){
+		$this->template->set_layout('blank');
+		$data['nursery'] = new V_nursery($nursery_id);
+		
+		$data['rs'] = new Assessment();
+		$data['rs']->where('nursery_id = '.$data['nursery']->id)->order_by('approve_year','asc')->get();
+			
+		$data['assessment'] = new Assessment($assessment_id);
+		$this->template->build('estimate_form',$data);
+	}
+	
+	// ประเมินผลแบบเก่า
+	function assessment_save_old(){
+		if($_POST){
+			// หาข้อมูลใน db ถ้ามีให้อัพเดท ถ้าไม่มีให้ insert
+			$a1 = new Assessment();
+			$a1->where('nursery_id = '.$_POST['nursery_id']);
+			$a1->where('approve_year = '.$_POST['approve_year'])->get(1);
+			//echo $assessment->id;
+			
+			$a2 = new Assessment($a1->id);
+			$_POST['approve_date'] = date("Y-m-d H:i:s");
+			$a2->from_array($_POST);
+		    $a2->save();	
+			
+			/*** อัพเดท status ของ approve_year ล่าสุด ที่ table nursery ***/
+			update_last_assessment_status($_POST['nursery_id']);
+			
+			set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
+		}
+		// redirect($_POST['referer']);
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+	
+	// ประเมินผลแบบ 35 ข้อ
+	function assessment_save($id=false){
+		if($_POST){
+			// หาข้อมูลใน db ถ้ามีให้อัพเดท ถ้าไม่มีให้ insert
+			$a1 = new Assessment();
+			$a1->where('nursery_id = '.$_POST['nursery_id']);
+			$a1->where('approve_year = '.$_POST['approve_year'])->get(1);
+			$id = $a1->id;
+		
+			$assessment = new Assessment($id);
+			
+			$_POST['approve_user_id'] = user_login()->id;
+			$_POST['approve_date'] = date("Y-m-d H:i:s");
+			
+			if($id){
+				$_POST['updated_by'] = user_login()->id;
+			}else{
+				$_POST['created_by'] = user_login()->id;
+			}
+			
+			if($_POST['total'] >= 28){ 
+				$_POST['status'] = 1; //ผ่านเกณฑ์
+			}else{
+				$_POST['status'] = 2; //ไม่ผ่านเกณฑ์
+			}
+			
+			if($_FILES['files']['name'])
+			{
+				if($assessment->id){
+					$assessment->delete_file($assessment->id,'uploads/assessment','files');
+				}
+				$_POST['files'] = $assessment->upload($_FILES['files'],'uploads/assessment/');
+			}
+			
+	        $assessment->from_array($_POST);
+	        $assessment->save();	
+			
+			/*** อัพเดท status ของ approve_year ล่าสุด ที่ table nursery ***/
+			update_last_assessment_status($_POST['nursery_id']);
+			
+			set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
+		}
+		// redirect($_POST['referer']);
+		redirect($_SERVER['HTTP_REFERER']);
+	}
 }
 ?>

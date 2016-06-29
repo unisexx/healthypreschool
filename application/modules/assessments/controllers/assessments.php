@@ -9,7 +9,7 @@ class Assessments extends Public_Controller{
 		$this->template->set_layout('blank');
 		$data['nursery_id'] = user_login()->nursery_id;
 		$data['assessments'] = new Assessment();
-		$data['assessments']->where('nursery_id = '.$data['nursery_id'])->get();
+		$data['assessments']->where('nursery_id = '.$data['nursery_id'])->order_by('approve_year','asc')->get();
 		$this->template->build('index',$data);
 	}
 	
