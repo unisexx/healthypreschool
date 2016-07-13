@@ -15,13 +15,13 @@ class Reports extends Public_Controller
 		if(@$_GET['search_type'] == 1){ //ย้อนหลัง 3 ปี
 			
 			if(@$_GET['three_year']){
-			$txt = "ตั้งแต่ปี พ.ศ. ".($_GET['three_year']-2)." ถึง พ.ศ. ".$_GET['three_year'];
+			$txt = "ปี ".($_GET['three_year']-2)." - ".$_GET['three_year'];
 			}
 			
 		}elseif(@$_GET['search_type'] == 2){ // ระหว่างปี
 			
 			if(@$_GET['start_year'] and @$_GET['end_year']){
-			$txt = "ระหว่างปี พ.ศ. ".$_GET['start_year']." ถึง พ.ศ. ".$_GET['end_year'];
+			$txt = "ปี ".$_GET['start_year']." - ".$_GET['end_year'];
 			}
 			if(@$_GET['start_year'] and @empty($_GET['end_year'])){
 				$txt = "ตั้งแต่ปี พ.ศ. ".$_GET['start_year'];
@@ -36,29 +36,29 @@ class Reports extends Public_Controller
 		if(@$_GET['type'] == 1 ){ // สคร
 			$data['provinces'] = new V_province();
 			$data['provinces']->where('area_id = '.$_GET['area_id'])->get();
-			$data['text'] = "ผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรค".$txt." (สคร.".$_GET['area_id'].")";
+			$data['text'] = "ผลการดำเนินงานป้องกันควบคุมโรคติดต่อในศดล.".$txt." (สคร.".$_GET['area_id'].")";
 		}elseif(@$_GET['type'] == 2 ){ // จังหวัด
 			$data['province'] = new Province($_GET['province_id']);
 			$data['amphurs'] = new Amphur();
 			$data['amphurs']->where('province_id = '.$_GET['province_id'])->get();
-			$data['text'] = "สรุปผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรค".$txt." (จังหวัด".$data['province']->name.")";
+			$data['text'] = "ผลการดำเนินงานป้องกันควบคุมโรคติดต่อในศดล.".$txt." (จังหวัด".$data['province']->name.")";
 		}elseif(@$_GET['type'] == 3 ){ // อำเภอ
 			$data['amphur'] = new Amphur($_GET['amphur_id']);
 			$data['districts'] = new District();
 			$data['districts']->where('amphur_id = ',$_GET['amphur_id'])->get();
-			$data['text'] = "สรุปผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรค".$txt." (อำเภอ".$data['amphur']->amphur_name.")";
+			$data['text'] = "ผลการดำเนินงานป้องกันควบคุมโรคติดต่อในศดล.".$txt." (อำเภอ".$data['amphur']->amphur_name.")";
 			$this->template->build('amphur_report',$data);
 		}elseif(@$_GET['type'] == 4 ){ // ตำบล
 			$data['district'] = new District($_GET['district_id']);
 			$data['nurseries'] = new Nursery();
 			$data['nurseries']->where('district_id = ',$_GET['district_id'])->get();
-			$data['text'] = "สรุปผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรค".$txt." (ตำบล".$data['district']->district_name.")";
+			$data['text'] = "ผลการดำเนินงานป้องกันควบคุมโรคติดต่อในศดล.".$txt." (ตำบล".$data['district']->district_name.")";
 			$this->template->build('amphur_report',$data);
 		}else{
 			$data['areas'] = new Area();
 			$data['areas']->order_by('id','asc')->get();
 			
-			$data['text'] = "สรุปผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรค".$txt;
+			$data['text'] = "ผลการดำเนินงานป้องกันควบคุมโรคติดต่อในศดล.แยกรายสคร.".$txt;
 			
 			// if(@$_GET['year']){
 				// $data['text'] = "สรุปผลการดำเนินงานโครงการศูนย์เด็กเล็กปลอดโรคปีงบประมาณ ".$_GET['year'];
