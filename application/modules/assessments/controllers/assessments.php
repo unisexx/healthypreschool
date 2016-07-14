@@ -60,12 +60,12 @@ class Assessments extends Public_Controller{
 		redirect('assessments/index');
 	}
 	
-	function preview($nursery_id = false){
+	function preview($id = false){
 		$this->template->set_layout('blank');
-		$data['nursery'] = new Nursery($nursery_id);
+		$data['nursery_id'] = user_login()->nursery_id;
 		
-		$assessment = new Assessment();
-		$data['assessment'] = $assessment->where('nursery_id = '.$nursery_id)->limit(1)->get();
+		$data['nursery'] = new Nursery($data['nursery_id']);
+		$data['assessment'] = new Assessment($id);
 		$this->template->build('preview',$data);
 	}
 }

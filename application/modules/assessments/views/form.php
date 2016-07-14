@@ -93,7 +93,7 @@ function estimate(){
 <p class="title"><strong>คำชี้แจง</strong> ให้ผู้ประเมินสอบถามครูและผู้ดูแลเด็กในการดำเนินงานป้องกันควบคุมโรค ภายในระยะเวลา 1 ปีที่ผ่านมา และตรวจสอบเอกสาร/หลักฐานในการดำเนินงาน ตามหัวข้อการประเมินที่กำหนดให้</p>
 
 
-<form method="post" action="assessments/save/<?=$assessment->id?>" enctype="multipart/form-data">
+<!-- <form method="post" action="assessments/save/<?=$assessment->id?>" enctype="multipart/form-data"> -->
 
 <table width="98%" border="0" align="center" cellpadding="0"  class="table1">
   <tr  bgcolor="#cce5fe">
@@ -488,7 +488,7 @@ function estimate(){
 	<td>แนบไฟล์แบบประเมิน</td>
 	<td><?=is_file('uploads/assessment/'.$assessment->files)? "<a href='uploads/assessment/".$assessment->files."' target='_blank'>ดูไฟล์แนบ</a>" : "";?></td>
 	<td>
-		<input type="file" name="files" />
+		<!-- <input type="file" name="files" /> -->
 	</td>
   </tr>
 </table>
@@ -496,5 +496,5 @@ function estimate(){
 <input type="hidden" name="total" value="<?=$assessment->total?>">
 <input type="hidden" name="nursery_id" value="<?=@$nursery->id?>">
 <input type="hidden" name="approve_type" value="2">
-<div style="text-align: center; padding:5px;"><input type="submit" value=" บันทึก "></div>
-</form>
+<!-- <div style="text-align: center; padding:5px;"><input type="submit" value=" บันทึก "></div>
+</form> -->
