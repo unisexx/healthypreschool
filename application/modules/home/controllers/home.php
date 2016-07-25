@@ -162,25 +162,28 @@ class Home extends Public_Controller {
 	function ajax_get_teacher(){
 		if($_GET){
 			$rs = new User();
-			$rs->where("user_type_id = 10 and (name like '%".$_GET['name']."%' or email like '%".$_GET['name']."%')")->order_by('name','asc')->get();
+			$rs->where("user_type_id = 10 and (name like '%".$_GET['name']."%' or email like '%".$_GET['name']."%')")->order_by('name','asc')->get_page(10);
 
+			echo $rs->pagination();
 			echo '<table class="table table-striped table-bordered">
 				  		<th>ชื่อ</th>
 				  		<th>เพศ</th>
 				  		<th>ตำแหน่ง</th>
-				  		<th class="span1"></th>';
+				  		<th class="span2"></th>';
 			foreach($rs as $row){
-				echo '<tr><td>'.$row->name.'</td><td>'.$row->sex.'</td><td>'.$row->position.'</td><td><input type="hidden" name="teacherName" value="'.$row->name.'"><input type="hidden" name="teacherId" value="'.$row->id.'"><button class="btn btn-mini btn-info selectTeacher" data-dismiss="modal" aria-hidden="true">เลือก</button></td></tr>';
+				echo '<tr><td>'.$row->name.'</td><td>'.$row->sex.'</td><td>'.$row->position.'</td><td><input type="hidden" name="teacherName" value="'.$row->name.'"><input type="hidden" name="teacherId" value="'.$row->id.'"><button class="btn btn-mini btn-info selectTeacher" data-dismiss="modal" aria-hidden="true">เลือก</button> | <button class="btn btn-mini btn-danger editTeacher">แก้ไข</button> <button class="btn btn-mini btn-danger delTeacher">ลบ</button></td></tr>';
 			}
 			echo '</table>';
+			echo $rs->pagination();
 		}
 	}
 
 	function ajax_get_children(){
 		if($_GET){
 			$rs = new Children();
-			$rs->where("name like '%".$_GET['name']."%'")->order_by('name','asc')->get();
-
+			$rs->where("name like '%".$_GET['name']."%'")->order_by('name','asc')->get_page(10);
+			
+			echo $rs->pagination();
 			echo '<table class="table table-striped table-bordered">
 				  		<th>ชื่อ</th>
 				  		<th>วันเกิด</th>
@@ -189,6 +192,7 @@ class Home extends Public_Controller {
 				echo '<tr><td>'.$row->title.' '.$row->name.'</td><td>'.mysql_to_th($row->birth_date).'</td><td><input type="hidden" name="childrenName" value="'.$row->title.' '.$row->name.'"><input type="hidden" name="childrenBirth" value="'.mysql_to_th($row->birth_date).'"><input type="hidden" name="childrenId" value="'.$row->id.'"><button class="btn btn-mini btn-info selectChildren" data-dismiss="modal" aria-hidden="true">เลือก</button></td></tr>';
 			}
 			echo '</table>';
+			echo $rs->pagination();
 		}
 	}
 

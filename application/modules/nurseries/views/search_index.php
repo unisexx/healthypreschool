@@ -50,9 +50,9 @@ $(document).ready(function(){
 
 <?php if($_GET):?>
 	ผลการค้นหาพบทั้งหมด <?=$count?> แห่ง
-        <div style="float:right; padding:10px 0;">
+        <!-- <div style="float:right; padding:10px 0;">
         	<a href="nurseries/searchs/register_form"><div class="btn">สมัครเข้าร่วมโครงการ</div></a>
-        </div>
+        </div> -->
     	<table class="table">
         <tr>
 	        <th>ลำดับ</th>

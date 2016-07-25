@@ -201,6 +201,30 @@ ORDER BY year desc";
 			$rs->delete();
 		}
 	}
+	
+	function ajax_delete_teacher_from_system(){
+		if($_POST){
+			$rs = new User($_POST['id']);
+			$rs->delete();
+		}
+	}
+	
+	function ajax_get_teacher_data(){
+		if($_POST){
+			$rs = new User($_POST['id']);
+			// echo $rs;
+			$array = array(
+				$rs->id,
+				$rs->name,
+				$rs->sex,
+				$rs->position,
+				$rs->phone,
+				$rs->email,
+				$rs->password
+			);
+			echo json_encode($array);
+		}
+	}
 
 	function ajax_delete_children(){
 		if($_POST){
@@ -211,8 +235,6 @@ ORDER BY year desc";
 	
 	function ajax_teacher_save($id=false){
 		if($_POST){
-			$captcha = $this->session->userdata('captcha');
-			if(($_POST['captcha'] == $captcha) && !empty($captcha)){
 				$teacher = new User($id);
 	            $teacher->from_array($_POST);
 	            $teacher->save();
@@ -220,9 +242,6 @@ ORDER BY year desc";
 				
 				echo $_POST['name'];
 				// echo "<tr><td>'+childrenName+'</td><td>".$_POST['name']."</td><td><input type='hidden' name='childrenID[]' value=".$teacher->id."><button class='btn btn-mini btn-danger delButton'>ลบ</button></td></tr>";
-			}else{
-				set_notify('error','กรอกรหัสไม่ถูกต้อง');
-			}
 		}
 	}
 	
@@ -237,5 +256,16 @@ ORDER BY year desc";
 			echo $_POST['name'];
 		}
 	}
+	
+	function check_email()
+    {
+        $user = new User();
+        $user->get_by_email($_GET['email']);
+		if($_GET['id'] != ""){ // ถ้า เป็นงาน edit ให้ผ่าน
+			echo "true";
+		}else{
+			echo ($user->email)?"false":"true";
+		}
+    }
 }
 ?>

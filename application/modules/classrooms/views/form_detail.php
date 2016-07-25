@@ -152,10 +152,10 @@ $(document).ready(function(){
 <style>
 	.modal.large {
 	    width: 80%; /* respsonsive width */
-	    height:550px;
+	    height:600px;
 	    margin-left:-40%; /* width/2) */ 
 	}
-	.modal-body {max-height:500px!important;}
+	.modal-body {max-height:600px!important;}
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -180,6 +180,54 @@ $(document).ready(function(){
 		});
 	});
 	
+	// modal pagination on click page number
+	$( document ).on( "click", "#teacherData .pagination a", function() {
+	  var a_href = $(this).attr('href');
+	  $.get(a_href,{},function(data){
+			$('#teacherData').html(data);
+		});
+	  return false;
+	});
+	
+	// delete teacher from system
+	$( document ).on( "click", "#teacherData .delTeacher", function() {
+		if (!confirm('ยืนยันการลบ?')) return false;
+			var teacherID = $(this).closest('td').find('input[name=teacherId]').val();
+			var $this = $(this);
+		    $.post('classrooms/ajax_delete_teacher_from_system',{
+				'id' : teacherID
+			},function(data){
+				$this.closest('tr').fadeOut(300, function() { $(this).remove(); });
+			});
+			return false;
+	});
+	
+	// edit teacher
+	$( document ).on( "click", "#teacherData .editTeacher", function() {
+		var teacherID = $(this).closest('td').find('input[name=teacherId]').val();
+		$.post('classrooms/ajax_get_teacher_data',{
+			'id' : teacherID
+		},function(data){
+			$('#teacherform [name=id]').val(data[0]);
+			$('#teacherform [name=name]').val(data[1]);
+			$('#teacherform input:radio[name=sex][value='+data[2]+']').attr('checked','checked');
+			$('#teacherform [name=position]').val(data[3]);
+			$('#teacherform [name=phone]').val(data[4]);
+			$('#teacherform [name=email]').val(data[5]);
+			$('#teacherform [name=password]').val(data[6]);
+			
+			var TeacherForm = $("#teacherFormBlock").clone();
+			$("#teacherData").html(TeacherForm);
+		}, 'json');
+	});
+	
+	//------------------- Teacher Form ---------------------
+	$('.addTeacherForm').click(function(){
+		var TeacherForm = $("#teacherFormBlock").clone();
+		$("#teacherData").html(TeacherForm);
+	});
+	
+	
 	//------------------- Children ---------------------
 	$('.searchChildren').click(function(){
 		$.get('home/ajax_get_children',{
@@ -197,10 +245,13 @@ $(document).ready(function(){
 		$('#childrenTable tr:last').after('<tr><td>'+childrenName+'</td><td>'+childrenBirth+'</td><td><input type="hidden" name="childrenID[]" value="'+childrenId+'"><button class="btn btn-mini btn-danger delButton">ลบ</button></td></tr>');
 	});
 	
-	//------------------- Teacher Form ---------------------
-	$('.addTeacherForm').click(function(){
-		var TeacherForm = $("#teacherFormBlock").clone();
-		$("#teacherData").html(TeacherForm);
+	// modal pagination on click page number
+	$( document ).on( "click", "#childrenData .pagination a", function() {
+	  var a_href = $(this).attr('href');
+	  $.get(a_href,{},function(data){
+			$('#childrenData').html(data);
+		});
+	  return false;
 	});
 	
 	//------------------- Children Form ---------------------
@@ -346,13 +397,14 @@ $(document).ready(function(){
 <div id="teacherFormBlock">
 <script type="text/javascript">
 $(function(){
+	var editTeacherID = $('#teacherFormBlock').find('[name=id]').val();
     $("#teacherform").validate({
 	    rules: 
 	    {
 	    	name: { required: true},
 	    	sex: { required: true},
 	    	phone: { required: true},
-	        email: { required: true,email: true,remote: "users/check_email"},
+	        email: { required: true,email: true,remote: "classrooms/check_email?id="+editTeacherID},
 	        password: {required: true,minlength: 4},
 	        _password:{equalTo: "#inputPass"},
 	        captcha:{required: true,remote: "users/check_captcha"}
@@ -439,6 +491,8 @@ $(function(){
 	            </div>
 			    <div class="control-group">
 	                <div class="controls">
+	                  <input type="hidden" name="id" value="">
+	                  
 	                  <!-- บัญชีครูคนนี้ถูกสร้างครั้งแรกที่ไหน -->
 	                  <input type="hidden" name="area_province_id" value="<?=user_login()->area_province_id?>">
 	                  <input type="hidden" name="nursery_id" value="<?=user_login()->nursery_id?>">
