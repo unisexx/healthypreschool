@@ -71,7 +71,7 @@ $(function(){
                 		<?php 
 	                		foreach($districts as $key=>$row){
 	                			$nursery[$key] = new Nursery();
-								$nursery[$key]->select("COUNT(district_id) AS regis_count")->where("district_id = ".$row->id." and status = 1")->get();
+								$nursery[$key]->select("COUNT(district_id) AS regis_count")->where("district_id = ".$row->id." and assessment_status = 1")->get();
 								echo $nursery[$key]->regis_count.',';
 	                		}
 						?>
@@ -83,7 +83,7 @@ $(function(){
                 		<?php 
 	                		foreach($districts as $key=>$row){
 	                			$nursery[$key] = new Nursery();
-								$nursery[$key]->select("COUNT(district_id) AS regis_count")->where("district_id = ".$row->id." and status = 0")->get();
+								$nursery[$key]->select("COUNT(district_id) AS regis_count")->where("district_id = ".$row->id." and assessment_status = 0")->get();
 								echo $nursery[$key]->regis_count.',';
 	                		}
 						?>

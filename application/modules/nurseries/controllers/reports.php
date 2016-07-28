@@ -158,7 +158,7 @@ class Reports extends Public_Controller
 		}
 		
 		if($_GET['status'] != ""){
-			$condition .=" and v_nurseries.status = ".$_GET['status'];
+			$condition .=" and v_nurseries.assessment_status = ".$_GET['status'];
 		}
 		
 		$sql="SELECT
@@ -169,11 +169,11 @@ class Reports extends Public_Controller
 						v_nurseries.p_surname,
 						v_nurseries.created,
 						v_nurseries.user_id,
-						v_nurseries.status,
+						v_nurseries.assessment_status,
 						v_nurseries.year,
-						v_nurseries.approve_year,
-						v_nurseries.approve_date,
-						v_nurseries.approve_user_id,
+						v_nurseries.assessment_approve_year,
+						v_nurseries.assessment_approve_date,
+						v_nurseries.assessment_approve_user_id,
 						area_provinces_detail.name province_name,
 						amphures.amphur_name,
 						districts.district_name,
@@ -255,7 +255,7 @@ class Reports extends Public_Controller
 			$data['year'] = "ปี ".$_GET['year'];
 		}
 		if(isset($_GET['status'])){
-			$condition .=" and v_nurseries.status = ".$_GET['status'];
+			$condition .=" and v_nurseries.assessment_status = ".$_GET['status'];
 		}
 		
 		$sql="SELECT
@@ -266,11 +266,11 @@ class Reports extends Public_Controller
 						v_nurseries.p_surname,
 						v_nurseries.created,
 						v_nurseries.user_id,
-						v_nurseries.status,
+						v_nurseries.assessment_status,
 						v_nurseries.year,
-						v_nurseries.approve_year,
-						v_nurseries.approve_date,
-						v_nurseries.approve_user_id,
+						v_nurseries.assessment_approve_year,
+						v_nurseries.assessment_approve_date,
+						v_nurseries.assessment_approve_user_id,
 						area_provinces_detail.name province_name,
 						amphures.amphur_name,
 						districts.district_name,
