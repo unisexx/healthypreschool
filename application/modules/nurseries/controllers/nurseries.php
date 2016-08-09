@@ -489,6 +489,17 @@ class Nurseries extends Public_Controller
 		$this->template->build('estimate_form',$data);
 	}
 	
+	function estimate_view($nursery_id,$assessment_id=false){
+		$this->template->set_layout('blank');
+		$data['nursery'] = new V_nursery($nursery_id);
+		
+		$data['rs'] = new Assessment();
+		$data['rs']->where('nursery_id = '.$data['nursery']->id)->order_by('approve_year','asc')->get();
+			
+		$data['assessment'] = new Assessment($assessment_id);
+		$this->template->build('estimate_view',$data);
+	}
+	
 	// ประเมินผลแบบเก่า
 	function assessment_save_old(){
 		if($_POST){

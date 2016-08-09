@@ -14,5 +14,13 @@ class Cert extends Public_Controller
 		$data['expired'] = thainumDigit(($nursery->assessment_approve_year)+2,"F");
 		$this->load->view('cert/nursery_diploma', $data);
 	}
+	
+	// function index($assessment_id){
+ 		// $assessment = new Assessment($assessment_id);
+ 		// $data['nursery_name'] = $assessment->nursery->name;
+		// $data['approve_year'] = thainumDigit($assessment->approve_year,"F");
+		// $data['expired'] = thainumDigit(($assessment->approve_year)+2,"F");
+		// $this->load->view('cert/nursery_diploma', $data);
+	// }
 }
 ?>
