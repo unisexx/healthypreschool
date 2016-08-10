@@ -151,7 +151,8 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        <td><?$_GET['page'] = (@$_GET['page'] == "")?"1":@$_GET['page'];?><?=($key+1)+(20 * (@$_GET['page'] - 1));?></td>
 	        <td>
 	        	<input type="hidden" name="id" value="<?=$nursery->id?>">
-	        	<a href="#myModal" class="btn-estimate" data-toggle="modal"><b><?//=$nursery->nursery_category->title?><?=$nursery->name?> (<?=$nursery->id?>)</b></a>
+	        	<!-- <a href="#myModal" class="btn-estimate" data-toggle="modal"><b><?=$nursery->name?> (<?=$nursery->id?>)</b></a> -->
+	        	<a href="nurseries/estimate_view/<?=$nursery->id?>" target="_blank"><b><?//=$nursery->nursery_category->title?><?=$nursery->name?> (<?=$nursery->id?>)</b></a>
 	        	<ul>
 	        		<li>
 	        			<a href="childrens?nursery_id=<?=$nursery->id?>" target="_blank">รายชื่อเด็ก/นักเรียน</a>
@@ -238,7 +239,10 @@ jQuery_1_4_2("input.datepicker").date_input();
 	        <td>
 	        	<?=get_assessment_status($nursery->assessment_status)?>
 	        	<?if($nursery->assessment_status == 1):?>
-	        		<div><a href="nurseries/cert/index/<?=$nursery->id?>" target="_blank">พิมพ์ใบประกาศ</a></div>
+	        		<div>
+	        			<!-- <a href="nurseries/cert/index/<?=$nursery->id?>" target="_blank">พิมพ์ใบประกาศ</a> -->
+	        			<a href="nurseries/estimate_view/<?=$nursery->id?>" target="_blank">พิมพ์ใบประกาศ</a>
+	        		</div>
 	        	<?endif;?>
 	        </td>
 	        <td><?=get_assessment_approve_type_2($nursery->assessment_status,$nursery->assessment_approve_type,$nursery->assessment_approve_user_id,$nursery->assessment_total)?></td>
