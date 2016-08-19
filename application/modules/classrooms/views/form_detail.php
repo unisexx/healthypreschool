@@ -192,13 +192,16 @@ $(document).ready(function(){
 	// delete teacher from system
 	$( document ).on( "click", "#teacherData .delTeacher", function() {
 		if (!confirm('ยืนยันการลบ?')) return false;
-			var teacherID = $(this).closest('td').find('input[name=teacherId]').val();
 			var $this = $(this);
+			var teacherID = $this.closest('td').find('input[name=teacherId]').val();
 		    $.post('classrooms/ajax_delete_teacher_from_system',{
 				'id' : teacherID
 			},function(data){
-				$this.closest('tr').fadeOut(300, function() { $(this).remove(); });
+				// $this.closest('tr').fadeOut(300, function() { $(this).remove(); });
+				// $this.closest('tr').remove();
 			});
+			
+			$this.closest('tr').fadeOut(300, function() { $(this).remove(); });
 			return false;
 	});
 	
@@ -223,7 +226,7 @@ $(document).ready(function(){
 	
 	//------------------- Teacher Form ---------------------
 	$('.addTeacherForm').click(function(){
-		var TeacherForm = $("#teacherFormBlock").clone();
+		var TeacherForm = $("#teacherFormBlock").clone().find("input:text").val("").end();
 		$("#teacherData").html(TeacherForm);
 	});
 	
@@ -421,7 +424,7 @@ $(function(){
 	    },
          submitHandler: function (form) {
              // alert('valid form submission'); // for demo
-             $.post('classrooms/ajax_teacher_save',$("#teacherform").serialize(),function(data){
+             $.post('classrooms/ajax_teacher_save',$("#teacherData form").serialize(),function(data){
 				if(data != ""){
 					alert("บันทึกข้อมูลสำเร็จ");
 					$.get('home/ajax_get_teacher',{

@@ -233,9 +233,10 @@ ORDER BY year desc";
 		}
 	}
 	
-	function ajax_teacher_save($id=false){
+	function ajax_teacher_save(){
 		if($_POST){
-				$teacher = new User($id);
+				// print_r($_POST);
+				$teacher = new User($_POST['id']);
 	            $teacher->from_array($_POST);
 	            $teacher->save();
 	            set_notify('success', 'บันทึกข้อมูลเรียบร้อย');
