@@ -209,6 +209,13 @@ ORDER BY year desc";
 		}
 	}
 	
+	function ajax_delete_children_from_system(){
+		if($_POST){
+			$rs = new Children($_POST['id']);
+			$rs->delete();
+		}
+	}
+	
 	function ajax_get_teacher_data(){
 		if($_POST){
 			$rs = new User($_POST['id']);
@@ -221,6 +228,20 @@ ORDER BY year desc";
 				$rs->phone,
 				$rs->email,
 				$rs->password
+			);
+			echo json_encode($array);
+		}
+	}
+	
+	function ajax_get_children_data(){
+		if($_POST){
+			$rs = new Children($_POST['id']);
+			// echo $rs;
+			$array = array(
+				$rs->id,
+				$rs->name,
+				$rs->title,
+				DB2Date2($rs->birth_date)
 			);
 			echo json_encode($array);
 		}

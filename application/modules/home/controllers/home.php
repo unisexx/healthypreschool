@@ -187,9 +187,9 @@ class Home extends Public_Controller {
 			echo '<table class="table table-striped table-bordered">
 				  		<th>ชื่อ</th>
 				  		<th>วันเกิด</th>
-				  		<th class="span1"></th>';
+				  		<th class="span2"></th>';
 			foreach($rs as $row){
-				echo '<tr><td>'.$row->title.' '.$row->name.'</td><td>'.mysql_to_th($row->birth_date).'</td><td><input type="hidden" name="childrenName" value="'.$row->title.' '.$row->name.'"><input type="hidden" name="childrenBirth" value="'.mysql_to_th($row->birth_date).'"><input type="hidden" name="childrenId" value="'.$row->id.'"><button class="btn btn-mini btn-info selectChildren" data-dismiss="modal" aria-hidden="true">เลือก</button></td></tr>';
+				echo '<tr><td>'.$row->title.' '.$row->name.'</td><td>'.mysql_to_th($row->birth_date).'</td><td><input type="hidden" name="childrenName" value="'.$row->title.' '.$row->name.'"><input type="hidden" name="childrenBirth" value="'.mysql_to_th($row->birth_date).'"><input type="hidden" name="childrenId" value="'.$row->id.'"><button class="btn btn-mini btn-info selectChildren" data-dismiss="modal" aria-hidden="true">เลือก</button> | <button class="btn btn-mini btn-danger editChildren">แก้ไข</button> <button class="btn btn-mini btn-danger delChildren">ลบ</button></td></tr>';
 			}
 			echo '</table>';
 			echo $rs->pagination();

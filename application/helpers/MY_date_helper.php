@@ -64,6 +64,17 @@ function DB2Date($Dt){
 	}
 }
 
+function DB2Date2($Dt){ 
+	if(($Dt!=NULL)&&($Dt != '0000-00-00')){
+		@list($date,$time) = explode(" ",$Dt);
+		list($y,$m,$d) = explode("-",$date);
+		return $d."-".$m."-".($y+543);
+	}else{
+		$Dt = "";
+		return $Dt; 
+	}
+}
+
 function Date2DB($Dt){
 	if(($Dt!="")&&($Dt != '0000-00-00')){
 		@list($date,$time) = explode(" ",$Dt);

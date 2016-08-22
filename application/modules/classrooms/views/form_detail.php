@@ -257,6 +257,38 @@ $(document).ready(function(){
 	  return false;
 	});
 	
+	// delete children from system
+	$( document ).on( "click", "#childrenData .delChildren", function() {
+		if (!confirm('ยืนยันการลบ?')) return false;
+			var $this = $(this);
+			var childrenID = $this.closest('td').find('input[name=childrenId]').val();
+		    $.post('classrooms/ajax_delete_children_from_system',{
+				'id' : childrenID
+			},function(data){
+				// $this.closest('tr').fadeOut(300, function() { $(this).remove(); });
+				// $this.closest('tr').remove();
+			});
+			
+			$this.closest('tr').fadeOut(300, function() { $(this).remove(); });
+			return false;
+	});
+	
+	// edit children
+	$( document ).on( "click", "#childrenData .editChildren", function() {
+		var childrenID = $(this).closest('td').find('input[name=childrenId]').val();
+		$.post('classrooms/ajax_get_children_data',{
+			'id' : childrenID
+		},function(data){
+			$('#childrenform [name=id]').val(data[0]);
+			$('#childrenform [name=name]').val(data[1]);
+			$("#childrenform [name=title] option[value='"+data[2]+"']").attr('selected','selected');
+			$('#childrenform [name=birth_date]').val(data[3]);
+			
+			$("#childrenData").html("");
+			$('#childrenForm').show();
+		}, 'json');
+	});
+	
 	//------------------- Children Form ---------------------
 	$('.addChildrenForm').click(function(){
 		// var ChildrenForm = $("#childrenFormBlock").clone();
@@ -264,11 +296,7 @@ $(document).ready(function(){
 		// jQuery_1_4_2("input.datepicker").date_input();
 		
 		//clear form input
-		$(':input','#childrenform')
-		  .removeAttr('checked')
-		  .removeAttr('selected')
-		  .not(':button, :submit, :reset, :hidden, :radio, :checkbox')
-		  .val('');
+		$('#childrenform').find("input:text").val("").end();
 		
 		$("#childrenData").html("");
 		$('#childrenForm').show();
@@ -381,6 +409,7 @@ $(document).ready(function(){
 							</div>
 						    <div class="control-group">
 				                <div class="controls">
+				                  <input type="hidden" name="id" value="<?=@$child->id?>">
 				                  <input type="hidden" name="create_by_user_id" value="<?=user_login()->id?>">
 				                  <input type="submit" class="btn btn-small btn-info btnChildrenSubmitButton" value="บันทึก">
 				                </div>
