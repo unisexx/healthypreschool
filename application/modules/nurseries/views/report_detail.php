@@ -129,7 +129,7 @@ $(document).ready(function(){
 		        		<img class="icon-girl" src="themes/hps/images/girl.png" rel="tooltip" data-placement="top" data-original-title="<?=$nursery->p_title?><?=$nursery->p_name?> <?=$nursery->p_surname?>">
 		        	<?php endif;?>
 		        </td>
-		        <td><?=($nursery->status == 0)?"เข้าร่วมโครงการ":"ผ่านเกณฑ์";?></td>
+		        <td><?=($nursery->assessment_status == 0)?"เข้าร่วมโครงการ":"ผ่านเกณฑ์";?></td>
 	        </tr>
 		<?php endforeach;?>
 	</tbody>
