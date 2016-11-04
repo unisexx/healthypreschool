@@ -358,7 +358,7 @@ function get_district_dropdown($amphur_id, $selected_value='', $show_all = false
 	      		$ext_condition .= ' AND id = '.$current_user->district_id;
 			}
 		}
-   		echo form_dropdown('district_id',get_option('id','district_name','districts',$ext_condition.' order by district_name asc'),@$selected_value,'style="width:250px;"','--- เลือกตำบล ---');
+   		echo @form_dropdown('district_id',@get_option('id','district_name','districts',$ext_condition.' order by district_name asc'),@$selected_value,'style="width:250px;"','--- เลือกตำบล ---');
 	}else{ 
         echo '<select name="district_id" id="district_id" disabled="disabled"><option value="">แสดงทั้งหมด</option></select>';
 	}
