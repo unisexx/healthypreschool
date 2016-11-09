@@ -162,7 +162,8 @@ $(document).ready(function(){
 	//------------------- Teacher ---------------------
 	$('.searchTeacher').click(function(){
 		$.get('home/ajax_get_teacher',{
-			'name' : $(this).prev('input[name=search]').val()
+			'name' : $(this).prev('input[name=search]').val(),
+			'nursery_id' : "<?php echo $v_nursery->id?>"
 		},function(data){
 			$('#teacherData').html(data);
 		});
@@ -234,7 +235,8 @@ $(document).ready(function(){
 	//------------------- Children ---------------------
 	$('.searchChildren').click(function(){
 		$.get('home/ajax_get_children',{
-			'name' : $(this).prev('input[name=search]').val()
+			'name' : $(this).prev('input[name=search]').val(),
+			'nursery_id' : "<?php echo $v_nursery->id?>"
 		},function(data){
 			$('#childrenData').html(data);
 			$('#childrenForm').hide();
@@ -370,7 +372,8 @@ $(document).ready(function(){
 								if(data != ""){
 									alert("บันทึกข้อมูลสำเร็จ");
 									$.get('home/ajax_get_children',{
-										'name' : data
+										'name' : data,
+										'nursery_id' : "<?php echo $v_nursery->id?>"
 									},function(data){
 										$('#childrenData').html(data);
 										$('#childrenForm').css('display','none');
@@ -457,7 +460,8 @@ $(function(){
 				if(data != ""){
 					alert("บันทึกข้อมูลสำเร็จ");
 					$.get('home/ajax_get_teacher',{
-						'name' : data
+						'name' : data,
+						'nursery_id' : "<?php echo $v_nursery->id?>"
 					},function(data){
 						$('#teacherData').html(data);
 					});

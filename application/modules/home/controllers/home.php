@@ -161,8 +161,10 @@ class Home extends Public_Controller {
 
 	function ajax_get_teacher(){
 		if($_GET){
+			if($_GET['nursery_id']){ $condition = ' and nursery_id = '.$_GET['nursery_id']; }
+			
 			$rs = new User();
-			$rs->where("user_type_id = 10 and (name like '%".$_GET['name']."%' or email like '%".$_GET['name']."%')")->order_by('name','asc')->get_page(10);
+			$rs->where("user_type_id = 10 ".@$condition." and (name like '%".$_GET['name']."%' or email like '%".$_GET['name']."%')")->order_by('name','asc')->get_page(10);
 
 			echo $rs->pagination();
 			echo '<table class="table table-striped table-bordered">
@@ -180,6 +182,8 @@ class Home extends Public_Controller {
 
 	function ajax_get_children(){
 		if($_GET){
+			if($_GET['nursery_id']){ $condition = ' and nursery_id = '.$_GET['nursery_id']; }
+			
 			$rs = new Children();
 			$rs->where("name like '%".$_GET['name']."%'")->order_by('name','asc')->get_page(10);
 			
