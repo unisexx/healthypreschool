@@ -1,6 +1,7 @@
 <style type="text/css">
 .form-horizontal .control-label {width:170px !important;}
 .date_selector{top:150px !important;left:400px !important;}
+.ui-datepicker { top: 300px !important; left: 400px !important; }
 </style>
 <!-- <script type="text/javascript" src="media/js/jquery-1.4.2.min.js"></script>
 <link rel="stylesheet" href="media/js/date_input/date_input.css" type="text/css" media="screen">
@@ -414,6 +415,7 @@ $(document).ready(function(){
 				                <div class="controls">
 				                  <input type="hidden" name="id" value="<?=@$child->id?>">
 				                  <input type="hidden" name="create_by_user_id" value="<?=user_login()->id?>">
+				                  <input type="hidden" name="nursery_id" value="<?=user_login()->nursery_id?>">
 				                  <input type="submit" class="btn btn-small btn-info btnChildrenSubmitButton" value="บันทึก">
 				                </div>
 				            </div>

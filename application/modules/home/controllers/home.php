@@ -182,10 +182,10 @@ class Home extends Public_Controller {
 
 	function ajax_get_children(){
 		if($_GET){
-			if($_GET['nursery_id']){ $condition = ' and nursery_id = '.$_GET['nursery_id']; }
+			if($_GET['nursery_id']){ $condition = 'nursery_id = '.$_GET['nursery_id']; }
 			
 			$rs = new Children();
-			$rs->where("name like '%".$_GET['name']."%'")->order_by('name','asc')->get_page(10);
+			$rs->where(@$condition." and name like '%".$_GET['name']."%'")->order_by('name','asc')->get_page(10);
 			
 			echo $rs->pagination();
 			echo '<table class="table table-striped table-bordered">
