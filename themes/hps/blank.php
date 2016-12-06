@@ -49,6 +49,8 @@
 				                        echo $current_user->province->name;
 				                    }elseif($current_user->user_type_id == 8){
 				                        echo $current_user->amphur->amphur_name;
+				                    }elseif($current_user->user_type_id == 13){
+				                        echo $current_user->district->district_name;
 				                    }elseif($current_user->user_type_id == 9 or $current_user->user_type_id == 10 or $current_user->user_type_id == 11){
 
 				                    	echo '('.$current_user->nursery->name.')';

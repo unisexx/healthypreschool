@@ -206,10 +206,8 @@ class Users extends Public_Controller{
 				
 				if($_POST['user_type_id'] == 6){
 					$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['area_id']);
-				}elseif($_POST['user_type_id']==7){
+				}elseif($_POST['user_type_id']==7 or $_POST['user_type_id']==8 or $_POST['user_type_id']==13){
 					$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['province_id']);
-				}elseif($_POST['user_type_id']==8){
-					$_POST['area_province_id'] = get_area_province_id($_POST['user_type_id'],$_POST['province_to_select_amphur']);
 				}
 				
 				$_POST['m_status'] = "active";

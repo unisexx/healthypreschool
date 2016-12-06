@@ -81,31 +81,40 @@ $(function(){
     }
     });
     
+    $("#area,#province,#amphur,#district").hide();
+    
     $("select[name=user_type_id]").change(function(){
         //alert( this.value );
         switch(this.value)
         {
            case '6': // เจ้าหน้าที่เขต
             $("#area").show();
-            $("#province,#amphur").hide();
+            $("#province,#amphur,#district").hide();
             $('.underprovince,.province_frm').html("");
-            $("select[name=province_id],select[name=amphur_id],select[name=province_to_select_amphur]").val("0");
+            $("select[name=province_id],select[name=amphur_id],select[name=district_id],select[name=province_to_select_amphur]").val("0");
            break;
            case '7': // เจ้าหน้าที่จังหวัด
             $("#province").show();
-            $("#area,#amphur").hide();
+            $("#area,#amphur,#district").hide();
             $('.underprovince').html("");
-            $("select[name=area_id],select[name=amphur_id],select[name=province_to_select_amphur]").val("0");
+            $("select[name=area_id],select[name=amphur_id],select[name=district_id],select[name=province_to_select_amphur]").val("0");
             
             $.post('users/get_province','',function(data){
             	$(".province_frm").html(data);
             });
            break;
            case '8': // เจ้าหน้าที่อำเภอ
-            $("#amphur").show();
-            $("#province,#area").hide();
+            $("#province,#amphur").show();
+            $("#area,#district").hide();
             $('.underprovince').html("");
-            $("select[name=province_id],select[name=area_id]").val("0");
+            $("select[name=area_id],select[name=district_id]").val("0");
+            $('select[name=amphur_id]').attr('disabled','disabled');
+           break;
+           case '13': // เจ้าหน้าที่ตำบล
+            $("#province,#amphur,#district").show();
+            $("#area").hide();
+            $('.underprovince').html("");
+            $("select[name=area_id]").val("0");
             $('select[name=amphur_id]').attr('disabled','disabled');
            break;
            default:
@@ -140,6 +149,45 @@ $(function(){
 				$(".amphur-frm").html(data);
 			});
 	});
+	
+	
+	$("select[name='province_id']").live("change",function(){
+  		$.post('ajax/get_amphur',{
+  				'province_id' : $(this).val()
+  			},function(data){
+  				$("#amphur").html(data);
+  			});
+
+				// disabled low level
+				$('select[name=district_id] option:first-child,select[name=nursery_id] option:first-child,select[name=classroom_id] option:first-child').attr("selected", "selected");
+				$('select[name=district_id],select[name=nursery_id],select[name=classroom_id]').attr("disabled", "disabled");
+  	});
+
+  	$("select[name='amphur_id']").live("change",function(){
+  		$.post('ajax/get_district',{
+  				'amphur_id' : $(this).val()
+  			},function(data){
+  				$("#district").html(data);
+  			});
+
+				// disabled low level
+				$('select[name=nursery_id] option:first-child,select[name=classroom_id] option:first-child').attr("selected", "selected");
+				$('select[name=nursery_id],select[name=classroom_id]').attr("disabled", "disabled");
+  	});
+
+		$("select[name='district_id']").live("change",function(){
+  		$.get('ajax/get_nursery',{
+  				'district_id' : $(this).val()
+  			},function(data){
+  				$("#nursery").html(data);
+  			});
+
+				// disabled low level
+				$('select[name=classroom_id] option:first-child').attr("selected", "selected");
+				$('select[name=classroom_id]').attr("disabled", "disabled");
+  	});
+
+
 });
 </script>
 
@@ -165,33 +213,29 @@ $(function(){
         	<div class="control-group">
                 <label class="control-label">ประเภท <span class="TxtRed">*</span></label>
                 <div class="controls">
-                    <?=form_dropdown('user_type_id',array('6'=>'เจ้าหน้าที่ประจำเขต','7'=>'เจ้าหน้าที่ประจำจังหวัด','8'=>'เจ้าหน้าที่ประจำอำเภอ'),'','class="input-xlarge"','--- เลือกประเภท ---');?>
+                    <?=form_dropdown('user_type_id',array('6'=>'เจ้าหน้าที่ประจำเขต','7'=>'เจ้าหน้าที่ประจำจังหวัด','8'=>'เจ้าหน้าที่ประจำอำเภอ','13'=>'เจ้าหน้าที่ประจำตำบล'),'','class="input-xlarge"','--- เลือกประเภท ---');?>
                 </div>
             </div>
-            <div class="control-group" id="area" style="display:none;">
-                <label class="control-label">เจ้าหน้าที่ประจำเขต</label>
+            <div class="control-group">
+                <label class="control-label">พื้นที่</label>
                 <div class="controls">
+                	<div id="area">
                     <?=form_dropdown('area_id',array('1'=>'สคร.1','2'=>'สคร.2','3'=>'สคร.3','4'=>'สคร.4','5'=>'สคร.5','6'=>'สคร.6','7'=>'สคร.7','8'=>'สคร.8','9'=>'สคร.9','10'=>'สคร.10','11'=>'สคร.11','12'=>'สคร.12','13'=>'สคร.13'),@$_GET['area_id'],'class="input-xlarge"','--- เลือกสคร. ---');?>
                     <div class="underprovince"></div>
-                </div>
-            </div>
-            <div class="control-group" id="province" style="display:none;">
-                <label class="control-label">เจ้าหน้าที่ประจำจังหวัด</label>
-                <div class="controls province_frm">
+                    </div>
                     
+						<div id="province">
+						<?php get_province_dropdown(@$_GET['area_id'],@$_GET['province_id']);?>
+						</div>
+					    <div id="amphur">
+					    <?php get_amphur_dropdown(@$_GET['province_id'],@$_GET['amphur_id']);?>
+					    </div>
+					    <div id="district">
+					    <?php get_district_dropdown(@$_GET['amphur_id'],@$_GET['district_id']);?>
+					    </div>
                 </div>
             </div>
-            <div class="control-group" id="amphur" style="display:none;">
-                <label class="control-label">เจ้าหน้าที่ประจำอำเภอ</label>
-                <div class="controls">
-                	<div>
-                		<?=form_dropdown('province_to_select_amphur',get_option('id','name','provinces order by name asc'),@$_GET['province_id'],'class="input-xlarge"','--- เลือกจังหวัด ---');?>
-                	</div>
-                	<div class="amphur-frm">
-                		<?=form_dropdown('amphur_id',get_option('id','amphur_name','amphures'),'','class="input-xlarge" style="margin-top:5px"; disabled','--- เลือกอำเภอ ---');?>
-                	</div>
-                </div>
-            </div>
+            
             <hr>
             <div class="control-group">
                 <label class="control-label">ชื่อ - นามสกุล <span class="TxtRed">*</span></label>
