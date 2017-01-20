@@ -9,7 +9,9 @@ jQuery(document).ready(function() {
 </script>
 <div id="gallery">
 	<img src="themes/hps/images/title_gallery.png" width="698" height="47" /><br>
-    <a href="galleries" class="viewGallery"><u>ดูภาพกิจกรรมทั้งหมด</u></a><br clear="all">
+	<span style="font-weight: bold; margin-left: 55px;"><a href="galleries/view/<?=$galleries->album->id?>"><?=$galleries->album->name?></a></span>
+    <a href="galleries" class="viewGallery"><u>ดูภาพกิจกรรมทั้งหมด</u></a>
+    <br clear="all">
 <div id="content_gallery">
 	  <ul id="mycarousel" class="jcarousel-skin-tango">
 	  	<?php foreach($galleries as $row):?>
