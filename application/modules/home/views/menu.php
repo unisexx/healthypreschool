@@ -33,3 +33,25 @@
     <?php endif;?>
     
 </div> -->
+
+<div class="modal hide fade" id="myModal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>ขอความร่วมมือในการทำแบบสอบถาม</h3>
+  </div>
+  <div class="modal-body">
+  	<center>
+    <h4 style="line-height: 30px;"><a href="http://thaigcd.ddc.moph.go.th/docs/publics/questionaire/67" target="_blank">- แบบสำรวจความพึงพอใจต่อการใช้บริการฐานข้อมูล ศูนย์เด็กเล็กโรงเรียนอนุบาลคุณภาพปลอดโรค ประจำปี พ.ศ. 2559</a></h4>
+    </center>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">ปิดหน้าต่าง</button>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+    $(window).load(function(){
+        $('#myModal').modal('show');
+    });
+</script>
