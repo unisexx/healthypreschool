@@ -164,7 +164,7 @@ class Home extends Public_Controller {
 			if($_GET['nursery_id']){ $condition = ' and nursery_id = '.$_GET['nursery_id']; }
 			
 			$rs = new User();
-			$rs->where("user_type_id = 10 ".@$condition." and (name like '%".$_GET['name']."%' or email like '%".$_GET['name']."%')")->order_by('name','asc')->get_page(10);
+			$rs->where("user_type_id between 9 and 10 ".@$condition." and (name like '%".$_GET['name']."%' or email like '%".$_GET['name']."%')")->order_by('name','asc')->get_page(10);
 
 			echo $rs->pagination();
 			echo '<table class="table table-striped table-bordered">
